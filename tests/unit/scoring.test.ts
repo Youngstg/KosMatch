@@ -21,8 +21,13 @@ describe("calculateMatch", () => {
       ["environment", 80],
       ["ruleFit", 100],
     ]);
-    expect(result.confidence).toBe("high");
+    expect(result.confidence).toBe("medium");
     expect(result.strengths).toHaveLength(2);
+  });
+
+  it("memberi keyakinan tinggi hanya ketika biaya utama dikonfirmasi", () => {
+    const confirmed = { ...anggrek, electricity: { amount: 150_000, origin: "confirmed" as const }, laundry: { amount: 120_000, origin: "confirmed" as const }, roundTripTransportCost: { amount: 20_000, origin: "confirmed" as const } };
+    expect(calculateMatch(demoProject, confirmed).confidence).toBe("high");
   });
 
   it("mengecualikan kriteria unknown dari denominator", () => {

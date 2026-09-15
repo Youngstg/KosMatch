@@ -4,7 +4,7 @@ const confirmed = (amount: number): MoneyValue => ({ amount, origin: "confirmed"
 const estimated = (amount: number): MoneyValue => ({ amount, origin: "estimated" });
 const unknown = (): MoneyValue => ({ amount: null, origin: "unknown" });
 
-export const DEMO_DISCLAIMER = "Semua nama, harga, area, dan ketersediaan dalam data contoh ini bersifat fiktif.";
+export const DEMO_DISCLAIMER = "Nama, harga, alamat, dan ketersediaan pada data contoh ini bersifat fiktif.";
 
 export const demoProject: ComparisonProject = {
   id: "demo-project-jakarta",

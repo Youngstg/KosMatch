@@ -2,6 +2,7 @@
   "name": "kostmatch",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "description": "Alat bantu perbandingan kos yang transparan dan explainable",
   "scripts": {
     "dev": "next dev",
@@ -10,7 +11,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "idb": "^8.0.3",
@@ -21,6 +23,8 @@
     "zod": "^4.6.4"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
@@ -29,6 +33,7 @@
     "@types/react-dom": "^19.2.0",
     "eslint": "^9.39.0",
     "eslint-config-next": "^16.3.5",
+    "fake-indexeddb": "^6.2.5",
     "jsdom": "^27.0.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.0",

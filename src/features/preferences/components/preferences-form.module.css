@@ -1,0 +1,434 @@
+.root {
+  width: min(720px, 100%);
+  margin-inline: auto;
+  color: var(--text);
+}
+
+.header {
+  margin-bottom: var(--space-5);
+}
+
+.eyebrow {
+  margin: 0 0 var(--space-2);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.intro,
+.explanation {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.intro {
+  margin: var(--space-2) 0 0;
+}
+
+.progress {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+
+.progress li {
+  display: flex;
+  min-width: 0;
+  min-height: 44px;
+  align-items: center;
+  gap: var(--space-2);
+  border-top: 5px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.progress .currentStep {
+  border-color: var(--primary);
+  color: var(--text);
+}
+
+.stepNumber {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--surface-subtle);
+  color: var(--text);
+}
+
+.currentStep .stepNumber {
+  background: var(--primary);
+  color: var(--surface);
+}
+
+.form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.stepPanel {
+  min-width: 0;
+  margin: 0;
+  padding: var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+}
+
+.stepPanel > legend {
+  padding: 0 var(--space-2);
+  font-size: 1.125rem;
+  font-weight: 800;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.field {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.field label,
+.choiceLegend,
+.importanceGroup legend {
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
+.field small {
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.field > input,
+.affixedInput {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.field > input {
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+}
+
+.affixedInput {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.affixedInput span {
+  padding-inline: var(--space-3);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.affixedInput input {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  border: 0;
+  padding: var(--space-2) 0 var(--space-2) var(--space-3);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.field > input:focus-visible,
+.affixedInput:focus-within {
+  outline: 2px solid var(--focus);
+  outline-offset: var(--space-1);
+}
+
+.affixedInput input:focus {
+  outline: 0;
+}
+
+.preferenceSection {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.preferenceSection h2,
+.summary h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.preferenceSection .explanation {
+  margin: calc(-1 * var(--space-1)) 0 var(--space-1);
+}
+
+.choiceCard,
+.importanceGroup {
+  min-width: 0;
+  margin: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+}
+
+.choiceLegend,
+.importanceGroup legend {
+  padding-inline: var(--space-2);
+}
+
+.checkTarget {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+}
+
+.checkTarget input {
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--primary);
+}
+
+.segmented,
+.importanceOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.segmented label,
+.importanceOptions label {
+  position: relative;
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.segmented input,
+.importanceOptions input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.segmented span,
+.importanceOptions span {
+  display: grid;
+  min-width: 44px;
+  min-height: 44px;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.segmented input:checked + span,
+.importanceOptions input:checked + span {
+  border-color: var(--primary);
+  background: var(--secondary);
+  color: var(--primary-hover);
+  font-weight: 800;
+}
+
+.segmented input:focus-visible + span,
+.importanceOptions input:focus-visible + span,
+.checkTarget input:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: var(--space-1);
+}
+
+.importanceList {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.importanceGroup {
+  display: grid;
+  grid-template-columns: minmax(130px, 1fr) auto;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+}
+
+.importanceOutput {
+  grid-column: 1 / -1;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.summary {
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  border-radius: var(--radius-panel);
+  background: var(--surface-subtle);
+}
+
+.summary p {
+  margin: var(--space-3) 0 0;
+  line-height: 1.6;
+}
+
+.summary :where(.intro, .explanation, .status, .importanceOutput) {
+  color: var(--text);
+}
+
+.error {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-control);
+  background: var(--surface-subtle);
+  color: var(--danger);
+}
+
+.error:focus {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.status {
+  min-height: 1.5em;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.actions,
+.secondaryActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.actions {
+  justify-content: space-between;
+}
+
+.primaryButton,
+.secondaryButton {
+  min-height: 44px;
+  border-radius: var(--radius-control);
+  padding: var(--space-2) var(--space-4);
+  font: inherit;
+  font-weight: 750;
+}
+
+.primaryButton {
+  border: 1px solid var(--primary);
+  background: var(--primary);
+  color: var(--surface);
+}
+
+.secondaryButton {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.primaryButton:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.secondaryButton:hover:not(:disabled) {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.primaryButton:focus-visible,
+.secondaryButton:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.primaryButton:disabled,
+.secondaryButton:disabled,
+.stepPanel:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+@media (max-width: 680px) {
+  .stepLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .progress li {
+    justify-content: center;
+  }
+
+  .stepPanel {
+    padding: var(--space-4);
+  }
+
+  .grid,
+  .importanceGroup {
+    grid-template-columns: 1fr;
+  }
+
+  .fullWidth,
+  .importanceOutput {
+    grid-column: auto;
+  }
+
+  .actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .secondaryActions,
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+
+  .secondaryActions {
+    flex-direction: column-reverse;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root *,
+  .root *::before,
+  .root *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}

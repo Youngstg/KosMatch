@@ -100,6 +100,56 @@ Use tabular numerals for aligned currency and cost comparisons.
 - elevation: subtle, reserved for floating layers and the currently selected option;
 - never nest more than two bordered card levels.
 
+### Design tokens (engineering handoff)
+
+All screens must be built from this single token set — no ad-hoc hex values or spacing in component code.
+
+```css
+:root {
+  /* Color */
+  --background: #F7F8FC;
+  --surface: #FFFFFF;
+  --surface-subtle: #F0F2F8;
+  --primary: #4F46E5;
+  --primary-hover: #3730A3;
+  --secondary: #E9E7FF;
+  --accent: #0F766E;
+  --text: #182033;
+  --text-muted: #667085;
+  --border: #DDE1EA;
+  --warning: #A15C07;
+  --danger: #B42318;
+  --focus: #2563EB;
+
+  /* Spacing scale (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Radius */
+  --radius-panel: 16px;
+  --radius-control: 10px;
+  --radius-pill: 999px;
+
+  /* Elevation */
+  --shadow-card: 0 1px 2px rgba(24, 32, 51, 0.04), 0 1px 3px rgba(24, 32, 51, 0.06);
+  --shadow-floating: 0 8px 24px rgba(24, 32, 51, 0.12);
+
+  /* Motion */
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 220ms;
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+```
+
+Semua nilai spacing di komponen (padding, gap, margin) harus kelipatan `--space-*`, tidak ada angka bebas di luar skala.
+
 ## 4. Layout System
 
 ### Breakpoints
@@ -153,11 +203,38 @@ Sections:
 
 Hero copy:
 
-> **Kos murah belum tentu paling hemat.**  
+> **Kos murah belum tentu paling hemat.**
 > Bandingkan biaya bulanan, perjalanan, fasilitas, dan kebutuhan pribadi dalam satu keputusan yang transparan.
 
-Primary CTA: `Mulai Perbandingan`  
+Primary CTA: `Mulai Perbandingan`
 Secondary CTA: `Coba Data Contoh`
+
+**Wireframe (desktop, ringkas):**
+
+```text
+┌─────────────────────────────────────────────────────────┐
+│ KosMatch                         Masuk    [Mulai Perbandingan] │
+├─────────────────────────────────────────────────────────┤
+│   Kos murah belum tentu paling hemat.                    │
+│   Bandingkan biaya bulanan, perjalanan, fasilitas,        │
+│   dan kebutuhan pribadi dalam satu keputusan transparan.  │
+│                                                             │
+│   [ Mulai Perbandingan ]   [ Coba Data Contoh ]            │
+│                                                             │
+│   ┌───────────────┐  ← preview kartu perbandingan          │
+│   │ 86% cocok      │                                       │
+│   │ Rp1.850.000/bln│                                       │
+│   └───────────────┘                                        │
+├─────────────────────────────────────────────────────────┤
+│ Kenapa harga sewa saja tidak cukup? (3 langkah singkat)    │
+├─────────────────────────────────────────────────────────┤
+│ Skor yang transparan — bukan sekadar rating bintang        │
+├─────────────────────────────────────────────────────────┤
+│ *Data pada demo bersifat fiktif untuk ilustrasi            │
+├─────────────────────────────────────────────────────────┤
+│ [Mulai Perbandingan]                             Footer    │
+└─────────────────────────────────────────────────────────┘
+```
 
 ### 5.2 Preference onboarding
 
@@ -239,7 +316,7 @@ Top section:
 - count of eligible options;
 - `Tambah pilihan` action.
 
-Group A: `Memenuhi kebutuhan wajib`  
+Group A: `Memenuhi kebutuhan wajib`
 Group B: `Perlu dipertimbangkan ulang`
 
 Each option card contains:
@@ -257,6 +334,26 @@ Each option card contains:
 
 Do not use large property photos as the main ranking cue. One optional thumbnail is enough because this is a decision tool.
 
+**Wireframe (option card, desktop & mobile identik secara konten):**
+
+```text
+┌───────────────────────────────────────────┐
+│ Kos Anggrek 12 · Menteng                   │
+│                                             │
+│ 86% cocok            Keyakinan data: Tinggi│
+│                                             │
+│ Rp2.150.000/bln estimasi   (sewa Rp1.900.000)│
+│ 18 menit ke Kantor Kuningan                 │
+│ ✓ Wi-Fi   ✓ Kamar mandi dalam               │
+│                                             │
+│ + Sesuai anggaran, dekat kantor             │
+│ + Wi-Fi & kamar mandi dalam tersedia        │
+│ ! Biaya listrik belum diketahui             │
+│                                             │
+│ [Detail]   [Bandingkan]   [☆ Shortlist]     │
+└───────────────────────────────────────────┘
+```
+
 ### 5.6 Accommodation detail
 
 Information hierarchy:
@@ -273,7 +370,7 @@ Use horizontal criterion bars with numeric/text alternatives. Avoid radar charts
 
 Example explanation:
 
-> **Mengapa skornya 86?**  
+> **Mengapa skornya 86?**
 > Biaya dan perjalanan sesuai prioritas utama Anda. Empat dari lima fasilitas pilihan tersedia. Biaya listrik belum masuk karena datanya belum diketahui.
 
 ### 5.7 Compare view
@@ -292,7 +389,7 @@ Example explanation:
 - option selector at top;
 - one criterion group at a time;
 - stacked cards with identical order;
-- optional “show differences only” toggle;
+- optional "show differences only" toggle;
 - do not require horizontal scrolling for core information.
 
 Comparison groups:
@@ -464,7 +561,48 @@ Autosave must show `Menyimpan…`, `Tersimpan`, or `Gagal menyimpan`. Do not cla
 - Show formulas in plain language before mathematical notation.
 - Destructive actions state whether they affect one option or the whole project.
 
-## 13. Motion
+## 13. Indonesian Microcopy Library
+
+Gunakan istilah ini secara konsisten di semua layar — jangan variasikan kata untuk konsep yang sama.
+
+| Konteks | Teks |
+| --- | --- |
+| CTA utama landing | `Mulai Perbandingan` |
+| CTA sekunder landing | `Coba Data Contoh` |
+| Tambah pilihan | `Tambah Pilihan` |
+| Simpan draf | `Simpan Draf` |
+| Terapkan simulasi | `Terapkan Perubahan` |
+| Status autosave — proses | `Menyimpan…` |
+| Status autosave — sukses | `Tersimpan` |
+| Status autosave — gagal | `Gagal menyimpan` |
+| Grup memenuhi syarat | `Memenuhi kebutuhan wajib` |
+| Grup tidak memenuhi syarat | `Perlu dipertimbangkan ulang` |
+| Peringatan syarat wajib hilang | `Belum memenuhi kebutuhan wajib` |
+| Label nilai kosong | `Belum diketahui` |
+| Label keyakinan data — tinggi/sedang/rendah | `Keyakinan data: Tinggi` / `Sedang` / `Rendah` |
+| Label kepentingan (importance control) | `Tidak penting` → `Sedikit penting` → `Cukup penting` → `Penting` → `Sangat penting` |
+| Toggle perbedaan saja (mobile compare) | `Tampilkan perbedaan saja` |
+| Empty state dashboard | `Belum ada pilihan kos. Tambahkan yang pertama atau coba data contoh.` |
+| Konfirmasi hapus (satu opsi) | `Hapus pilihan kos ini? Tindakan ini hanya memengaruhi opsi ini, bukan seluruh proyek.` |
+| Konfirmasi hapus (seluruh proyek) | `Hapus seluruh proyek perbandingan? Semua pilihan dan catatan akan hilang.` |
+| Disclaimer demo | `Nama, harga, alamat, dan ketersediaan pada data contoh ini bersifat fiktif.` |
+
+## 14. Page-to-Component Map
+
+Referensi cepat untuk engineering — komponen mana dipakai di layar mana.
+
+| Layar | Komponen utama |
+| --- | --- |
+| Landing page | `AppShell` (varian publik), `InlineAlert` (disclaimer demo) |
+| Onboarding preferensi | `StepProgress`, `CurrencyField`, `ImportanceControl`, `RequirementChip` |
+| Dashboard kosong | `EmptyState`, `PreferenceSummary` |
+| Tambah/edit opsi | `CurrencyField`, `UnknownValue`, `SkeletonState`, `Toast` |
+| Results overview | `OptionCard`, `EligibilityBadge`, `ConfidenceBadge`, `MatchScore` |
+| Detail akomodasi | `CriterionScoreRow`, `CostBreakdown`, `VerificationStatus` |
+| Compare view | `ComparisonGrid` (desktop), `MobileComparisonSection` (mobile) |
+| Decision board | `DecisionNoteCard`, `ConfirmationDialog` |
+
+## 15. Motion
 
 - use 150–220 ms transitions;
 - animate score changes only after user input settles;
@@ -472,7 +610,7 @@ Autosave must show `Menyimpan…`, `Tersimpan`, or `Gagal menyimpan`. Do not cla
 - no looping decorative motion in the application;
 - disable non-essential motion when reduced motion is requested.
 
-## 14. Fictional Demo Scenario
+## 16. Fictional Demo Scenario
 
 Project: `Kos untuk Magang di Jakarta`
 
@@ -494,7 +632,7 @@ Options:
 
 Every demo surface must state that names, prices, addresses, and availability are fictional.
 
-## 15. Design Deliverables
+## 17. Design Deliverables
 
 Before declaring the design complete, produce:
 
@@ -506,4 +644,3 @@ Before declaring the design complete, produce:
 - loading, empty, error, unknown-data, and read-only states;
 - score-explanation prototype;
 - at least one documented iteration from real feedback or a clearly labeled heuristic review.
-
