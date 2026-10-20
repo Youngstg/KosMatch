@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  build:
-    name: Test & Build
+  build-and-deploy:
+    name: Build & Deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -31,28 +31,6 @@ jobs:
       - name: Build Next.js App
         run: npm run build
 
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: kostmatch-build
-          path: |
-            .next/
-            public/
-            package.json
-            package-lock.json
-          retention-days: 1
-
-  deploy:
-    name: Deploy via SSH
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: kostmatch-build
-
       - name: Deploy to Tencent Cloud Server
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -62,12 +40,11 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H "$SERVER_IP" >> ~/.ssh/known_hosts 2>/dev/null || true
 
           echo "Ensuring remote directory exists..."
           ssh -o StrictHostKeyChecking=no "$SERVER_USER@$SERVER_IP" "mkdir -p /var/www/kostmatch"
 
-          echo "Syncing build files..."
+          echo "Syncing build files to server..."
           rsync -avz -e "ssh -o StrictHostKeyChecking=no" --delete .next/ "$SERVER_USER@$SERVER_IP:/var/www/kostmatch/.next/"
           rsync -avz -e "ssh -o StrictHostKeyChecking=no" public/ "$SERVER_USER@$SERVER_IP:/var/www/kostmatch/public/"
           scp -o StrictHostKeyChecking=no package.json package-lock.json "$SERVER_USER@$SERVER_IP:/var/www/kostmatch/"
