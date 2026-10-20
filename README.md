@@ -1,82 +1,89 @@
-# KosMatch
+# 🏠 KosMatch — Smart & Transparent Kost Decision Support System
 
-KosMatch adalah aplikasi web pendukung keputusan untuk membandingkan pilihan kos berdasarkan biaya bulanan sebenarnya, perjalanan, fasilitas wajib, lingkungan, dan kecocokan aturan. KosMatch bukan marketplace dan tidak memilihkan “kos terbaik” secara mutlak.
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Live%20Production-success?style=for-the-badge" alt="Production Status" />
+  <img src="https://img.shields.io/badge/Next.js-16.3-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-5.9-blue?style=for-the-badge&logo=typescript" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/TailwindCSS-v4-38bdf8?style=for-the-badge&logo=tailwindcss" alt="TailwindCSS" />
+  <img src="https://img.shields.io/badge/Storage-Client--Side%20IndexedDB-orange?style=for-the-badge" alt="Storage" />
+</p>
 
-![Tampilan landing KosMatch](public/screenshots/landing-desktop-chromium.png)
+<p align="center">
+  <strong>Alat bantu perbandingan dan pendukung keputusan pemilihan tempat kos yang transparan, objektif, dan mengutamakan privasi pengguna.</strong>
+</p>
 
-## Fitur MVP
+<p align="center">
+  🌐 <strong>Live Demo:</strong> <a href="https://kosmatch.mooo.com" target="_blank">https://kosmatch.mooo.com</a>
+</p>
 
-- penggunaan anonim tanpa sign-up;
-- onboarding preferensi empat langkah dan pengeditan preferensi;
-- beberapa proyek dengan project switcher dan pemulihan proyek aktif;
-- tambah, edit, hapus, dan draft sesi pilihan kos;
-- status biaya `dikonfirmasi`, `perkiraan`, atau `belum diketahui`;
-- kalkulasi biaya bulanan dan biaya awal yang terpisah;
-- eligibility fasilitas wajib, Match Score, confidence, dan penjelasan rule-based;
-- sort, filter, detail, dan perbandingan responsif untuk 2–3 pilihan;
-- shortlist, favorit, pro, kekhawatiran, dan pertanyaan verifikasi;
-- simulator biaya non-mutating dengan aksi penerapan eksplisit;
-- ringkasan print/PDF yang mengecualikan URL serta catatan privat;
-- backup dan pemulihan proyek melalui JSON tervalidasi;
-- data demo fiktif dan halaman metodologi publik.
+---
 
-## Menjalankan proyek
+## 💡 Latar Belakang & Masalah
 
-Persyaratan: Node.js 20.19+, 22.13+, atau versi LTS yang lebih baru direkomendasikan.
+Mencari kos sering kali membingungkan karena informasi biaya yang tersembunyi (listrik, air, iuran sampah, deposit), jarak tempuh harian yang menguras ongkos, serta aturan kos yang tidak transparan. Marketplace kos konvensional umumnya mengarahkan pengguna pada transaksi tanpa memberikan perbandingan objektif berbasis kebutuhan nyata pencari kos.
 
-```bash
-npm install
-npm run dev
+**KosMatch hadir sebagai sistem pendukung keputusan (Decision Support System)**:
+- ❌ **Bukan marketplace** yang menjual/mempromosikan kos sponsor.
+- ❌ **Tidak memaksakan** satu "kos terbaik" secara mutlak.
+- ✅ **Menghitung Total Cost of Living sebenarnya** (Sewa + Utilitas + Biaya Transportasi Harian).
+- ✅ **Menjelaskan alasan di balik setiap penilaian** secara transparan (*explainable scoring*).
+
+---
+
+## ✨ Fitur Unggulan
+
+### 1. 🧮 True Cost Calculator
+Memisahkan dengan tegas antara:
+* **Biaya Bulanan Berulang:** Sewa pokok, utilitas (listrik/air/laundry), dan biaya transportasi pulang-pergi × jumlah hari perjalanan dalam sebulan.
+* **Biaya Awal Masuk:** Uang deposit jaminan, biaya administrasi, dan pembayaran di muka (tidak dicampur ke pengeluaran bulanan).
+
+### 2. 🎯 Weighted Match Score & Confidence Metric
+* **Rule-Based Scoring:** Setiap kriteria (harga, fasilitas wajib, aksesibilitas, aturan malam) dinilai dari 0–100 dengan bobot personal yang dapat disesuaikan.
+* **Confidence Level:** Menunjukkan seberapa lengkap data yang telah diverifikasi langsung oleh pengguna tanpa memanipulasi nilai kecocokan.
+
+### 3. 🛡️ 100% Privacy-First Architecture (Client-Side Storage)
+* Seluruh data proyek, preferensi, dan catatan privat tersimpan secara lokal di **IndexedDB** browser pengguna.
+* **Zero Tracker, Zero Sign-up:** Pengguna tidak perlu mendaftar, memasukkan nomor telepon, atau data sensitif apapun.
+* Tersedia fitur **Export/Import JSON tervalidasi** untuk backup data lintas perangkat.
+
+### 4. 🖨️ Clean Print & PDF Summary
+Menghasilkan ringkasan perbandingan satu halaman yang bersih dan siap cetak untuk didiskusikan bersama orang tua atau rekan, dengan sensor otomatis terhadap catatan privat dan URL mentah.
+
+---
+
+## 🏗️ Arsitektur & Prinsip Desain
+
+```
+[ Browser Client ]
+  ├── Next.js 16 App Router (React 19 Server & Client Components)
+  ├── Local State & Invariant Math Engine (Formula Biaya & Scoring)
+  ├── IndexedDB Storage Layer (Zero Data Ke Server / Full Privacy)
+  └── TailwindCSS v4 Modern Responsive Interface (Mobile & Desktop Viewport)
 ```
 
-Buka `http://localhost:3000`.
+| Prinsip | Implementasi |
+| :--- | :--- |
+| **Explainable AI/Logic** | Rumus penilaian terbuka, transparan, dan dapat diverifikasi di halaman `/methodology`. |
+| **Data Integrity** | Validasi skema ketat menggunakan **Zod** untuk mencegah korupsi data saat impor/ekspor. |
+| **Comprehensive Testing** | Unit test formula via **Vitest** dan End-to-End browser test via **Playwright** (termasuk audit aksesibilitas Axe). |
+| **Automated CI/CD** | Pipeline pengujian dan kompilasi otomatis melalui **GitHub Actions** menuju server **Tencent Cloud**. |
 
-## Quality gates
+---
 
-```bash
-npm run typecheck
-npm run lint
-npm test
-npm run build
-npx playwright install chromium
-npm run test:e2e
-```
+## 🛠️ Tech Stack
 
-Unit dan integration test mencakup kalkulasi biaya, formula pada boundary, invariant skor, confidence, repository in-memory/IndexedDB, simulator, decision tools, serta import/export atomik. Playwright menjalankan core flow pada desktop dan mobile, persistence setelah reload, multi-project switching, viewport 360 px, dan automated axe checks.
+* **Framework:** [Next.js 16](https://nextjs.org/) (App Router, Turbopack)
+* **Library:** [React 19](https://react.dev/), [TypeScript 5](https://www.typescriptlang.org/)
+* **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
+* **Data Validation:** [Zod](https://zod.dev/)
+* **Client Database:** [idb](https://github.com/jakearchibald/idb) (IndexedDB Wrapper)
+* **Testing:** [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/)
+* **Deployment & CI/CD:** GitHub Actions, Nginx Reverse Proxy, Ubuntu Linux, Let's Encrypt SSL
 
-## Cara kerja skor
+---
 
-Setiap kriteria menghasilkan skor 0–100. Skor akhir adalah rata-rata berbobot dari kriteria yang datanya diketahui:
+## 📄 Lisensi & Hak Cipta
 
-```text
-Match Score = Σ(skor kriteria × bobot)
-              / Σ(bobot dengan data diketahui)
-```
-
-Nilai yang belum diketahui tidak dianggap nol dan dikeluarkan dari penyebut. Fasilitas wajib menentukan kelayakan secara terpisah dari skor. Confidence menunjukkan kelengkapan/verifikasi data dan tidak menambah Match Score.
-
-Biaya bulanan terdiri dari sewa, utilitas/layanan berulang, serta biaya transportasi pulang-pergi dikalikan jumlah hari perjalanan. Deposit, administrasi, dan pembayaran sewa pertama ditampilkan sebagai biaya awal masuk, bukan dicampur ke biaya bulanan.
-
-Penjelasan lebih lengkap tersedia di halaman `/methodology`.
-
-## Data dan privasi
-
-Data proyek anonim disimpan pada IndexedDB di perangkat pengguna. Backup JSON hanya diimpor setelah validasi penuh dan konfirmasi; ID baru dibuat untuk menghindari collision. Ringkasan cetak tidak menyertakan source URL atau catatan privat secara default.
-
-KosMatch tidak mengumpulkan dokumen identitas, pembayaran, kredensial pemilik, alamat rumah/kantor yang presisi, ataupun cookie marketplace.
-
-## Batasan
-
-- seluruh data demo sepenuhnya fiktif;
-- biaya, aturan, kualitas, dan ketersediaan harus dikonfirmasi kepada pemilik kos;
-- penilaian lingkungan adalah observasi pribadi pengguna, bukan klaim keamanan;
-- belum ada akun atau sinkronisasi cloud karena merupakan Phase 5 opsional;
-- tidak ada scraping, booking, pembayaran, chat pemilik, marketplace, maupun routing peta real-time;
-- deployment publik membutuhkan akun hosting dan dilakukan terpisah dari source code;
-- riset pengguna asli belum dilakukan dan tidak ada metrik yang direkayasa.
-
-## Dokumen sumber
-
-- `KosMatch-description.md` — kontrak produk;
-- `KosMatch-design.md` — kontrak UX dan visual;
-- `KosMatch-architecture.md` — kontrak teknis.
+Dibuat dengan dedikasi untuk mempermudah kehidupan mahasiswa dan pencari tempat tinggal mandiri.  
+© 2026 **KosMatch**. Hak Cipta Dilindungi.
