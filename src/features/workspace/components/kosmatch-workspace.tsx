@@ -11,7 +11,13 @@ import { FACILITY_DEFINITIONS, RULE_DEFINITIONS } from "@/domain/validation";
 import { CostSimulator } from "@/features/comparison";
 import { DecisionBoard, PrintSummaryView, updateShortlist, type DecisionState } from "@/features/decisions";
 import { PreferencesForm } from "@/features/preferences";
-import { confirmProjectImport, exportProjectAsJson, parseProjectImport } from "@/features/projects/services";
+import {
+  confirmProjectImport,
+  exportProjectAsJson,
+  generateBackupFilename,
+  MAX_IMPORT_SIZE_BYTES,
+  parseProjectImport,
+} from "@/features/projects/services";
 import { formatRupiah } from "@/lib/currency";
 import { calculateDestinationDistance } from "@/domain/distance";
 import { formatDistance } from "@/lib/geo";
@@ -269,7 +275,7 @@ function ProjectWorkspace({ repository, projects, project, initialOptions, onPro
 
 function DataTools({repository,project,options,onProjectDeleted}:{repository:IndexedDbProjectRepository;project:ComparisonProject;options:AccommodationOption[];onProjectDeleted:()=>void}) {
   const [message,setMessage]=useState<string|null>(null);
-  const download=async()=>{const json=await exportProjectAsJson(repository,project.id);const url=URL.createObjectURL(new Blob([json],{type:"application/json"}));const link=document.createElement("a");link.href=url;link.download=`kosmatch-${project.name.toLowerCase().replace(/[^a-z0-9]+/g,"-")}.json`;link.click();URL.revokeObjectURL(url);setMessage("Backup JSON berhasil diunduh.");};
+  const download=async()=>{const json=await exportProjectAsJson(repository,project.id);const url=URL.createObjectURL(new Blob([json],{type:"application/json"}));const link=document.createElement("a");link.href=url;link.download=generateBackupFilename(project.name);link.click();URL.revokeObjectURL(url);setMessage("Backup JSON berhasil diunduh.");};
   return <section><h2 className="section-title">Data dan pemulihan</h2><div className="tool-grid"><article className="panel"><Download size={24}/><h3>Backup proyek</h3><p className="muted">Ekspor proyek dan {options.length} pilihan sebagai JSON tervalidasi.</p><button className="btn btn-secondary" onClick={download}>Unduh backup</button></article><article className="panel"><Printer size={24}/><h3>Ringkasan cetak</h3><p className="muted">Buat PDF melalui dialog cetak browser tanpa URL dan catatan privat.</p><button className="btn btn-secondary" onClick={()=>window.print()}>Cetak ringkasan</button></article><article className="panel danger-zone"><Trash2 size={24}/><h3>Hapus proyek</h3><p className="muted">Menghapus proyek ini beserta semua pilihannya dari perangkat.</p><button className="btn btn-danger" onClick={async()=>{if(!confirm("Hapus seluruh proyek perbandingan? Semua pilihan dan catatan akan hilang."))return;await repository.deleteProject(project.id);onProjectDeleted();}}>Hapus seluruh proyek</button></article></div>{message&&<div className="inline-alert good" role="status">{message}</div>}<div className="print-block"><PrintSummaryView project={project} options={options} selectedOptionIds={options.map((option)=>option.id)}/></div></section>;
 }
 
@@ -303,6 +309,9 @@ export function KosMatchWorkspace() {
 
   useEffect(() => {
     let active = true;
+    if (typeof navigator !== "undefined" && navigator.storage?.persist) {
+      void navigator.storage.persist().catch(() => {});
+    }
     const nextRepository = getBrowserRepository();
     void nextRepository.listProjects().then(async (allProjects) => {
       const activeId = await nextRepository.getSetting<string>("activeProjectId");
@@ -356,6 +365,13 @@ export function KosMatchWorkspace() {
   const importFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+    if (file.size > MAX_IMPORT_SIZE_BYTES) {
+      setError(
+        `Ukuran file import (${Math.round(file.size / 1024)} KB) melebihi batas maksimum ${Math.round(MAX_IMPORT_SIZE_BYTES / (1024 * 1024))} MB.`,
+      );
+      setView("error");
+      return;
+    }
     setImporting(true);
     try {
       const preview = parseProjectImport(await file.text());

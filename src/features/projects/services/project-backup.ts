@@ -73,7 +73,26 @@ export async function exportProjectAsJson(
   return JSON.stringify(backup, null, 2);
 }
 
-export function parseProjectImport(json: string): ProjectImportPreview {
+export const MAX_IMPORT_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
+
+export function generateBackupFilename(projectName: string): string {
+  const clean = projectName
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return `kosmatch-${clean || "backup"}.json`;
+}
+
+export function parseProjectImport(
+  json: string,
+  maxBytes: number = MAX_IMPORT_SIZE_BYTES,
+): ProjectImportPreview {
+  if (json.length > maxBytes) {
+    throw new ProjectImportError(
+      `Ukuran file import (${Math.round(json.length / 1024)} KB) melebihi batas maksimum ${Math.round(maxBytes / (1024 * 1024))} MB.`,
+    );
+  }
+
   let unknownPayload: unknown;
   try {
     unknownPayload = JSON.parse(json);
