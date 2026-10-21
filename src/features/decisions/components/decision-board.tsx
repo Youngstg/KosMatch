@@ -7,6 +7,8 @@ import type {
   VerificationQuestion,
   VerificationStatus,
 } from "@/domain/entities";
+import { calculateCost } from "@/domain/costing";
+import { formatRupiah } from "@/lib/currency";
 import {
   VERIFICATION_STATUSES,
   addVerificationQuestion,
@@ -113,6 +115,16 @@ function DecisionOptionCard({
   const [concernText, setConcernText] = useState("");
   const favorite = state.project.favoriteOptionId === option.id;
 
+  const cost = calculateCost(state.project, option);
+  const savings =
+    !cost.hasUnknownMonthlyValues && cost.knownMonthlyTotal <= state.project.monthlyBudget
+      ? state.project.monthlyBudget - cost.knownMonthlyTotal
+      : null;
+  const overBudget =
+    !cost.hasUnknownMonthlyValues && cost.knownMonthlyTotal > state.project.monthlyBudget
+      ? cost.knownMonthlyTotal - state.project.monthlyBudget
+      : null;
+
   const emitOption = (replacement: AccommodationOption) => {
     onChange?.(replaceOption(state, replacement));
   };
@@ -134,6 +146,18 @@ function DecisionOptionCard({
         <div className="badges">
           {favorite ? <span className="badge good">Favorit saat ini</span> : null}
           <span className="badge">Masuk shortlist</span>
+          {savings !== null && savings > 0 ? (
+            <span className="badge good">Hemat {formatRupiah(savings)}/bln</span>
+          ) : null}
+          {savings === 0 ? (
+            <span className="badge">Sesuai anggaran</span>
+          ) : null}
+          {overBudget !== null && overBudget > 0 ? (
+            <span className="badge warn">Lebih {formatRupiah(overBudget)} dari anggaran</span>
+          ) : null}
+          {cost.hasUnknownMonthlyValues ? (
+            <span className="badge warn">Biaya belum lengkap</span>
+          ) : null}
         </div>
         <h3 id={titleId}>{option.name}</h3>
         <span className="muted">{option.area}</span>

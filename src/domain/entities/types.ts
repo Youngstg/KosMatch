@@ -99,6 +99,11 @@ export interface CriterionResult {
   readonly explanation: string;
 }
 
+export interface ScoreRange {
+  readonly min: number;
+  readonly max: number;
+}
+
 export interface MatchResult {
   readonly optionId: string;
   readonly optionName: string;
@@ -107,6 +112,10 @@ export interface MatchResult {
   readonly unknownRequiredFacilities: readonly string[];
   readonly criteria: readonly CriterionResult[];
   readonly score: number | null;
+  readonly scoreRange?: ScoreRange | null;
+  readonly isTentative?: boolean;
+  readonly tentativeWarning?: string | null;
+  readonly savingsVsBudget?: number | null;
   readonly confidence: Confidence;
   readonly strengths: readonly string[];
   readonly tradeoffs: readonly string[];

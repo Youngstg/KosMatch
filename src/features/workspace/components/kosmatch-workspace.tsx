@@ -76,7 +76,15 @@ function Compare({ project, options, matches, requestedOptionId }: { project: Co
       label: "Ringkasan dan kelayakan",
       rows: [
         { label: "Kelayakan", render: (match) => match.eligible ? "Memenuhi kebutuhan wajib" : "Belum memenuhi kebutuhan wajib" },
-        { label: "Skor", render: (match) => match.score === null ? "Belum dapat dihitung" : `${Math.round(match.score)}% cocok` },
+        {
+          label: "Skor",
+          render: (match) =>
+            match.score === null
+              ? "Belum dapat dihitung"
+              : match.isTentative && match.scoreRange && match.scoreRange.min !== match.scoreRange.max
+              ? `${match.scoreRange.min}% – ${match.scoreRange.max}% (perkiraan ${Math.round(match.score)}%)`
+              : `${Math.round(match.score)}% cocok`,
+        },
         ...criteria.map<ComparisonRow>((criterionItem) => ({
           label: `Rincian skor: ${criterionItem.label}`,
           render: (match) => {
@@ -188,11 +196,27 @@ function OptionCard({ project, option, match, onEdit, onDelete, onShortlist, onC
         <span className="muted">{option.area || "Area belum dicatat"}</span>
       </header>
       <div className="score-cost">
-        <div className="score">{match.score === null ? "Belum dapat dihitung" : `${Math.round(match.score)}% cocok`}</div>
+        <div className="score">
+          {match.score === null
+            ? "Belum dapat dihitung"
+            : match.isTentative && match.scoreRange && match.scoreRange.min !== match.scoreRange.max
+            ? `${match.scoreRange.min}% – ${match.scoreRange.max}%`
+            : `${Math.round(match.score)}% cocok`}
+        </div>
         <span className={`badge ${match.confidence === "low" ? "warn" : ""}`}>Keyakinan data: {confidenceLabels[match.confidence]}</span>
       </div>
       <div className="badges">
         <span className={`badge ${match.eligible ? "good" : "bad"}`}>{match.eligible ? <Check size={13} /> : <AlertTriangle size={13} />} {match.eligible ? "Memenuhi kebutuhan wajib" : "Belum memenuhi kebutuhan wajib"}</span>
+        {match.isTentative && (
+          <span className="badge warn" title={match.tentativeWarning ?? undefined}>
+            Estimasi Sementara ({Math.round(match.score ?? 0)}%)
+          </span>
+        )}
+        {match.savingsVsBudget !== null && match.savingsVsBudget !== undefined && match.savingsVsBudget > 0 && (
+          <span className="badge good">
+            Hemat {formatRupiah(match.savingsVsBudget)}/bln
+          </span>
+        )}
         {option.shortlisted && <span className="badge good"><Star size={13} fill="currentColor" /> Shortlist</span>}
       </div>
       <div className="cost">

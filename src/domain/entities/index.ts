@@ -17,6 +17,7 @@ export type {
   MoveInCostField,
   RequirementLevel,
   RulePreference,
+  ScoreRange,
   VerificationQuestion,
   VerificationStatus,
 } from "@/domain/entities/types";
