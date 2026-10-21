@@ -3,6 +3,7 @@ export {
   FACILITY_DEFINITIONS,
   MAX_LAST_CHECKED_FUTURE_MS,
   MAX_RUPIAH,
+  MAX_FIELD_RUPIAH,
   RULE_CODES,
   RULE_DEFINITIONS,
 } from "@/domain/validation/constants";

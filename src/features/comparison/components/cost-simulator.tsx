@@ -4,7 +4,7 @@ import { useId, useMemo, useState, type FormEvent } from "react";
 
 import type { AccommodationOption, ComparisonProject, MoneyValue } from "@/domain/entities";
 import {
-  MAX_RUPIAH,
+  MAX_FIELD_RUPIAH,
   formatRupiah,
 } from "@/lib/currency";
 import {
@@ -84,8 +84,8 @@ function CostSimulatorForm({ project, option, onApply }: CostSimulatorProps) {
     readonly error: string | null;
   } => {
     const parsedDays = parseInteger(commuteDays, 0, 31);
-    const parsedTransport = parseInteger(transportCost, 0, MAX_RUPIAH);
-    const parsedRecurring = parseInteger(recurringAmount, 0, MAX_RUPIAH);
+    const parsedTransport = parseInteger(transportCost, 0, MAX_FIELD_RUPIAH);
+    const parsedRecurring = parseInteger(recurringAmount, 0, MAX_FIELD_RUPIAH);
 
     if (parsedDays === null) {
       return { result: null, error: "Hari perjalanan harus antara 0 dan 31." };
@@ -191,7 +191,7 @@ function CostSimulatorForm({ project, option, onApply }: CostSimulatorProps) {
                 type="number"
                 inputMode="numeric"
                 min={0}
-                max={MAX_RUPIAH}
+                max={MAX_FIELD_RUPIAH}
                 value={transportCost}
                 onChange={(event) => setTransportCost(event.target.value)}
                 aria-describedby={`${headingId}-transport-help`}
@@ -234,7 +234,7 @@ function CostSimulatorForm({ project, option, onApply }: CostSimulatorProps) {
                 type="number"
                 inputMode="numeric"
                 min={0}
-                max={MAX_RUPIAH}
+                max={MAX_FIELD_RUPIAH}
                 value={recurringAmount}
                 onChange={(event) => setRecurringAmount(event.target.value)}
                 aria-describedby={`${headingId}-recurring-help`}

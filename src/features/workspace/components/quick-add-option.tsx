@@ -8,7 +8,7 @@ import { accommodationOptionSchema } from "@/domain/validation";
 import { DistanceSummary } from "@/features/geo/components/distance-summary";
 import { LocationInput } from "@/features/geo/components/location-input";
 import { createEmptyOption, unknownMoney } from "@/features/workspace/option-factory";
-import { MAX_RUPIAH } from "@/lib/currency";
+import { MAX_FIELD_RUPIAH } from "@/lib/currency";
 
 interface QuickAddOptionProps {
   readonly project: ComparisonProject;
@@ -76,7 +76,7 @@ export function QuickAddOption({ project, onSaveAction, onCancelAction, onOpenFu
             <label htmlFor="quick-rent">Harga sewa bulanan</label>
             <div className="input-prefix">
               <span aria-hidden="true">Rp</span>
-              <input id="quick-rent" className="input" type="number" inputMode="numeric" min={0} max={MAX_RUPIAH} value={rentText} onChange={(event) => setRentText(event.target.value)} />
+              <input id="quick-rent" className="input" type="number" inputMode="numeric" min={0} max={MAX_FIELD_RUPIAH} value={rentText} onChange={(event) => setRentText(event.target.value)} />
             </div>
           </div>
           <div className="field">

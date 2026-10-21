@@ -7,14 +7,15 @@ const rupiahFormatter = new Intl.NumberFormat("id-ID", {
 });
 
 export const MAX_RUPIAH = 100_000_000_000;
+export const MAX_FIELD_RUPIAH = 100_000_000;
 
-export function isValidRupiah(value: number): boolean {
-  return Number.isSafeInteger(value) && value >= 0 && value <= MAX_RUPIAH;
+export function isValidRupiah(value: number, max: number = MAX_RUPIAH): boolean {
+  return Number.isSafeInteger(value) && value >= 0 && value <= max;
 }
 
-export function assertRupiah(value: number): number {
-  if (!isValidRupiah(value)) {
-    throw new RangeError(`Nilai Rupiah harus berupa integer antara 0 dan ${MAX_RUPIAH}.`);
+export function assertRupiah(value: number, max: number = MAX_RUPIAH): number {
+  if (!isValidRupiah(value, max)) {
+    throw new RangeError(`Nilai Rupiah harus berupa integer antara 0 dan ${max}.`);
   }
   return value;
 }

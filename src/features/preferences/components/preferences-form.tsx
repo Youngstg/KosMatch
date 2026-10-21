@@ -11,7 +11,7 @@ import type {
 import {
   comparisonProjectSchema,
   FACILITY_DEFINITIONS,
-  MAX_RUPIAH,
+  MAX_FIELD_RUPIAH,
   RULE_DEFINITIONS,
 } from "@/domain/validation";
 import { formatRupiah } from "@/lib/currency";
@@ -149,7 +149,7 @@ function validateStep(step: Step, draft: PreferencesDraft): string | null {
 
   if (step === 2) {
     return (
-      integerError(draft.monthlyBudget, "Anggaran bulanan", 0, MAX_RUPIAH) ??
+      integerError(draft.monthlyBudget, "Anggaran bulanan", 0, MAX_FIELD_RUPIAH) ??
       integerError(draft.maxOneWayCommuteMinutes, "Batas perjalanan", 0, 360)
     );
   }
@@ -159,7 +159,7 @@ function validateStep(step: Step, draft: PreferencesDraft): string | null {
 
 function displayBudget(value: string): string {
   const parsed = parseInteger(value);
-  return Number.isInteger(parsed) && parsed >= 0 && parsed <= MAX_RUPIAH
+  return Number.isInteger(parsed) && parsed >= 0 && parsed <= MAX_FIELD_RUPIAH
     ? formatRupiah(parsed)
     : "belum valid";
 }
@@ -409,7 +409,7 @@ export function PreferencesForm(props: PreferencesFormProps) {
                     inputMode="numeric"
                     required
                     min={0}
-                    max={MAX_RUPIAH}
+                    max={MAX_FIELD_RUPIAH}
                     step={1}
                     value={draft.monthlyBudget}
                     onChange={(event) => updateDraft("monthlyBudget", event.target.value)}

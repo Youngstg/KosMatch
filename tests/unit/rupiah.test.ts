@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { MAX_RUPIAH, assertRupiah, formatRupiah, isValidRupiah } from "@/lib/currency";
+import { MAX_FIELD_RUPIAH, MAX_RUPIAH, assertRupiah, formatRupiah, isValidRupiah } from "@/lib/currency";
 
 describe("Rupiah", () => {
   it("memformat integer tanpa desimal atau spasi", () => {
@@ -10,8 +10,11 @@ describe("Rupiah", () => {
 
   it("menerima hanya integer non-negatif dalam batas aman domain", () => {
     expect(isValidRupiah(MAX_RUPIAH)).toBe(true);
+    expect(isValidRupiah(MAX_FIELD_RUPIAH, MAX_FIELD_RUPIAH)).toBe(true);
+    expect(isValidRupiah(MAX_FIELD_RUPIAH + 1, MAX_FIELD_RUPIAH)).toBe(false);
     expect(isValidRupiah(-1)).toBe(false);
     expect(isValidRupiah(1.5)).toBe(false);
     expect(() => assertRupiah(MAX_RUPIAH + 1)).toThrow(RangeError);
+    expect(() => assertRupiah(MAX_FIELD_RUPIAH + 1, MAX_FIELD_RUPIAH)).toThrow(RangeError);
   });
 });

@@ -35,4 +35,25 @@ describe("calculateCost", () => {
     calculateCost(demoProject, anggrek);
     expect(anggrek).toEqual(before);
   });
+
+  it("menghitung batas realistis MAX_FIELD_RUPIAH tanpa RangeError", () => {
+    const extremeOption = {
+      ...anggrek,
+      rent: { amount: 100_000_000, origin: "confirmed" as const },
+      electricity: { amount: 100_000_000, origin: "confirmed" as const },
+      water: { amount: 100_000_000, origin: "confirmed" as const },
+      internet: { amount: 100_000_000, origin: "confirmed" as const },
+      laundry: { amount: 100_000_000, origin: "confirmed" as const },
+      otherRecurring: { amount: 100_000_000, origin: "confirmed" as const },
+      roundTripTransportCost: { amount: 100_000_000, origin: "confirmed" as const },
+      deposit: { amount: 100_000_000, origin: "confirmed" as const },
+      administrationFee: { amount: 100_000_000, origin: "confirmed" as const },
+    };
+    const extremeProject = { ...demoProject, commuteDaysPerMonth: 31 };
+
+    expect(() => calculateCost(extremeProject, extremeOption)).not.toThrow();
+    const result = calculateCost(extremeProject, extremeOption);
+    expect(result.knownMonthlyTotal).toBe(3_700_000_000);
+    expect(result.knownMoveInTotal).toBe(300_000_000);
+  });
 });

@@ -5,7 +5,7 @@ import { ArrowLeft, Check, Info, Save } from "lucide-react";
 import type { AccommodationOption, Availability, ComparisonProject, DataOrigin, MoneyValue } from "@/domain/entities";
 import { accommodationOptionSchema, FACILITY_DEFINITIONS, RULE_DEFINITIONS } from "@/domain/validation";
 import { calculateCost } from "@/domain/costing";
-import { formatRupiah, MAX_RUPIAH } from "@/lib/currency";
+import { formatRupiah, MAX_FIELD_RUPIAH } from "@/lib/currency";
 import { DistanceSummary } from "@/features/geo/components/distance-summary";
 import { LocationInput } from "@/features/geo/components/location-input";
 import { QuickAddOption } from "@/features/workspace/components/quick-add-option";
@@ -20,7 +20,7 @@ const moveInFields = [["deposit", "Deposit"], ["administrationFee", "Biaya admin
 function MoneyField({ id, label, value, onChange, helper }: { id: string; label: string; value: MoneyValue; onChange: (value: MoneyValue) => void; helper?: string }) {
   const origin = value.origin;
   const setOrigin = (next: DataOrigin) => onChange(next === "unknown" ? unknownMoney() : { amount: value.amount ?? 0, origin: next });
-  return <div className="field"><label htmlFor={id}>{label}</label><div className="money-control"><div className="input-prefix"><span aria-hidden="true">Rp</span><input id={id} className="input" type="number" inputMode="numeric" min={0} max={MAX_RUPIAH} disabled={origin === "unknown"} value={value.amount ?? ""} onChange={(event) => onChange({ amount: Math.max(0, Math.round(Number(event.target.value))), origin: origin === "unknown" ? "estimated" : origin })} /></div><select className="input origin-select" aria-label={`Status data ${label}`} value={origin} onChange={(event) => setOrigin(event.target.value as DataOrigin)}><option value="unknown">Belum diketahui</option><option value="estimated">Perkiraan</option><option value="confirmed">Dikonfirmasi</option></select></div>{helper && <small>{helper}</small>}</div>;
+  return <div className="field"><label htmlFor={id}>{label}</label><div className="money-control"><div className="input-prefix"><span aria-hidden="true">Rp</span><input id={id} className="input" type="number" inputMode="numeric" min={0} max={MAX_FIELD_RUPIAH} disabled={origin === "unknown"} value={value.amount ?? ""} onChange={(event) => onChange({ amount: Math.max(0, Math.round(Number(event.target.value))), origin: origin === "unknown" ? "estimated" : origin })} /></div><select className="input origin-select" aria-label={`Status data ${label}`} value={origin} onChange={(event) => setOrigin(event.target.value as DataOrigin)}><option value="unknown">Belum diketahui</option><option value="estimated">Perkiraan</option><option value="confirmed">Dikonfirmasi</option></select></div>{helper && <small>{helper}</small>}</div>;
 }
 
 function restoreDraft(projectId: string, initialOption: AccommodationOption | undefined, draftKey: string, seed?: AccommodationOption): AccommodationOption {

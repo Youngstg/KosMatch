@@ -6,6 +6,7 @@ import {
   FACILITY_DEFINITIONS,
   MAX_LAST_CHECKED_FUTURE_MS,
   MAX_RUPIAH,
+  MAX_FIELD_RUPIAH,
   RULE_CODES,
   RULE_DEFINITIONS,
 } from "@/domain/validation/constants";
@@ -60,8 +61,8 @@ export const geoPointSchema = z
 export const commuteOriginSchema = z.enum(["manual", "estimated"]);
 
 export const moneyValueSchema = z.discriminatedUnion("origin", [
-  z.object({ amount: z.number().int().min(0).max(MAX_RUPIAH), origin: z.literal("confirmed") }).strict(),
-  z.object({ amount: z.number().int().min(0).max(MAX_RUPIAH), origin: z.literal("estimated") }).strict(),
+  z.object({ amount: z.number().int().min(0).max(MAX_FIELD_RUPIAH), origin: z.literal("confirmed") }).strict(),
+  z.object({ amount: z.number().int().min(0).max(MAX_FIELD_RUPIAH), origin: z.literal("estimated") }).strict(),
   z.object({ amount: z.null(), origin: z.literal("unknown") }).strict(),
 ]);
 
@@ -114,7 +115,7 @@ export const comparisonProjectSchema: z.ZodType<ComparisonProject> = z
     name: requiredTrimmedString(80),
     destinationLabel: requiredTrimmedString(120),
     destinationPoint: geoPointSchema.nullable().default(null),
-    monthlyBudget: z.number().int().min(0).max(MAX_RUPIAH),
+    monthlyBudget: z.number().int().min(0).max(MAX_FIELD_RUPIAH),
     maxOneWayCommuteMinutes: z.number().int().min(0).max(360),
     commuteDaysPerMonth: z.number().int().min(0).max(31),
     weights: z
@@ -199,6 +200,29 @@ export const accommodationOptionSchema: z.ZodType<AccommodationOption> = z
     }
     if (Date.parse(option.updatedAt) < Date.parse(option.createdAt)) {
       context.addIssue({ code: "custom", path: ["updatedAt"], message: "updatedAt tidak boleh sebelum createdAt." });
+    }
+    const monthlyAmounts = [
+      option.rent.amount,
+      option.electricity.amount,
+      option.water.amount,
+      option.internet.amount,
+      option.laundry.amount,
+      option.otherRecurring.amount,
+    ].filter((v): v is number => typeof v === "number");
+    const sumMonthly = monthlyAmounts.reduce((acc, curr) => acc + curr, 0);
+    const transportAmount = option.roundTripTransportCost.amount ?? 0;
+    const maxMonthlyWithTransport = sumMonthly + (transportAmount * 31);
+    if (maxMonthlyWithTransport > MAX_RUPIAH) {
+      context.addIssue({ code: "custom", path: ["rent"], message: "Total estimasi biaya bulanan melebihi batas sistem." });
+    }
+    const moveInAmounts = [
+      option.deposit.amount,
+      option.administrationFee.amount,
+      option.rent.amount,
+    ].filter((v): v is number => typeof v === "number");
+    const sumMoveIn = moveInAmounts.reduce((acc, curr) => acc + curr, 0);
+    if (sumMoveIn > MAX_RUPIAH) {
+      context.addIssue({ code: "custom", path: ["deposit"], message: "Total biaya awal masuk melebihi batas sistem." });
     }
   });
 

@@ -1,4 +1,4 @@
-export { MAX_RUPIAH } from "@/lib/currency";
+export { MAX_RUPIAH, MAX_FIELD_RUPIAH } from "@/lib/currency";
 
 export const MAX_LAST_CHECKED_FUTURE_MS = 24 * 60 * 60 * 1_000;
 
