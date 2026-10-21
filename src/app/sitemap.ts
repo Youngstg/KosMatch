@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://kosmatch.mooo.com";
+  const baseUrl = "https://kosmatch.us.ci";
 
   return [
     {

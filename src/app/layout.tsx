@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://kosmatch.mooo.com"),
+  metadataBase: new URL("https://kosmatch.us.ci"),
   title: {
     default: "KosMatch — Bandingkan Biaya Kos Sebenarnya & Sistem Pendukung Keputusan",
     template: "%s | KosMatch",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "id_ID",
-    url: "https://kosmatch.mooo.com",
+    url: "https://kosmatch.us.ci",
     title: "KosMatch — Bandingkan Biaya Kos Sebenarnya",
     description:
       "Kalkulator biaya hidup dan alat bantu perbandingan kos transparan berbasis kebutuhan nyata dan privasi 100%.",
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     images: ["/screenshots/landing-desktop-chromium.png"],
   },
   alternates: {
-    canonical: "https://kosmatch.mooo.com",
+    canonical: "https://kosmatch.us.ci",
   },
 };
 

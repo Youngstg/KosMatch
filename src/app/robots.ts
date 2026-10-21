@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
       },
     ],
-    sitemap: "https://kosmatch.mooo.com/sitemap.xml",
+    sitemap: "https://kosmatch.us.ci/sitemap.xml",
   };
 }
