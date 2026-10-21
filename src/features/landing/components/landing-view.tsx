@@ -30,6 +30,12 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
             <a className="btn btn-ghost" href="/explore">
               Peta Eksplorasi
             </a>
+            <a className="btn btn-ghost" href="/listings/new">
+              Tambah Kos
+            </a>
+            <a className="btn btn-ghost" href="/auth/login">
+              Akun
+            </a>
             <a className="btn btn-ghost" href="/methodology">
               Metodologi
             </a>

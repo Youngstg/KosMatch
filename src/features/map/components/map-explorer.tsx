@@ -227,6 +227,12 @@ export function MapExplorer() {
             </span>
           </div>
           <div className="actions compact">
+            <Link className="btn btn-ghost" href="/listings/new">
+              Tambah Kos
+            </Link>
+            <Link className="btn btn-ghost" href="/auth/login">
+              Akun
+            </Link>
             <Link className="btn btn-ghost" href="/">
               <ArrowLeft size={16} /> Beranda
             </Link>
