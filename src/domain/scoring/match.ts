@@ -45,7 +45,8 @@ function calculateConfidence(project: ComparisonProject, option: AccommodationOp
     option.roundTripTransportCost,
   ].every((value) => value.origin === "confirmed" && value.amount !== null);
   const commuteKnown = option.oneWayCommuteMinutes !== null;
-  if (completeness >= 0.9 && rentConfirmed && recurringAndTransportConfirmed && commuteKnown) return "high";
+  const commuteConfirmed = commuteKnown && option.commuteOrigin !== "estimated";
+  if (completeness >= 0.9 && rentConfirmed && recurringAndTransportConfirmed && commuteConfirmed) return "high";
   if (completeness >= 0.65 && unknown <= 1 && option.rent.amount !== null && commuteKnown) return "medium";
   return "low";
 }

@@ -9,8 +9,10 @@ export {
 export {
   accommodationOptionSchema,
   availabilitySchema,
+  commuteOriginSchema,
   comparisonProjectSchema,
   facilityCodeSchema,
+  geoPointSchema,
   idSchema,
   importanceSchema,
   isoDateTimeSchema,

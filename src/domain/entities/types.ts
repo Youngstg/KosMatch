@@ -1,3 +1,5 @@
+import type { GeoPoint } from "@/lib/geo";
+
 export type Importance = 1 | 2 | 3 | 4 | 5;
 export type CriterionKey = "cost" | "commute" | "facilities" | "environment" | "ruleFit";
 export type DataOrigin = "confirmed" | "estimated" | "unknown";
@@ -5,6 +7,8 @@ export type RequirementLevel = "required" | "desired";
 export type VerificationStatus = "unverified" | "confirmed" | "changed";
 export type Availability = boolean | "unknown";
 export type Confidence = "high" | "medium" | "low";
+export type CommuteOrigin = "manual" | "estimated";
+export type { GeoPoint };
 
 export type MoneyValue =
   | Readonly<{ amount: number; origin: Exclude<DataOrigin, "unknown"> }>
@@ -32,6 +36,7 @@ export interface ComparisonProject {
   readonly id: string;
   readonly name: string;
   readonly destinationLabel: string;
+  readonly destinationPoint: GeoPoint | null;
   readonly monthlyBudget: number;
   readonly maxOneWayCommuteMinutes: number;
   readonly commuteDaysPerMonth: number;
@@ -59,6 +64,8 @@ export interface AccommodationOption {
   readonly deposit: MoneyValue;
   readonly administrationFee: MoneyValue;
   readonly oneWayCommuteMinutes: number | null;
+  readonly commuteOrigin: CommuteOrigin | null;
+  readonly location: GeoPoint | null;
   readonly roundTripTransportCost: MoneyValue;
   readonly facilityCodes: readonly string[];
   readonly facilityValues: Readonly<Record<string, Availability>>;

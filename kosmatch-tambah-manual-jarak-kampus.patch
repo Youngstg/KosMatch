@@ -1,0 +1,1335 @@
+diff --git a/src/app/globals.css b/src/app/globals.css
+index e09d7ad..a3dac0c 100644
+--- a/src/app/globals.css
++++ b/src/app/globals.css
+@@ -221,3 +221,11 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
+ @media (max-width: 767px) { .compare-desktop { display: none; } .compare-mobile { display: block; } .footer-note .container { align-items: flex-start; flex-direction: column; } }
+ @media print { body { background: var(--surface); } .no-print, .topbar, .nav-tabs, .summary-strip, .disclaimer, .floating-import, .tool-grid, .inline-alert { display: none !important; } .container { width: 100%; } .workspace { padding: 0; } .print-block { display: block; margin: 0; } .print-summary > .panel { border: 0; padding: 0; } }
+ @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
++
++/* Lokasi, jarak, dan pemilih kampus */
++.location-input .input-prefix { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
++.location-input .input-prefix .input { flex: 1 1 14rem; min-width: 0; }
++.location-chosen { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 0.35rem; }
++.distance-summary { margin-top: 0.75rem; }
++.distance-summary dl { margin: 0.5rem 0; }
++.campus-picker { display: grid; gap: 0.75rem; }
+diff --git a/src/app/methodology/page.tsx b/src/app/methodology/page.tsx
+index c45cc1b..b27e188 100644
+--- a/src/app/methodology/page.tsx
++++ b/src/app/methodology/page.tsx
+@@ -1,6 +1,6 @@
+ import Link from "next/link";
+-import { ArrowLeft, Calculator, CircleHelp, Database, Scale } from "lucide-react";
++import { ArrowLeft, Calculator, CircleHelp, Database, Scale, MapPin } from "lucide-react";
+ 
+ export default function MethodologyPage() {
+-  return <main className="container methodology"><Link className="btn btn-ghost" href="/"><ArrowLeft size={18}/> Kembali ke KosMatch</Link><div className="methodology-hero"><div className="eyebrow">Metodologi terbuka</div><h1>Skor membantu menjelaskan, bukan menentukan.</h1><p className="lead">KosMatch menggunakan aturan deterministik berdasarkan data dan prioritas yang Anda masukkan. Tidak ada scraping, machine learning, atau fakta kos yang dibuat otomatis.</p></div><div className="method-grid"><section className="panel"><Calculator size={24}/><h2>Biaya sebenarnya</h2><p>Estimasi bulanan menjumlahkan sewa, listrik, air, internet, laundry, biaya rutin lain, dan transportasi pulang-pergi × hari perjalanan. Deposit, administrasi, dan pembayaran sewa pertama ditampilkan terpisah sebagai biaya awal.</p></section><section className="panel"><Scale size={24}/><h2>Kelayakan dan skor</h2><p>Fasilitas wajib menentukan kelayakan sebelum ranking. Setiap kriteria yang datanya diketahui menghasilkan skor 0–100, lalu dihitung sebagai rata-rata berbobot. Data yang belum diketahui dikeluarkan dari penyebut—bukan dianggap nol atau sempurna.</p></section><section className="panel"><Database size={24}/><h2>Keyakinan data</h2><p>Label tinggi, sedang, atau rendah menunjukkan kelengkapan dan status verifikasi. Label ini tidak menaikkan Match Score. Biaya berstatus perkiraan tetap berbeda dari biaya yang telah dikonfirmasi.</p></section><section className="panel"><CircleHelp size={24}/><h2>Batasan</h2><p>Skor tidak menjamin kualitas, keamanan, legalitas, harga, atau ketersediaan kos. Penilaian lingkungan berasal dari pengguna. Seluruh informasi harus dikonfirmasi langsung kepada pemilik sebelum memutuskan.</p></section></div><section className="panel formula"><h2>Rumus ringkas</h2><pre>Match Score = Σ(skor kriteria × bobot) / Σ(bobot dengan data diketahui)</pre><p>Biaya dan perjalanan bernilai 100 selama masih dalam batas. Di atas batas, skor turun proporsional hingga 0 pada dua kali batas. Fasilitas pilihan dan aturan dihitung sebagai persentase kecocokan; lingkungan berasal dari rating 1–5 × 20.</p></section><section className="panel"><h2>Status riset dan iterasi</h2><p>Aplikasi ini belum mengklaim hasil riset pengguna. Implementasi saat ini mengikuti heuristic review terhadap transparansi, unknown-data handling, keyboard navigation, responsive comparison, dan pemisahan kelayakan dari skor. Validasi berikutnya yang disarankan adalah wawancara serta usability test dengan mahasiswa, intern, atau pekerja yang pernah mencari kos di kota baru.</p></section></main>;
++  return <main className="container methodology"><Link className="btn btn-ghost" href="/"><ArrowLeft size={18}/> Kembali ke KosMatch</Link><div className="methodology-hero"><div className="eyebrow">Metodologi terbuka</div><h1>Skor membantu menjelaskan, bukan menentukan.</h1><p className="lead">KosMatch menggunakan aturan deterministik berdasarkan data dan prioritas yang Anda masukkan. Tidak ada scraping, machine learning, atau fakta kos yang dibuat otomatis.</p></div><div className="method-grid"><section className="panel"><Calculator size={24}/><h2>Biaya sebenarnya</h2><p>Estimasi bulanan menjumlahkan sewa, listrik, air, internet, laundry, biaya rutin lain, dan transportasi pulang-pergi × hari perjalanan. Deposit, administrasi, dan pembayaran sewa pertama ditampilkan terpisah sebagai biaya awal.</p></section><section className="panel"><Scale size={24}/><h2>Kelayakan dan skor</h2><p>Fasilitas wajib menentukan kelayakan sebelum ranking. Setiap kriteria yang datanya diketahui menghasilkan skor 0–100, lalu dihitung sebagai rata-rata berbobot. Data yang belum diketahui dikeluarkan dari penyebut—bukan dianggap nol atau sempurna.</p></section><section className="panel"><Database size={24}/><h2>Keyakinan data</h2><p>Label tinggi, sedang, atau rendah menunjukkan kelengkapan dan status verifikasi. Label ini tidak menaikkan Match Score. Biaya berstatus perkiraan tetap berbeda dari biaya yang telah dikonfirmasi.</p></section><section className="panel"><MapPin size={24}/><h2>Jarak ke kampus atau tujuan</h2><p>Jika Anda mengisi titik tujuan dan lokasi kos, KosMatch menghitung jarak garis lurus (rumus haversine) lalu memperkirakan jarak jalan sebagai 1,3 kali garis lurus. Waktu tempuh dihitung dari kecepatan rata-rata 4,5 km/jam (jalan kaki) dan 22 km/jam (motor). Ini perkiraan kasar, bukan hasil rute sebenarnya: macet, jalan satu arah, dan medan tidak dihitung. Waktu yang diambil dari perkiraan ini ditandai “perkiraan”, sehingga tidak menaikkan keyakinan data ke tingkat tinggi. Titik kampus bawaan juga perkiraan; sesuaikan ke gerbang atau fakultas yang Anda tuju.</p></section><section className="panel"><CircleHelp size={24}/><h2>Batasan</h2><p>Skor tidak menjamin kualitas, keamanan, legalitas, harga, atau ketersediaan kos. Penilaian lingkungan berasal dari pengguna. Seluruh informasi harus dikonfirmasi langsung kepada pemilik sebelum memutuskan.</p></section></div><section className="panel formula"><h2>Rumus ringkas</h2><pre>Match Score = Σ(skor kriteria × bobot) / Σ(bobot dengan data diketahui)</pre><p>Biaya dan perjalanan bernilai 100 selama masih dalam batas. Di atas batas, skor turun proporsional hingga 0 pada dua kali batas. Fasilitas pilihan dan aturan dihitung sebagai persentase kecocokan; lingkungan berasal dari rating 1–5 × 20.</p></section><section className="panel"><h2>Status riset dan iterasi</h2><p>Aplikasi ini belum mengklaim hasil riset pengguna. Implementasi saat ini mengikuti heuristic review terhadap transparansi, unknown-data handling, keyboard navigation, responsive comparison, dan pemisahan kelayakan dari skor. Validasi berikutnya yang disarankan adalah wawancara serta usability test dengan mahasiswa, intern, atau pekerja yang pernah mencari kos di kota baru.</p></section></main>;
+ }
+diff --git a/src/data/campuses.ts b/src/data/campuses.ts
+new file mode 100644
+index 0000000..3added2
+--- /dev/null
++++ b/src/data/campuses.ts
+@@ -0,0 +1,32 @@
++import type { GeoPoint } from "@/lib/geo";
++
++export interface Campus extends GeoPoint {
++  readonly id: string;
++  readonly name: string;
++  readonly shortName: string;
++  readonly city: string;
++}
++
++/**
++ * Titik kampus PERKIRAAN (±1 km) dan BELUM diverifikasi satu per satu.
++ * Pengguna harus memeriksa titik di peta dan menyesuaikannya ke gerbang/fakultas yang dituju.
++ * Daftar ini sengaja pendek; tambahkan lewat PR setelah koordinatnya diverifikasi.
++ */
++export const CAMPUSES: readonly Campus[] = [
++  { id: "ui-depok", name: "Universitas Indonesia (Depok)", shortName: "UI", city: "Depok", latitude: -6.362, longitude: 106.827 },
++  { id: "itb-ganesha", name: "Institut Teknologi Bandung (Ganesha)", shortName: "ITB", city: "Bandung", latitude: -6.8915, longitude: 107.6107 },
++  { id: "unpad-jatinangor", name: "Universitas Padjadjaran (Jatinangor)", shortName: "Unpad", city: "Sumedang", latitude: -6.927, longitude: 107.7716 },
++  { id: "ipb-dramaga", name: "IPB University (Dramaga)", shortName: "IPB", city: "Bogor", latitude: -6.558, longitude: 106.725 },
++  { id: "ugm-bulaksumur", name: "Universitas Gadjah Mada", shortName: "UGM", city: "Sleman", latitude: -7.7713, longitude: 110.3774 },
++  { id: "undip-tembalang", name: "Universitas Diponegoro (Tembalang)", shortName: "Undip", city: "Semarang", latitude: -7.0504, longitude: 110.438 },
++  { id: "uns-kentingan", name: "Universitas Sebelas Maret (Kentingan)", shortName: "UNS", city: "Surakarta", latitude: -7.5612, longitude: 110.8572 },
++  { id: "its-sukolilo", name: "Institut Teknologi Sepuluh Nopember", shortName: "ITS", city: "Surabaya", latitude: -7.2819, longitude: 112.7949 },
++  { id: "ub-malang", name: "Universitas Brawijaya", shortName: "UB", city: "Malang", latitude: -7.9522, longitude: 112.614 },
++  { id: "usu-medan", name: "Universitas Sumatera Utara", shortName: "USU", city: "Medan", latitude: -3.5597, longitude: 98.6563 },
++  { id: "unand-limau-manis", name: "Universitas Andalas (Limau Manis)", shortName: "Unand", city: "Padang", latitude: -0.9143, longitude: 100.4602 },
++  { id: "unhas-tamalanrea", name: "Universitas Hasanuddin (Tamalanrea)", shortName: "Unhas", city: "Makassar", latitude: -5.13, longitude: 119.489 },
++];
++
++export function findCampus(id: string): Campus | undefined {
++  return CAMPUSES.find((campus) => campus.id === id);
++}
+diff --git a/src/data/demo/kosmatch-demo.ts b/src/data/demo/kosmatch-demo.ts
+index 83ca590..7d85022 100644
+--- a/src/data/demo/kosmatch-demo.ts
++++ b/src/data/demo/kosmatch-demo.ts
+@@ -10,6 +10,7 @@ export const demoProject: ComparisonProject = {
+   id: "demo-project-jakarta",
+   name: "Kos untuk Magang di Jakarta",
+   destinationLabel: "Kantor Kuningan",
++  destinationPoint: null,
+   monthlyBudget: 2_500_000,
+   maxOneWayCommuteMinutes: 35,
+   commuteDaysPerMonth: 22,
+@@ -43,6 +44,8 @@ export const demoOptions: readonly AccommodationOption[] = [
+     deposit: confirmed(1_650_000),
+     administrationFee: confirmed(100_000),
+     oneWayCommuteMinutes: 18,
++    commuteOrigin: null,
++    location: null,
+     roundTripTransportCost: estimated(20_000),
+     facilityCodes: ["wifi", "private-bathroom", "nearby-laundry"],
+     facilityValues: { wifi: true, "private-bathroom": true, kitchen: false, "nearby-laundry": true },
+@@ -72,6 +75,8 @@ export const demoOptions: readonly AccommodationOption[] = [
+     deposit: confirmed(1_000_000),
+     administrationFee: unknown(),
+     oneWayCommuteMinutes: 30,
++    commuteOrigin: null,
++    location: null,
+     roundTripTransportCost: estimated(16_000),
+     facilityCodes: ["wifi", "private-bathroom", "kitchen", "nearby-laundry"],
+     facilityValues: { wifi: true, "private-bathroom": true, kitchen: true, "nearby-laundry": true },
+@@ -101,6 +106,8 @@ export const demoOptions: readonly AccommodationOption[] = [
+     deposit: confirmed(1_400_000),
+     administrationFee: confirmed(0),
+     oneWayCommuteMinutes: 48,
++    commuteOrigin: null,
++    location: null,
+     roundTripTransportCost: estimated(24_000),
+     facilityCodes: ["wifi", "kitchen", "nearby-laundry"],
+     facilityValues: { wifi: true, "private-bathroom": false, kitchen: true, "nearby-laundry": true },
+diff --git a/src/domain/distance/calculate-distance.ts b/src/domain/distance/calculate-distance.ts
+new file mode 100644
+index 0000000..a2f42e7
+--- /dev/null
++++ b/src/domain/distance/calculate-distance.ts
+@@ -0,0 +1,29 @@
++import type { AccommodationOption, ComparisonProject } from "@/domain/entities";
++import { estimateMinutes, estimateRoadMeters, haversineMeters } from "@/lib/geo";
++
++export interface DestinationDistance {
++  readonly straightMeters: number;
++  readonly estimatedRoadMeters: number;
++  readonly walkMinutes: number;
++  readonly motorcycleMinutes: number;
++}
++
++/**
++ * Estimasi jarak kos ke tujuan (kampus/kantor) dari dua koordinat.
++ * Ini PERKIRAAN dari garis lurus × faktor kelokan, bukan hasil routing.
++ * Mengembalikan null bila salah satu koordinat belum diisi.
++ */
++export function calculateDestinationDistance(
++  project: Pick<ComparisonProject, "destinationPoint">,
++  option: Pick<AccommodationOption, "location">,
++): DestinationDistance | null {
++  if (project.destinationPoint === null || option.location === null) return null;
++  const straightMeters = Math.round(haversineMeters(option.location, project.destinationPoint));
++  const estimatedRoadMeters = estimateRoadMeters(straightMeters);
++  return {
++    straightMeters,
++    estimatedRoadMeters,
++    walkMinutes: estimateMinutes(estimatedRoadMeters, "walk"),
++    motorcycleMinutes: estimateMinutes(estimatedRoadMeters, "motorcycle"),
++  };
++}
+diff --git a/src/domain/distance/index.ts b/src/domain/distance/index.ts
+new file mode 100644
+index 0000000..f4b0ad3
+--- /dev/null
++++ b/src/domain/distance/index.ts
+@@ -0,0 +1,2 @@
++export { calculateDestinationDistance } from "@/domain/distance/calculate-distance";
++export type { DestinationDistance } from "@/domain/distance/calculate-distance";
+diff --git a/src/domain/entities/index.ts b/src/domain/entities/index.ts
+index 5184478..6ebc138 100644
+--- a/src/domain/entities/index.ts
++++ b/src/domain/entities/index.ts
+@@ -2,12 +2,14 @@ export type {
+   AccommodationOption,
+   Availability,
+   ComparisonProject,
++  CommuteOrigin,
+   Confidence,
+   CostResult,
+   CriterionKey,
+   CriterionResult,
+   DataOrigin,
+   FacilityPreference,
++  GeoPoint,
+   Importance,
+   MatchResult,
+   MoneyValue,
+diff --git a/src/domain/entities/types.ts b/src/domain/entities/types.ts
+index 6d5bd2d..85c01eb 100644
+--- a/src/domain/entities/types.ts
++++ b/src/domain/entities/types.ts
+@@ -1,3 +1,5 @@
++import type { GeoPoint } from "@/lib/geo";
++
+ export type Importance = 1 | 2 | 3 | 4 | 5;
+ export type CriterionKey = "cost" | "commute" | "facilities" | "environment" | "ruleFit";
+ export type DataOrigin = "confirmed" | "estimated" | "unknown";
+@@ -5,6 +7,8 @@ export type RequirementLevel = "required" | "desired";
+ export type VerificationStatus = "unverified" | "confirmed" | "changed";
+ export type Availability = boolean | "unknown";
+ export type Confidence = "high" | "medium" | "low";
++export type CommuteOrigin = "manual" | "estimated";
++export type { GeoPoint };
+ 
+ export type MoneyValue =
+   | Readonly<{ amount: number; origin: Exclude<DataOrigin, "unknown"> }>
+@@ -32,6 +36,7 @@ export interface ComparisonProject {
+   readonly id: string;
+   readonly name: string;
+   readonly destinationLabel: string;
++  readonly destinationPoint: GeoPoint | null;
+   readonly monthlyBudget: number;
+   readonly maxOneWayCommuteMinutes: number;
+   readonly commuteDaysPerMonth: number;
+@@ -59,6 +64,8 @@ export interface AccommodationOption {
+   readonly deposit: MoneyValue;
+   readonly administrationFee: MoneyValue;
+   readonly oneWayCommuteMinutes: number | null;
++  readonly commuteOrigin: CommuteOrigin | null;
++  readonly location: GeoPoint | null;
+   readonly roundTripTransportCost: MoneyValue;
+   readonly facilityCodes: readonly string[];
+   readonly facilityValues: Readonly<Record<string, Availability>>;
+diff --git a/src/domain/scoring/match.ts b/src/domain/scoring/match.ts
+index 784b18c..dcbacf3 100644
+--- a/src/domain/scoring/match.ts
++++ b/src/domain/scoring/match.ts
+@@ -45,7 +45,8 @@ function calculateConfidence(project: ComparisonProject, option: AccommodationOp
+     option.roundTripTransportCost,
+   ].every((value) => value.origin === "confirmed" && value.amount !== null);
+   const commuteKnown = option.oneWayCommuteMinutes !== null;
+-  if (completeness >= 0.9 && rentConfirmed && recurringAndTransportConfirmed && commuteKnown) return "high";
++  const commuteConfirmed = commuteKnown && option.commuteOrigin !== "estimated";
++  if (completeness >= 0.9 && rentConfirmed && recurringAndTransportConfirmed && commuteConfirmed) return "high";
+   if (completeness >= 0.65 && unknown <= 1 && option.rent.amount !== null && commuteKnown) return "medium";
+   return "low";
+ }
+diff --git a/src/domain/validation/index.ts b/src/domain/validation/index.ts
+index 8945ef7..6904f67 100644
+--- a/src/domain/validation/index.ts
++++ b/src/domain/validation/index.ts
+@@ -9,8 +9,10 @@ export {
+ export {
+   accommodationOptionSchema,
+   availabilitySchema,
++  commuteOriginSchema,
+   comparisonProjectSchema,
+   facilityCodeSchema,
++  geoPointSchema,
+   idSchema,
+   importanceSchema,
+   isoDateTimeSchema,
+diff --git a/src/domain/validation/schemas.ts b/src/domain/validation/schemas.ts
+index 9b33ffb..6cc6fb2 100644
+--- a/src/domain/validation/schemas.ts
++++ b/src/domain/validation/schemas.ts
+@@ -53,6 +53,12 @@ export const sourceUrlSchema = z
+     return protocol === "http:" || protocol === "https:";
+   }, "URL sumber hanya boleh menggunakan http atau https.");
+ 
++export const geoPointSchema = z
++  .object({ latitude: z.number().min(-90).max(90), longitude: z.number().min(-180).max(180) })
++  .strict();
++
++export const commuteOriginSchema = z.enum(["manual", "estimated"]);
++
+ export const moneyValueSchema = z.discriminatedUnion("origin", [
+   z.object({ amount: z.number().int().min(0).max(MAX_RUPIAH), origin: z.literal("confirmed") }).strict(),
+   z.object({ amount: z.number().int().min(0).max(MAX_RUPIAH), origin: z.literal("estimated") }).strict(),
+@@ -107,6 +113,7 @@ export const comparisonProjectSchema: z.ZodType<ComparisonProject> = z
+     id: idSchema,
+     name: requiredTrimmedString(80),
+     destinationLabel: requiredTrimmedString(120),
++    destinationPoint: geoPointSchema.nullable().default(null),
+     monthlyBudget: z.number().int().min(0).max(MAX_RUPIAH),
+     maxOneWayCommuteMinutes: z.number().int().min(0).max(360),
+     commuteDaysPerMonth: z.number().int().min(0).max(31),
+@@ -155,6 +162,8 @@ export const accommodationOptionSchema: z.ZodType<AccommodationOption> = z
+     deposit: moneyValueSchema,
+     administrationFee: moneyValueSchema,
+     oneWayCommuteMinutes: z.number().int().min(0).max(360).nullable(),
++    commuteOrigin: commuteOriginSchema.nullable().default(null),
++    location: geoPointSchema.nullable().default(null),
+     roundTripTransportCost: moneyValueSchema,
+     facilityCodes: z.array(facilityCodeSchema).max(FACILITY_CODES.length),
+     facilityValues: allowlistedAvailabilityRecord(FACILITY_CODES),
+diff --git a/src/features/geo/components/campus-picker.tsx b/src/features/geo/components/campus-picker.tsx
+new file mode 100644
+index 0000000..7156cc5
+--- /dev/null
++++ b/src/features/geo/components/campus-picker.tsx
+@@ -0,0 +1,59 @@
++"use client";
++
++import { useId } from "react";
++
++import { CAMPUSES, findCampus } from "@/data/campuses";
++import type { GeoPoint } from "@/lib/geo";
++import { LocationInput } from "@/features/geo/components/location-input";
++
++export const CUSTOM_CAMPUS_ID = "custom";
++
++export function inferCampusId(point: GeoPoint | null): string {
++  if (point === null) return "";
++  const match = CAMPUSES.find((campus) => campus.latitude === point.latitude && campus.longitude === point.longitude);
++  return match?.id ?? CUSTOM_CAMPUS_ID;
++}
++
++interface CampusPickerProps {
++  readonly campusId: string;
++  readonly point: GeoPoint | null;
++  readonly onChange: (change: { campusId: string; point: GeoPoint | null; campusName: string | null }) => void;
++}
++
++export function CampusPicker({ campusId, point, onChange }: CampusPickerProps) {
++  const id = useId();
++
++  const select = (nextId: string) => {
++    if (nextId === "") return onChange({ campusId: "", point: null, campusName: null });
++    if (nextId === CUSTOM_CAMPUS_ID) return onChange({ campusId: nextId, point, campusName: null });
++    const campus = findCampus(nextId);
++    if (campus === undefined) return;
++    onChange({ campusId: nextId, point: { latitude: campus.latitude, longitude: campus.longitude }, campusName: campus.name });
++  };
++
++  return (
++    <div className="campus-picker">
++      <div className="field">
++        <label htmlFor={id}>Kampus tujuan (opsional)</label>
++        <select id={id} className="input" value={campusId} onChange={(event) => select(event.target.value)}>
++          <option value="">Belum dipilih</option>
++          {CAMPUSES.map((campus) => (
++            <option key={campus.id} value={campus.id}>{campus.shortName} — {campus.name}, {campus.city}</option>
++          ))}
++          <option value={CUSTOM_CAMPUS_ID}>Kampus/tujuan lain (isi koordinat sendiri)</option>
++        </select>
++        <small className="muted">Dipakai untuk menghitung jarak setiap kos ke tujuan Anda.</small>
++      </div>
++      {campusId !== "" && (
++        <>
++          <LocationInput
++            label="Titik tujuan"
++            value={point}
++            onChange={(next) => onChange({ campusId, point: next, campusName: null })}
++            helper={campusId === CUSTOM_CAMPUS_ID ? undefined : "Titik kampus ini perkiraan. Sesuaikan ke gerbang/fakultas yang Anda tuju dengan menempel koordinat baru."}
++          />
++        </>
++      )}
++    </div>
++  );
++}
+diff --git a/src/features/geo/components/distance-summary.tsx b/src/features/geo/components/distance-summary.tsx
+new file mode 100644
+index 0000000..59cbdfd
+--- /dev/null
++++ b/src/features/geo/components/distance-summary.tsx
+@@ -0,0 +1,47 @@
++"use client";
++
++import { ExternalLink, Footprints, Bike } from "lucide-react";
++
++import type { AccommodationOption, ComparisonProject } from "@/domain/entities";
++import { calculateDestinationDistance } from "@/domain/distance";
++import { formatDistance, googleDirectionsLink } from "@/lib/geo";
++
++interface DistanceSummaryProps {
++  readonly project: Pick<ComparisonProject, "destinationLabel" | "destinationPoint">;
++  readonly location: AccommodationOption["location"];
++  readonly currentMinutes: number | null;
++  readonly onApplyMinutes: (minutes: number) => void;
++}
++
++export function DistanceSummary({ project, location, currentMinutes, onApplyMinutes }: DistanceSummaryProps) {
++  if (project.destinationPoint === null) {
++    return <p className="muted distance-summary">Titik kampus/tujuan belum diatur. Atur di Preferensi untuk melihat jarak otomatis.</p>;
++  }
++  if (location === null) {
++    return <p className="muted distance-summary">Isi lokasi kos untuk menghitung jarak ke {project.destinationLabel}.</p>;
++  }
++  const distance = calculateDestinationDistance(project, { location });
++  if (distance === null) return null;
++
++  return (
++    <div className="distance-summary panel" aria-label={`Jarak ke ${project.destinationLabel}`}>
++      <strong>Jarak ke {project.destinationLabel}</strong>
++      <dl>
++        <div className="detail-row"><dt>Garis lurus</dt><dd>{formatDistance(distance.straightMeters)}</dd></div>
++        <div className="detail-row"><dt>Perkiraan lewat jalan</dt><dd>±{formatDistance(distance.estimatedRoadMeters)}</dd></div>
++      </dl>
++      <div className="chips" role="group" aria-label="Pakai estimasi waktu tempuh">
++        <button className={`chip ${currentMinutes === distance.walkMinutes ? "selected" : ""}`} type="button" onClick={() => onApplyMinutes(distance.walkMinutes)}>
++          <Footprints size={14} aria-hidden="true" /> Jalan kaki ±{distance.walkMinutes} menit
++        </button>
++        <button className={`chip ${currentMinutes === distance.motorcycleMinutes ? "selected" : ""}`} type="button" onClick={() => onApplyMinutes(distance.motorcycleMinutes)}>
++          <Bike size={14} aria-hidden="true" /> Motor ±{distance.motorcycleMinutes} menit
++        </button>
++      </div>
++      <small className="muted">
++        Perkiraan kasar (garis lurus × 1,3, kecepatan rata-rata), bukan rute sebenarnya. Waktu yang Anda pakai ditandai sebagai perkiraan.{" "}
++        <a href={googleDirectionsLink(location, project.destinationPoint)} target="_blank" rel="noopener noreferrer"><ExternalLink size={12} aria-hidden="true" /> Cek rute di peta</a>
++      </small>
++    </div>
++  );
++}
+diff --git a/src/features/geo/components/location-input.tsx b/src/features/geo/components/location-input.tsx
+new file mode 100644
+index 0000000..20fcb12
+--- /dev/null
++++ b/src/features/geo/components/location-input.tsx
+@@ -0,0 +1,125 @@
++"use client";
++
++import { useId, useState, type ClipboardEvent, type KeyboardEvent } from "react";
++import { Crosshair, ExternalLink, MapPin, X } from "lucide-react";
++
++import { formatCoordinates, googleMapsLink, isWithinIndonesia, parseCoordinates, type GeoPoint } from "@/lib/geo";
++
++interface LocationInputProps {
++  readonly label: string;
++  readonly value: GeoPoint | null;
++  readonly onChange: (value: GeoPoint | null) => void;
++  readonly helper?: string;
++  readonly allowCurrentLocation?: boolean;
++}
++
++type Status = { readonly kind: "idle" | "ok" | "error"; readonly message: string };
++
++const IDLE: Status = { kind: "idle", message: "" };
++
++export function LocationInput({ label, value, onChange, helper, allowCurrentLocation = false }: LocationInputProps) {
++  const id = useId();
++  const [text, setText] = useState("");
++  const [status, setStatus] = useState<Status>(IDLE);
++
++  const apply = (raw: string): boolean => {
++    const point = parseCoordinates(raw);
++    if (point === null) {
++      setStatus({
++        kind: "error",
++        message: raw.includes("goo.gl") || raw.includes("maps.app")
++          ? "Tautan pendek tidak bisa dibaca. Buka tautannya, lalu salin koordinat atau tautan panjang dari peta."
++          : "Format belum dikenali. Contoh: -0.9143, 100.4602 atau tautan Google Maps.",
++      });
++      return false;
++    }
++    onChange(point);
++    setText("");
++    setStatus({ kind: "ok", message: `Koordinat terbaca: ${formatCoordinates(point)}` });
++    return true;
++  };
++
++  const onPaste = (event: ClipboardEvent<HTMLInputElement>) => {
++    const pasted = event.clipboardData.getData("text");
++    if (parseCoordinates(pasted) !== null) {
++      event.preventDefault();
++      apply(pasted);
++    }
++  };
++
++  const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
++    if (event.key !== "Enter") return;
++    event.preventDefault();
++    if (text.trim().length > 0) apply(text);
++  };
++
++  const useCurrentLocation = () => {
++    if (typeof navigator === "undefined" || navigator.geolocation === undefined) {
++      setStatus({ kind: "error", message: "Peramban ini tidak mendukung lokasi saat ini." });
++      return;
++    }
++    setStatus({ kind: "idle", message: "Mencari lokasi…" });
++    navigator.geolocation.getCurrentPosition(
++      (position) => {
++        const point = {
++          latitude: Number(position.coords.latitude.toFixed(6)),
++          longitude: Number(position.coords.longitude.toFixed(6)),
++        };
++        onChange(point);
++        setStatus({ kind: "ok", message: `Lokasi saat ini dipakai (akurasi ±${Math.round(position.coords.accuracy)} m).` });
++      },
++      (error) =>
++        setStatus({
++          kind: "error",
++          message: error.code === error.PERMISSION_DENIED ? "Izin lokasi ditolak. Tempel koordinat secara manual." : "Lokasi tidak dapat dibaca. Coba lagi atau tempel koordinat.",
++        }),
++      { enableHighAccuracy: true, timeout: 15_000, maximumAge: 60_000 },
++    );
++  };
++
++  const clear = () => {
++    onChange(null);
++    setStatus(IDLE);
++  };
++
++  return (
++    <div className="field location-input">
++      <label htmlFor={id}>{label}</label>
++      {value !== null && (
++        <div className="location-chosen">
++          <span className="badge"><MapPin size={13} aria-hidden="true" /> {formatCoordinates(value)}</span>{" "}
++          <a href={googleMapsLink(value)} target="_blank" rel="noopener noreferrer"><ExternalLink size={13} aria-hidden="true" /> Cek di peta</a>{" "}
++          <button className="btn btn-ghost" type="button" onClick={clear} aria-label={`Hapus ${label}`}><X size={14} aria-hidden="true" /> Hapus</button>
++        </div>
++      )}
++      <div className="input-prefix">
++        <input
++          id={id}
++          className="input"
++          type="text"
++          inputMode="text"
++          autoComplete="off"
++          placeholder="Tempel koordinat atau tautan Google Maps"
++          value={text}
++          aria-describedby={`${id}-help`}
++          onChange={(event) => { setText(event.target.value); if (status.kind === "error") setStatus(IDLE); }}
++          onPaste={onPaste}
++          onKeyDown={onKeyDown}
++        />
++        <button className="btn btn-secondary" type="button" onClick={() => apply(text)} disabled={text.trim().length === 0}>Terapkan</button>
++        {allowCurrentLocation && (
++          <button className="btn btn-secondary" type="button" onClick={useCurrentLocation}><Crosshair size={14} aria-hidden="true" /> Lokasi saya</button>
++        )}
++      </div>
++      <small id={`${id}-help`} className="muted">
++        {helper ?? "Di Google Maps: tekan lama pada titik, lalu salin koordinatnya (lintang, bujur)."}
++      </small>
++      <div role="status" aria-live="polite">
++        {status.message !== "" && <small className={status.kind === "error" ? "unknown" : "muted"}>{status.message}</small>}
++        {value !== null && !isWithinIndonesia(value) && (
++          <small className="unknown"> Titik ini di luar Indonesia. Pastikan urutannya lintang, bujur (contoh: -0.91, 100.46).</small>
++        )}
++      </div>
++    </div>
++  );
++}
+diff --git a/src/features/preferences/components/preferences-form.tsx b/src/features/preferences/components/preferences-form.tsx
+index 9ca03e9..f460f99 100644
+--- a/src/features/preferences/components/preferences-form.tsx
++++ b/src/features/preferences/components/preferences-form.tsx
+@@ -15,6 +15,9 @@ import {
+   RULE_DEFINITIONS,
+ } from "@/domain/validation";
+ import { formatRupiah } from "@/lib/currency";
++import type { GeoPoint } from "@/lib/geo";
++import { CAMPUSES } from "@/data/campuses";
++import { CampusPicker, inferCampusId } from "@/features/geo/components/campus-picker";
+ 
+ import styles from "./preferences-form.module.css";
+ 
+@@ -41,6 +44,8 @@ export type PreferencesFormProps =
+ interface PreferencesDraft {
+   name: string;
+   destinationLabel: string;
++  campusId: string;
++  destinationPoint: GeoPoint | null;
+   commuteDaysPerMonth: string;
+   monthlyBudget: string;
+   maxOneWayCommuteMinutes: string;
+@@ -101,6 +106,8 @@ function createDraft(project: ComparisonProject | undefined): PreferencesDraft {
+   return {
+     name: project?.name ?? "",
+     destinationLabel: project?.destinationLabel ?? "",
++    campusId: inferCampusId(project?.destinationPoint ?? null),
++    destinationPoint: project?.destinationPoint ?? null,
+     commuteDaysPerMonth: String(project?.commuteDaysPerMonth ?? 20),
+     monthlyBudget: project === undefined ? "" : String(project.monthlyBudget),
+     maxOneWayCommuteMinutes: String(project?.maxOneWayCommuteMinutes ?? 30),
+@@ -242,6 +249,7 @@ export function PreferencesForm(props: PreferencesFormProps) {
+       id: sourceProject?.id ?? crypto.randomUUID(),
+       name: draft.name.trim(),
+       destinationLabel: draft.destinationLabel.trim(),
++      destinationPoint: draft.destinationPoint,
+       monthlyBudget: parseInteger(draft.monthlyBudget),
+       maxOneWayCommuteMinutes: parseInteger(draft.maxOneWayCommuteMinutes),
+       commuteDaysPerMonth: parseInteger(draft.commuteDaysPerMonth),
+@@ -347,6 +355,24 @@ export function PreferencesForm(props: PreferencesFormProps) {
+                 />
+                 <small>Nama kantor atau kampus cukup; alamat lengkap tidak diperlukan.</small>
+               </div>
++              <div className={`${styles.field} ${styles.fullWidth}`}>
++                <CampusPicker
++                  campusId={draft.campusId}
++                  point={draft.destinationPoint}
++                  onChange={({ campusId, point, campusName }) => {
++                    setDraft((current) => ({
++                      ...current,
++                      campusId,
++                      destinationPoint: point,
++                      destinationLabel:
++                        campusName !== null && (current.destinationLabel.trim() === "" || CAMPUSES.some((campus) => campus.name === current.destinationLabel))
++                          ? campusName
++                          : current.destinationLabel,
++                    }));
++                    setSaveState("idle");
++                  }}
++                />
++              </div>
+               <div className={styles.field}>
+                 <label htmlFor={`${formId}-days`}>Hari perjalanan per bulan</label>
+                 <input
+diff --git a/src/features/workspace/components/kosmatch-workspace.tsx b/src/features/workspace/components/kosmatch-workspace.tsx
+index 077c88b..3b92038 100644
+--- a/src/features/workspace/components/kosmatch-workspace.tsx
++++ b/src/features/workspace/components/kosmatch-workspace.tsx
+@@ -13,11 +13,13 @@ import { DecisionBoard, PrintSummaryView, updateShortlist, type DecisionState }
+ import { PreferencesForm } from "@/features/preferences";
+ import { confirmProjectImport, exportProjectAsJson, parseProjectImport } from "@/features/projects/services";
+ import { formatRupiah } from "@/lib/currency";
++import { calculateDestinationDistance } from "@/domain/distance";
++import { formatDistance } from "@/lib/geo";
+ import { OptionEditor } from "@/features/workspace/components/option-editor";
+ 
+ type View = "loading" | "landing" | "setup" | "project" | "editor" | "error";
+ type Tab = "overview" | "compare" | "decision" | "simulator" | "preferences" | "data";
+-type Sort = "match" | "cost" | "commute" | "recent";
++type Sort = "match" | "cost" | "commute" | "distance" | "recent";
+ type Filter = "all" | "eligible" | "withinBudget" | "complete" | "unknown" | "needsVerification";
+ 
+ const criteria: readonly { key: CriterionKey; label: string }[] = [
+@@ -162,7 +164,7 @@ function Compare({ project, options, matches, requestedOptionId }: { project: Co
+     {
+       key: "commute",
+       label: "Perjalanan",
+-      rows: [{ label: "Perjalanan sekali jalan", render: (match) => { const minutes = getOption(match.optionId).oneWayCommuteMinutes; return minutes === null ? `Belum diketahui ke ${project.destinationLabel}` : `${minutes} menit ke ${project.destinationLabel}`; } }],
++      rows: [{ label: "Perjalanan sekali jalan", render: (match) => { const minutes = getOption(match.optionId).oneWayCommuteMinutes; return minutes === null ? `Belum diketahui ke ${project.destinationLabel}` : `${minutes} menit ke ${project.destinationLabel}`; } }, { label: "Jarak ke tujuan", render: (match) => { const d = calculateDestinationDistance(project, getOption(match.optionId)); return d === null ? "Lokasi belum diisi" : `±${formatDistance(d.estimatedRoadMeters)} (garis lurus ${formatDistance(d.straightMeters)})`; } }],
+     },
+     {
+       key: "required-facilities",
+@@ -254,7 +256,7 @@ function OptionCard({ project, option, match, onEdit, onDelete, onShortlist, onC
+         {formatRupiah(cost.knownMonthlyTotal)}
+         <small>Harga sewa: {formatMoneyValue(option.rent)}</small>
+       </div>
+-      <div className="badge"><Clock3 size={13} /> {option.oneWayCommuteMinutes === null ? "Belum diketahui" : `${option.oneWayCommuteMinutes} menit`} ke {project.destinationLabel}</div>
++      <div className="badge"><Clock3 size={13} /> {option.oneWayCommuteMinutes === null ? "Belum diketahui" : `${option.oneWayCommuteMinutes} menit`} ke {project.destinationLabel}</div>{calculateDestinationDistance(project,option)!==null&&<div className="badge"><MapPin size={13} /> ±{formatDistance(calculateDestinationDistance(project,option)!.estimatedRoadMeters)} dari {project.destinationLabel}</div>}
+       <div className="badges required-facilities" aria-label="Status fasilitas wajib">
+         {requiredFacilities.length === 0 && <span className="badge"><Info size={13} /> Tidak ada fasilitas wajib</span>}
+         {requiredFacilities.map((facility) => {
+@@ -283,15 +285,15 @@ function OptionCard({ project, option, match, onEdit, onDelete, onShortlist, onC
+ function ProjectWorkspace({ repository, projects, project, initialOptions, onProjectDeleted, onBack, onSwitchProject, onNewProject, onLoadDemo }: { repository:IndexedDbProjectRepository; projects:readonly ComparisonProject[]; project:ComparisonProject; initialOptions:AccommodationOption[]; onProjectDeleted:()=>void; onBack:()=>void; onSwitchProject:(id:string)=>Promise<void>; onNewProject:()=>void; onLoadDemo:()=>Promise<void> }) {
+   const [currentProject,setCurrentProject]=useState(project); const [options,setOptions]=useState<AccommodationOption[]>(initialOptions); const [tab,setTab]=useState<Tab>("overview"); const [editing,setEditing]=useState<AccommodationOption|undefined>(); const [showEditor,setShowEditor]=useState(false); const [sort,setSort]=useState<Sort>("match"); const [filter,setFilter]=useState<Filter>("all"); const [simulated,setSimulated]=useState<string|null>(null); const [notice,setNotice]=useState<string|null>(null); const [requestedComparisonOptionId,setRequestedComparisonOptionId]=useState<string|null>(null);
+   const matches=useMemo(()=>matchAndRank(currentProject,options),[currentProject,options]);
+-  const visible=useMemo(()=>{const list=matches.filter((m)=>{const cost=calculateCost(currentProject,options.find((o)=>o.id===m.optionId)!);return filter==="all"||(filter==="eligible"&&m.eligible)||(filter==="withinBudget"&&!cost.hasUnknownMonthlyValues&&cost.knownMonthlyTotal<=currentProject.monthlyBudget)||(filter==="complete"&&!cost.hasUnknownMonthlyValues)||(filter==="unknown"&&cost.hasUnknownMonthlyValues)||(filter==="needsVerification"&&options.find((o)=>o.id===m.optionId)!.verificationQuestions.some((q)=>q.status!=="confirmed"));});if(sort==="cost")list.sort((a,b)=>calculateCost(currentProject,options.find(o=>o.id===a.optionId)!).knownMonthlyTotal-calculateCost(currentProject,options.find(o=>o.id===b.optionId)!).knownMonthlyTotal);if(sort==="commute")list.sort((a,b)=>(options.find(o=>o.id===a.optionId)!.oneWayCommuteMinutes??999)-(options.find(o=>o.id===b.optionId)!.oneWayCommuteMinutes??999));if(sort==="recent")list.sort((a,b)=>options.find(o=>o.id===b.optionId)!.createdAt.localeCompare(options.find(o=>o.id===a.optionId)!.createdAt));return list;},[matches,sort,filter,currentProject,options]);
++  const visible=useMemo(()=>{const list=matches.filter((m)=>{const cost=calculateCost(currentProject,options.find((o)=>o.id===m.optionId)!);return filter==="all"||(filter==="eligible"&&m.eligible)||(filter==="withinBudget"&&!cost.hasUnknownMonthlyValues&&cost.knownMonthlyTotal<=currentProject.monthlyBudget)||(filter==="complete"&&!cost.hasUnknownMonthlyValues)||(filter==="unknown"&&cost.hasUnknownMonthlyValues)||(filter==="needsVerification"&&options.find((o)=>o.id===m.optionId)!.verificationQuestions.some((q)=>q.status!=="confirmed"));});if(sort==="cost")list.sort((a,b)=>calculateCost(currentProject,options.find(o=>o.id===a.optionId)!).knownMonthlyTotal-calculateCost(currentProject,options.find(o=>o.id===b.optionId)!).knownMonthlyTotal);if(sort==="commute")list.sort((a,b)=>(options.find(o=>o.id===a.optionId)!.oneWayCommuteMinutes??999)-(options.find(o=>o.id===b.optionId)!.oneWayCommuteMinutes??999));if(sort==="distance"){const dist=(id:string)=>calculateDestinationDistance(currentProject,options.find((x)=>x.id===id)!)?.straightMeters??Number.MAX_SAFE_INTEGER;list.sort((a,b)=>dist(a.optionId)-dist(b.optionId));}if(sort==="recent")list.sort((a,b)=>options.find(o=>o.id===b.optionId)!.createdAt.localeCompare(options.find(o=>o.id===a.optionId)!.createdAt));return list;},[matches,sort,filter,currentProject,options]);
+   const saveOption=async(option:AccommodationOption)=>{await repository.saveOption(option);setOptions((all)=>[...all.filter((item)=>item.id!==option.id),option]);setShowEditor(false);setEditing(undefined);setNotice("Pilihan berhasil disimpan.");};
+   const saveDecision=async(state:DecisionState)=>{const now=new Date().toISOString();const updatedProject={...state.project,updatedAt:now};const updatedOptions=state.options.map((option)=>({...option,updatedAt:now}));await repository.saveProject(updatedProject);await Promise.all(updatedOptions.map((option)=>repository.saveOption(option)));setCurrentProject(updatedProject);setOptions(updatedOptions);setNotice("Keputusan tersimpan.");};
+   const toggleShortlist=async(id:string)=>saveDecision(updateShortlist({project:currentProject,options},id,!options.find((o)=>o.id===id)!.shortlisted));
+   const deleteOption=async(option:AccommodationOption)=>{if(!confirm("Hapus pilihan kos ini? Tindakan ini hanya memengaruhi opsi ini, bukan seluruh proyek."))return;await repository.deleteOption(option.id);if(currentProject.favoriteOptionId===option.id){const updatedProject={...currentProject,favoriteOptionId:null,updatedAt:new Date().toISOString()};await repository.saveProject(updatedProject);setCurrentProject(updatedProject);}setOptions((all)=>all.filter((item)=>item.id!==option.id));setNotice("Pilihan dihapus.");};
+   if(showEditor)return <OptionEditor project={currentProject} initialOption={editing} onSaveAction={saveOption} onCancelAction={()=>{setShowEditor(false);setEditing(undefined);}}/>;
+   const eligibleCount=matches.filter((m)=>m.eligible).length; const simulatedOption=options.find((o)=>o.id===(simulated??options[0]?.id));
+-  return <div className="shell"><header className="topbar no-print"><div className="container header-inner"><div className="project-switcher"><Brand/><label className="sr-only" htmlFor="project-switcher">Pilih proyek</label><select id="project-switcher" className="input" value={currentProject.id} onChange={(event)=>void onSwitchProject(event.target.value)}>{projects.map((item)=><option value={item.id} key={item.id}>{item.name}</option>)}</select></div><div className="actions compact"><button className="btn btn-ghost" onClick={onBack}>Beranda</button><button className="btn btn-secondary" onClick={onNewProject}><Plus size={18}/> Proyek baru</button><button className="btn btn-primary" onClick={()=>{setEditing(undefined);setShowEditor(true);}}><Plus size={18}/> Tambah Pilihan</button></div></div></header><main className="container workspace"><div className="workspace-head"><div><div className="eyebrow">Ruang keputusan</div><h1>{currentProject.name}</h1><p className="muted"><MapPin size={15}/> Tujuan: {currentProject.destinationLabel}</p></div><div className="badges">{currentProject.name.includes("(Demo)")&&<span className="badge warn"><Info size={14}/> Data contoh fiktif</span>}<span className="badge good">Tersimpan di perangkat</span></div></div>{currentProject.name.includes("(Demo)")&&<p className="disclaimer"><Info size={17}/> Nama, harga, alamat, dan ketersediaan pada data contoh ini bersifat fiktif.</p>}{notice&&<div className="inline-alert good" role="status"><Check size={18}/>{notice}<button className="btn btn-ghost" onClick={()=>setNotice(null)}>Tutup</button></div>}<nav className="nav-tabs no-print" aria-label="Navigasi proyek">{([['overview','Ringkasan'],['compare','Bandingkan'],['decision','Keputusan'],['simulator','Simulator'],['preferences','Preferensi'],['data','Data & backup']] as const).map(([key,label])=><button className={`nav-tab ${tab===key?"active":""}`} aria-current={tab===key?"page":undefined} onClick={()=>setTab(key)} key={key}>{label}</button>)}</nav><div className="summary-strip"><div className="summary-item"><span className="muted">Anggaran total</span><strong>{formatRupiah(currentProject.monthlyBudget)} / bulan</strong></div><div className="summary-item"><span className="muted">Batas perjalanan</span><strong>{currentProject.maxOneWayCommuteMinutes} menit</strong></div><div className="summary-item"><span className="muted">Memenuhi wajib</span><strong>{eligibleCount} dari {matches.length} pilihan</strong></div></div>
+-    {tab==="overview"&&(options.length===0?<Empty title="Belum ada pilihan kos. Tambahkan yang pertama atau coba data contoh." text="Siapkan biaya, perjalanan, fasilitas, dan aturan untuk setiap pilihan." action={<div className="actions compact"><button className="btn btn-primary" aria-label="Tambah pilihan pertama" onClick={()=>setShowEditor(true)}><Plus size={18}/> Tambah Pilihan</button><button className="btn btn-secondary" onClick={()=>void onLoadDemo()}><Sparkles size={18}/> Coba Data Contoh</button></div>}/>:<><div className="toolbar"><div className="field"><label htmlFor="sort">Urutkan</label><select id="sort" className="input" value={sort} onChange={(e)=>setSort(e.target.value as Sort)}><option value="match">Kecocokan</option><option value="cost">Biaya bulanan</option><option value="commute">Perjalanan</option><option value="recent">Baru ditambahkan</option></select></div><div className="field"><label htmlFor="filter">Filter</label><select id="filter" className="input" value={filter} onChange={(e)=>setFilter(e.target.value as Filter)}><option value="all">Semua pilihan</option><option value="eligible">Memenuhi fasilitas wajib</option><option value="withinBudget">Dalam anggaran</option><option value="complete">Biaya lengkap</option><option value="unknown">Ada biaya belum diketahui</option><option value="needsVerification">Perlu verifikasi</option></select></div></div>{visible.length===0?<Empty title="Tidak ada hasil" text="Ubah filter untuk melihat pilihan lain."/>:<div>{([{eligible:true,title:"Memenuhi kebutuhan wajib"},{eligible:false,title:"Perlu dipertimbangkan ulang"}] as const).map((group)=>{const grouped=visible.filter((match)=>match.eligible===group.eligible);return grouped.length===0?null:<section aria-label={group.title} key={group.title}><h2 className="group-title">{group.eligible?<Check size={21} color="var(--accent)"/>:<AlertTriangle size={21} color="var(--danger)"/>}{group.title}</h2><div className="option-grid">{grouped.map((match)=>{const option=options.find((o)=>o.id===match.optionId)!;return <OptionCard project={currentProject} option={option} match={match} onEdit={()=>{setEditing(option);setShowEditor(true);}} onDelete={()=>deleteOption(option)} onShortlist={()=>toggleShortlist(option.id)} onCompare={()=>{setRequestedComparisonOptionId(option.id);setTab("compare");}} onSimulate={()=>{setSimulated(option.id);setTab("simulator");}} key={option.id}/>})}</div></section>;})}</div>}</>)}
++  return <div className="shell"><header className="topbar no-print"><div className="container header-inner"><div className="project-switcher"><Brand/><label className="sr-only" htmlFor="project-switcher">Pilih proyek</label><select id="project-switcher" className="input" value={currentProject.id} onChange={(event)=>void onSwitchProject(event.target.value)}>{projects.map((item)=><option value={item.id} key={item.id}>{item.name}</option>)}</select></div><div className="actions compact"><button className="btn btn-ghost" onClick={onBack}>Beranda</button><button className="btn btn-secondary" onClick={onNewProject}><Plus size={18}/> Proyek baru</button><button className="btn btn-primary" onClick={()=>{setEditing(undefined);setShowEditor(true);}}><Plus size={18}/> Tambah Kos Manual</button></div></div></header><main className="container workspace"><div className="workspace-head"><div><div className="eyebrow">Ruang keputusan</div><h1>{currentProject.name}</h1><p className="muted"><MapPin size={15}/> Tujuan: {currentProject.destinationLabel}</p></div><div className="badges">{currentProject.name.includes("(Demo)")&&<span className="badge warn"><Info size={14}/> Data contoh fiktif</span>}<span className="badge good">Tersimpan di perangkat</span></div></div>{currentProject.name.includes("(Demo)")&&<p className="disclaimer"><Info size={17}/> Nama, harga, alamat, dan ketersediaan pada data contoh ini bersifat fiktif.</p>}{notice&&<div className="inline-alert good" role="status"><Check size={18}/>{notice}<button className="btn btn-ghost" onClick={()=>setNotice(null)}>Tutup</button></div>}<nav className="nav-tabs no-print" aria-label="Navigasi proyek">{([['overview','Ringkasan'],['compare','Bandingkan'],['decision','Keputusan'],['simulator','Simulator'],['preferences','Preferensi'],['data','Data & backup']] as const).map(([key,label])=><button className={`nav-tab ${tab===key?"active":""}`} aria-current={tab===key?"page":undefined} onClick={()=>setTab(key)} key={key}>{label}</button>)}</nav><div className="summary-strip"><div className="summary-item"><span className="muted">Anggaran total</span><strong>{formatRupiah(currentProject.monthlyBudget)} / bulan</strong></div><div className="summary-item"><span className="muted">Batas perjalanan</span><strong>{currentProject.maxOneWayCommuteMinutes} menit</strong></div><div className="summary-item"><span className="muted">Memenuhi wajib</span><strong>{eligibleCount} dari {matches.length} pilihan</strong></div></div>
++    {tab==="overview"&&(options.length===0?<Empty title="Belum ada pilihan kos. Tambahkan yang pertama atau coba data contoh." text="Siapkan biaya, perjalanan, fasilitas, dan aturan untuk setiap pilihan." action={<div className="actions compact"><button className="btn btn-primary" aria-label="Tambah pilihan pertama" onClick={()=>setShowEditor(true)}><Plus size={18}/> Tambah Kos Manual</button><button className="btn btn-secondary" onClick={()=>void onLoadDemo()}><Sparkles size={18}/> Coba Data Contoh</button></div>}/>:<><div className="toolbar"><div className="field"><label htmlFor="sort">Urutkan</label><select id="sort" className="input" value={sort} onChange={(e)=>setSort(e.target.value as Sort)}><option value="match">Kecocokan</option><option value="cost">Biaya bulanan</option><option value="commute">Perjalanan</option><option value="distance">Jarak ke tujuan</option><option value="recent">Baru ditambahkan</option></select></div><div className="field"><label htmlFor="filter">Filter</label><select id="filter" className="input" value={filter} onChange={(e)=>setFilter(e.target.value as Filter)}><option value="all">Semua pilihan</option><option value="eligible">Memenuhi fasilitas wajib</option><option value="withinBudget">Dalam anggaran</option><option value="complete">Biaya lengkap</option><option value="unknown">Ada biaya belum diketahui</option><option value="needsVerification">Perlu verifikasi</option></select></div></div>{visible.length===0?<Empty title="Tidak ada hasil" text="Ubah filter untuk melihat pilihan lain."/>:<div>{([{eligible:true,title:"Memenuhi kebutuhan wajib"},{eligible:false,title:"Perlu dipertimbangkan ulang"}] as const).map((group)=>{const grouped=visible.filter((match)=>match.eligible===group.eligible);return grouped.length===0?null:<section aria-label={group.title} key={group.title}><h2 className="group-title">{group.eligible?<Check size={21} color="var(--accent)"/>:<AlertTriangle size={21} color="var(--danger)"/>}{group.title}</h2><div className="option-grid">{grouped.map((match)=>{const option=options.find((o)=>o.id===match.optionId)!;return <OptionCard project={currentProject} option={option} match={match} onEdit={()=>{setEditing(option);setShowEditor(true);}} onDelete={()=>deleteOption(option)} onShortlist={()=>toggleShortlist(option.id)} onCompare={()=>{setRequestedComparisonOptionId(option.id);setTab("compare");}} onSimulate={()=>{setSimulated(option.id);setTab("simulator");}} key={option.id}/>})}</div></section>;})}</div>}</>)}
+     {tab==="compare"&&<Compare project={currentProject} options={options} matches={matches} requestedOptionId={requestedComparisonOptionId}/>} {tab==="decision"&&<><DecisionBoard state={{project:currentProject,options}} onChange={saveDecision}/><div className="print-block"><PrintSummaryView project={currentProject} options={options}/></div></>} {tab==="simulator"&&(simulatedOption?<><div className="field simulator-select"><label htmlFor="simulate-option">Pilihan yang disimulasikan</label><select id="simulate-option" className="input" value={simulatedOption.id} onChange={(e)=>setSimulated(e.target.value)}>{options.map((o)=><option value={o.id} key={o.id}>{o.name}</option>)}</select></div><CostSimulator project={currentProject} option={simulatedOption} onApply={async(projectValue,optionValue)=>{await repository.saveProject(projectValue);await repository.saveOption(optionValue);setCurrentProject(projectValue);setOptions((all)=>all.map((item)=>item.id===optionValue.id?optionValue:item));setNotice("Hasil simulasi diterapkan dan disimpan.");}}/></>:<Empty title="Belum ada pilihan" text="Tambahkan pilihan untuk menjalankan simulasi."/>)}
+     {tab==="preferences"&&<PreferencesForm mode="edit" initialProject={currentProject} onCancel={()=>setTab("overview")} onSave={async(value)=>{await repository.saveProject(value);setCurrentProject(value);setNotice("Preferensi disimpan dan semua skor dihitung ulang.");setTab("overview");}}/>}
+     {tab==="data"&&<DataTools repository={repository} project={currentProject} options={options} onProjectDeleted={onProjectDeleted}/>}<p className="disclaimer"><Info size={17}/> Skor mencerminkan data dan prioritas Anda. Periksa kembali seluruh biaya dan ketersediaan kepada pemilik kos.</p></main></div>;
+diff --git a/src/features/workspace/components/option-editor.tsx b/src/features/workspace/components/option-editor.tsx
+index 0eb0d87..d424afd 100644
+--- a/src/features/workspace/components/option-editor.tsx
++++ b/src/features/workspace/components/option-editor.tsx
+@@ -6,6 +6,10 @@ import type { AccommodationOption, Availability, ComparisonProject, DataOrigin,
+ import { accommodationOptionSchema, FACILITY_DEFINITIONS, RULE_DEFINITIONS } from "@/domain/validation";
+ import { calculateCost } from "@/domain/costing";
+ import { formatRupiah, MAX_RUPIAH } from "@/lib/currency";
++import { DistanceSummary } from "@/features/geo/components/distance-summary";
++import { LocationInput } from "@/features/geo/components/location-input";
++import { QuickAddOption } from "@/features/workspace/components/quick-add-option";
++import { createEmptyOption, unknownMoney } from "@/features/workspace/option-factory";
+ 
+ const moneyFields = [
+   ["rent", "Harga sewa bulanan"], ["electricity", "Listrik per bulan"], ["water", "Air per bulan"],
+@@ -13,30 +17,15 @@ const moneyFields = [
+ ] as const;
+ const moveInFields = [["deposit", "Deposit"], ["administrationFee", "Biaya administrasi"]] as const;
+ 
+-function unknownMoney(): MoneyValue { return { amount: null, origin: "unknown" }; }
+-
+-function createEmptyOption(projectId: string): AccommodationOption {
+-  const now = new Date().toISOString();
+-  return {
+-    id: crypto.randomUUID(), projectId, name: "", area: "", sourceUrl: null, lastCheckedAt: null,
+-    rent: unknownMoney(), electricity: unknownMoney(), water: unknownMoney(), internet: unknownMoney(), laundry: unknownMoney(), otherRecurring: unknownMoney(),
+-    deposit: unknownMoney(), administrationFee: unknownMoney(), oneWayCommuteMinutes: null, roundTripTransportCost: unknownMoney(),
+-    facilityCodes: [],
+-    facilityValues: Object.fromEntries(Object.keys(FACILITY_DEFINITIONS).map((code) => [code, "unknown"])),
+-    ruleValues: Object.fromEntries(Object.keys(RULE_DEFINITIONS).map((code) => [code, "unknown"])),
+-    environmentRating: null, notes: "", pros: [], concerns: [], verificationQuestions: [], shortlisted: false,
+-    createdAt: now, updatedAt: now,
+-  };
+-}
+-
+ function MoneyField({ id, label, value, onChange, helper }: { id: string; label: string; value: MoneyValue; onChange: (value: MoneyValue) => void; helper?: string }) {
+   const origin = value.origin;
+   const setOrigin = (next: DataOrigin) => onChange(next === "unknown" ? unknownMoney() : { amount: value.amount ?? 0, origin: next });
+   return <div className="field"><label htmlFor={id}>{label}</label><div className="money-control"><div className="input-prefix"><span aria-hidden="true">Rp</span><input id={id} className="input" type="number" inputMode="numeric" min={0} max={MAX_RUPIAH} disabled={origin === "unknown"} value={value.amount ?? ""} onChange={(event) => onChange({ amount: Math.max(0, Math.round(Number(event.target.value))), origin: origin === "unknown" ? "estimated" : origin })} /></div><select className="input origin-select" aria-label={`Status data ${label}`} value={origin} onChange={(event) => setOrigin(event.target.value as DataOrigin)}><option value="unknown">Belum diketahui</option><option value="estimated">Perkiraan</option><option value="confirmed">Dikonfirmasi</option></select></div>{helper && <small>{helper}</small>}</div>;
+ }
+ 
+-function restoreDraft(projectId: string, initialOption: AccommodationOption | undefined, draftKey: string): AccommodationOption {
++function restoreDraft(projectId: string, initialOption: AccommodationOption | undefined, draftKey: string, seed?: AccommodationOption): AccommodationOption {
+   if (initialOption !== undefined) return initialOption;
++  if (seed !== undefined) return seed;
+   const empty = createEmptyOption(projectId);
+   if (typeof window === "undefined") return empty;
+   const saved = window.sessionStorage.getItem(draftKey);
+@@ -50,9 +39,9 @@ function restoreDraft(projectId: string, initialOption: AccommodationOption | un
+   }
+ }
+ 
+-export function OptionEditor({ project, initialOption, onSaveAction, onCancelAction }: { project: ComparisonProject; initialOption?: AccommodationOption; onSaveAction: (option: AccommodationOption) => Promise<void>; onCancelAction: () => void }) {
++function FullOptionEditor({ project, initialOption, seed, onSaveAction, onCancelAction }: { project: ComparisonProject; initialOption?: AccommodationOption; seed?: AccommodationOption; onSaveAction: (option: AccommodationOption) => Promise<void>; onCancelAction: () => void }) {
+   const draftKey = `kosmatch-draft-${project.id}-${initialOption?.id ?? "new"}`;
+-  const [option, setOption] = useState<AccommodationOption>(() => restoreDraft(project.id, initialOption, draftKey));
++  const [option, setOption] = useState<AccommodationOption>(() => restoreDraft(project.id, initialOption, draftKey, seed));
+   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+   const [error, setError] = useState<string | null>(null);
+ 
+@@ -76,6 +65,11 @@ export function OptionEditor({ project, initialOption, onSaveAction, onCancelAct
+     };
+   const updateMoney = (key: keyof Pick<AccommodationOption, "rent" | "electricity" | "water" | "internet" | "laundry" | "otherRecurring" | "deposit" | "administrationFee" | "roundTripTransportCost">, value: MoneyValue) => update(key, value);
+ 
++  const setCommute = (minutes: number | null, origin: "manual" | "estimated") => {
++    setSaveState("saving");
++    setOption((current) => ({ ...current, oneWayCommuteMinutes: minutes, commuteOrigin: minutes === null ? null : origin, updatedAt: new Date().toISOString() }));
++  };
++
+   const setFacility = (code: string, value: Availability) => {
+     const codes = value === true ? [...new Set([...option.facilityCodes, code])] : option.facilityCodes.filter((item) => item !== code);
+     update("facilityCodes", codes);
+@@ -97,7 +91,7 @@ export function OptionEditor({ project, initialOption, onSaveAction, onCancelAct
+         <fieldset className="panel form-section"><legend>1. Informasi dasar</legend><div className="form-grid"><div className="field"><label htmlFor="option-name">Nama pilihan kos</label><input id="option-name" className="input" required maxLength={100} value={option.name} onChange={(e) => update("name", e.target.value)} /></div><div className="field"><label htmlFor="option-area">Area atau lingkungan</label><input id="option-area" className="input" maxLength={120} value={option.area} onChange={(e) => update("area", e.target.value)} /></div><div className="field"><label htmlFor="source-url">URL sumber (opsional)</label><input id="source-url" className="input" type="url" placeholder="https://..." value={option.sourceUrl ?? ""} onChange={(e) => update("sourceUrl", e.target.value || null)} /></div><div className="field"><label htmlFor="checked-date">Terakhir diperiksa</label><input id="checked-date" className="input" type="date" max={new Date().toISOString().slice(0,10)} value={option.lastCheckedAt ?? ""} onChange={(e) => update("lastCheckedAt", e.target.value || null)} /></div></div></fieldset>
+         <fieldset className="panel form-section"><legend>2. Biaya bulanan</legend><div className="form-grid">{moneyFields.map(([key,label]) => <MoneyField key={key} id={key} label={label} value={option[key]} onChange={(value) => updateMoney(key,value)} />)}</div></fieldset>
+         <fieldset className="panel form-section"><legend>3. Biaya awal masuk</legend><div className="form-grid">{moveInFields.map(([key,label]) => <MoneyField key={key} id={key} label={label} value={option[key]} onChange={(value) => updateMoney(key,value)} helper="Biaya satu kali; tidak dicampur ke estimasi bulanan." />)}</div></fieldset>
+-        <fieldset className="panel form-section"><legend>4. Perjalanan</legend><div className="form-grid"><div className="field"><label htmlFor="commute-time">Waktu sekali jalan</label><div className="input-prefix"><input id="commute-time" className="input" type="number" min={0} max={360} value={option.oneWayCommuteMinutes ?? ""} onChange={(e) => update("oneWayCommuteMinutes", e.target.value === "" ? null : Number(e.target.value))} /><span className="suffix">menit</span></div></div><MoneyField id="transport" label="Biaya transportasi pulang-pergi" value={option.roundTripTransportCost} onChange={(value) => updateMoney("roundTripTransportCost",value)} /></div></fieldset>
++        <fieldset className="panel form-section"><legend>4. Lokasi dan perjalanan</legend><div className="form-grid"><div className="field"><label htmlFor="commute-time">Waktu sekali jalan</label><div className="input-prefix"><input id="commute-time" className="input" type="number" min={0} max={360} value={option.oneWayCommuteMinutes ?? ""} onChange={(e) => setCommute(e.target.value === "" ? null : Number(e.target.value), "manual")} /><span className="suffix">menit</span></div></div><MoneyField id="transport" label="Biaya transportasi pulang-pergi" value={option.roundTripTransportCost} onChange={(value) => updateMoney("roundTripTransportCost",value)} /></div><LocationInput label="Lokasi kos" value={option.location} onChange={(point) => update("location", point)} allowCurrentLocation /><DistanceSummary project={project} location={option.location} currentMinutes={option.oneWayCommuteMinutes} onApplyMinutes={(minutes) => setCommute(minutes, "estimated")} />{option.commuteOrigin === "estimated" && <p className="unknown"><Info size={15} /> Waktu tempuh ini adalah perkiraan dari jarak, bukan hasil rute.</p>}</fieldset>
+         <fieldset className="panel form-section"><legend>5. Fasilitas dan aturan</legend><p className="muted">Pilih status sebenarnya. “Perlu dikonfirmasi” membuat fasilitas wajib belum memenuhi kelayakan.</p><div className="availability-list">{Object.entries(FACILITY_DEFINITIONS).map(([code,label]) => <div className="availability-row" key={code}><strong>{label}</strong><div className="chips" role="group" aria-label={`Status ${label}`}>{([[true,"Tersedia"],[false,"Tidak ada"],["unknown","Belum diketahui"]] as const).map(([value,text]) => <button className={`chip ${option.facilityValues[code] === value ? "selected" : ""}`} type="button" aria-pressed={option.facilityValues[code] === value} onClick={() => setFacility(code,value)} key={String(value)}>{text}</button>)}</div></div>)}</div><h3>Aturan kos</h3><div className="availability-list">{Object.entries(RULE_DEFINITIONS).map(([code,label]) => <div className="availability-row" key={code}><strong>{label}</strong><div className="chips" role="group" aria-label={`Status ${label}`}>{([[true,"Sesuai"],[false,"Tidak sesuai"],["unknown","Belum diketahui"]] as const).map(([value,text]) => <button className={`chip ${option.ruleValues[code] === value ? "selected" : ""}`} type="button" aria-pressed={option.ruleValues[code] === value} onClick={() => update("ruleValues",{...option.ruleValues,[code]:value})} key={String(value)}>{text}</button>)}</div></div>)}</div></fieldset>
+         <fieldset className="panel form-section"><legend>6. Pengamatan pribadi</legend><div className="form-grid"><div className="field"><label htmlFor="environment">Penilaian lingkungan</label><select id="environment" className="input" value={option.environmentRating ?? ""} onChange={(e) => update("environmentRating", e.target.value === "" ? null : Number(e.target.value) as 1|2|3|4|5)}><option value="">Belum dinilai</option>{[1,2,3,4,5].map((value) => <option value={value} key={value}>{value} dari 5</option>)}</select></div><div className="field full"><label htmlFor="notes">Catatan dan pertanyaan</label><textarea id="notes" className="input textarea" maxLength={3000} value={option.notes} onChange={(e) => update("notes",e.target.value)} /></div></div></fieldset>
+         <fieldset className="panel form-section"><legend>7. Tinjau sebelum menyimpan</legend><p>Anda dapat menyimpan draft yang belum lengkap. Informasi berikut akan ditampilkan sebagai belum diketahui:</p>{cost.unknownMonthlyFields.length===0&&option.oneWayCommuteMinutes!==null?<p className="badge good"><Check size={14}/> Data biaya dan perjalanan utama sudah terisi.</p>:<ul className="reasons">{cost.unknownMonthlyFields.map((field)=><li key={field}>{field === "monthlyTransport" ? "Transportasi bulanan" : field}</li>)}{option.oneWayCommuteMinutes===null&&<li>Waktu perjalanan sekali jalan</li>}</ul>}<p className="muted small">Status fasilitas dan aturan yang belum diketahui tetap mengurangi keyakinan data dan tidak diasumsikan cocok.</p></fieldset>
+@@ -108,3 +102,20 @@ export function OptionEditor({ project, initialOption, onSaveAction, onCancelAct
+     </form>
+   </main>;
+ }
++
++function hasNewDraft(projectId: string): boolean {
++  try {
++    return typeof window !== "undefined" && window.sessionStorage.getItem(`kosmatch-draft-${projectId}-new`) !== null;
++  } catch {
++    return false;
++  }
++}
++
++export function OptionEditor(props: { project: ComparisonProject; initialOption?: AccommodationOption; onSaveAction: (option: AccommodationOption) => Promise<void>; onCancelAction: () => void }) {
++  const [seed, setSeed] = useState<AccommodationOption | undefined>(undefined);
++  const [mode, setMode] = useState<"quick" | "full">(() => (props.initialOption !== undefined || hasNewDraft(props.project.id) ? "full" : "quick"));
++  if (mode === "quick") {
++    return <QuickAddOption project={props.project} onSaveAction={props.onSaveAction} onCancelAction={props.onCancelAction} onOpenFullAction={(draft) => { setSeed(draft); setMode("full"); }} />;
++  }
++  return <FullOptionEditor {...props} seed={seed} />;
++}
+diff --git a/src/features/workspace/components/quick-add-option.tsx b/src/features/workspace/components/quick-add-option.tsx
+new file mode 100644
+index 0000000..efe2d9c
+--- /dev/null
++++ b/src/features/workspace/components/quick-add-option.tsx
+@@ -0,0 +1,111 @@
++"use client";
++
++import { useState, type FormEvent } from "react";
++import { ArrowLeft, ArrowRight, Info, Save } from "lucide-react";
++
++import type { AccommodationOption, ComparisonProject, DataOrigin, MoneyValue } from "@/domain/entities";
++import { accommodationOptionSchema } from "@/domain/validation";
++import { DistanceSummary } from "@/features/geo/components/distance-summary";
++import { LocationInput } from "@/features/geo/components/location-input";
++import { createEmptyOption, unknownMoney } from "@/features/workspace/option-factory";
++import { MAX_RUPIAH } from "@/lib/currency";
++
++interface QuickAddOptionProps {
++  readonly project: ComparisonProject;
++  readonly onSaveAction: (option: AccommodationOption) => Promise<void>;
++  readonly onCancelAction: () => void;
++  readonly onOpenFullAction: (draft: AccommodationOption) => void;
++}
++
++export function QuickAddOption({ project, onSaveAction, onCancelAction, onOpenFullAction }: QuickAddOptionProps) {
++  const [option, setOption] = useState<AccommodationOption>(() => createEmptyOption(project.id));
++  const [rentText, setRentText] = useState("");
++  const [rentOrigin, setRentOrigin] = useState<Exclude<DataOrigin, "unknown">>("confirmed");
++  const [error, setError] = useState<string | null>(null);
++  const [saving, setSaving] = useState(false);
++
++  const patch = (changes: Partial<AccommodationOption>) =>
++    setOption((current) => ({ ...current, ...changes, updatedAt: new Date().toISOString() }));
++
++  const rent = (): MoneyValue => {
++    if (rentText.trim() === "") return unknownMoney();
++    const amount = Math.round(Number(rentText));
++    return Number.isFinite(amount) && amount >= 0 ? { amount, origin: rentOrigin } : unknownMoney();
++  };
++
++  const build = (): AccommodationOption => ({ ...option, name: option.name.trim(), area: option.area.trim(), notes: option.notes.trim(), rent: rent() });
++
++  const submit = async (event: FormEvent) => {
++    event.preventDefault();
++    setError(null);
++    const validated = accommodationOptionSchema.safeParse(build());
++    if (!validated.success) {
++      setError(validated.error.issues[0]?.message ?? "Periksa kembali data kos.");
++      return;
++    }
++    setSaving(true);
++    try {
++      await onSaveAction(validated.data);
++    } catch (cause) {
++      setError(cause instanceof Error ? cause.message : "Pilihan gagal disimpan.");
++      setSaving(false);
++    }
++  };
++
++  return (
++    <main className="container workspace">
++      <button className="btn btn-ghost" type="button" onClick={onCancelAction}><ArrowLeft size={18} /> Kembali ke hasil</button>
++      <div className="workspace-head">
++        <div>
++          <div className="eyebrow">Tambah manual</div>
++          <h1>Tambah kos manual</h1>
++          <p className="muted">Isi yang Anda tahu saja. Data yang kosong ditandai “belum diketahui” dan bisa dilengkapi kapan saja.</p>
++        </div>
++      </div>
++      <form className="panel form-section" onSubmit={submit}>
++        <div className="form-grid">
++          <div className="field">
++            <label htmlFor="quick-name">Nama pilihan kos</label>
++            <input id="quick-name" className="input" required maxLength={100} value={option.name} onChange={(event) => patch({ name: event.target.value })} />
++          </div>
++          <div className="field">
++            <label htmlFor="quick-area">Area atau lingkungan</label>
++            <input id="quick-area" className="input" maxLength={100} value={option.area} onChange={(event) => patch({ area: event.target.value })} />
++          </div>
++          <div className="field">
++            <label htmlFor="quick-rent">Harga sewa bulanan</label>
++            <div className="input-prefix">
++              <span aria-hidden="true">Rp</span>
++              <input id="quick-rent" className="input" type="number" inputMode="numeric" min={0} max={MAX_RUPIAH} value={rentText} onChange={(event) => setRentText(event.target.value)} />
++            </div>
++          </div>
++          <div className="field">
++            <label htmlFor="quick-rent-origin">Status harga</label>
++            <select id="quick-rent-origin" className="input" value={rentOrigin} onChange={(event) => setRentOrigin(event.target.value as "confirmed" | "estimated")}>
++              <option value="confirmed">Sudah dikonfirmasi pemilik</option>
++              <option value="estimated">Perkiraan saya</option>
++            </select>
++          </div>
++        </div>
++        <LocationInput label="Lokasi kos" value={option.location} onChange={(point) => patch({ location: point })} allowCurrentLocation />
++        <DistanceSummary
++          project={project}
++          location={option.location}
++          currentMinutes={option.oneWayCommuteMinutes}
++          onApplyMinutes={(minutes) => patch({ oneWayCommuteMinutes: minutes, commuteOrigin: "estimated" })}
++        />
++        {option.commuteOrigin === "estimated" && <p className="unknown"><Info size={15} /> Waktu tempuh {option.oneWayCommuteMinutes} menit adalah perkiraan dari jarak.</p>}
++        <div className="field">
++          <label htmlFor="quick-notes">Catatan singkat (opsional)</label>
++          <textarea id="quick-notes" className="input" rows={2} maxLength={2000} value={option.notes} onChange={(event) => patch({ notes: event.target.value })} />
++        </div>
++        {error !== null && <div className="inline-alert bad" role="alert"><Info size={18} /> {error}</div>}
++        <div className="form-actions">
++          <button className="btn btn-secondary" type="button" onClick={onCancelAction}>Batal</button>
++          <button className="btn btn-secondary" type="button" onClick={() => onOpenFullAction(build())}>Lengkapi detail <ArrowRight size={16} /></button>
++          <button className="btn btn-primary" type="submit" disabled={saving}><Save size={18} /> Simpan pilihan</button>
++        </div>
++      </form>
++    </main>
++  );
++}
+diff --git a/src/features/workspace/option-factory.ts b/src/features/workspace/option-factory.ts
+new file mode 100644
+index 0000000..18746e2
+--- /dev/null
++++ b/src/features/workspace/option-factory.ts
+@@ -0,0 +1,21 @@
++import type { AccommodationOption, MoneyValue } from "@/domain/entities";
++import { FACILITY_DEFINITIONS, RULE_DEFINITIONS } from "@/domain/validation";
++
++export function unknownMoney(): MoneyValue {
++  return { amount: null, origin: "unknown" };
++}
++
++export function createEmptyOption(projectId: string): AccommodationOption {
++  const now = new Date().toISOString();
++  return {
++    id: crypto.randomUUID(), projectId, name: "", area: "", sourceUrl: null, lastCheckedAt: null,
++    rent: unknownMoney(), electricity: unknownMoney(), water: unknownMoney(), internet: unknownMoney(), laundry: unknownMoney(), otherRecurring: unknownMoney(),
++    deposit: unknownMoney(), administrationFee: unknownMoney(), oneWayCommuteMinutes: null, commuteOrigin: null, location: null,
++    roundTripTransportCost: unknownMoney(),
++    facilityCodes: [],
++    facilityValues: Object.fromEntries(Object.keys(FACILITY_DEFINITIONS).map((code) => [code, "unknown"])),
++    ruleValues: Object.fromEntries(Object.keys(RULE_DEFINITIONS).map((code) => [code, "unknown"])),
++    environmentRating: null, notes: "", pros: [], concerns: [], verificationQuestions: [], shortlisted: false,
++    createdAt: now, updatedAt: now,
++  };
++}
+diff --git a/src/lib/geo/geo.ts b/src/lib/geo/geo.ts
+new file mode 100644
+index 0000000..5e3fcc4
+--- /dev/null
++++ b/src/lib/geo/geo.ts
+@@ -0,0 +1,105 @@
++export interface GeoPoint {
++  readonly latitude: number;
++  readonly longitude: number;
++}
++
++export type TravelMode = "walk" | "motorcycle";
++
++const EARTH_RADIUS_METERS = 6_371_008.8;
++
++/** Faktor kelokan jalan: jarak jalan rata-rata kota ≈ 1,3× jarak garis lurus (heuristik kasar). */
++export const ROAD_DETOUR_FACTOR = 1.3;
++
++/** Kecepatan rata-rata kasar dalam km/jam. Bukan hasil routing sungguhan. */
++export const TRAVEL_SPEED_KMH: Readonly<Record<TravelMode, number>> = { walk: 4.5, motorcycle: 22 };
++
++/** Batas kasar wilayah Indonesia, dipakai hanya untuk memberi peringatan input. */
++export const INDONESIA_BOUNDS = { minLatitude: -11.5, maxLatitude: 6.5, minLongitude: 94.5, maxLongitude: 141.5 } as const;
++
++export function isValidGeoPoint(point: GeoPoint): boolean {
++  return (
++    Number.isFinite(point.latitude) &&
++    Number.isFinite(point.longitude) &&
++    point.latitude >= -90 &&
++    point.latitude <= 90 &&
++    point.longitude >= -180 &&
++    point.longitude <= 180
++  );
++}
++
++export function isWithinIndonesia(point: GeoPoint): boolean {
++  return (
++    point.latitude >= INDONESIA_BOUNDS.minLatitude &&
++    point.latitude <= INDONESIA_BOUNDS.maxLatitude &&
++    point.longitude >= INDONESIA_BOUNDS.minLongitude &&
++    point.longitude <= INDONESIA_BOUNDS.maxLongitude
++  );
++}
++
++const toRadians = (degrees: number): number => (degrees * Math.PI) / 180;
++
++export function haversineMeters(from: GeoPoint, to: GeoPoint): number {
++  const dLat = toRadians(to.latitude - from.latitude);
++  const dLng = toRadians(to.longitude - from.longitude);
++  const a =
++    Math.sin(dLat / 2) ** 2 +
++    Math.cos(toRadians(from.latitude)) * Math.cos(toRadians(to.latitude)) * Math.sin(dLng / 2) ** 2;
++  return 2 * EARTH_RADIUS_METERS * Math.asin(Math.min(1, Math.sqrt(a)));
++}
++
++export function estimateRoadMeters(straightMeters: number): number {
++  return Math.round(straightMeters * ROAD_DETOUR_FACTOR);
++}
++
++export function estimateMinutes(roadMeters: number, mode: TravelMode): number {
++  if (roadMeters <= 0) return 0;
++  return Math.max(1, Math.ceil((roadMeters / 1_000 / TRAVEL_SPEED_KMH[mode]) * 60));
++}
++
++export function formatDistance(meters: number): string {
++  if (meters < 1_000) return `${Math.max(10, Math.round(meters / 10) * 10)} m`;
++  return `${(meters / 1_000).toFixed(1).replace(".", ",")} km`;
++}
++
++export function formatCoordinates(point: GeoPoint): string {
++  return `${point.latitude.toFixed(5)}, ${point.longitude.toFixed(5)}`;
++}
++
++export function googleMapsLink(point: GeoPoint): string {
++  return `https://www.google.com/maps/search/?api=1&query=${point.latitude},${point.longitude}`;
++}
++
++export function googleDirectionsLink(from: GeoPoint, to: GeoPoint): string {
++  return `https://www.google.com/maps/dir/?api=1&origin=${from.latitude},${from.longitude}&destination=${to.latitude},${to.longitude}`;
++}
++
++const NUM = "[-+]?\\d{1,3}(?:\\.\\d+)?";
++const PIN_PATTERN = new RegExp(`!3d(${NUM})!4d(${NUM})`);
++const AT_PATTERN = new RegExp(`@(${NUM}),(${NUM})`);
++const QUERY_PATTERN = new RegExp(`[?&](?:q|query|ll|destination|center)=(${NUM})(?:,|%2C)\\s*(${NUM})`, "i");
++const GEO_PATTERN = new RegExp(`^\\s*geo:(${NUM}),(${NUM})`, "i");
++const PLAIN_PATTERN = new RegExp(`^\\s*\\(?\\s*(${NUM})\\s*[,;\\s]\\s*(${NUM})\\s*\\)?\\s*$`);
++
++/**
++ * Membaca koordinat dari teks: "-0.9143, 100.4602", tautan Google Maps panjang
++ * (@lat,lng / !3d..!4d.. / ?q=lat,lng), atau URI geo:. Tautan pendek (maps.app.goo.gl)
++ * tidak bisa dibaca tanpa membuka jaringan, sehingga mengembalikan null.
++ */
++export function parseCoordinates(input: string): GeoPoint | null {
++  const text = input.trim();
++  if (text.length === 0 || text.length > 2_048) return null;
++  let decoded = text;
++  try {
++    decoded = decodeURIComponent(text);
++  } catch {
++    decoded = text;
++  }
++  const patterns = [PIN_PATTERN, AT_PATTERN, QUERY_PATTERN, GEO_PATTERN, PLAIN_PATTERN];
++  for (const pattern of patterns) {
++    const match = pattern.exec(decoded) ?? pattern.exec(text);
++    if (match === null) continue;
++    const point = { latitude: Number(match[1]), longitude: Number(match[2]) };
++    if (isValidGeoPoint(point)) return point;
++  }
++  return null;
++}
+diff --git a/src/lib/geo/index.ts b/src/lib/geo/index.ts
+new file mode 100644
+index 0000000..a43f355
+--- /dev/null
++++ b/src/lib/geo/index.ts
+@@ -0,0 +1,16 @@
++export {
++  INDONESIA_BOUNDS,
++  ROAD_DETOUR_FACTOR,
++  TRAVEL_SPEED_KMH,
++  estimateMinutes,
++  estimateRoadMeters,
++  formatCoordinates,
++  formatDistance,
++  googleDirectionsLink,
++  googleMapsLink,
++  haversineMeters,
++  isValidGeoPoint,
++  isWithinIndonesia,
++  parseCoordinates,
++} from "@/lib/geo/geo";
++export type { GeoPoint, TravelMode } from "@/lib/geo/geo";
+diff --git a/tests/components/geo-ui.test.tsx b/tests/components/geo-ui.test.tsx
+new file mode 100644
+index 0000000..f142ff9
+--- /dev/null
++++ b/tests/components/geo-ui.test.tsx
+@@ -0,0 +1,139 @@
++// @vitest-environment jsdom
++import { afterEach, describe, expect, it, vi } from "vitest";
++import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
++import { useState } from "react";
++import { demoProject } from "@/data/demo";
++import type { ComparisonProject, GeoPoint } from "@/domain/entities";
++import type { AccommodationOption } from "@/domain/entities";
++import { CampusPicker } from "@/features/geo/components/campus-picker";
++import { DistanceSummary } from "@/features/geo/components/distance-summary";
++import { LocationInput } from "@/features/geo/components/location-input";
++import { QuickAddOption } from "@/features/workspace/components/quick-add-option";
++
++afterEach(() => cleanup());
++
++function Harness({ initial = null }: { initial?: GeoPoint | null }) {
++  const [value, setValue] = useState<GeoPoint | null>(initial);
++  return <><LocationInput label="Lokasi kos" value={value} onChange={setValue} /><output data-testid="value">{value === null ? "null" : `${value.latitude},${value.longitude}`}</output></>;
++}
++
++describe("LocationInput", () => {
++  it("menerapkan koordinat dari teks lewat tombol Terapkan", () => {
++    render(<Harness />);
++    fireEvent.change(screen.getByLabelText("Lokasi kos"), { target: { value: "-0.9143, 100.4602" } });
++    fireEvent.click(screen.getByRole("button", { name: "Terapkan" }));
++    expect(screen.getByTestId("value").textContent).toBe("-0.9143,100.4602");
++  });
++  it("Enter menerapkan koordinat dan tidak mengirim form induk", () => {
++    const onSubmit = vi.fn((e: { preventDefault: () => void }) => e.preventDefault());
++    render(<form onSubmit={onSubmit}><Harness /></form>);
++    const input = screen.getByLabelText("Lokasi kos");
++    fireEvent.change(input, { target: { value: "-0.9143, 100.4602" } });
++    fireEvent.keyDown(input, { key: "Enter" });
++    expect(screen.getByTestId("value").textContent).toBe("-0.9143,100.4602");
++    expect(onSubmit).not.toHaveBeenCalled();
++  });
++  it("menampilkan galat untuk format tidak dikenal dan tautan pendek", () => {
++    render(<Harness />);
++    const input = screen.getByLabelText("Lokasi kos");
++    fireEvent.change(input, { target: { value: "bukan koordinat" } });
++    fireEvent.click(screen.getByRole("button", { name: "Terapkan" }));
++    expect(screen.getByText(/Format belum dikenali/)).toBeTruthy();
++    fireEvent.change(input, { target: { value: "https://maps.app.goo.gl/xyz" } });
++    fireEvent.click(screen.getByRole("button", { name: "Terapkan" }));
++    expect(screen.getByText(/Tautan pendek/)).toBeTruthy();
++    expect(screen.getByTestId("value").textContent).toBe("null");
++  });
++  it("memperingatkan titik di luar Indonesia dan bisa dihapus", () => {
++    render(<Harness initial={{ latitude: 100.4602, longitude: -0.9143 }} />);
++    expect(screen.getByText(/di luar Indonesia/)).toBeTruthy();
++    fireEvent.click(screen.getByRole("button", { name: /Hapus Lokasi kos/ }));
++    expect(screen.getByTestId("value").textContent).toBe("null");
++  });
++});
++
++describe("DistanceSummary", () => {
++  const project = { destinationLabel: "Unand", destinationPoint: { latitude: -0.9143, longitude: 100.4602 } };
++  it("meminta pengguna mengatur tujuan bila belum ada", () => {
++    render(<DistanceSummary project={{ destinationLabel: "X", destinationPoint: null }} location={{ latitude: 0, longitude: 0 }} currentMinutes={null} onApplyMinutes={() => undefined} />);
++    expect(screen.getByText(/belum diatur/)).toBeTruthy();
++  });
++  it("menampilkan jarak dan menerapkan estimasi waktu", () => {
++    const onApply = vi.fn();
++    render(<DistanceSummary project={project} location={{ latitude: -0.9143, longitude: 100.4692 }} currentMinutes={null} onApplyMinutes={onApply} />);
++    expect(screen.getByText(/Garis lurus/)).toBeTruthy();
++    fireEvent.click(screen.getByRole("button", { name: /Motor/ }));
++    expect(onApply).toHaveBeenCalledTimes(1);
++    expect(onApply.mock.calls[0]![0]).toBeGreaterThan(0);
++  });
++});
++
++describe("CampusPicker", () => {
++  it("memilih kampus mengisi titik dan nama; memilih 'belum dipilih' mengosongkan", () => {
++    const onChange = vi.fn();
++    render(<CampusPicker campusId="" point={null} onChange={onChange} />);
++    fireEvent.change(screen.getByLabelText(/Kampus tujuan/), { target: { value: "unand-limau-manis" } });
++    const call = onChange.mock.calls[0]![0];
++    expect(call.campusId).toBe("unand-limau-manis");
++    expect(call.campusName).toMatch(/Andalas/);
++    expect(call.point.latitude).toBeLessThan(0);
++    cleanup();
++    render(<CampusPicker campusId="unand-limau-manis" point={call.point} onChange={onChange} />);
++    fireEvent.change(screen.getByLabelText(/Kampus tujuan/), { target: { value: "" } });
++    expect(onChange.mock.calls.at(-1)![0]).toEqual({ campusId: "", point: null, campusName: null });
++  });
++});
++
++describe("QuickAddOption (tambah kos manual)", () => {
++  const project: ComparisonProject = { ...demoProject, destinationLabel: "Unand", destinationPoint: { latitude: -0.9143, longitude: 100.4602 } };
++
++  it("menyimpan kos dengan data minimal; sisanya 'belum diketahui'", async () => {
++    const onSave = vi.fn<(option: AccommodationOption) => Promise<void>>().mockResolvedValue(undefined);
++    render(<QuickAddOption project={project} onSaveAction={onSave} onCancelAction={() => undefined} onOpenFullAction={() => undefined} />);
++    fireEvent.change(screen.getByLabelText("Nama pilihan kos"), { target: { value: "Kos Melati" } });
++    fireEvent.click(screen.getByRole("button", { name: /Simpan pilihan/ }));
++    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
++    const saved = onSave.mock.calls[0]![0];
++    expect(saved.name).toBe("Kos Melati");
++    expect(saved.rent).toEqual({ amount: null, origin: "unknown" });
++    expect(saved.location).toBeNull();
++    expect(saved.oneWayCommuteMinutes).toBeNull();
++  });
++
++  it("menyimpan harga, lokasi, dan waktu tempuh perkiraan yang ditandai estimated", async () => {
++    const onSave = vi.fn<(option: AccommodationOption) => Promise<void>>().mockResolvedValue(undefined);
++    render(<QuickAddOption project={project} onSaveAction={onSave} onCancelAction={() => undefined} onOpenFullAction={() => undefined} />);
++    fireEvent.change(screen.getByLabelText("Nama pilihan kos"), { target: { value: "Kos Dekat Kampus" } });
++    fireEvent.change(screen.getByLabelText("Harga sewa bulanan"), { target: { value: "850000" } });
++    fireEvent.change(screen.getByLabelText("Status harga"), { target: { value: "estimated" } });
++    fireEvent.change(screen.getByLabelText("Lokasi kos"), { target: { value: "-0.9143, 100.4692" } });
++    fireEvent.click(screen.getByRole("button", { name: "Terapkan" }));
++    fireEvent.click(screen.getByRole("button", { name: /Motor/ }));
++    fireEvent.click(screen.getByRole("button", { name: /Simpan pilihan/ }));
++    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
++    const saved = onSave.mock.calls[0]![0];
++    expect(saved.rent).toEqual({ amount: 850_000, origin: "estimated" });
++    expect(saved.location).toEqual({ latitude: -0.9143, longitude: 100.4692 });
++    expect(saved.commuteOrigin).toBe("estimated");
++    expect(saved.oneWayCommuteMinutes).toBeGreaterThan(0);
++  });
++
++  it("menolak nama kosong dan tidak memanggil simpan", async () => {
++    const onSave = vi.fn<(option: AccommodationOption) => Promise<void>>().mockResolvedValue(undefined);
++    render(<QuickAddOption project={project} onSaveAction={onSave} onCancelAction={() => undefined} onOpenFullAction={() => undefined} />);
++    fireEvent.submit(screen.getByRole("button", { name: /Simpan pilihan/ }).closest("form")!);
++    await waitFor(() => expect(screen.getByRole("alert")).toBeTruthy());
++    expect(onSave).not.toHaveBeenCalled();
++  });
++
++  it("'Lengkapi detail' membawa data yang sudah diisi ke editor lengkap", () => {
++    const onFull = vi.fn();
++    render(<QuickAddOption project={project} onSaveAction={async () => undefined} onCancelAction={() => undefined} onOpenFullAction={onFull} />);
++    fireEvent.change(screen.getByLabelText("Nama pilihan kos"), { target: { value: "  Kos Bawa Data " } });
++    fireEvent.change(screen.getByLabelText("Harga sewa bulanan"), { target: { value: "900000" } });
++    fireEvent.click(screen.getByRole("button", { name: /Lengkapi detail/ }));
++    const draft = onFull.mock.calls[0]![0] as AccommodationOption;
++    expect(draft.name).toBe("Kos Bawa Data");
++    expect(draft.rent.amount).toBe(900_000);
++  });
++});
+diff --git a/tests/unit/destination-distance.test.ts b/tests/unit/destination-distance.test.ts
+new file mode 100644
+index 0000000..a4d073b
+--- /dev/null
++++ b/tests/unit/destination-distance.test.ts
+@@ -0,0 +1,74 @@
++import { describe, expect, it } from "vitest";
++import { demoOptions, demoProject } from "@/data/demo";
++import { calculateDestinationDistance } from "@/domain/distance";
++import type { AccommodationOption, MoneyValue } from "@/domain/entities";
++import { calculateMatch } from "@/domain/scoring";
++import { accommodationOptionSchema, comparisonProjectSchema, kosMatchExportSchema } from "@/domain/validation";
++
++const base = demoOptions[0]!;
++function without(source: object, ...keys: string[]): Record<string, unknown> {
++  const copy = { ...source } as Record<string, unknown>;
++  for (const key of keys) delete copy[key];
++  return copy;
++}
++const confirmed = (amount: number): MoneyValue => ({ amount, origin: "confirmed" });
++
++describe("calculateDestinationDistance", () => {
++  const campus = { latitude: -0.9143, longitude: 100.4602 };
++  it("null bila titik tujuan atau lokasi kos belum ada", () => {
++    expect(calculateDestinationDistance({ destinationPoint: null }, { location: campus })).toBeNull();
++    expect(calculateDestinationDistance({ destinationPoint: campus }, { location: null })).toBeNull();
++  });
++  it("menghitung jarak dan estimasi waktu", () => {
++    const kos = { latitude: -0.9143, longitude: 100.4692 }; // ±1 km ke timur
++    const d = calculateDestinationDistance({ destinationPoint: campus }, { location: kos })!;
++    expect(d.straightMeters).toBeGreaterThan(950);
++    expect(d.straightMeters).toBeLessThan(1_050);
++    expect(d.estimatedRoadMeters).toBe(Math.round(d.straightMeters * 1.3));
++    expect(d.walkMinutes).toBeGreaterThan(d.motorcycleMinutes);
++  });
++});
++
++describe("kompatibilitas data lama", () => {
++  it("opsi tanpa field lokasi (data lama) tetap valid dengan default null", () => {
++    const legacy = without(base, "location", "commuteOrigin");
++    const parsed = accommodationOptionSchema.parse(legacy);
++    expect(parsed.location).toBeNull();
++    expect(parsed.commuteOrigin).toBeNull();
++  });
++  it("proyek lama tanpa destinationPoint tetap valid", () => {
++    const legacy = without(demoProject, "destinationPoint");
++    expect(comparisonProjectSchema.parse(legacy).destinationPoint).toBeNull();
++  });
++  it("menerima koordinat valid dan menolak yang di luar rentang atau berisi field asing", () => {
++    expect(accommodationOptionSchema.safeParse({ ...base, location: { latitude: -0.9, longitude: 100.4 } }).success).toBe(true);
++    expect(accommodationOptionSchema.safeParse({ ...base, location: { latitude: 120, longitude: 100.4 } }).success).toBe(false);
++    expect(accommodationOptionSchema.safeParse({ ...base, location: { latitude: 1, longitude: 1, x: 1 } }).success).toBe(false);
++    expect(accommodationOptionSchema.safeParse({ ...base, commuteOrigin: "gps" }).success).toBe(false);
++  });
++  it("ekspor v1 lama tanpa field baru tetap bisa diimpor", () => {
++    const legacyProject = without(demoProject, "destinationPoint");
++    const legacyOptions = demoOptions.map((o) => without(o, "location", "commuteOrigin"));
++    const result = kosMatchExportSchema.safeParse({
++      format: "kosmatch-project", version: 1, exportedAt: new Date().toISOString(), project: legacyProject, options: legacyOptions,
++    });
++    if (!result.success) console.error(result.error.issues.slice(0, 3));
++    expect(result.success).toBe(true);
++  });
++});
++
++describe("confidence dan waktu tempuh perkiraan", () => {
++  const full: AccommodationOption = {
++    ...base,
++    rent: confirmed(1_200_000), electricity: confirmed(100_000), water: confirmed(50_000),
++    internet: confirmed(80_000), laundry: confirmed(60_000), otherRecurring: confirmed(0),
++    roundTripTransportCost: confirmed(20_000), oneWayCommuteMinutes: 20,
++  };
++  it("waktu tempuh manual dapat mencapai high, estimasi dari jarak tidak", () => {
++    const manual = calculateMatch(demoProject, { ...full, commuteOrigin: "manual" });
++    const estimated = calculateMatch(demoProject, { ...full, commuteOrigin: "estimated" });
++    expect(manual.confidence).toBe("high");
++    expect(estimated.confidence).not.toBe("high");
++    expect(estimated.score).toBe(manual.score); // skor sama; hanya kepercayaan yang turun
++  });
++});
+diff --git a/tests/unit/geo.test.ts b/tests/unit/geo.test.ts
+new file mode 100644
+index 0000000..c056c5d
+--- /dev/null
++++ b/tests/unit/geo.test.ts
+@@ -0,0 +1,76 @@
++import { describe, expect, it } from "vitest";
++import { CAMPUSES } from "@/data/campuses";
++import {
++  estimateMinutes, estimateRoadMeters, formatDistance, haversineMeters, isValidGeoPoint, isWithinIndonesia, parseCoordinates,
++} from "@/lib/geo";
++
++describe("haversineMeters", () => {
++  it("satu derajat bujur di khatulistiwa ≈ 111,2 km", () => {
++    const d = haversineMeters({ latitude: 0, longitude: 100 }, { latitude: 0, longitude: 101 });
++    expect(d).toBeGreaterThan(111_000);
++    expect(d).toBeLessThan(111_400);
++  });
++  it("jarak titik yang sama adalah 0 dan simetris", () => {
++    const a = { latitude: -6.2, longitude: 106.8 };
++    const b = { latitude: -6.9, longitude: 107.6 };
++    expect(haversineMeters(a, a)).toBe(0);
++    expect(haversineMeters(a, b)).toBeCloseTo(haversineMeters(b, a), 6);
++  });
++});
++
++describe("estimasi", () => {
++  it("jarak jalan = garis lurus × 1,3", () => expect(estimateRoadMeters(1_000)).toBe(1_300));
++  it("menit dibulatkan ke atas dan minimal 1 untuk jarak > 0", () => {
++    expect(estimateMinutes(1_300, "walk")).toBe(18); // 1,3 km / 4,5 km/j
++    expect(estimateMinutes(1_300, "motorcycle")).toBe(4); // 1,3 km / 22 km/j
++    expect(estimateMinutes(5, "motorcycle")).toBe(1);
++    expect(estimateMinutes(0, "walk")).toBe(0);
++  });
++  it("format jarak", () => {
++    expect(formatDistance(850)).toBe("850 m");
++    expect(formatDistance(1_240)).toBe("1,2 km");
++    expect(formatDistance(3)).toBe("10 m");
++  });
++});
++
++describe("parseCoordinates", () => {
++  const expected = { latitude: -0.9143, longitude: 100.4602 };
++  it.each([
++    ["-0.9143, 100.4602"],
++    ["-0.9143,100.4602"],
++    ["(-0.9143; 100.4602)"],
++    ["-0.9143 100.4602"],
++    ["geo:-0.9143,100.4602"],
++    ["https://www.google.com/maps/place/Kampus/@-0.9143,100.4602,17z/data=!4m6"],
++    ["https://www.google.com/maps?q=-0.9143,100.4602"],
++    ["https://www.google.com/maps/search/?api=1&query=-0.9143%2C100.4602"],
++  ])("membaca %s", (input) => expect(parseCoordinates(input)).toEqual(expected));
++
++  it("pin (!3d!4d) didahulukan daripada pusat peta (@)", () => {
++    const url = "https://www.google.com/maps/place/X/@-1.0,100.0,15z/data=!3d-0.9143!4d100.4602";
++    expect(parseCoordinates(url)).toEqual(expected);
++  });
++  it.each([[""], ["halo"], ["95, 200"], ["https://maps.app.goo.gl/abc123"], ["-0.9143"], ["1,2,3"]])("menolak %j", (input) =>
++    expect(parseCoordinates(input)).toBeNull());
++  it("menolak input terlalu panjang", () => expect(parseCoordinates("1".repeat(3_000))).toBeNull());
++});
++
++describe("validasi titik", () => {
++  it("rentang global dan Indonesia", () => {
++    expect(isValidGeoPoint({ latitude: 91, longitude: 0 })).toBe(false);
++    expect(isValidGeoPoint({ latitude: Number.NaN, longitude: 0 })).toBe(false);
++    expect(isWithinIndonesia({ latitude: -6.2, longitude: 106.8 })).toBe(true);
++    expect(isWithinIndonesia({ latitude: 100.4602, longitude: -0.9143 })).toBe(false);
++  });
++});
++
++describe("daftar kampus", () => {
++  it("id unik, titik valid, dan berada di Indonesia", () => {
++    expect(new Set(CAMPUSES.map((c) => c.id)).size).toBe(CAMPUSES.length);
++    for (const campus of CAMPUSES) {
++      expect(isValidGeoPoint(campus)).toBe(true);
++      expect(isWithinIndonesia(campus), campus.id).toBe(true);
++      expect(campus.name.length).toBeLessThanOrEqual(120);
++    }
++  });
++});
+diff --git a/vitest.config.ts b/vitest.config.ts
+index d594f5c..b44957c 100644
+--- a/vitest.config.ts
++++ b/vitest.config.ts
+@@ -5,6 +5,7 @@ export default defineConfig({
+   resolve: {
+     alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
+   },
++  esbuild: { jsx: "automatic" },
+   test: {
+     environment: "node",
+     include: ["tests/**/*.test.ts", "tests/**/*.test.tsx"],

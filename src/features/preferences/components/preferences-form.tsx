@@ -15,6 +15,9 @@ import {
   RULE_DEFINITIONS,
 } from "@/domain/validation";
 import { formatRupiah } from "@/lib/currency";
+import type { GeoPoint } from "@/lib/geo";
+import { CAMPUSES } from "@/data/campuses";
+import { CampusPicker, inferCampusId } from "@/features/geo/components/campus-picker";
 
 import styles from "./preferences-form.module.css";
 
@@ -41,6 +44,8 @@ export type PreferencesFormProps =
 interface PreferencesDraft {
   name: string;
   destinationLabel: string;
+  campusId: string;
+  destinationPoint: GeoPoint | null;
   commuteDaysPerMonth: string;
   monthlyBudget: string;
   maxOneWayCommuteMinutes: string;
@@ -101,6 +106,8 @@ function createDraft(project: ComparisonProject | undefined): PreferencesDraft {
   return {
     name: project?.name ?? "",
     destinationLabel: project?.destinationLabel ?? "",
+    campusId: inferCampusId(project?.destinationPoint ?? null),
+    destinationPoint: project?.destinationPoint ?? null,
     commuteDaysPerMonth: String(project?.commuteDaysPerMonth ?? 20),
     monthlyBudget: project === undefined ? "" : String(project.monthlyBudget),
     maxOneWayCommuteMinutes: String(project?.maxOneWayCommuteMinutes ?? 30),
@@ -242,6 +249,7 @@ export function PreferencesForm(props: PreferencesFormProps) {
       id: sourceProject?.id ?? crypto.randomUUID(),
       name: draft.name.trim(),
       destinationLabel: draft.destinationLabel.trim(),
+      destinationPoint: draft.destinationPoint,
       monthlyBudget: parseInteger(draft.monthlyBudget),
       maxOneWayCommuteMinutes: parseInteger(draft.maxOneWayCommuteMinutes),
       commuteDaysPerMonth: parseInteger(draft.commuteDaysPerMonth),
@@ -346,6 +354,24 @@ export function PreferencesForm(props: PreferencesFormProps) {
                   onChange={(event) => updateDraft("destinationLabel", event.target.value)}
                 />
                 <small>Nama kantor atau kampus cukup; alamat lengkap tidak diperlukan.</small>
+              </div>
+              <div className={`${styles.field} ${styles.fullWidth}`}>
+                <CampusPicker
+                  campusId={draft.campusId}
+                  point={draft.destinationPoint}
+                  onChange={({ campusId, point, campusName }) => {
+                    setDraft((current) => ({
+                      ...current,
+                      campusId,
+                      destinationPoint: point,
+                      destinationLabel:
+                        campusName !== null && (current.destinationLabel.trim() === "" || CAMPUSES.some((campus) => campus.name === current.destinationLabel))
+                          ? campusName
+                          : current.destinationLabel,
+                    }));
+                    setSaveState("idle");
+                  }}
+                />
               </div>
               <div className={styles.field}>
                 <label htmlFor={`${formId}-days`}>Hari perjalanan per bulan</label>

@@ -53,6 +53,12 @@ export const sourceUrlSchema = z
     return protocol === "http:" || protocol === "https:";
   }, "URL sumber hanya boleh menggunakan http atau https.");
 
+export const geoPointSchema = z
+  .object({ latitude: z.number().min(-90).max(90), longitude: z.number().min(-180).max(180) })
+  .strict();
+
+export const commuteOriginSchema = z.enum(["manual", "estimated"]);
+
 export const moneyValueSchema = z.discriminatedUnion("origin", [
   z.object({ amount: z.number().int().min(0).max(MAX_RUPIAH), origin: z.literal("confirmed") }).strict(),
   z.object({ amount: z.number().int().min(0).max(MAX_RUPIAH), origin: z.literal("estimated") }).strict(),
@@ -107,6 +113,7 @@ export const comparisonProjectSchema: z.ZodType<ComparisonProject> = z
     id: idSchema,
     name: requiredTrimmedString(80),
     destinationLabel: requiredTrimmedString(120),
+    destinationPoint: geoPointSchema.nullable().default(null),
     monthlyBudget: z.number().int().min(0).max(MAX_RUPIAH),
     maxOneWayCommuteMinutes: z.number().int().min(0).max(360),
     commuteDaysPerMonth: z.number().int().min(0).max(31),
@@ -155,6 +162,8 @@ export const accommodationOptionSchema: z.ZodType<AccommodationOption> = z
     deposit: moneyValueSchema,
     administrationFee: moneyValueSchema,
     oneWayCommuteMinutes: z.number().int().min(0).max(360).nullable(),
+    commuteOrigin: commuteOriginSchema.nullable().default(null),
+    location: geoPointSchema.nullable().default(null),
     roundTripTransportCost: moneyValueSchema,
     facilityCodes: z.array(facilityCodeSchema).max(FACILITY_CODES.length),
     facilityValues: allowlistedAvailabilityRecord(FACILITY_CODES),
