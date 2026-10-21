@@ -27,6 +27,9 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
         <div className="container header-inner">
           <Brand />
           <div className="actions compact">
+            <a className="btn btn-ghost" href="/explore">
+              Peta Eksplorasi
+            </a>
             <a className="btn btn-ghost" href="/methodology">
               Metodologi
             </a>

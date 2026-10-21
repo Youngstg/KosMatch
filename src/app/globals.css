@@ -267,3 +267,109 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   .feature-grid { grid-template-columns: 1fr; }
 }
 
+/* Map Explorer Layout (Fase 1) */
+.map-explorer-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  min-height: calc(100vh - 72px);
+  background: var(--background);
+}
+.map-sidebar {
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  overflow-y: auto;
+  max-height: calc(100vh - 72px);
+}
+.map-sidebar-content {
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.map-main {
+  position: relative;
+  min-height: 480px;
+}
+.map-canvas-container {
+  width: 100%;
+  height: 100%;
+}
+
+/* Map Markers */
+.map-campus-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+.marker-pin {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  display: grid;
+  place-items: center;
+  box-shadow: var(--shadow-card);
+  transition: transform var(--duration-fast) var(--easing-standard);
+}
+.marker-pin:hover, .marker-pin.active {
+  background: var(--primary);
+  color: var(--surface);
+  transform: scale(1.15);
+}
+.marker-label {
+  margin-top: 4px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 750;
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  white-space: nowrap;
+}
+
+/* Candidate Pulse Pin */
+.candidate-pin {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+}
+.candidate-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-pill);
+  background: var(--danger);
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 4px rgba(0,0,0,0.3);
+  z-index: 2;
+}
+.candidate-pulse {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  background: rgba(180, 35, 24, 0.35);
+  animation: pulse-ring 1.8s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+@keyframes pulse-ring {
+  0% { transform: scale(0.5); opacity: 1; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+@media (max-width: 900px) {
+  .map-explorer-layout {
+    grid-template-columns: 1fr;
+  }
+  .map-sidebar {
+    max-height: none;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
