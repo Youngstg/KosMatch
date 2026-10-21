@@ -1,0 +1,35 @@
+name: Supabase Inactivity Keep-Alive
+
+on:
+  schedule:
+    # Runs at 02:00 UTC every 4 days to prevent the 7-day free-tier pause
+    - cron: '0 2 */4 * *'
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    name: Ping Supabase Instance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send keep-alive query to Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_KEY" ]; then
+            echo "Notice: NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY secrets not configured yet. Skipping keep-alive ping."
+            exit 0
+          fi
+
+          echo "Sending query to Supabase REST endpoint to keep Postgres database active..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "apikey: $SUPABASE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            "$SUPABASE_URL/rest/v1/campuses?select=id&limit=1")
+
+          echo "Supabase response status: $STATUS"
+          if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 400 ]; then
+            echo "✅ Keep-alive ping succeeded. Supabase pause timer refreshed."
+          else
+            echo "⚠️ Unexpected status code: $STATUS (check project status or credentials)"
+          fi
