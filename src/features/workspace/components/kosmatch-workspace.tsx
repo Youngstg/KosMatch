@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
-import { AlertTriangle, ArrowRight, Check, Clock3, Download, FileUp, Info, LoaderCircle, MapPin, Pencil, Plus, Printer, RotateCcw, Save, Scale, Sparkles, Star, Trash2 } from "lucide-react";
+import { AlertTriangle, Check, Clock3, Download, FileUp, Info, MapPin, Pencil, Plus, Printer, RotateCcw, Scale, Sparkles, Star, Trash2 } from "lucide-react";
 import { demoOptions, demoProject } from "@/data/demo";
 import { deleteKosMatchDatabase, IndexedDbProjectRepository } from "@/data/indexeddb";
 import { calculateCost } from "@/domain/costing";
@@ -49,65 +49,9 @@ function getBrowserRepository(): IndexedDbProjectRepository {
   return browserRepository;
 }
 
-function Landing({ onStart, onDemo, hasSaved, onResume }: { onStart: () => void; onDemo: () => void; hasSaved: boolean; onResume: () => void }) {
-  return (
-    <div className="shell">
-      <header className="topbar">
-        <div className="container header-inner">
-          <Brand />
-          <div className="actions compact">
-            <a className="btn btn-ghost" href="/methodology">Metodologi</a>
-            <button className="btn btn-primary" onClick={onStart}>Mulai Perbandingan</button>
-          </div>
-        </div>
-      </header>
-      <main>
-        <section className="container hero">
-          <div>
-            <h1>Kos murah belum tentu paling hemat.</h1>
-            <p className="lead">Bandingkan biaya bulanan, perjalanan, fasilitas, dan kebutuhan pribadi dalam satu keputusan yang transparan.</p>
-            <div className="actions">
-              <button className="btn btn-primary" onClick={onStart}>Mulai Perbandingan <ArrowRight size={18} /></button>
-              <button className="btn btn-secondary" onClick={onDemo}><Sparkles size={18} /> Coba Data Contoh</button>
-              {hasSaved && <button className="btn btn-ghost" onClick={onResume}><Save size={18} /> Lanjutkan proyek</button>}
-            </div>
-          </div>
-          <article className="hero-card" aria-label="Pratinjau hasil perbandingan">
-            <p className="muted"><strong>Kos Anggrek 12</strong> · Menteng</p>
-            <div className="preview-score">86% cocok</div>
-            <p><strong>Rp1.850.000 per bulan</strong></p>
-            <div className="preview-row"><span>Harga sewa</span><strong>Rp1.650.000</strong></div>
-            <div className="preview-row"><span>Perjalanan</span><strong>18 menit ke Kantor Kuningan</strong></div>
-            <div className="preview-row"><span>Kebutuhan wajib</span><strong><Check size={16} /> Terpenuhi</strong></div>
-          </article>
-        </section>
-        <section className="container steps" aria-labelledby="rent-problem-title">
-          <h2 id="rent-problem-title" className="section-title">Kenapa harga sewa saja tidak cukup?</h2>
-          <div className="step-grid">
-            {[["1", "Hitung biaya nyata", "Gabungkan sewa, biaya rutin, dan perjalanan bulanan."], ["2", "Periksa kebutuhan wajib", "Pisahkan syarat yang harus tersedia dari preferensi tambahan."], ["3", "Pahami trade-off", "Lihat alasan skor dan data yang masih perlu dikonfirmasi."]].map(([number, title, text]) => <article className="step-card" key={number}><span className="step-number">{number}</span><h3>{title}</h3><p className="muted">{text}</p></article>)}
-          </div>
-        </section>
-        <section className="container steps" aria-labelledby="transparent-score-title">
-          <div className="panel">
-            <div className="eyebrow">Transparansi skor</div>
-            <h2 id="transparent-score-title" className="section-title">Skor yang transparan, bukan sekadar rating</h2>
-            <p className="lead">Setiap skor disertai alasan, kebutuhan wajib, tingkat keyakinan data, dan hal yang masih perlu diverifikasi.</p>
-            <div className="preview-row"><span>Biaya total</span><strong>100/100 · Sesuai anggaran</strong></div>
-            <div className="preview-row"><span>Perjalanan</span><strong>92/100 · Sesuai batas waktu</strong></div>
-            <div className="preview-row"><span>Data belum lengkap</span><strong><Info size={16} /> Ditandai apa adanya</strong></div>
-          </div>
-          <p className="disclaimer"><Info size={17} /> Nama, harga, alamat, dan ketersediaan pada data contoh ini bersifat fiktif.</p>
-        </section>
-      </main>
-      <footer className="footer-note">
-        <div className="container">
-          <p>KosMatch adalah alat bantu keputusan, bukan jaminan kualitas atau ketersediaan kos.</p>
-          <button className="btn btn-primary" onClick={onStart}>Mulai Perbandingan</button>
-        </div>
-      </footer>
-    </div>
-  );
-}
+import { LandingView } from "@/features/landing";
+import { WorkspaceSkeleton } from "./workspace-skeleton";
+
 
 function Compare({ project, options, matches, requestedOptionId }: { project: ComparisonProject; options: readonly AccommodationOption[]; matches: ReturnType<typeof matchAndRank>; requestedOptionId: string | null }) {
   const [selectedIds, setSelectedIds] = useState<string[]>(() => {
@@ -306,15 +250,240 @@ function DataTools({repository,project,options,onProjectDeleted}:{repository:Ind
 }
 
 export function KosMatchWorkspace() {
-  const [repository,setRepository]=useState<IndexedDbProjectRepository|null>(null); const [view,setView]=useState<View>("loading"); const [project,setProject]=useState<ComparisonProject|null>(null); const [projects,setProjects]=useState<ComparisonProject[]>([]); const [options,setOptions]=useState<AccommodationOption[]>([]); const [error,setError]=useState<string|null>(null); const [importing,setImporting]=useState(false);
-  const initialize=async()=>{setView("loading");setError(null);try{const nextRepository=getBrowserRepository();const allProjects=await nextRepository.listProjects();const activeId=await nextRepository.getSetting<string>("activeProjectId");const loaded=allProjects.find((item)=>item.id===activeId)??allProjects[0]??null;setProjects(allProjects);setProject(loaded);setOptions(loaded===null?[]:await nextRepository.listOptions(loaded.id));setRepository(nextRepository);setView("landing");}catch(cause){setError(cause instanceof Error?cause.message:"Penyimpanan lokal tidak dapat dibuka.");setView("error");}};
-  useEffect(()=>{let active=true;const nextRepository=getBrowserRepository();void nextRepository.listProjects().then(async(allProjects)=>{const activeId=await nextRepository.getSetting<string>("activeProjectId");const loaded=allProjects.find((item)=>item.id===activeId)??allProjects[0]??null;const loadedOptions=loaded===null?[]:await nextRepository.listOptions(loaded.id);if(active){setProjects(allProjects);setProject(loaded);setOptions(loadedOptions);setRepository(nextRepository);setView("landing");}}).catch((cause:unknown)=>{if(active){setError(cause instanceof Error?cause.message:"Penyimpanan lokal tidak dapat dibuka.");setView("error");}});return()=>{active=false;};},[]);
-  const loadDemo=async()=>{const activeRepository=repository!;const projectId=newId();const now=new Date().toISOString();const clonedProject={...demoProject,id:projectId,name:`${demoProject.name} (Demo)`,createdAt:now,updatedAt:now};const clonedOptions=demoOptions.map((option)=>({...option,id:newId(),projectId,verificationQuestions:option.verificationQuestions.map((q)=>({...q,id:newId()})),createdAt:now,updatedAt:now}));await activeRepository.saveProjectBundle(clonedProject,clonedOptions);await activeRepository.saveSetting("activeProjectId",projectId);setProjects((all)=>[clonedProject,...all]);setProject(clonedProject);setOptions(clonedOptions);setView("project");};
-  const importFile=async(event:ChangeEvent<HTMLInputElement>)=>{const file=event.target.files?.[0];if(!file)return;setImporting(true);try{const preview=parseProjectImport(await file.text());if(!confirm(`Impor proyek “${preview.projectName}” dengan ${preview.optionCount} pilihan?`))return;const imported=await confirmProjectImport(preview,repository!);await repository!.saveSetting("activeProjectId",imported.project.id);setProjects((all)=>[imported.project,...all]);setProject(imported.project);setOptions([...imported.options]);setView("project");}catch(cause){setError(cause instanceof Error?cause.message:"Import gagal.");setView("error");}finally{setImporting(false);}};
-  if(view==="loading")return <div className="center-state" role="status"><LoaderCircle className="spin" size={36}/><h1>Menyiapkan data lokal…</h1><p className="muted">Data Anda tetap berada di perangkat ini.</p></div>;
-  if(view==="error")return <div className="center-state" role="alert"><AlertTriangle size={40} color="var(--danger)"/><h1>Data belum dapat dibuka</h1><p className="muted">{error}</p><div className="actions"><button className="btn btn-primary" onClick={initialize}><RotateCcw size={18}/> Coba lagi</button><label className="btn btn-secondary"><FileUp size={18}/> Impor backup<input className="sr-only" type="file" accept="application/json" onChange={importFile} disabled={importing}/></label></div></div>;
-  if(view==="landing")return <><Landing onStart={()=>setView("setup")} onDemo={loadDemo} hasSaved={project!==null} onResume={()=>setView("project")}/><div className="floating-import"><label className="btn btn-secondary"><FileUp size={18}/> Impor backup<input className="sr-only" type="file" accept="application/json" onChange={importFile} disabled={importing}/></label>{project&&<button className="btn btn-ghost" onClick={async()=>{if(!confirm("Hapus seluruh data KosMatch di perangkat ini?"))return;await repository?.close();browserRepository=null;await deleteKosMatchDatabase();setRepository(null);setProject(null);setProjects([]);setOptions([]);await initialize();}}>Hapus data lokal</button>}</div></>;
-  if(view==="setup")return <div className="shell"><header className="topbar"><div className="container header-inner"><Brand/><button className="btn btn-ghost" onClick={()=>setView("landing")}>Keluar</button></div></header><main className="container workspace"><PreferencesForm mode="create" onCancel={()=>setView("landing")} onSave={async(value)=>{await repository!.saveProject(value);await repository!.saveSetting("activeProjectId",value.id);setProjects((all)=>[value,...all]);setProject(value);setOptions([]);setView("project");}}/></main></div>;
-  if(view==="project"&&project)return <ProjectWorkspace key={project.id} repository={repository!} projects={projects} project={project} initialOptions={options} onBack={()=>setView("landing")} onNewProject={()=>setView("setup")} onLoadDemo={loadDemo} onSwitchProject={async(id)=>{const selected=await repository!.getProject(id);if(selected===null)return;await repository!.saveSetting("activeProjectId",id);setProject(selected);setOptions(await repository!.listOptions(id));}} onProjectDeleted={()=>{void repository!.listProjects().then(async(remaining)=>{setProjects(remaining);const next=remaining[0]??null;setProject(next);setOptions(next===null?[]:await repository!.listOptions(next.id));if(next!==null){await repository!.saveSetting("activeProjectId",next.id);setView("project");}else setView("landing");});}}/>;
+  const [repository, setRepository] = useState<IndexedDbProjectRepository | null>(null);
+  const [view, setView] = useState<View>("landing");
+  const [project, setProject] = useState<ComparisonProject | null>(null);
+  const [projects, setProjects] = useState<ComparisonProject[]>([]);
+  const [options, setOptions] = useState<AccommodationOption[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
+
+  const initialize = async () => {
+    setView("loading");
+    setError(null);
+    try {
+      const nextRepository = getBrowserRepository();
+      const allProjects = await nextRepository.listProjects();
+      const activeId = await nextRepository.getSetting<string>("activeProjectId");
+      const loaded = allProjects.find((item) => item.id === activeId) ?? allProjects[0] ?? null;
+      setProjects(allProjects);
+      setProject(loaded);
+      setOptions(loaded === null ? [] : await nextRepository.listOptions(loaded.id));
+      setRepository(nextRepository);
+      setView("landing");
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Penyimpanan lokal tidak dapat dibuka.");
+      setView("error");
+    }
+  };
+
+  useEffect(() => {
+    let active = true;
+    const nextRepository = getBrowserRepository();
+    void nextRepository.listProjects().then(async (allProjects) => {
+      const activeId = await nextRepository.getSetting<string>("activeProjectId");
+      const loaded = allProjects.find((item) => item.id === activeId) ?? allProjects[0] ?? null;
+      const loadedOptions = loaded === null ? [] : await nextRepository.listOptions(loaded.id);
+      if (active) {
+        setProjects(allProjects);
+        setProject(loaded);
+        setOptions(loadedOptions);
+        setRepository(nextRepository);
+      }
+    }).catch((cause: unknown) => {
+      if (active) {
+        setError(cause instanceof Error ? cause.message : "Penyimpanan lokal tidak dapat dibuka.");
+        setView("error");
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const loadDemo = async () => {
+    const activeRepository = repository ?? getBrowserRepository();
+    const projectId = newId();
+    const now = new Date().toISOString();
+    const clonedProject = {
+      ...demoProject,
+      id: projectId,
+      name: `${demoProject.name} (Demo)`,
+      createdAt: now,
+      updatedAt: now,
+    };
+    const clonedOptions = demoOptions.map((option) => ({
+      ...option,
+      id: newId(),
+      projectId,
+      verificationQuestions: option.verificationQuestions.map((q) => ({ ...q, id: newId() })),
+      createdAt: now,
+      updatedAt: now,
+    }));
+    await activeRepository.saveProjectBundle(clonedProject, clonedOptions);
+    await activeRepository.saveSetting("activeProjectId", projectId);
+    setRepository(activeRepository);
+    setProjects((all) => [clonedProject, ...all]);
+    setProject(clonedProject);
+    setOptions(clonedOptions);
+    setView("project");
+  };
+
+  const importFile = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setImporting(true);
+    try {
+      const preview = parseProjectImport(await file.text());
+      if (!confirm(`Impor proyek “${preview.projectName}” dengan ${preview.optionCount} pilihan?`)) return;
+      const activeRepo = repository ?? getBrowserRepository();
+      const imported = await confirmProjectImport(preview, activeRepo);
+      await activeRepo.saveSetting("activeProjectId", imported.project.id);
+      setRepository(activeRepo);
+      setProjects((all) => [imported.project, ...all]);
+      setProject(imported.project);
+      setOptions([...imported.options]);
+      setView("project");
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Import gagal.");
+      setView("error");
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  if (view === "loading") return <WorkspaceSkeleton />;
+  if (view === "error") {
+    return (
+      <div className="center-state" role="alert">
+        <AlertTriangle size={40} color="var(--danger)" />
+        <h1>Data belum dapat dibuka</h1>
+        <p className="muted">{error}</p>
+        <div className="actions">
+          <button className="btn btn-primary" onClick={initialize}>
+            <RotateCcw size={18} /> Coba lagi
+          </button>
+          <label className="btn btn-secondary">
+            <FileUp size={18} /> Impor backup
+            <input className="sr-only" type="file" accept="application/json" onChange={importFile} disabled={importing} />
+          </label>
+        </div>
+      </div>
+    );
+  }
+  if (view === "landing") {
+    return (
+      <>
+        <LandingView
+          onStart={() => {
+            if (repository === null) {
+              setView("loading");
+              const nextRepo = getBrowserRepository();
+              void nextRepo.listProjects().then(() => {
+                setRepository(nextRepo);
+                setView("setup");
+              });
+            } else {
+              setView("setup");
+            }
+          }}
+          onDemo={loadDemo}
+          hasSaved={project !== null}
+          onResume={() => setView("project")}
+        />
+        <div className="floating-import">
+          <label className="btn btn-secondary">
+            <FileUp size={18} /> Impor backup
+            <input className="sr-only" type="file" accept="application/json" onChange={importFile} disabled={importing} />
+          </label>
+          {project && (
+            <button
+              className="btn btn-ghost"
+              onClick={async () => {
+                if (!confirm("Hapus seluruh data KosMatch di perangkat ini?")) return;
+                await repository?.close();
+                browserRepository = null;
+                await deleteKosMatchDatabase();
+                setRepository(null);
+                setProject(null);
+                setProjects([]);
+                setOptions([]);
+                await initialize();
+              }}
+            >
+              Hapus data lokal
+            </button>
+          )}
+        </div>
+      </>
+    );
+  }
+  if (view === "setup") {
+    return (
+      <div className="shell">
+        <header className="topbar">
+          <div className="container header-inner">
+            <Brand />
+            <button className="btn btn-ghost" onClick={() => setView("landing")}>
+              Keluar
+            </button>
+          </div>
+        </header>
+        <main className="container workspace">
+          <PreferencesForm
+            mode="create"
+            onCancel={() => setView("landing")}
+            onSave={async (value) => {
+              const activeRepo = repository ?? getBrowserRepository();
+              await activeRepo.saveProject(value);
+              await activeRepo.saveSetting("activeProjectId", value.id);
+              setRepository(activeRepo);
+              setProjects((all) => [value, ...all]);
+              setProject(value);
+              setOptions([]);
+              setView("project");
+            }}
+          />
+        </main>
+      </div>
+    );
+  }
+  if (view === "project" && project) {
+    return (
+      <ProjectWorkspace
+        key={project.id}
+        repository={repository ?? getBrowserRepository()}
+        projects={projects}
+        project={project}
+        initialOptions={options}
+        onBack={() => setView("landing")}
+        onNewProject={() => setView("setup")}
+        onLoadDemo={loadDemo}
+        onSwitchProject={async (id) => {
+          const activeRepo = repository ?? getBrowserRepository();
+          const selected = await activeRepo.getProject(id);
+          if (selected === null) return;
+          await activeRepo.saveSetting("activeProjectId", id);
+          setProject(selected);
+          setOptions(await activeRepo.listOptions(id));
+        }}
+        onProjectDeleted={() => {
+          const activeRepo = repository ?? getBrowserRepository();
+          void activeRepo.listProjects().then(async (remaining) => {
+            setProjects(remaining);
+            const next = remaining[0] ?? null;
+            setProject(next);
+            setOptions(next === null ? [] : await activeRepo.listOptions(next.id));
+            if (next !== null) {
+              await activeRepo.saveSetting("activeProjectId", next.id);
+              setView("project");
+            } else {
+              setView("landing");
+            }
+          });
+        }}
+      />
+    );
+  }
   return null;
 }

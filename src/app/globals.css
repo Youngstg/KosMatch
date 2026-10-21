@@ -229,3 +229,41 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
 .distance-summary { margin-top: 0.75rem; }
 .distance-summary dl { margin: 0.5rem 0; }
 .campus-picker { display: grid; gap: 0.75rem; }
+
+/* Skeleton Loading (V-03) */
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-subtle) 25%, #E2E6EF 50%, var(--surface-subtle) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite ease-in-out;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Feature Grid & Cards */
+.feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin-top: var(--space-6); }
+.feature-card { padding: var(--space-5); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-panel); display: flex; flex-direction: column; gap: var(--space-2); }
+.feature-card h3 { font-size: 18px; margin: var(--space-2) 0 var(--space-1); letter-spacing: -0.02em; }
+
+/* FAQ Accordion */
+.faq-list { display: grid; gap: var(--space-3); margin-top: var(--space-6); }
+.faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-panel); padding: var(--space-4) var(--space-5); transition: border-color var(--duration-base) var(--easing-standard); }
+.faq-item[open] { border-color: var(--primary); }
+.faq-item summary { font-size: 16px; font-weight: 750; cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: "+"; font-size: 22px; font-weight: 400; color: var(--primary); transition: transform var(--duration-base) var(--easing-standard); }
+.faq-item[open] summary::after { transform: rotate(45deg); }
+.faq-answer { margin-top: var(--space-3); color: var(--text-muted); line-height: 1.7; font-size: 14px; border-top: 1px solid var(--surface-subtle); padding-top: var(--space-3); }
+.faq-answer p { margin: 0; }
+
+/* CTA Banner */
+.cta-banner { background: linear-gradient(135deg, var(--surface) 0%, var(--surface-subtle) 100%); border: 1px solid var(--border); padding: var(--space-7) var(--space-6); }
+
+@media (max-width: 900px) {
+  .feature-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 767px) {
+  .feature-grid { grid-template-columns: 1fr; }
+}
+
