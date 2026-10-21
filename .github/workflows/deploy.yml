@@ -1,4 +1,4 @@
-name: CI & Deploy KostMatch to Tencent Cloud
+name: Build & Deploy KostMatch to Tencent Cloud
 
 on:
   push:
@@ -9,8 +9,8 @@ on:
       - main
 
 jobs:
-  test:
-    name: Test & Quality Checks
+  build-and-deploy:
+    name: Build & Deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -54,29 +54,8 @@ jobs:
           path: playwright-report/
           retention-days: 7
 
-  deploy:
-    name: Deploy to Tencent Cloud
-    needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'npm'
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Build Next.js App
-        run: npm run build
-
       - name: Deploy to Tencent Cloud Server
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}

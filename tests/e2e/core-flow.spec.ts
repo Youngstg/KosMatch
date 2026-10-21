@@ -4,7 +4,7 @@ import AxeBuilder from "@axe-core/playwright";
 test("demo comparison, decision, simulation, and backup flow", async ({ page }) => {
 
   await page.goto("/");
-  await page.getByRole("button", { name: "Coba Data Contoh" }).click();
+  await page.getByRole("button", { name: "Coba Data Contoh" }).first().click();
   await expect(page.getByRole("heading", { name: /Kos untuk Magang di Jakarta/ })).toBeVisible();
   await expect(page.getByText("Data contoh fiktif")).toBeVisible();
   await page.getByRole("navigation", { name: "Navigasi proyek" }).getByRole("button", { name: "Bandingkan" }).click();
@@ -68,7 +68,7 @@ test("creates a project and saves an incomplete option honestly", async ({ page 
 
 test("switches projects and restores the active project after reload", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Coba Data Contoh" }).click();
+  await page.getByRole("button", { name: "Coba Data Contoh" }).first().click();
   await page.getByRole("button", { name: "Proyek baru" }).click();
   await page.getByLabel("Nama perbandingan").fill("Proyek Kedua");
   await page.getByLabel("Tujuan rutin").fill("Kantor Bandung");
@@ -98,7 +98,7 @@ test("landing has no serious accessibility violations", async ({ page }, testInf
 test("dashboard remains accessible at narrow width", async ({ page }, testInfo) => {
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto("/");
-  await page.getByRole("button", { name: "Coba Data Contoh" }).click();
+  await page.getByRole("button", { name: "Coba Data Contoh" }).first().click();
   await expect(page.getByRole("button", { name: "Beranda" })).toBeVisible();
   await page.screenshot({ path: `public/screenshots/dashboard-${testInfo.project.name}.png`, fullPage: true });
   const results = await new AxeBuilder({ page }).analyze();
