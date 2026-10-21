@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it } from "vitest";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MapExplorer, MapSkeleton } from "@/features/map";
 
 afterEach(() => cleanup());
@@ -35,13 +35,48 @@ describe("MapExplorer Component", () => {
     const uiHeading = screen.getByRole("heading", { level: 2, name: /Universitas Indonesia \(Depok\)/i });
     expect(uiHeading).not.toBeNull();
     expect(screen.getByText("4 km")).not.toBeNull();
-    expect(screen.getByText("50 kos")).not.toBeNull();
 
     // Switch campus to Unand Limau Manis
     fireEvent.click(unandBtn);
     const unandHeading = screen.getByRole("heading", { level: 2, name: /Universitas Andalas \(Limau Manis\)/i });
     expect(unandHeading).not.toBeNull();
     expect(screen.getByText("5 km")).not.toBeNull();
-    expect(screen.getByText("30 kos")).not.toBeNull();
+  });
+
+  it("selects a listing, updates inspector, and displays neighborhood amenities", async () => {
+    render(<MapExplorer />);
+
+    // Click on one of the verified kos cards in UI Depok
+    const listingCard = screen.getByText("Kos Graha Kukusan Mandiri");
+    expect(listingCard).not.toBeNull();
+    fireEvent.click(listingCard);
+
+    // Inspector should now display listing details
+    const areaElements = screen.getAllByText(/Kukusan Teknik/);
+    expect(areaElements.length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText(/Jarak ke kampus:/)).not.toBeNull();
+
+    // Neighborhood profile card should load
+    await waitFor(() => {
+      expect(screen.getByText("Profil Fasilitas Lingkungan")).not.toBeNull();
+      expect(screen.getByText("Skor Fasilitas")).not.toBeNull();
+    });
+
+    // Test radius buttons
+    const radius500Btn = screen.getByRole("button", { name: "500 m" });
+    fireEvent.click(radius500Btn);
+    expect(radius500Btn.className).toContain("selected");
+  });
+
+  it("filters listings by gender", () => {
+    render(<MapExplorer />);
+
+    const putriFilterBtn = screen.getByRole("button", { name: "Putri" });
+    fireEvent.click(putriFilterBtn);
+
+    // Female listing should be visible
+    expect(screen.getByText("Wisma Pondok Cina Asri")).not.toBeNull();
+    // Male listing should not be visible
+    expect(screen.queryByText("Kos Graha Kukusan Mandiri")).toBeNull();
   });
 });

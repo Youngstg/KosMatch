@@ -14,13 +14,17 @@ import {
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { PilotSpecification } from "@/data/pilot-config";
 import { PILOT_CONFIG } from "@/data/pilot-config";
+import type { PilotListing } from "@/data/pilot-listings";
 import { createGeoJsonCircle } from "../utils/geo-circle";
 
 export interface MapCanvasProps {
   selectedCampus: PilotSpecification;
+  listings?: readonly PilotListing[];
+  selectedListingId?: string | null;
   candidatePoint: { latitude: number; longitude: number } | null;
   onMapClick?: (coords: { latitude: number; longitude: number }) => void;
   onCampusSelect?: (campus: PilotSpecification) => void;
+  onListingSelect?: (listing: PilotListing) => void;
 }
 
 const OSM_RASTER_STYLE: StyleSpecification = {
@@ -47,22 +51,29 @@ const OSM_RASTER_STYLE: StyleSpecification = {
 
 export function MapCanvas({
   selectedCampus,
+  listings = [],
+  selectedListingId = null,
   candidatePoint,
   onMapClick,
   onCampusSelect,
+  onListingSelect,
 }: MapCanvasProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const candidateMarkerRef = useRef<Marker | null>(null);
+  const listingMarkersRef = useRef<Marker[]>([]);
   const circleSourceId = "campus-radius-source";
   const circleFillId = "campus-radius-fill";
   const circleLineId = "campus-radius-line";
 
   const onMapClickRef = useRef(onMapClick);
   const onCampusSelectRef = useRef(onCampusSelect);
+  const onListingSelectRef = useRef(onListingSelect);
+
   useEffect(() => {
     onMapClickRef.current = onMapClick;
     onCampusSelectRef.current = onCampusSelect;
+    onListingSelectRef.current = onListingSelect;
   });
 
   // Initialize Map
@@ -163,7 +174,7 @@ export function MapCanvas({
       map.remove();
       mapRef.current = null;
     };
-    // Map instance is created once on mount; dynamic campus/candidate updates are handled in dedicated effects below.
+    // Map instance is created once on mount; dynamic updates handled in effects
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -189,6 +200,43 @@ export function MapCanvas({
       circleSource.setData(createGeoJsonCircle(targetCenter, selectedCampus.radiusKm));
     }
   }, [selectedCampus]);
+
+  // Update listing markers
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    // Remove old listing markers
+    listingMarkersRef.current.forEach((m) => m.remove());
+    listingMarkersRef.current = [];
+
+    listings.forEach((listing) => {
+      const isSelected = listing.id === selectedListingId;
+      const markerEl = document.createElement("div");
+      markerEl.className = `map-listing-marker ${isSelected ? "active" : ""}`;
+      markerEl.setAttribute("role", "button");
+      markerEl.setAttribute("aria-label", `Kos: ${listing.name}`);
+      markerEl.innerHTML = `
+        <span class="listing-price-badge">Rp${Math.round(listing.rentMonthly / 1000)}k</span>
+      `;
+
+      markerEl.addEventListener("click", (e) => {
+        e.stopPropagation();
+        onListingSelectRef.current?.(listing);
+      });
+
+      const marker = new Marker({ element: markerEl })
+        .setLngLat([listing.coordinates.longitude, listing.coordinates.latitude])
+        .addTo(map);
+
+      listingMarkersRef.current.push(marker);
+    });
+
+    return () => {
+      listingMarkersRef.current.forEach((m) => m.remove());
+      listingMarkersRef.current = [];
+    };
+  }, [listings, selectedListingId]);
 
   // Update candidate marker position
   useEffect(() => {

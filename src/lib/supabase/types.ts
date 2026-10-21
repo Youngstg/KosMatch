@@ -54,6 +54,7 @@ export interface Database {
           is_pilot?: boolean;
           created_at?: string;
         };
+        Relationships: [];
       };
       pois: {
         Row: {
@@ -78,7 +79,7 @@ export interface Database {
         };
         Update: {
           id?: number;
-          osm_type?: "N" | "W" | "R";
+          osm_type: "N" | "W" | "R";
           osm_id?: number;
           category?: PoiCategory;
           name?: string | null;
@@ -86,6 +87,7 @@ export interface Database {
           geom?: unknown;
           created_at?: string;
         };
+        Relationships: [];
       };
       listings: {
         Row: {
@@ -139,6 +141,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       commute_cache: {
         Row: {
@@ -165,8 +168,10 @@ export interface Database {
           distance_m?: number;
           fetched_at?: string;
         };
+        Relationships: [];
       };
     };
+    Views: Record<string, never>;
     Functions: {
       get_listing_neighborhood_profile: {
         Args: {
@@ -205,5 +210,11 @@ export interface Database {
         }[];
       };
     };
+    Enums: {
+      poi_category: PoiCategory;
+      listing_status: ListingStatus;
+      commute_mode: CommuteMode;
+    };
+    CompositeTypes: Record<string, never>;
   };
 }
