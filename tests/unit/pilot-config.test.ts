@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { PILOT_CONFIG, getPilotByCampusId, isPilotCampus } from "@/data/pilot-config";
-import { findCampus } from "@/data/campuses";
 
 describe("Pilot Configuration (Fase 0)", () => {
   it("menetapkan Universitas Indonesia (Depok) sebagai pilot utama", () => {
@@ -34,11 +33,17 @@ describe("Pilot Configuration (Fase 0)", () => {
     expect(isPilotCampus("ugm-bulaksumur")).toBe(false);
   });
 
-  it("kampus pilot terdaftar dalam daftar resmi CAMPUSES", () => {
+  it("kampus pilot memiliki titik gerbang/tujuan resmi yang valid", () => {
     for (const pilot of PILOT_CONFIG.allPilots) {
-      const campus = findCampus(pilot.campusId);
-      expect(campus).toBeDefined();
-      expect(campus?.city).toBe(pilot.city);
+      expect(pilot.gates.length).toBeGreaterThanOrEqual(3);
+      for (const gate of pilot.gates) {
+        expect(gate.id).toBeTruthy();
+        expect(gate.name).toBeTruthy();
+        expect(gate.coordinates.latitude).toBeGreaterThan(-90);
+        expect(gate.coordinates.latitude).toBeLessThan(90);
+        expect(gate.coordinates.longitude).toBeGreaterThan(-180);
+        expect(gate.coordinates.longitude).toBeLessThan(180);
+      }
     }
   });
 });

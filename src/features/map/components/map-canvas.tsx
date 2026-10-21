@@ -22,6 +22,7 @@ export interface MapCanvasProps {
   listings?: readonly PilotListing[];
   selectedListingId?: string | null;
   candidatePoint: { latitude: number; longitude: number } | null;
+  destinationPoint?: { latitude: number; longitude: number; name?: string } | null;
   onMapClick?: (coords: { latitude: number; longitude: number }) => void;
   onCampusSelect?: (campus: PilotSpecification) => void;
   onListingSelect?: (listing: PilotListing) => void;
@@ -54,6 +55,7 @@ export function MapCanvas({
   listings = [],
   selectedListingId = null,
   candidatePoint,
+  destinationPoint = null,
   onMapClick,
   onCampusSelect,
   onListingSelect,
@@ -61,6 +63,7 @@ export function MapCanvas({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const candidateMarkerRef = useRef<Marker | null>(null);
+  const destinationMarkerRef = useRef<Marker | null>(null);
   const listingMarkersRef = useRef<Marker[]>([]);
   const circleSourceId = "campus-radius-source";
   const circleFillId = "campus-radius-fill";
@@ -269,6 +272,53 @@ export function MapCanvas({
       ]);
     }
   }, [candidatePoint]);
+
+  // Update destination marker position
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    if (!destinationPoint) {
+      if (destinationMarkerRef.current) {
+        destinationMarkerRef.current.remove();
+        destinationMarkerRef.current = null;
+      }
+      return;
+    }
+
+    if (!destinationMarkerRef.current) {
+      const pinEl = document.createElement("div");
+      pinEl.className = "map-destination-marker";
+      pinEl.innerHTML = `
+        <div class="destination-pin">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="22" y1="12" x2="18" y2="12"/>
+            <line x1="6" y1="12" x2="2" y2="12"/>
+            <line x1="12" y1="6" x2="12" y2="2"/>
+            <line x1="12" y1="22" x2="12" y2="18"/>
+          </svg>
+        </div>
+        ${destinationPoint.name ? `<span class="destination-label">${destinationPoint.name}</span>` : ""}
+      `;
+
+      destinationMarkerRef.current = new Marker({ element: pinEl })
+        .setLngLat([destinationPoint.longitude, destinationPoint.latitude])
+        .addTo(map);
+    } else {
+      destinationMarkerRef.current.setLngLat([
+        destinationPoint.longitude,
+        destinationPoint.latitude,
+      ]);
+    }
+
+    return () => {
+      if (destinationMarkerRef.current) {
+        destinationMarkerRef.current.remove();
+        destinationMarkerRef.current = null;
+      }
+    };
+  }, [destinationPoint]);
 
   return (
     <div

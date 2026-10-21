@@ -9,8 +9,9 @@ describe("PILOT_LISTINGS dataset", () => {
     const uiListings = getListingsByCampus("ui-depok");
     const unandListings = getListingsByCampus("unand-limau-manis");
 
-    expect(uiListings.length).toBeGreaterThanOrEqual(4);
-    expect(unandListings.length).toBeGreaterThanOrEqual(4);
+    expect(uiListings.length).toBeGreaterThanOrEqual(15);
+    expect(unandListings.length).toBeGreaterThanOrEqual(12);
+    expect(PILOT_LISTINGS.length).toBeGreaterThanOrEqual(30);
     expect(PILOT_LISTINGS.length).toBe(uiListings.length + unandListings.length);
   });
 

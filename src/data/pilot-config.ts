@@ -5,12 +5,21 @@ export interface PilotBoundingBox {
   readonly maxLat: number;
 }
 
+export interface PilotGate {
+  readonly id: string;
+  readonly name: string;
+  readonly shortLabel: string;
+  readonly coordinates: { readonly latitude: number; readonly longitude: number };
+  readonly description?: string;
+}
+
 export interface PilotSpecification {
   readonly id: string;
   readonly campusId: string;
   readonly campusName: string;
   readonly city: string;
   readonly centerCoordinates: { readonly latitude: number; readonly longitude: number };
+  readonly gates: readonly PilotGate[];
   readonly radiusKm: number;
   readonly boundingBox: PilotBoundingBox;
   readonly initialTargetVerifiedListings: number;
@@ -25,6 +34,36 @@ export const PILOT_CONFIG = {
     campusName: "Universitas Indonesia (Depok)",
     city: "Depok",
     centerCoordinates: { latitude: -6.362, longitude: 106.827 },
+    gates: [
+      {
+        id: "ui-gerbatama",
+        name: "Gerbatama & Stasiun UI",
+        shortLabel: "Gerbatama / Stasiun UI",
+        coordinates: { latitude: -6.362, longitude: 106.827 },
+        description: "Akses utama Margonda Raya, halte bus kuning, dan KRL Stasiun UI",
+      },
+      {
+        id: "ui-kutek",
+        name: "Pintu Kukusan Teknik (Kutek)",
+        shortLabel: "Pintu Kutek (FT/Vokasi)",
+        coordinates: { latitude: -6.3685, longitude: 106.8225 },
+        description: "Akses utama Fakultas Teknik dan Program Pendidikan Vokasi",
+      },
+      {
+        id: "ui-kukel",
+        name: "Pintu Kukusan Kelurahan (Kukel)",
+        shortLabel: "Pintu Kukel (MIPA/FIK)",
+        coordinates: { latitude: -6.3575, longitude: 106.8255 },
+        description: "Akses FMIPA, Fakultas Ilmu Keperawatan, dan Rumpun Ilmu Kesehatan",
+      },
+      {
+        id: "ui-pocin",
+        name: "Jembatan Stasiun Pondok Cina",
+        shortLabel: "Pondok Cina (FIB/FEB)",
+        coordinates: { latitude: -6.368, longitude: 106.832 },
+        description: "Akses pejalan kaki langsung ke FIB, FEB, dan Fakultas Psikologi",
+      },
+    ],
     radiusKm: 4.0,
     boundingBox: { minLon: 106.77, minLat: -6.42, maxLon: 106.87, maxLat: -6.32 },
     initialTargetVerifiedListings: 50,
@@ -37,6 +76,29 @@ export const PILOT_CONFIG = {
     campusName: "Universitas Andalas (Limau Manis)",
     city: "Padang",
     centerCoordinates: { latitude: -0.9143, longitude: 100.4602 },
+    gates: [
+      {
+        id: "unand-gerbang-utama",
+        name: "Gerbang Utama Limau Manis",
+        shortLabel: "Gerbang Utama",
+        coordinates: { latitude: -0.9143, longitude: 100.4602 },
+        description: "Gerbang utama kampus dari arah Simpang Pasar Baru",
+      },
+      {
+        id: "unand-rektorat-gkb",
+        name: "Pusat Rektorat & Gedung Kuliah Bersama (GKB)",
+        shortLabel: "Rektorat & GKB",
+        coordinates: { latitude: -0.914, longitude: 100.464 },
+        description: "Pusat kuliah bersama tingkat 1 dan gedung administrasi rektorat",
+      },
+      {
+        id: "unand-pasar-baru",
+        name: "Simpang Kampus / Pasar Baru",
+        shortLabel: "Pasar Baru",
+        coordinates: { latitude: -0.923, longitude: 100.435 },
+        description: "Sentra transportasi angkot dan kawasan hunian kos mahasiswa terbanyak",
+      },
+    ],
     radiusKm: 5.0,
     boundingBox: { minLon: 100.35, minLat: -0.96, maxLon: 100.49, maxLat: -0.86 },
     initialTargetVerifiedListings: 30,

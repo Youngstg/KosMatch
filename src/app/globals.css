@@ -392,6 +392,49 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
 }
 
+.map-destination-marker {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 15;
+}
+.destination-pin {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  background: #D97706;
+  border: 2px solid var(--surface);
+  color: white;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.45);
+}
+.destination-label {
+  margin-top: 3px;
+  background: #78350F;
+  color: white;
+  font-size: 10px;
+  font-weight: 750;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.commute-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(13, 148, 136, 0.1);
+  color: var(--primary);
+  border: 1px solid rgba(13, 148, 136, 0.25);
+  border-radius: var(--radius-pill);
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
 @media (max-width: 900px) {
   .map-explorer-layout {
     grid-template-columns: 1fr;

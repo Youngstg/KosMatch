@@ -43,7 +43,7 @@ describe("MapExplorer Component", () => {
     expect(screen.getByText("5 km")).not.toBeNull();
   });
 
-  it("selects a listing, updates inspector, and displays neighborhood amenities", async () => {
+  it("selects a listing, updates inspector, and displays neighborhood amenities and commute", async () => {
     render(<MapExplorer />);
 
     // Click on one of the verified kos cards in UI Depok
@@ -54,7 +54,7 @@ describe("MapExplorer Component", () => {
     // Inspector should now display listing details
     const areaElements = screen.getAllByText(/Kukusan Teknik/);
     expect(areaElements.length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText(/Jarak ke kampus:/)).not.toBeNull();
+    expect(screen.getByText(/Waktu tempuh ke/)).not.toBeNull();
 
     // Neighborhood profile card should load
     await waitFor(() => {
@@ -78,5 +78,30 @@ describe("MapExplorer Component", () => {
     expect(screen.getByText("Wisma Pondok Cina Asri")).not.toBeNull();
     // Male listing should not be visible
     expect(screen.queryByText("Kos Graha Kukusan Mandiri")).toBeNull();
+  });
+
+  it("switches destination gates and re-estimates commute", () => {
+    render(<MapExplorer />);
+
+    // Check default gate button
+    const kutekBtn = screen.getByRole("button", { name: /Pintu Kutek/i });
+    expect(kutekBtn).not.toBeNull();
+    fireEvent.click(kutekBtn);
+    expect(kutekBtn.className).toContain("selected");
+
+    // Select motorcycle mode
+    const motorBtn = screen.getByRole("button", { name: /Motor/i });
+    fireEvent.click(motorBtn);
+    expect(motorBtn.className).toContain("selected");
+  });
+
+  it("sorts listings by price ascending", () => {
+    render(<MapExplorer />);
+
+    const sortSelect = screen.getByLabelText("Urutkan Kos");
+    fireEvent.change(sortSelect, { target: { value: "price_asc" } });
+
+    // Wisma Jurang Kutek Ekonomis (Rp 850.000) should be visible
+    expect(screen.getByText("Wisma Jurang Kutek Ekonomis")).not.toBeNull();
   });
 });
