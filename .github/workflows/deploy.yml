@@ -1,13 +1,16 @@
-name: Deploy KostMatch to Tencent Cloud
+name: CI & Deploy KostMatch to Tencent Cloud
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build-and-deploy:
-    name: Build & Deploy
+  test:
+    name: Test & Quality Checks
     runs-on: ubuntu-latest
 
     steps:
@@ -23,10 +26,52 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Security Audit Gate (Production)
+        run: npm audit --omit=dev --audit-level=high
+
       - name: Run Typecheck & Lint
         run: |
           npm run typecheck
           npm run lint
+
+      - name: Run Unit & Integration Tests
+        run: npm test
+
+      - name: Build Next.js App
+        run: npm run build
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run End-to-End Tests
+        run: npm run test:e2e
+
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  deploy:
+    name: Deploy to Tencent Cloud
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
 
       - name: Build Next.js App
         run: npm run build
@@ -34,6 +79,7 @@ jobs:
       - name: Deploy to Tencent Cloud Server
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
           SERVER_IP: ${{ secrets.SERVER_IP }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
         run: |
@@ -41,19 +87,71 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
 
-          echo "Ensuring remote directory exists..."
-          ssh -o StrictHostKeyChecking=no "$SERVER_USER@$SERVER_IP" "mkdir -p /var/www/kostmatch"
+          SSH_OPTS="-o StrictHostKeyChecking=accept-new"
+          if [ -n "$SSH_KNOWN_HOSTS" ]; then
+            echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+            chmod 644 ~/.ssh/known_hosts
+            SSH_OPTS=""
+          else
+            ssh-keyscan -H "$SERVER_IP" >> ~/.ssh/known_hosts 2>/dev/null || true
+          fi
 
-          echo "Syncing build files to server..."
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no" --delete .next/ "$SERVER_USER@$SERVER_IP:/var/www/kostmatch/.next/"
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no" public/ "$SERVER_USER@$SERVER_IP:/var/www/kostmatch/public/"
-          scp -o StrictHostKeyChecking=no package.json package-lock.json "$SERVER_USER@$SERVER_IP:/var/www/kostmatch/"
+          RELEASE_ID=$(date +%Y%m%d%H%M%S)
+          RELEASE_PATH="/var/www/kostmatch/releases/$RELEASE_ID"
 
-          echo "Installing production dependencies & restarting PM2..."
-          ssh -o StrictHostKeyChecking=no "$SERVER_USER@$SERVER_IP" "
-            cd /var/www/kostmatch &&
-            npm ci --omit=dev --prefer-offline &&
-            (pm2 describe kostmatch > /dev/null 2>&1 && pm2 restart kostmatch --update-env || PORT=3001 pm2 start npm --name kostmatch -- start -- -p 3001) &&
+          echo "Ensuring remote directory structure exists..."
+          ssh $SSH_OPTS "$SERVER_USER@$SERVER_IP" "mkdir -p $RELEASE_PATH /var/www/kostmatch/releases"
+
+          echo "Syncing build files to release directory..."
+          rsync -avz -e "ssh $SSH_OPTS" --delete .next/ "$SERVER_USER@$SERVER_IP:$RELEASE_PATH/.next/"
+          rsync -avz -e "ssh $SSH_OPTS" public/ "$SERVER_USER@$SERVER_IP:$RELEASE_PATH/public/"
+          scp $SSH_OPTS package.json package-lock.json "$SERVER_USER@$SERVER_IP:$RELEASE_PATH/"
+
+          echo "Activating release, restarting PM2, running smoke tests, and cleaning up..."
+          ssh $SSH_OPTS "$SERVER_USER@$SERVER_IP" "bash -s $RELEASE_ID" << 'EOF'
+            set -e
+            RELEASE_ID="$1"
+            RELEASE_PATH="/var/www/kostmatch/releases/$RELEASE_ID"
+            CURRENT_PATH="/var/www/kostmatch/current"
+            PREV_RELEASE=""
+            if [ -L "$CURRENT_PATH" ]; then
+              PREV_RELEASE=$(readlink -f "$CURRENT_PATH" || true)
+            fi
+
+            echo "Installing production dependencies in $RELEASE_PATH..."
+            cd "$RELEASE_PATH"
+            npm ci --omit=dev --prefer-offline
+
+            echo "Switching symlink to $RELEASE_PATH..."
+            ln -sfn "$RELEASE_PATH" "$CURRENT_PATH"
+
+            echo "Restarting application via PM2..."
+            cd "$CURRENT_PATH"
+            if pm2 describe kostmatch > /dev/null 2>&1; then
+              pm2 delete kostmatch
+            fi
+            PORT=3001 pm2 start npm --name kostmatch -- start -- -p 3001
             pm2 save
-          "
-          echo "✅ KostMatch successfully deployed!"
+
+            echo "Running smoke tests..."
+            sleep 3
+            if curl -fsS http://localhost:3001/ > /dev/null && curl -fsS http://localhost:3001/methodology > /dev/null; then
+              echo "✅ Smoke tests passed!"
+            else
+              echo "❌ Smoke tests failed! Rolling back..."
+              if [ -n "$PREV_RELEASE" ] && [ -d "$PREV_RELEASE" ]; then
+                ln -sfn "$PREV_RELEASE" "$CURRENT_PATH"
+                cd "$CURRENT_PATH"
+                pm2 delete kostmatch > /dev/null 2>&1 || true
+                PORT=3001 pm2 start npm --name kostmatch -- start -- -p 3001
+                pm2 save
+                echo "Rolled back to $PREV_RELEASE"
+              fi
+              exit 1
+            fi
+
+            echo "Pruning older releases (keeping latest 5)..."
+            cd /var/www/kostmatch/releases
+            ls -1dt */ 2>/dev/null | tail -n +6 | xargs -r rm -rf
+            echo "✅ Release $RELEASE_ID successfully deployed and verified!"
+          EOF
