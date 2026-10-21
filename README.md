@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  🌐 <strong>Live Demo:</strong> <a href="https://kosmatch.mooo.com" target="_blank">https://kosmatch.mooo.com</a>
+  🌐 <strong>Live Demo:</strong> <a href="https://kosmatch.us.ci" target="_blank">https://kosmatch.us.ci</a>
 </p>
 
 ---
