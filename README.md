@@ -73,9 +73,11 @@ Menghasilkan ringkasan perbandingan satu halaman yang bersih dan siap cetak untu
 
 ## 🛠️ Tech Stack
 
-* **Framework:** [Next.js 16](https://nextjs.org/) (App Router, Turbopack)
+* **Framework:** [Next.js 16.4.2](https://nextjs.org/) (App Router, Turbopack)
 * **Library:** [React 19](https://react.dev/), [TypeScript 5](https://www.typescriptlang.org/)
-* **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
+* **Spatial & Database:** [PostgreSQL](https://www.postgresql.org/) + [PostGIS](https://postgis.net/) (Self-hosted on Tencent Cloud VPS)
+* **Maps & Geo:** [MapLibre GL JS](https://maplibre.org/), OpenStreetMap
+* **Styling:** Vanilla CSS Tokens & Tailwind CSS
 * **Data Validation:** [Zod](https://zod.dev/)
 * **Client Database:** [idb](https://github.com/jakearchibald/idb) (IndexedDB Wrapper)
 * **Testing:** [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/)
