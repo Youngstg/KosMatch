@@ -54,10 +54,11 @@ osmium tags-filter "$WORKDIR/$PILOT_TARGET-raw.osm.pbf" \
 
 echo "POIs extracted: $WORKDIR/$PILOT_TARGET-poi.osm.pbf ($(du -h "$WORKDIR/$PILOT_TARGET-poi.osm.pbf" | cut -f1))"
 
-if [ -n "${SUPABASE_DB_URL:-}" ]; then
-  echo "4. Loading POIs into Supabase/PostgreSQL database via osm2pgsql flex..."
-  osm2pgsql -d "$SUPABASE_DB_URL" -O flex -S "$(dirname "$0")/poi.lua" "$WORKDIR/$PILOT_TARGET-poi.osm.pbf"
+TARGET_DB_URL="${DATABASE_URL:-${SUPABASE_DB_URL:-}}"
+if [ -n "$TARGET_DB_URL" ]; then
+  echo "4. Loading POIs into PostgreSQL database on VPS via osm2pgsql flex..."
+  osm2pgsql -d "$TARGET_DB_URL" -O flex -S "$(dirname "$0")/poi.lua" "$WORKDIR/$PILOT_TARGET-poi.osm.pbf"
   echo "✅ POI ingestion completed!"
 else
-  echo "Notice: SUPABASE_DB_URL not set. Run with SUPABASE_DB_URL to load into database directly."
+  echo "Notice: DATABASE_URL not set. Run with DATABASE_URL to load into PostgreSQL directly."
 fi

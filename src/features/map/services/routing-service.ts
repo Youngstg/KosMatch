@@ -1,5 +1,4 @@
-import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/client";
-import type { CommuteMode } from "@/lib/supabase/types";
+import type { CommuteMode } from "@/lib/db/types";
 import { haversineMeters } from "@/lib/geo";
 
 export interface CommuteResult {
@@ -99,7 +98,7 @@ export function estimateCommuteQuick(
  * Mengambil waktu tempuh dan jarak rute antara titik asal (kos) dan tujuan (kampus/gerbang).
  * Mengecek:
  * 1. In-memory cache
- * 2. Supabase PostgreSQL `commute_cache`
+ * 2. VPS PostgreSQL commute_cache via internal API
  * 3. OpenRouteService API (jika API key tersedia)
  * 4. Fallback ke model jalan & kecepatan terkalibrasi
  */
@@ -128,41 +127,32 @@ export async function calculateCommute(
     };
   }
 
-  // 2. Cek Supabase PostgreSQL commute_cache
-  if (isSupabaseConfigured()) {
-    try {
-      const supabase = getSupabaseClient();
-      if (supabase) {
-        const { data, error } = await supabase
-          .from("commute_cache")
-          .select("minutes, distance_m")
-          .eq("origin_cell", originCell)
-          .eq("dest_id", destId)
-          .eq("mode", mode)
-          .maybeSingle();
-
-        if (!error && data) {
-          const result = {
-            minutes: Number(data.minutes),
-            distanceMeters: Number(data.distance_m),
-          };
-          memoryCommuteCache.set(cacheKey, result);
-          return {
-            origin,
-            destination,
-            originCell,
-            destId,
-            mode,
-            minutes: result.minutes,
-            distanceMeters: result.distanceMeters,
-            isCached: true,
-            source: "cache",
-          };
-        }
+  // 2. Cek PostgreSQL VPS commute_cache via internal API
+  try {
+    const res = await fetch(`/api/commute?origin_cell=${originCell}&dest_id=${destId}&mode=${mode}`);
+    if (res.ok) {
+      const json = await res.json();
+      if (json.cached) {
+        const result = {
+          minutes: Number(json.cached.minutes),
+          distanceMeters: Number(json.cached.distanceMeters),
+        };
+        memoryCommuteCache.set(cacheKey, result);
+        return {
+          origin,
+          destination,
+          originCell,
+          destId,
+          mode,
+          minutes: result.minutes,
+          distanceMeters: result.distanceMeters,
+          isCached: true,
+          source: "cache",
+        };
       }
-    } catch {
-      // Abaikan kegagalan jaringan DB, lanjutkan ke opsi berikutnya
     }
+  } catch {
+    // Abaikan kegagalan jaringan DB, lanjutkan ke opsi berikutnya
   }
 
   // 3. Cek OpenRouteService jika API Key tersedia
@@ -182,19 +172,18 @@ export async function calculateCommute(
 
           memoryCommuteCache.set(cacheKey, { minutes, distanceMeters });
 
-          // Simpan ke Supabase commute_cache di latar belakang
-          if (isSupabaseConfigured()) {
-            const supabase = getSupabaseClient();
-            if (supabase) {
-              void supabase.from("commute_cache").upsert({
-                origin_cell: originCell,
-                dest_id: destId,
-                mode,
-                minutes,
-                distance_m: distanceMeters,
-              });
-            }
-          }
+          // Simpan ke PostgreSQL commute_cache di latar belakang via API
+          void fetch("/api/commute", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              origin_cell: originCell,
+              dest_id: destId,
+              mode,
+              minutes,
+              distance_m: distanceMeters,
+            }),
+          }).catch(() => {});
 
           return {
             origin,
@@ -218,23 +207,18 @@ export async function calculateCommute(
   const quick = estimateCommuteQuick(origin, destination, mode);
   memoryCommuteCache.set(cacheKey, quick);
 
-  // Jika Supabase terhubung, simpan hasil estimasi ke cache agar tidak dihitung ulang terus-menerus
-  if (isSupabaseConfigured()) {
-    try {
-      const supabase = getSupabaseClient();
-      if (supabase) {
-        void supabase.from("commute_cache").upsert({
-          origin_cell: originCell,
-          dest_id: destId,
-          mode,
-          minutes: quick.minutes,
-          distance_m: quick.distanceMeters,
-        });
-      }
-    } catch {
-      // Abaikan kegagalan DB
-    }
-  }
+  // Simpan hasil estimasi ke cache API di latar belakang
+  void fetch("/api/commute", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      origin_cell: originCell,
+      dest_id: destId,
+      mode,
+      minutes: quick.minutes,
+      distance_m: quick.distanceMeters,
+    }),
+  }).catch(() => {});
 
   return {
     origin,

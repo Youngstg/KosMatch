@@ -14,7 +14,7 @@ import {
   estimateCommuteQuick,
   type CommuteResult,
 } from "../services/routing-service";
-import type { CommuteMode } from "@/lib/supabase/types";
+import type { CommuteMode } from "@/lib/db/types";
 import { estimateRoadMeters, formatDistance, haversineMeters } from "@/lib/geo";
 import { formatRupiah } from "@/lib/currency";
 

@@ -49,8 +49,8 @@ export function NeighborhoodProfileCard({
           </p>
         </div>
         {profile && (
-          <span className={`badge ${profile.source === "supabase" ? "good" : ""}`} style={{ fontSize: "11px" }}>
-            {profile.source === "supabase" ? "OSM PostGIS Live" : "Estimasi Pilot OSM"}
+          <span className={`badge ${profile.source === "vps-postgres" ? "good" : ""}`} style={{ fontSize: "11px" }}>
+            {profile.source === "vps-postgres" ? "PostGIS VPS Live" : "Estimasi Pilot OSM"}
           </span>
         )}
       </div>

@@ -1,5 +1,3 @@
-import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase";
-
 export interface NeighborhoodProfileItem {
   readonly category: string;
   readonly categoryLabel: string;
@@ -12,7 +10,7 @@ export interface NeighborhoodProfileResult {
   readonly latitude: number;
   readonly longitude: number;
   readonly radiusMeters: number;
-  readonly source: "supabase" | "simulated";
+  readonly source: "vps-postgres" | "simulated";
   readonly totalPois: number;
   readonly scoreOutOf10: number;
   readonly items: readonly NeighborhoodProfileItem[];
@@ -70,7 +68,7 @@ export function calculateAmenityScore(
 
 /**
  * Simulasi data profil lingkungan realistis untuk fallback saat offline
- * atau saat Supabase POI belum terisi.
+ * atau saat database PostgreSQL VPS POI belum terisi.
  */
 function generateSimulatedProfile(
   targetLat: number,
@@ -142,26 +140,21 @@ function generateSimulatedProfile(
 }
 
 /**
- * Mengambil profil lingkungan titik koordinat dari Supabase PostGIS RPC,
- * atau menghasilkan fallback yang realistis jika Supabase belum terhubung.
+ * Mengambil profil lingkungan titik koordinat dari API internal PostgreSQL PostGIS di VPS,
+ * atau menghasilkan fallback yang realistis jika database belum terhubung.
  */
 export async function fetchPointNeighborhoodProfile(
   targetLat: number,
   targetLng: number,
   radiusMeters = 800
 ): Promise<NeighborhoodProfileResult> {
-  if (isSupabaseConfigured()) {
-    try {
-      const supabase = getSupabaseClient();
-      if (supabase) {
-        const { data, error } = await supabase.rpc("get_point_neighborhood_profile", {
-          target_lat: targetLat,
-          target_lng: targetLng,
-          radius_meters: radiusMeters,
-        });
-
-        if (!error && Array.isArray(data) && data.length > 0) {
-          const items: NeighborhoodProfileItem[] = data.map((row: { category: string; count: number; nearest_meters: number | null }) => {
+  try {
+    const res = await fetch(`/api/neighborhood?lat=${targetLat}&lng=${targetLng}&radius=${radiusMeters}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data.items) && data.items.length > 0) {
+        const items: NeighborhoodProfileItem[] = data.items.map(
+          (row: { category: string; count: number; nearest_meters: number | null }) => {
             const nearest = row.nearest_meters ?? null;
             return {
               category: row.category,
@@ -170,25 +163,25 @@ export async function fetchPointNeighborhoodProfile(
               nearestMeters: nearest,
               walkMinutes: nearest !== null ? Math.max(1, Math.ceil(nearest / 80)) : null,
             };
-          });
+          }
+        );
 
-          const totalPois = items.reduce((acc, curr) => acc + curr.count, 0);
-          const scoreOutOf10 = calculateAmenityScore(items);
+        const totalPois = items.reduce((acc, curr) => acc + curr.count, 0);
+        const scoreOutOf10 = calculateAmenityScore(items);
 
-          return {
-            latitude: targetLat,
-            longitude: targetLng,
-            radiusMeters,
-            source: "supabase",
-            totalPois,
-            scoreOutOf10,
-            items,
-          };
-        }
+        return {
+          latitude: targetLat,
+          longitude: targetLng,
+          radiusMeters,
+          source: "vps-postgres",
+          totalPois,
+          scoreOutOf10,
+          items,
+        };
       }
-    } catch {
-      // Fallback to simulated profile on network failure
     }
+  } catch {
+    // Fallback to simulated profile on network or server offline
   }
 
   return generateSimulatedProfile(targetLat, targetLng, radiusMeters);
