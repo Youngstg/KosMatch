@@ -23,6 +23,7 @@ export interface MapCanvasProps {
   selectedListingId?: string | null;
   candidatePoint: { latitude: number; longitude: number } | null;
   destinationPoint?: { latitude: number; longitude: number; name?: string } | null;
+  theme?: "dark" | "light";
   onMapClick?: (coords: { latitude: number; longitude: number }) => void;
   onCampusSelect?: (campus: PilotSpecification) => void;
   onListingSelect?: (listing: PilotListing) => void;
@@ -30,24 +31,30 @@ export interface MapCanvasProps {
 
 const CARTO_API_KEY = process.env.NEXT_PUBLIC_CARTO_API_KEY;
 
-const getTileUrls = (key?: string): string[] => {
+const getTileUrls = (theme: "dark" | "light" = "dark", key?: string): string[] => {
+  const variant = theme === "light" ? "voyager" : "dark_all";
   if (key) {
     return [
-      `https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${key}`,
-      `https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${key}`,
-      `https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${key}`,
-      `https://d.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${key}`,
+      `https://a.basemaps.cartocdn.com/rastertiles/${variant}/{z}/{x}/{y}.png?key=${key}`,
+      `https://b.basemaps.cartocdn.com/rastertiles/${variant}/{z}/{x}/{y}.png?key=${key}`,
+      `https://c.basemaps.cartocdn.com/rastertiles/${variant}/{z}/{x}/{y}.png?key=${key}`,
+      `https://d.basemaps.cartocdn.com/rastertiles/${variant}/{z}/{x}/{y}.png?key=${key}`,
     ];
   }
-  return ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"];
+  return [
+    `https://a.basemaps.cartocdn.com/rastertiles/${variant}/{z}/{x}/{y}.png`,
+    `https://b.basemaps.cartocdn.com/rastertiles/${variant}/{z}/{x}/{y}.png`,
+    `https://c.basemaps.cartocdn.com/rastertiles/${variant}/{z}/{x}/{y}.png`,
+    `https://d.basemaps.cartocdn.com/rastertiles/${variant}/{z}/{x}/{y}.png`,
+  ];
 };
 
-const OSM_RASTER_STYLE: StyleSpecification = {
+const getOsmRasterStyle = (theme: "dark" | "light" = "dark"): StyleSpecification => ({
   version: 8,
   sources: {
     "osm-tiles": {
       type: "raster",
-      tiles: getTileUrls(CARTO_API_KEY),
+      tiles: getTileUrls(theme, CARTO_API_KEY),
       tileSize: 256,
       attribution: CARTO_API_KEY
         ? '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>'
@@ -63,7 +70,7 @@ const OSM_RASTER_STYLE: StyleSpecification = {
       maxzoom: 19,
     },
   ],
-};
+});
 
 export function MapCanvas({
   selectedCampus,
@@ -71,6 +78,7 @@ export function MapCanvas({
   selectedListingId = null,
   candidatePoint,
   destinationPoint = null,
+  theme = "dark",
   onMapClick,
   onCampusSelect,
   onListingSelect,
@@ -105,7 +113,7 @@ export function MapCanvas({
 
     const map = new MapLibreMap({
       container: containerRef.current,
-      style: OSM_RASTER_STYLE,
+      style: getOsmRasterStyle(theme),
       center: initialCenter,
       zoom: 13,
       minZoom: 5,
@@ -335,11 +343,92 @@ export function MapCanvas({
     };
   }, [destinationPoint]);
 
+  // Update theme tiles dynamically when theme changes
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const updateTiles = () => {
+      const source = map.getSource("osm-tiles") as unknown as { setTiles?: (urls: string[]) => void };
+      if (source && typeof source.setTiles === "function") {
+        source.setTiles(getTileUrls(theme, CARTO_API_KEY));
+      }
+    };
+
+    if (map.isStyleLoaded()) {
+      updateTiles();
+    } else {
+      map.once("styledata", updateTiles);
+    }
+  }, [theme]);
+
+  // Update route polyline between active point and destination point
+  const routeSourceId = "route-line-source";
+  const routeLayerId = "route-line-layer";
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const activePoint = candidatePoint;
+
+    if (!activePoint || !destinationPoint) {
+      if (map.getLayer(routeLayerId)) {
+        map.removeLayer(routeLayerId);
+      }
+      if (map.getSource(routeSourceId)) {
+        map.removeSource(routeSourceId);
+      }
+      return;
+    }
+
+    const routeGeoJson = {
+      type: "Feature" as const,
+      properties: {},
+      geometry: {
+        type: "LineString" as const,
+        coordinates: [
+          [activePoint.longitude, activePoint.latitude],
+          [destinationPoint.longitude, destinationPoint.latitude],
+        ],
+      },
+    };
+
+    const updateOrCreateRoute = () => {
+      if (map.getSource(routeSourceId)) {
+        (map.getSource(routeSourceId) as GeoJSONSource).setData(routeGeoJson);
+      } else {
+        map.addSource(routeSourceId, {
+          type: "geojson",
+          data: routeGeoJson,
+        });
+
+        map.addLayer({
+          id: routeLayerId,
+          type: "line",
+          source: routeSourceId,
+          paint: {
+            "line-color": "#F97316",
+            "line-width": 3.5,
+            "line-dasharray": [2, 1],
+            "line-opacity": 0.9,
+          },
+        });
+      }
+    };
+
+    if (map.isStyleLoaded()) {
+      updateOrCreateRoute();
+    } else {
+      map.once("styledata", updateOrCreateRoute);
+    }
+  }, [candidatePoint, destinationPoint]);
+
   return (
     <div
       ref={containerRef}
       className="map-canvas-container"
-      style={{ width: "100%", height: "100%", minHeight: "calc(100vh - 72px)" }}
+      style={{ width: "100%", height: "100%", minHeight: "100%" }}
     />
   );
 }
