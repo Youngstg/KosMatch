@@ -441,30 +441,6 @@ export function KosMatchWorkspace() {
           hasSaved={project !== null}
           onResume={() => setView("project")}
         />
-        <div className="floating-import">
-          <label className="btn btn-secondary">
-            <FileUp size={18} /> Impor backup
-            <input className="sr-only" type="file" accept="application/json" onChange={importFile} disabled={importing} />
-          </label>
-          {project && (
-            <button
-              className="btn btn-ghost"
-              onClick={async () => {
-                if (!confirm("Hapus seluruh data KosMatch di perangkat ini?")) return;
-                await repository?.close();
-                browserRepository = null;
-                await deleteKosMatchDatabase();
-                setRepository(null);
-                setProject(null);
-                setProjects([]);
-                setOptions([]);
-                await initialize();
-              }}
-            >
-              Hapus data lokal
-            </button>
-          )}
-        </div>
       </>
     );
   }

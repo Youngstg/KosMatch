@@ -1752,16 +1752,47 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   box-shadow: 0 6px 18px rgba(28, 27, 25, 0.2);
 }
 
-/* Hero Section */
-.hero-editorial-section {
-  padding: 44px 0 64px;
+/* Fullscreen Hero Architectural Showcase (RANTY Style) */
+.hero-editorial-fullscreen {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-image: 
+    linear-gradient(108deg, rgba(246, 244, 239, 0.94) 0%, rgba(246, 244, 239, 0.62) 42%, rgba(246, 244, 239, 0.12) 68%, rgba(246, 244, 239, 0) 100%),
+    url('/images/landing-hero-residence.webp');
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hero-editorial-fullscreen .editorial-topbar {
+  background: rgba(246, 244, 239, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(28, 27, 25, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: 76px;
+}
+
+.hero-editorial-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: 40px;
+  padding-bottom: 36px;
 }
 
 .hero-editorial-grid {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
+  grid-template-columns: 1.08fr 0.92fr;
   gap: 48px;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .editorial-pill {
@@ -1777,6 +1808,7 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   color: #8D654C;
   border: 1px solid rgba(141, 101, 76, 0.25);
   margin-bottom: 16px;
+  backdrop-filter: blur(8px);
 }
 
 .hero-editorial-super {
@@ -1787,6 +1819,14 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   letter-spacing: -0.03em;
   color: #1C1B19;
   display: block;
+}
+
+.hero-editorial-sub {
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  color: #8D654C;
+  margin: 10px 0 14px;
 }
 
 .hero-editorial-h1 {
@@ -1841,7 +1881,9 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   min-height: 50px;
   padding: 12px 24px;
   border-radius: 999px;
-  background: #FFFFFF;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: #1C1B19;
   font-weight: 700;
   font-size: 13.5px;
@@ -1865,6 +1907,8 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   padding: 12px 24px;
   border-radius: 999px;
   background: rgba(141, 101, 76, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: #8D654C;
   font-weight: 750;
   font-size: 13.5px;
@@ -1883,11 +1927,13 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
 
 /* Right Floating Showcase Card */
 .editorial-card-wrapper {
-  background: #FFFFFF;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-radius: 38px;
   padding: 28px;
   box-shadow: 0 35px 85px rgba(28, 27, 25, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(28, 27, 25, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .editorial-pills-row {
@@ -1934,19 +1980,16 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   margin: 0 0 18px;
 }
 
-.editorial-residence-canvas {
+.editorial-hotspot-container {
   position: relative;
+  min-height: 220px;
   border-radius: 26px;
-  overflow: hidden;
-  background: #DFDBD2;
-}
-
-.editorial-residence-img {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: cover;
-  border-radius: 26px;
+  background: linear-gradient(135deg, rgba(234, 231, 225, 0.7) 0%, rgba(223, 219, 210, 0.5) 100%);
+  border: 1px solid rgba(28, 27, 25, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
 /* Interactive Hotspots */

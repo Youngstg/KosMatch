@@ -59,7 +59,7 @@ describe("LandingView Component", () => {
     expect(onResume).toHaveBeenCalledTimes(1);
   });
 
-  it("renders steps, feature cards, and FAQ accordions", () => {
+  it("renders architectural showcase cards and FAQ accordions", () => {
     render(
       <LandingView
         onStart={vi.fn()}
@@ -69,26 +69,12 @@ describe("LandingView Component", () => {
       />
     );
 
-    expect(
-      screen.getByRole("heading", { name: "Kenapa harga sewa saja tidak cukup?" })
-    ).not.toBeNull();
-    expect(
-      screen.getByRole("heading", { name: "Skor yang transparan, bukan sekadar rating" })
-    ).not.toBeNull();
-    expect(
-      screen.getByRole("heading", { name: "Fitur Utama untuk Keputusan Kos yang Cerdas" })
-    ).not.toBeNull();
+    expect(screen.getByText("Kebutuhan Wajib Terpenuhi!")).not.toBeNull();
+    expect(screen.getByText("100%")).not.toBeNull();
+    expect(screen.getByText(/KAMI MEMADUKAN HARGA SEWA/)).not.toBeNull();
     expect(
       screen.getByRole("heading", { name: "Pertanyaan yang Sering Diajukan" })
     ).not.toBeNull();
-
-    // Check specific feature items
-    expect(screen.getByText("Hitung Biaya Hidup Nyata")).not.toBeNull();
-    expect(screen.getByText("Kebutuhan Wajib vs Fleksibel")).not.toBeNull();
-    expect(screen.getByText("Perbandingan Berdampingan")).not.toBeNull();
-    expect(screen.getByText("Simulator Biaya & Skenario")).not.toBeNull();
-    expect(screen.getByText("Ekspor PDF & Data Mandiri")).not.toBeNull();
-    expect(screen.getByText("100% Privat di Browser")).not.toBeNull();
 
     // Check FAQ questions
     expect(
