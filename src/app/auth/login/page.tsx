@@ -45,8 +45,11 @@ export default function LoginPage() {
           : "Akun berhasil dibuat! Mengalihkan..."
       );
 
+      const targetUrl =
+        data.user?.role === "admin" || data.user?.role === "owner" ? "/admin" : "/explore";
+
       setTimeout(() => {
-        router.push("/explore");
+        router.push(targetUrl);
         router.refresh();
       }, 1000);
     } catch {

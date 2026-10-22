@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Building2, CheckCircle2, Compass, MapPin, PlusCircle, Scale, Sparkles } from "lucide-react";
+import { ArrowLeft, Building2, CheckCircle2, Compass, Lock, LogIn, MapPin, PlusCircle, Scale, Sparkles } from "lucide-react";
 import { PILOT_CONFIG } from "@/data/pilot-config";
 import { fetchPointNeighborhoodProfile, type NeighborhoodProfileResult } from "@/features/map/services/neighborhood-service";
 import { NeighborhoodProfileCard } from "@/features/map/components/neighborhood-profile-card";
@@ -22,6 +22,9 @@ const FACILITY_OPTIONS = [
 ];
 
 export default function NewListingPage() {
+  const [user, setUser] = useState<{ userId: string; email: string; role: string } | null>(null);
+  const [loadingUser, setLoadingUser] = useState(true);
+
   const [name, setName] = useState("");
   const [campusId, setCampusId] = useState(PILOT_CONFIG.primaryPilot.id);
   const [rentMonthly, setRentMonthly] = useState<number>(1500000);
@@ -37,6 +40,25 @@ export default function NewListingPage() {
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successResult, setSuccessResult] = useState<{ id: string; message: string } | null>(null);
+
+  // Check auth session
+  useEffect(() => {
+    let active = true;
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!active) return;
+        if (data.user) setUser(data.user);
+        setLoadingUser(false);
+      })
+      .catch(() => {
+        if (active) setLoadingUser(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   // When campus changes, update default coordinates to campus area
   const handleCampusChange = (id: string) => {
@@ -119,6 +141,76 @@ export default function NewListingPage() {
     }
   };
 
+  if (loadingUser) {
+    return (
+      <div className="shell landing-shell" style={{ display: "grid", placeItems: "center", minHeight: "100vh" }}>
+        <div style={{ textAlign: "center", color: "var(--text-muted)" }}>
+          <div className="hud-dashed-radius-badge" style={{ margin: "0 auto 12px", width: "24px", height: "24px" }} />
+          <p>Memverifikasi hak akses pendaftaran kos...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // GATE: Require owner or admin role
+  if (!user || (user.role !== "admin" && user.role !== "owner")) {
+    return (
+      <div className="shell landing-shell" style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+        <header className="topbar">
+          <div className="container header-inner">
+            <Link href="/" className="brand" style={{ textDecoration: "none", color: "inherit" }}>
+              <span className="logo">
+                <Building2 size={20} />
+              </span>
+              <span>KosMatch</span>
+            </Link>
+            <div className="actions compact">
+              <Link className="btn btn-ghost" href="/">
+                <ArrowLeft size={16} /> Kembali ke Beranda
+              </Link>
+            </div>
+          </div>
+        </header>
+
+        <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "var(--space-6) var(--space-4)" }}>
+          <div className="panel" style={{ width: "100%", maxWidth: "480px", padding: "var(--space-6)", textAlign: "center" }}>
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                borderRadius: "14px",
+                background: "rgba(245, 158, 11, 0.15)",
+                color: "#F59E0B",
+                display: "grid",
+                placeItems: "center",
+                margin: "0 auto 14px",
+              }}
+            >
+              <Lock size={24} />
+            </div>
+            <div className="eyebrow">Akses Terbatas</div>
+            <h1 style={{ fontSize: "22px", margin: "6px 0 8px" }}>Pendaftaran Kos Khusus Pemilik & Admin</h1>
+            <p className="muted" style={{ fontSize: "14px", margin: "0 0 20px" }}>
+              Untuk menjaga integritas dan transparansi data, pendaftaran unit kos hanya dapat dilakukan oleh akun dengan peran <strong>Pemilik Kos</strong> atau <strong>Administrator</strong>.
+            </p>
+
+            <div style={{ display: "grid", gap: "10px" }}>
+              <Link href="/admin" className="btn btn-primary" style={{ minHeight: "42px" }}>
+                <LogIn size={16} /> Masuk ke Portal Pemilik / Admin
+              </Link>
+              <Link href="/auth/login" className="btn btn-ghost" style={{ minHeight: "38px" }}>
+                Daftar Akun Pemilik Kos
+              </Link>
+              <Link href="/" className="btn btn-ghost" style={{ minHeight: "38px" }}>
+                <ArrowLeft size={16} /> Kembali ke Beranda
+              </Link>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="shell" style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <header className="topbar">
@@ -130,8 +222,11 @@ export default function NewListingPage() {
             <span>KosMatch</span>
           </Link>
           <div className="actions compact">
+            <Link className="btn btn-ghost" href="/admin">
+              <ArrowLeft size={16} /> Dashboard Pengelola
+            </Link>
             <Link className="btn btn-ghost" href="/explore">
-              <ArrowLeft size={16} /> Peta Eksplorasi
+              <Compass size={16} /> Peta Eksplorasi
             </Link>
           </div>
         </div>
@@ -154,8 +249,11 @@ export default function NewListingPage() {
               <p className="muted" style={{ fontSize: "14px", maxWidth: "540px", margin: "0 auto 20px" }}>
                 {successResult.message} Data titik lokasi telah tersimpan di basis data geospasial PostgreSQL VPS.
               </p>
-              <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
-                <Link className="btn btn-primary" href="/explore">
+              <div style={{ display: "flex", gap: "10px", justifyContent: "center", flexWrap: "wrap" }}>
+                <Link className="btn btn-primary" href="/admin">
+                  Kembali ke Dashboard Pengelola
+                </Link>
+                <Link className="btn btn-ghost" href="/explore">
                   Lihat di Peta Eksplorasi
                 </Link>
                 <button

@@ -293,9 +293,6 @@ export function MapExplorer() {
             <Link href="/#setup" className="hud-nav-link">
               Kalkulator DSS
             </Link>
-            <Link href="/listings/new" className="hud-nav-link">
-              Tambah Kos
-            </Link>
             <Link href="/methodology" className="hud-nav-link">
               Metodologi
             </Link>
@@ -861,9 +858,12 @@ export function MapExplorer() {
               <span className="hud-dashed-radius-badge" aria-hidden="true" />
               <strong>Peta Dasar & Radius Survei Pilot</strong>
             </div>
-            <p className="hud-disclaimer-card-text">
-              <Info size={14} className="hud-info-icon" /> Peta dasar disediakan oleh <strong>OpenStreetMap/CARTO</strong>. Lingkaran putus-putus menunjukkan <strong>radius survei pilot {selectedCampus.radiusKm} km</strong> di sekitar kampus {selectedCampus.campusName}.
-            </p>
+            <div className="hud-disclaimer-card-content">
+              <Info size={15} className="hud-info-icon" />
+              <p className="hud-disclaimer-card-text">
+                Peta dasar disediakan oleh <strong>OpenStreetMap/CARTO</strong>. Lingkaran putus-putus menunjukkan <strong>radius survei pilot {selectedCampus.radiusKm} km</strong> di sekitar kampus {selectedCampus.campusName}.
+              </p>
+            </div>
           </div>
         </div>
       </aside>

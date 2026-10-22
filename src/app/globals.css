@@ -1504,7 +1504,8 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
 .hud-map-disclaimer-overlay {
   position: absolute;
   top: 86px;
-  right: 56px;
+  left: 440px;
+  right: auto;
   z-index: 20;
   pointer-events: auto;
   max-width: 480px;
@@ -1581,14 +1582,18 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   letter-spacing: -0.01em;
 }
 
-.hud-disclaimer-card-text {
-  font-size: 12px;
-  line-height: 1.55;
-  color: var(--hud-text-muted, #9CA3AF);
-  margin: 0;
+.hud-disclaimer-card-content {
   display: flex;
   align-items: flex-start;
-  gap: 6px;
+  gap: 8px;
+}
+
+.hud-disclaimer-card-text {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--hud-text-muted, #9CA3AF);
+  margin: 0;
+  text-align: left;
 }
 
 .hud-disclaimer-card-text strong {

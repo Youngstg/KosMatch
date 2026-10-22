@@ -40,14 +40,11 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
             <a className="btn btn-ghost highlight-pill" href="/explore">
               <Compass size={15} /> Peta Eksplorasi
             </a>
-            <a className="btn btn-ghost" href="/listings/new">
-              Tambah Kos
+            <a className="btn btn-ghost" href="/methodology">
+              Metodologi
             </a>
             <a className="btn btn-ghost" href="/auth/login">
               Akun
-            </a>
-            <a className="btn btn-ghost" href="/methodology">
-              Metodologi
             </a>
             <button className="btn btn-primary" onClick={onStart}>
               Mulai Perbandingan
@@ -243,6 +240,9 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
           <div className="actions compact">
             <a className="btn btn-ghost" href="/methodology">
               Metodologi & Batasan
+            </a>
+            <a className="btn btn-ghost" href="/admin" title="Masuk ke portal pengelolaan kos bagi pemilik dan admin">
+              Portal Pemilik & Admin
             </a>
             <button className="btn btn-primary" onClick={onStart}>
               Mulai Perbandingan

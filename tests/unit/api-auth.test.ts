@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import { POST as registerHandler } from "@/app/api/auth/register/route";
 import { POST as loginHandler } from "@/app/api/auth/login/route";
 import { POST as logoutHandler } from "@/app/api/auth/logout/route";
-import { GET as listingsGetHandler, POST as listingsPostHandler } from "@/app/api/listings/route";
+import { GET as listingsGetHandler, POST as listingsPostHandler, PATCH as listingsPatchHandler } from "@/app/api/listings/route";
+import { createSessionToken } from "@/lib/auth";
 
 describe("API Auth & Listings Endpoints (Fase 2)", () => {
   it("menolak registrasi jika format email tidak valid", async () => {
@@ -121,5 +122,90 @@ describe("API Auth & Listings Endpoints (Fase 2)", () => {
 
     const data = await res.json();
     expect(Array.isArray(data.listings)).toBe(true);
+  });
+
+  it("menolak mahasiswa/user biasa untuk membuat listing kos (403 Forbidden)", async () => {
+    const studentToken = createSessionToken({ userId: "stu-1", email: "student@ui.ac.id", role: "user" });
+    const req = new Request("http://localhost:3000/api/listings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `kosmatch_session=${studentToken}`,
+      },
+      body: JSON.stringify({
+        name: "Kos Coba Coba",
+        campusId: "ui-depok",
+        latitude: -6.368,
+        longitude: 106.822,
+        rentMonthly: 1200000,
+      }),
+    });
+
+    const res = await listingsPostHandler(req);
+    expect(res.status).toBe(403);
+    const data = await res.json();
+    expect(data.code).toBe("UNAUTHORIZED_ROLE");
+  });
+
+  it("menerima listing jika dikirim oleh akun dengan role owner (200 OK)", async () => {
+    const ownerToken = createSessionToken({ userId: "owner-1", email: "juragan@kosmatch.id", role: "owner" });
+    const req = new Request("http://localhost:3000/api/listings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `kosmatch_session=${ownerToken}`,
+      },
+      body: JSON.stringify({
+        name: "Kos Graha Pemilik Resmi",
+        campusId: "ui-depok",
+        latitude: -6.368,
+        longitude: 106.822,
+        rentMonthly: 1500000,
+      }),
+    });
+
+    const res = await listingsPostHandler(req);
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(data.success).toBe(true);
+    expect(data.status).toBe("pending");
+  });
+
+  it("menolak permintaan PATCH status jika bukan admin (403)", async () => {
+    const ownerToken = createSessionToken({ userId: "owner-1", email: "owner@kosmatch.id", role: "owner" });
+    const req = new Request("http://localhost:3000/api/listings", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `kosmatch_session=${ownerToken}`,
+      },
+      body: JSON.stringify({
+        id: "mock-1",
+        status: "verified",
+      }),
+    });
+
+    const res = await listingsPatchHandler(req);
+    expect(res.status).toBe(403);
+  });
+
+  it("mengizinkan admin memverifikasi listing dengan PATCH (200)", async () => {
+    const adminToken = createSessionToken({ userId: "admin-1", email: "admin@kosmatch.id", role: "admin" });
+    const req = new Request("http://localhost:3000/api/listings", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `kosmatch_session=${adminToken}`,
+      },
+      body: JSON.stringify({
+        id: "mock-1",
+        status: "verified",
+      }),
+    });
+
+    const res = await listingsPatchHandler(req);
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(data.status).toBe("verified");
   });
 });
