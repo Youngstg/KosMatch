@@ -28,15 +28,30 @@ export interface MapCanvasProps {
   onListingSelect?: (listing: PilotListing) => void;
 }
 
+const CARTO_API_KEY = process.env.NEXT_PUBLIC_CARTO_API_KEY;
+
+const getTileUrls = (key?: string): string[] => {
+  if (key) {
+    return [
+      `https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${key}`,
+      `https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${key}`,
+      `https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${key}`,
+      `https://d.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${key}`,
+    ];
+  }
+  return ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"];
+};
+
 const OSM_RASTER_STYLE: StyleSpecification = {
   version: 8,
   sources: {
     "osm-tiles": {
       type: "raster",
-      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+      tiles: getTileUrls(CARTO_API_KEY),
       tileSize: 256,
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
+      attribution: CARTO_API_KEY
+        ? '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>'
+        : '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
     },
   },
   layers: [
