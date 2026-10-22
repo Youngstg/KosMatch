@@ -11,7 +11,7 @@ const securityHeaders = [
   },
   {
     key: "Referrer-Policy",
-    value: "no-referrer",
+    value: "strict-origin-when-cross-origin",
   },
   {
     key: "Strict-Transport-Security",
@@ -27,9 +27,9 @@ const securityHeaders = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://basemaps.cartocdn.com https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://demotiles.maplibre.org",
-      "font-src 'self' data: https://demotiles.maplibre.org https://basemaps.cartocdn.com",
-      "connect-src 'self' blob: https://*.basemaps.cartocdn.com https://basemaps.cartocdn.com https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://demotiles.maplibre.org",
+      "img-src 'self' data: blob: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://*.tile.openstreetmap.fr https://tile.openstreetmap.fr https://demotiles.maplibre.org",
+      "font-src 'self' data: https://demotiles.maplibre.org",
+      "connect-src 'self' blob: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://*.tile.openstreetmap.fr https://tile.openstreetmap.fr https://demotiles.maplibre.org",
       "worker-src 'self' blob:",
       "child-src 'self' blob:",
       "frame-ancestors 'none'",
