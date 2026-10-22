@@ -29,7 +29,8 @@ export interface MapCanvasProps {
   onListingSelect?: (listing: PilotListing) => void;
 }
 
-const CARTO_API_KEY = process.env.NEXT_PUBLIC_CARTO_API_KEY;
+const CARTO_API_KEY =
+  process.env.NEXT_PUBLIC_CARTO_API_KEY || "cb1_4rm7_1_bb6324dd9bf6700ea86a2fc1";
 
 const getTileUrls = (theme: "dark" | "light" = "dark", key?: string): string[] => {
   const variant = theme === "light" ? "voyager" : "dark_all";

@@ -38,6 +38,8 @@ jobs:
         run: npm test
 
       - name: Build Next.js App
+        env:
+          NEXT_PUBLIC_CARTO_API_KEY: ${{ secrets.NEXT_PUBLIC_CARTO_API_KEY || 'cb1_4rm7_1_bb6324dd9bf6700ea86a2fc1' }}
         run: npm run build
 
       - name: Install Playwright Browsers

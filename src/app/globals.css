@@ -452,11 +452,40 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
 
 /* Desktop / Mobile Visibility Helpers */
 .desktop-only { display: block; }
-.mobile-only { display: none; }
+.mobile-only { display: none !important; }
 
 @media (max-width: 768px) {
-  .desktop-only { display: none !important; }
-  .mobile-only { display: block !important; }
+  .desktop-only,
+  .hud-floating-topbar,
+  .hud-floating-rail,
+  .hud-desktop-bottom-tray {
+    display: none !important;
+  }
+  .mobile-only {
+    display: block !important;
+  }
+  .mobile-floating-controls {
+    display: flex !important;
+  }
+  .mobile-bottom-sheet {
+    display: flex !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-only,
+  .mobile-floating-controls,
+  .mobile-bottom-sheet,
+  .mobile-search-pill,
+  .mobile-category-scroll {
+    display: none !important;
+  }
+  .hud-floating-topbar {
+    display: block !important;
+  }
+  .hud-floating-rail {
+    display: flex !important;
+  }
 }
 
 /* Map Explorer Shell */

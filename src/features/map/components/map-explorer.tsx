@@ -280,7 +280,7 @@ export function MapExplorer() {
       {/* =========================================================================
           1. FLOATING TOPBAR (Desktop & Mobile - Pergamum University Style)
       ========================================================================== */}
-      <header className="hud-floating-topbar">
+      <header className="hud-floating-topbar desktop-only">
         <div className="hud-topbar-inner">
           <div className="hud-topbar-left">
             <Brand />
@@ -345,7 +345,7 @@ export function MapExplorer() {
       {/* =========================================================================
           2. MOBILE FLOATING CONTROLS (Image 2 - Apple Maps City Explorer Style)
       ========================================================================== */}
-      <div className="mobile-floating-controls">
+      <div className="mobile-floating-controls mobile-only">
         {/* Mobile Campus Selector Floating Pill */}
         <div className="mobile-search-pill">
           <button
