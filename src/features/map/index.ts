@@ -1,6 +1,8 @@
 export * from "./components/map-explorer";
 export * from "./components/map-skeleton";
 export * from "./components/neighborhood-profile-card";
+export * from "./components/semantic-search-bar";
 export * from "./services/neighborhood-service";
 export * from "./services/routing-service";
 export * from "./utils/geo-circle";
+

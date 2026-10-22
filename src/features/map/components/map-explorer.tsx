@@ -45,6 +45,12 @@ import { MapSkeleton } from "./map-skeleton";
 import { NeighborhoodProfileCard } from "./neighborhood-profile-card";
 import { fetchPointNeighborhoodProfile, type NeighborhoodProfileResult } from "../services/neighborhood-service";
 import { evaluatePriceFairness } from "@/domain/analytics/price-fairness";
+import { SemanticSearchBar } from "./semantic-search-bar";
+
+import {
+  searchListingsSemantically,
+  type SemanticSearchResult,
+} from "@/domain/search/semantic-search";
 import {
   calculateAllModesCommute,
   estimateCommuteQuick,
@@ -54,6 +60,7 @@ import type { CommuteMode } from "@/lib/db/types";
 import { estimateRoadMeters, formatDistance, haversineMeters } from "@/lib/geo";
 import { formatRupiah } from "@/lib/currency";
 import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
+
 
 function PoiCategoryIcon({
   category,
@@ -112,8 +119,9 @@ export function MapExplorer() {
   const [candidatePoint, setCandidatePoint] = useState<{ latitude: number; longitude: number } | null>(null);
   const [genderFilter, setGenderFilter] = useState<"all" | "male" | "female">("all");
   const [commuteMode, setCommuteMode] = useState<CommuteMode>("walking");
-  const [sortBy, setSortBy] = useState<"commute" | "price_asc" | "price_desc">("commute");
+  const [sortBy, setSortBy] = useState<"relevance" | "commute" | "price_asc" | "price_desc">("commute");
   const [radiusMeters, setRadiusMeters] = useState<number>(800);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   // New Pergamum & Apple Maps Interactive States
   const [mapTheme, setMapTheme] = useState<"dark" | "light">("dark");
@@ -155,28 +163,69 @@ export function MapExplorer() {
     return getPoisByCampus(selectedCampus.campusId);
   }, [selectedCampus.campusId]);
 
-  // Filter listings based on campus, gender, and optional category/price chip
+  // Tahap D: Natural Language & Semantic Search evaluation
   const campusListings = getListingsByCampus(selectedCampus.campusId);
+
+  const semanticSearchResult: SemanticSearchResult | null = useMemo(() => {
+    if (!searchQuery.trim()) return null;
+    return searchListingsSemantically(campusListings, searchQuery);
+  }, [campusListings, searchQuery]);
+
+  const detectedTargetCampus = useMemo(() => {
+    if (!semanticSearchResult?.parsedFilter.detectedCampusId) return null;
+    const targetId = semanticSearchResult.parsedFilter.detectedCampusId;
+    if (targetId === selectedCampus.campusId) return null;
+    return PILOT_CONFIG.allPilots.find((p) => p.campusId === targetId) ?? null;
+  }, [semanticSearchResult, selectedCampus.campusId]);
+
+  const handleSearchChange = (newQuery: string) => {
+    setSearchQuery(newQuery);
+    if (newQuery.trim() && sortBy === "commute") {
+      setSortBy("relevance");
+    } else if (!newQuery.trim() && sortBy === "relevance") {
+      setSortBy("commute");
+    }
+  };
+
+  // Filter listings based on campus, gender, optional category/price chip, or semantic NLP
   const filteredListings = useMemo(() => {
-    return campusListings.filter((l) => {
-      if (genderFilter !== "all" && l.gender !== genderFilter && l.gender !== "all") {
-        return false;
-      }
-      if (activeCategory === "cheap" && l.rentMonthly > 1_500_000) {
-        return false;
-      }
-      if (activeCategory === "female" && l.gender !== "female") {
-        return false;
-      }
-      if (activeCategory === "km_dalam" && !l.facilityCodes.includes("bathroom_inside")) {
-        return false;
-      }
-      if (activeCategory === "wifi" && !l.facilityCodes.includes("wifi")) {
-        return false;
-      }
-      return true;
-    });
-  }, [campusListings, genderFilter, activeCategory]);
+    if (semanticSearchResult) {
+      return semanticSearchResult.matches.map((m) => ({
+        ...m.listing,
+        semanticScore: m.relevanceScore as number | null,
+        semanticExplanation: m.matchExplanation as string | null,
+        matchedCriteria: m.matchedCriteria,
+        unmetCriteria: m.unmetCriteria,
+      }));
+    }
+
+    return campusListings
+      .filter((l) => {
+        if (genderFilter !== "all" && l.gender !== genderFilter && l.gender !== "all") {
+          return false;
+        }
+        if (activeCategory === "cheap" && l.rentMonthly > 1_500_000) {
+          return false;
+        }
+        if (activeCategory === "female" && l.gender !== "female") {
+          return false;
+        }
+        if (activeCategory === "km_dalam" && !l.facilityCodes.includes("bathroom_inside")) {
+          return false;
+        }
+        if (activeCategory === "wifi" && !l.facilityCodes.includes("wifi")) {
+          return false;
+        }
+        return true;
+      })
+      .map((l) => ({
+        ...l,
+        semanticScore: null as number | null,
+        semanticExplanation: null as string | null,
+        matchedCriteria: [] as readonly string[],
+        unmetCriteria: [] as readonly string[],
+      }));
+  }, [campusListings, semanticSearchResult, genderFilter, activeCategory]);
 
   // Calculate quick commute for all filtered listings to current destination
   const listingsWithCommute = useMemo(() => {
@@ -190,9 +239,12 @@ export function MapExplorer() {
     });
   }, [filteredListings, activeDestination, commuteMode]);
 
-  // Sort listings based on current sort criteria
+  // Sort listings based on current sort criteria (including relevance)
   const sortedListings = useMemo(() => {
     return [...listingsWithCommute].sort((a, b) => {
+      if (sortBy === "relevance" && a.semanticScore !== null && b.semanticScore !== null) {
+        return b.semanticScore - a.semanticScore;
+      }
       if (sortBy === "commute") {
         return a.commuteMinutes - b.commuteMinutes;
       }
@@ -202,6 +254,7 @@ export function MapExplorer() {
       return b.rentMonthly - a.rentMonthly;
     });
   }, [listingsWithCommute, sortBy]);
+
 
   const activePoint = candidatePoint ?? (selectedListing ? selectedListing.coordinates : null);
 
@@ -742,6 +795,15 @@ export function MapExplorer() {
               </h3>
             </div>
 
+            {/* Tahap D: NLP Semantic Natural Language Search Bar */}
+            <SemanticSearchBar
+              query={searchQuery}
+              onQueryChange={handleSearchChange}
+              searchResult={semanticSearchResult}
+              detectedCampus={detectedTargetCampus}
+              onSwitchCampus={handleCampusChange}
+            />
+
             {/* Commute Mode & Sorting Controls */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "6px", flexWrap: "wrap", marginBottom: "8px" }}>
               <div className="chips" style={{ gap: "4px" }}>
@@ -771,8 +833,11 @@ export function MapExplorer() {
                 style={{ width: "auto", minHeight: "28px", padding: "2px 8px", fontSize: "11px" }}
                 value={sortBy}
                 aria-label="Urutkan Kos"
-                onChange={(e) => setSortBy(e.target.value as "commute" | "price_asc" | "price_desc")}
+                onChange={(e) => setSortBy(e.target.value as "relevance" | "commute" | "price_asc" | "price_desc")}
               >
+                {searchQuery.trim() && (
+                  <option value="relevance">Relevansi Semantik</option>
+                )}
                 <option value="commute">Waktu Tempuh (Tercepat)</option>
                 <option value="price_asc">Harga (Termurah)</option>
                 <option value="price_desc">Harga (Tertinggi)</option>
@@ -804,12 +869,36 @@ export function MapExplorer() {
                     className={`panel hud-listing-card ${isSelected ? "selected" : ""}`}
                     onClick={() => handleSelectListing(listing)}
                   >
+                    {listing.semanticScore !== null && (
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "6px", marginBottom: "6px" }}>
+                        <span
+                          className="badge"
+                          style={{
+                            background: "rgba(16, 185, 129, 0.15)",
+                            color: "#10B981",
+                            border: "1px solid rgba(16, 185, 129, 0.3)",
+                            fontWeight: 750,
+                            fontSize: "11px",
+                            padding: "2px 7px",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "4px",
+                          }}
+                        >
+                          <Sparkles size={11} /> {listing.semanticScore}% Cocok
+                        </span>
+                        <span className="muted" style={{ fontSize: "11px", textAlign: "right", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "160px" }}>
+                          {listing.matchedCriteria[0] ?? "Sesuai kriteria"}
+                        </span>
+                      </div>
+                    )}
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px" }}>
                       <h4 style={{ margin: 0, fontSize: "14px" }}>{listing.name}</h4>
                       <strong style={{ fontSize: "13px", color: "var(--primary)", whiteSpace: "nowrap" }}>
                         {formatRupiah(listing.rentMonthly)}
                       </strong>
                     </div>
+
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", margin: "4px 0 6px", flexWrap: "wrap", gap: "4px" }}>
                       <span className="muted" style={{ fontSize: "12px" }}>
                         {listing.area} · {listing.gender === "all" ? "Campur" : listing.gender === "male" ? "Putra" : "Putri"}
@@ -1224,6 +1313,14 @@ export function MapExplorer() {
                     /* If no listing selected, show list of verified kos */
                     <div>
                       <h4 className="mobile-section-title">Pilih Kos untuk Melihat Detail</h4>
+                      <SemanticSearchBar
+                        query={searchQuery}
+                        onQueryChange={handleSearchChange}
+                        searchResult={semanticSearchResult}
+                        detectedCampus={detectedTargetCampus}
+                        onSwitchCampus={handleCampusChange}
+                        compact
+                      />
                       <div style={{ display: "grid", gap: "8px" }}>
                         {sortedListings.map((l) => (
                           <div
@@ -1232,7 +1329,26 @@ export function MapExplorer() {
                             onClick={() => handleSelectListing(l)}
                           >
                             <div>
-                              <strong>{l.name}</strong>
+                              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                <strong>{l.name}</strong>
+                                {l.semanticScore !== null && (
+                                  <span
+                                    className="badge"
+                                    style={{
+                                      fontSize: "10px",
+                                      color: "#10B981",
+                                      background: "rgba(16, 185, 129, 0.15)",
+                                      border: "1px solid rgba(16, 185, 129, 0.3)",
+                                      padding: "1px 5px",
+                                      display: "inline-flex",
+                                      alignItems: "center",
+                                      gap: "3px",
+                                    }}
+                                  >
+                                    <Sparkles size={9} /> {l.semanticScore}%
+                                  </span>
+                                )}
+                              </div>
                               <div className="text-muted" style={{ fontSize: "12px" }}>
                                 {l.area} · {formatRupiah(l.rentMonthly)}
                               </div>
@@ -1246,6 +1362,7 @@ export function MapExplorer() {
                       </div>
                     </div>
                   )}
+
                 </div>
               )}
 

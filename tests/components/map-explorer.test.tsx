@@ -112,4 +112,58 @@ describe("MapExplorer Component", () => {
     // Wisma Jurang Kutek Ekonomis (Rp 850.000) should be visible
     expect(screen.getByText("Wisma Jurang Kutek Ekonomis")).not.toBeNull();
   });
+
+  it("filters listings via natural language semantic search input", () => {
+    render(<MapExplorer />);
+
+    const searchInputs = screen.getAllByLabelText("Pencarian semantik kos bahasa alami");
+    const desktopInput = searchInputs[0]!;
+
+    // Search for female kos with AC
+    fireEvent.change(desktopInput, { target: { value: "kos putri ac budget 2jt" } });
+
+    // Female kos with AC should be visible with match badge
+    expect(screen.getByText("Wisma Pondok Cina Asri")).not.toBeNull();
+    expect(screen.getAllByText(/% Cocok/).length).toBeGreaterThan(0);
+
+
+    // Male kos should be excluded
+    expect(screen.queryByText("Kos Graha Kukusan Mandiri")).toBeNull();
+
+    // Clear search using clear button
+    const clearBtn = screen.getAllByLabelText("Hapus kata kunci pencarian")[0]!;
+    fireEvent.click(clearBtn);
+
+    // All listings restored
+    expect(screen.getByText("Kos Graha Kukusan Mandiri")).not.toBeNull();
+  });
+
+  it("triggers semantic filter via quick prompt chip and detects cross-campus intent", () => {
+    render(<MapExplorer />);
+
+    // Click prompt chip "Hemat ≤ 1jt"
+    const hematChip = screen.getAllByRole("button", { name: /Hemat ≤ 1jt/i })[0]!;
+    fireEvent.click(hematChip);
+
+    // Only budget kos <= 1jt should appear
+    expect(screen.getByText("Wisma Jurang Kutek Ekonomis")).not.toBeNull();
+    // High rent kos (>1jt) should not be eligible
+    expect(screen.queryByText("Kos UI Cantik Kutek")).toBeNull();
+
+    // Type query mentioning another campus (ITERA) while on UI
+    const searchInputs = screen.getAllByLabelText("Pencarian semantik kos bahasa alami");
+    fireEvent.change(searchInputs[0]!, { target: { value: "kos itera lampung murah" } });
+
+    // Cross-campus switcher banner should appear
+    const switchBtn = screen.getByRole("button", { name: /Beralih ke ITERA/i });
+    expect(switchBtn).not.toBeNull();
+
+    // Click switch campus
+    fireEvent.click(switchBtn);
+
+    // Campus is switched to ITERA and its listings are displayed
+    expect(screen.getByText("Institut Teknologi Sumatera (ITERA)")).not.toBeNull();
+    expect(screen.getByText("Kos Pondok Ryacudu Asri")).not.toBeNull();
+  });
 });
+
