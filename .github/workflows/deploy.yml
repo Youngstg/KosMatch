@@ -103,6 +103,11 @@ jobs:
             cd "$RELEASE_PATH"
             npm ci --omit=dev --prefer-offline
 
+            if [ -f "/var/www/kostmatch/.env.production" ]; then
+              echo "Preserving persistent .env.production into $RELEASE_PATH..."
+              cp "/var/www/kostmatch/.env.production" "$RELEASE_PATH/.env.production"
+            fi
+
             echo "Switching symlink to $RELEASE_PATH..."
             ln -sfn "$RELEASE_PATH" "$CURRENT_PATH"
 
