@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -176,9 +177,15 @@ export default function AdminDashboardPage() {
       <div className="shell landing-shell" style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
         <header className="topbar">
           <div className="container header-inner">
-            <Link href="/" className="brand" style={{ textDecoration: "none", color: "inherit" }}>
-              <span className="logo">
-                <Building2 size={20} />
+            <Link href="/" className="brand" style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center", gap: "10px" }}>
+              <span className="logo" style={{ overflow: "hidden", padding: 0, background: "transparent", borderRadius: "10px", width: "36px", height: "36px", border: "1px solid rgba(255,255,255,0.15)", display: "flex" }}>
+                <Image
+                  src="/kosmatch-logo-3d.jpg"
+                  alt="KosMatch Logo"
+                  width={36}
+                  height={36}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }}
+                />
               </span>
               <span>KosMatch Portal Pengelola</span>
             </Link>
@@ -312,9 +319,15 @@ export default function AdminDashboardPage() {
       <header className="topbar">
         <div className="container header-inner">
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <Link href="/" className="brand" style={{ textDecoration: "none", color: "inherit" }}>
-              <span className="logo">
-                <Building2 size={20} />
+            <Link href="/" className="brand" style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center", gap: "10px" }}>
+              <span className="logo" style={{ overflow: "hidden", padding: 0, background: "transparent", borderRadius: "10px", width: "36px", height: "36px", border: "1px solid rgba(255,255,255,0.15)", display: "flex" }}>
+                <Image
+                  src="/kosmatch-logo-3d.jpg"
+                  alt="KosMatch Logo"
+                  width={36}
+                  height={36}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }}
+                />
               </span>
               <span>KosMatch</span>
             </Link>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import { AlertTriangle, Check, Clock3, Download, FileUp, Info, MapPin, Pencil, Plus, Printer, RotateCcw, Scale, Sparkles, Star, Trash2 } from "lucide-react";
 import { demoOptions, demoProject } from "@/data/demo";
@@ -46,7 +47,22 @@ function getFacilityValue(option: AccommodationOption, code: string): boolean | 
   return option.facilityValues[code] ?? option.facilityCodes.includes(code);
 }
 
-function Brand() { return <div className="brand"><span className="logo"><Scale size={21} aria-hidden="true" /></span><span>KosMatch</span></div>; }
+function Brand() {
+  return (
+    <div className="brand" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+      <span className="logo" style={{ overflow: "hidden", padding: 0, background: "transparent", borderRadius: "10px", width: "36px", height: "36px", border: "1px solid rgba(255,255,255,0.15)", display: "flex" }}>
+        <Image
+          src="/kosmatch-logo-3d.jpg"
+          alt="KosMatch Logo"
+          width={36}
+          height={36}
+          style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }}
+        />
+      </span>
+      <span>KosMatch</span>
+    </div>
+  );
+}
 function newId() { return crypto.randomUUID(); }
 
 let browserRepository: IndexedDbProjectRepository | null = null;
