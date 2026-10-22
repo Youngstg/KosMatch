@@ -28,8 +28,10 @@ describe("MapExplorer Component", () => {
     // Campus selection buttons
     const uiBtn = screen.getByRole("button", { name: /Universitas Indonesia/i });
     const unandBtn = screen.getByRole("button", { name: /Universitas Andalas/i });
+    const iteraBtn = screen.getByRole("button", { name: /Institut Teknologi Sumatera/i });
     expect(uiBtn).not.toBeNull();
     expect(unandBtn).not.toBeNull();
+    expect(iteraBtn).not.toBeNull();
 
     // Default primary campus is UI Depok
     const uiHeading = screen.getByRole("heading", { level: 2, name: /Universitas Indonesia \(Depok\)/i });
@@ -41,6 +43,12 @@ describe("MapExplorer Component", () => {
     const unandHeading = screen.getByRole("heading", { level: 2, name: /Universitas Andalas \(Limau Manis\)/i });
     expect(unandHeading).not.toBeNull();
     expect(screen.getByText("5 km")).not.toBeNull();
+
+    // Switch campus to ITERA Lampung
+    fireEvent.click(iteraBtn);
+    const iteraHeading = screen.getByRole("heading", { level: 2, name: /Institut Teknologi Sumatera \(ITERA\)/i });
+    expect(iteraHeading).not.toBeNull();
+    expect(screen.getByText("Kos Pondok Ryacudu Asri")).not.toBeNull();
   });
 
   it("selects a listing, updates inspector, and displays neighborhood amenities and commute", async () => {

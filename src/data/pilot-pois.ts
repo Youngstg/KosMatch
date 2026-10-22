@@ -1,6 +1,8 @@
+export type PilotCampusPoiId = "ui-depok" | "unand-limau-manis" | "itera-lampung";
+
 export interface PilotPoi {
   readonly id: string;
-  readonly campusId: "ui-depok" | "unand-limau-manis";
+  readonly campusId: PilotCampusPoiId;
   readonly category: "food" | "laundry" | "convenience" | "pharmacy" | "worship" | "bus_stop" | "atm";
   readonly name: string;
   readonly coordinates: { readonly latitude: number; readonly longitude: number };
@@ -522,11 +524,151 @@ export const PILOT_POIS: readonly PilotPoi[] = [
     campusId: "unand-limau-manis",
     category: "atm",
     name: "ATM BNI Simpang Pasar Baru",
-    coordinates: { latitude: -0.9232, longitude: 100.4350 },
+    coordinates: { latitude: -0.9232, longitude: 100.435 },
     description: "ATM tarik tunai di depan Indomaret Pasar Baru",
+  },
+
+  // =========================================================================
+  // ITERA LAMPUNG POIS (Food, Laundry, Convenience, Pharmacy, Worship, Transport, ATM)
+  // =========================================================================
+  {
+    id: "itera-poi-food-01",
+    campusId: "itera-lampung",
+    category: "food",
+    name: "Kantin Utama GKU ITERA",
+    coordinates: { latitude: -5.3608, longitude: 105.3178 },
+    description: "Pusat kuliner kampus mahasiswa dan dosen di lantai dasar GKU",
+  },
+  {
+    id: "itera-poi-food-02",
+    campusId: "itera-lampung",
+    category: "food",
+    name: "Warung Makan Barokah Way Huwi",
+    coordinates: { latitude: -5.354, longitude: 105.3075 },
+    description: "Warteg prasmanan murah favorit mahasiswa ITERA",
+  },
+  {
+    id: "itera-poi-food-03",
+    campusId: "itera-lampung",
+    category: "food",
+    name: "Kopi Dari Hati Ryacudu ITERA",
+    coordinates: { latitude: -5.3565, longitude: 105.312 },
+    description: "Coffee shop tempat nugas dan diskusi mahasiswa dengan colokan tiap meja",
+  },
+  {
+    id: "itera-poi-food-04",
+    campusId: "itera-lampung",
+    category: "food",
+    name: "Ayam Geprek Mas Roy Ryacudu",
+    coordinates: { latitude: -5.3555, longitude: 105.3105 },
+    description: "Ayam geprek pedas hemat paket mahasiswa",
+  },
+  {
+    id: "itera-poi-food-05",
+    campusId: "itera-lampung",
+    category: "food",
+    name: "Pecel Lele & Sambal Ulek Way Huwi",
+    coordinates: { latitude: -5.353, longitude: 105.308 },
+    description: "Kuliner malam buka hingga tengah malam di jalan utama Way Huwi",
+  },
+  {
+    id: "itera-poi-laundry-01",
+    campusId: "itera-lampung",
+    category: "laundry",
+    name: "Clean & Fresh Kiloan Way Huwi",
+    coordinates: { latitude: -5.3542, longitude: 105.3068 },
+    description: "Laundry kiloan kilat 1 hari selesai, wangi dan rapi",
+  },
+  {
+    id: "itera-poi-laundry-02",
+    campusId: "itera-lampung",
+    category: "laundry",
+    name: "Sabah Wash Express Ryacudu",
+    coordinates: { latitude: -5.358, longitude: 105.3135 },
+    description: "Laundry antar-jemput gratis untuk area kos sekitar kampus",
+  },
+  {
+    id: "itera-poi-conv-01",
+    campusId: "itera-lampung",
+    category: "convenience",
+    name: "Indomaret Terusan Ryacudu ITERA",
+    coordinates: { latitude: -5.3568, longitude: 105.313 },
+    description: "Minimarket 24 jam tepat di jalur utama akses kampus",
+  },
+  {
+    id: "itera-poi-conv-02",
+    campusId: "itera-lampung",
+    category: "convenience",
+    name: "Alfamart Way Huwi Simpang",
+    coordinates: { latitude: -5.3548, longitude: 105.3085 },
+    description: "Pusat belanja kebutuhan harian mahasiswa kos Way Huwi",
+  },
+  {
+    id: "itera-poi-pharm-01",
+    campusId: "itera-lampung",
+    category: "pharmacy",
+    name: "Apotek K-24 Terusan Ryacudu",
+    coordinates: { latitude: -5.3575, longitude: 105.311 },
+    description: "Apotek buka 24 jam melayani obat resep dan vitamin mahasiswa",
+  },
+  {
+    id: "itera-poi-pharm-02",
+    campusId: "itera-lampung",
+    category: "pharmacy",
+    name: "Klinik Pratama & Apotek ITERA Sehat",
+    coordinates: { latitude: -5.361, longitude: 105.3165 },
+    description: "Layanan medis dan kesehatan dasar kampus ITERA",
+  },
+  {
+    id: "itera-poi-worship-01",
+    campusId: "itera-lampung",
+    category: "worship",
+    name: "Masjid Raya Baitul Ilmi ITERA",
+    coordinates: { latitude: -5.3592, longitude: 105.3185 },
+    description: "Masjid raya pusat kegiatan ibadah dan kajian mahasiswa kampus",
+  },
+  {
+    id: "itera-poi-worship-02",
+    campusId: "itera-lampung",
+    category: "worship",
+    name: "Masjid Al-Ikhlas Way Huwi",
+    coordinates: { latitude: -5.3535, longitude: 105.307 },
+    description: "Masjid permukiman warga dan kos mahasiswa di Way Huwi",
+  },
+  {
+    id: "itera-poi-bus-01",
+    campusId: "itera-lampung",
+    category: "bus_stop",
+    name: "Halte Trans Lampung Gerbang Utama ITERA",
+    coordinates: { latitude: -5.3582, longitude: 105.315 },
+    description: "Koneksi bus Trans Lampung koridor ITERA - Terminal Rajabasa",
+  },
+  {
+    id: "itera-poi-bus-02",
+    campusId: "itera-lampung",
+    category: "bus_stop",
+    name: "Pangkalan Ojek Online Simpang Way Huwi",
+    coordinates: { latitude: -5.3552, longitude: 105.3082 },
+    description: "Shelter titik jemput ojol terdekat ke permukiman kos",
+  },
+  {
+    id: "itera-poi-atm-01",
+    campusId: "itera-lampung",
+    category: "atm",
+    name: "Galeri ATM Mandiri & BNI Gedung Rektorat",
+    coordinates: { latitude: -5.3602, longitude: 105.3172 },
+    description: "Galeri ATM kampus utama dengan fasilitas setor tunai (CRM)",
+  },
+  {
+    id: "itera-poi-atm-02",
+    campusId: "itera-lampung",
+    category: "atm",
+    name: "ATM BRI Indomaret Ryacudu",
+    coordinates: { latitude: -5.3567, longitude: 105.3132 },
+    description: "ATM 24 jam di depan Indomaret Terusan Ryacudu",
   },
 ];
 
-export function getPoisByCampus(campusId: "ui-depok" | "unand-limau-manis"): readonly PilotPoi[] {
+export function getPoisByCampus(campusId: string): readonly PilotPoi[] {
   return PILOT_POIS.filter((poi) => poi.campusId === campusId);
 }

@@ -4,7 +4,8 @@
 -- 1. Pilot Campuses
 INSERT INTO public.campuses (id, name, short_name, city, geom, is_pilot) VALUES
   ('ui-depok', 'Universitas Indonesia (Depok)', 'UI Depok', 'Depok', ST_SetSRID(ST_MakePoint(106.827, -6.362), 4326)::geography, true),
-  ('unand-limau-manis', 'Universitas Andalas (Limau Manis)', 'Unand Padang', 'Padang', ST_SetSRID(ST_MakePoint(100.4602, -0.9143), 4326)::geography, true)
+  ('unand-limau-manis', 'Universitas Andalas (Limau Manis)', 'Unand Padang', 'Padang', ST_SetSRID(ST_MakePoint(100.4602, -0.9143), 4326)::geography, true),
+  ('itera-lampung', 'Institut Teknologi Sumatera (ITERA)', 'ITERA Lampung', 'Lampung Selatan', ST_SetSRID(ST_MakePoint(105.3148, -5.3584), 4326)::geography, true)
 ON CONFLICT (id) DO UPDATE SET
   name = EXCLUDED.name,
   city = EXCLUDED.city,
@@ -40,7 +41,17 @@ INSERT INTO public.pois (osm_type, osm_id, category, name, tags, geom) VALUES
   ('N', 20005, 'pharmacy', 'Apotek Andalas Limau Manis', '{"healthcare": "pharmacy"}', ST_SetSRID(ST_MakePoint(100.4570, -0.9160), 4326)::geography),
   ('N', 20006, 'worship', 'Masjid Nurul Ilmi Unand', '{"religion": "muslim"}', ST_SetSRID(ST_MakePoint(100.4630, -0.9125), 4326)::geography),
   ('N', 20007, 'bus_stop', 'Halte Pangkalan Angkot Pasar Baru', '{"highway": "bus_stop"}', ST_SetSRID(ST_MakePoint(100.4475, -0.9225), 4326)::geography),
-  ('N', 20008, 'atm', 'Galeri ATM BNI Gedung Pusat Unand', '{"amenity": "atm"}', ST_SetSRID(ST_MakePoint(100.4645, -0.9140), 4326)::geography)
+  ('N', 20008, 'atm', 'Galeri ATM BNI Gedung Pusat Unand', '{"amenity": "atm"}', ST_SetSRID(ST_MakePoint(100.4645, -0.9140), 4326)::geography),
+
+  -- ITERA Lampung POIs
+  ('N', 30001, 'food', 'Kantin Utama GKU ITERA', '{"cuisine": "indonesian"}', ST_SetSRID(ST_MakePoint(105.3178, -5.3608), 4326)::geography),
+  ('N', 30002, 'food', 'Warung Makan Barokah Way Huwi', '{"cuisine": "indonesian"}', ST_SetSRID(ST_MakePoint(105.3075, -5.3540), 4326)::geography),
+  ('N', 30003, 'laundry', 'Clean & Fresh Kiloan Way Huwi', '{"service": "laundry"}', ST_SetSRID(ST_MakePoint(105.3068, -5.3542), 4326)::geography),
+  ('N', 30004, 'convenience', 'Indomaret Terusan Ryacudu ITERA', '{"shop": "convenience"}', ST_SetSRID(ST_MakePoint(105.3130, -5.3568), 4326)::geography),
+  ('N', 30005, 'pharmacy', 'Apotek K-24 Terusan Ryacudu', '{"healthcare": "pharmacy"}', ST_SetSRID(ST_MakePoint(105.3110, -5.3575), 4326)::geography),
+  ('N', 30006, 'worship', 'Masjid Raya Baitul Ilmi ITERA', '{"religion": "muslim"}', ST_SetSRID(ST_MakePoint(105.3185, -5.3592), 4326)::geography),
+  ('N', 30007, 'bus_stop', 'Halte Trans Lampung Gerbang Utama ITERA', '{"highway": "bus_stop"}', ST_SetSRID(ST_MakePoint(105.3150, -5.3582), 4326)::geography),
+  ('N', 30008, 'atm', 'Galeri ATM Mandiri & BNI Gedung Rektorat', '{"amenity": "atm"}', ST_SetSRID(ST_MakePoint(105.3172, -5.3602), 4326)::geography)
 ON CONFLICT (osm_type, osm_id) DO NOTHING;
 
 -- 3. Verified Pilot Kos Listings
@@ -52,5 +63,8 @@ INSERT INTO public.listings (name, campus_id, rent_monthly, facilities, geom, st
   ('Kos Rindang Kukusan Kelurahan', 'ui-depok', 950000, '["wifi", "desk_chair", "closet"]'::jsonb, ST_SetSRID(ST_MakePoint(106.8195, -6.3742), 4326)::geography, 'verified', 'Hemat biaya, suasana kekeluargaan.'),
   ('Kos Kampus Limau Manis Sejahtera', 'unand-limau-manis', 850000, '["bathroom_inside", "wifi", "desk_chair", "closet"]'::jsonb, ST_SetSRID(ST_MakePoint(100.4578, -0.9168), 4326)::geography, 'verified', 'Dekat Gerbang Utama Unand Limau Manis.'),
   ('Wisma Pasar Baru Anggrek', 'unand-limau-manis', 750000, '["wifi", "desk_chair", "closet", "shared_kitchen"]'::jsonb, ST_SetSRID(ST_MakePoint(100.4492, -0.9245), 4326)::geography, 'verified', 'Dekat pusat kuliner Pasar Baru Unand.'),
-  ('Kos Syariah Melati Limau Manis', 'unand-limau-manis', 1100000, '["bathroom_inside", "wifi", "ac", "desk_chair", "access_24h"]'::jsonb, ST_SetSRID(ST_MakePoint(100.4632, -0.9115), 4326)::geography, 'verified', 'Kamar modern ber-AC di perumahan dosen.')
+  ('Kos Syariah Melati Limau Manis', 'unand-limau-manis', 1100000, '["bathroom_inside", "wifi", "ac", "desk_chair", "access_24h"]'::jsonb, ST_SetSRID(ST_MakePoint(100.4632, -0.9115), 4326)::geography, 'verified', 'Kamar modern ber-AC di perumahan dosen.'),
+  ('Kos Pondok Ryacudu Asri', 'itera-lampung', 1200000, '["bathroom_inside", "wifi", "ac", "desk_chair", "closet"]'::jsonb, ST_SetSRID(ST_MakePoint(105.3115, -5.3562), 4326)::geography, 'verified', '5 menit ke Gerbang Utama ITERA.'),
+  ('Wisma Putri Way Huwi Cantika', 'itera-lampung', 850000, '["bathroom_inside", "wifi", "desk_chair", "closet", "shared_kitchen"]'::jsonb, ST_SetSRID(ST_MakePoint(105.3065, -5.3538), 4326)::geography, 'verified', 'Khusus mahasiswi ITERA, penjagaan portal malam 24 jam.'),
+  ('Kos Griya ITERA Mandiri', 'itera-lampung', 600000, '["wifi", "desk_chair", "closet", "shared_kitchen"]'::jsonb, ST_SetSRID(ST_MakePoint(105.3092, -5.3525), 4326)::geography, 'verified', 'Pilihan hemat mahasiswa baru, dekat gang tembus kampus.')
 ON CONFLICT DO NOTHING;

@@ -44,6 +44,7 @@ describe("PostgreSQL + PostGIS VPS Database Schema & Configuration", () => {
     const seedSql = readFileSync(seedPath, "utf-8");
     expect(seedSql).toContain("ui-depok");
     expect(seedSql).toContain("unand-limau-manis");
+    expect(seedSql).toContain("itera-lampung");
   });
 
   it("file setup script scripts/setup-vps-postgres.sh tersedia untuk otomasi VPS", () => {

@@ -105,8 +105,50 @@ export const PILOT_CONFIG = {
     targetAudience: "Mahasiswa Unand di kawasan Limau Manis, Pasar Baru, dan Pauh",
     priorityPoiCategories: ["food", "laundry", "convenience", "worship", "pharmacy", "atm"] as const,
   },
+  iteraPilot: {
+    id: "pilot-lampung-itera",
+    campusId: "itera-lampung",
+    campusName: "Institut Teknologi Sumatera (ITERA)",
+    city: "Lampung Selatan",
+    centerCoordinates: { latitude: -5.3584, longitude: 105.3148 },
+    gates: [
+      {
+        id: "itera-gerbang-utama",
+        name: "Gerbang Utama Jl. Terusan Ryacudu",
+        shortLabel: "Gerbang Utama Ryacudu",
+        coordinates: { latitude: -5.3584, longitude: 105.3148 },
+        description: "Akses utama Jalan Terusan Ryacudu, halte bus Trans Lampung, dan gerbang depan kampus",
+      },
+      {
+        id: "itera-gku-rektorat",
+        name: "Gedung Kuliah Umum (GKU 1) & Rektorat",
+        shortLabel: "GKU 1 & Rektorat",
+        coordinates: { latitude: -5.3605, longitude: 105.3175 },
+        description: "Pusat perkuliahan mahasiswa tingkat pertama dan laboratorium dasar",
+      },
+      {
+        id: "itera-simpang-wayhuwi",
+        name: "Simpang Kampus Way Huwi",
+        shortLabel: "Simpang Way Huwi",
+        coordinates: { latitude: -5.355, longitude: 105.308 },
+        description: "Sentra hunian kos mahasiswa, minimarket, laundry, dan kuliner terpadat",
+      },
+      {
+        id: "itera-asrama-embung",
+        name: "Kawasan Asrama Mahasiswa & Embung C",
+        shortLabel: "Asrama TB & Embung",
+        coordinates: { latitude: -5.3645, longitude: 105.322 },
+        description: "Akses asrama Tower Bersama (TB 1-4) dan sarana olahraga mahasiswa",
+      },
+    ],
+    radiusKm: 4.0,
+    boundingBox: { minLon: 105.26, minLat: -5.41, maxLon: 105.37, maxLat: -5.31 },
+    initialTargetVerifiedListings: 25,
+    targetAudience: "Mahasiswa baru & sarjana ITERA di kawasan Terusan Ryacudu, Way Huwi, Sabah Balau, dan Jati Agung",
+    priorityPoiCategories: ["food", "laundry", "convenience", "pharmacy", "worship", "bus_stop", "atm"] as const,
+  },
   get allPilots(): readonly PilotSpecification[] {
-    return [this.primaryPilot, this.secondaryPilot];
+    return [this.primaryPilot, this.secondaryPilot, this.iteraPilot];
   },
 };
 

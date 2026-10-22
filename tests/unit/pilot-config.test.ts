@@ -21,15 +21,26 @@ describe("Pilot Configuration (Fase 0)", () => {
     expect(secondary.initialTargetVerifiedListings).toBe(30);
   });
 
+  it("menetapkan Institut Teknologi Sumatera (ITERA) sebagai pilot kampus di Sumatera", () => {
+    const itera = PILOT_CONFIG.iteraPilot;
+    expect(itera.id).toBe("pilot-lampung-itera");
+    expect(itera.campusId).toBe("itera-lampung");
+    expect(itera.city).toBe("Lampung Selatan");
+    expect(itera.initialTargetVerifiedListings).toBe(25);
+    expect(itera.gates.length).toBeGreaterThanOrEqual(3);
+  });
+
   it("dapat mencari pilot berdasarkan campusId", () => {
     expect(getPilotByCampusId("ui-depok")?.id).toBe("pilot-depok-ui");
     expect(getPilotByCampusId("unand-limau-manis")?.id).toBe("pilot-padang-unand");
+    expect(getPilotByCampusId("itera-lampung")?.id).toBe("pilot-lampung-itera");
     expect(getPilotByCampusId("non-existent")).toBeUndefined();
   });
 
   it("dapat mengecek apakah suatu kampus adalah kampus pilot", () => {
     expect(isPilotCampus("ui-depok")).toBe(true);
     expect(isPilotCampus("unand-limau-manis")).toBe(true);
+    expect(isPilotCampus("itera-lampung")).toBe(true);
     expect(isPilotCampus("ugm-bulaksumur")).toBe(false);
   });
 

@@ -111,7 +111,7 @@ export function MapExplorer() {
 
   // Curated pilot POIs for the active campus
   const campusPois = useMemo(() => {
-    return getPoisByCampus(selectedCampus.campusId as "ui-depok" | "unand-limau-manis");
+    return getPoisByCampus(selectedCampus.campusId);
   }, [selectedCampus.campusId]);
 
   // Filter listings based on campus, gender, and optional category/price chip

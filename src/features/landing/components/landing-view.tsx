@@ -22,7 +22,7 @@ function Brand() {
       <KosMatchLogo size={36} />
       <div className="editorial-brand-text">
         <span className="editorial-brand-title">KOSMATCH</span>
-        <span className="editorial-brand-badge">PILOT FASE 1</span>
+        <span className="editorial-brand-badge">MULTI-KAMPUS</span>
       </div>
     </Link>
   );
@@ -74,7 +74,7 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
             <div className="hero-editorial-left">
               <div className="hero-pilot-pill editorial-pill">
                 <span className="live-indicator" />
-                <span>PILOT FASE 1 • UI DEPOK & UNAND LIMAU MANIS</span>
+                <span>KATALOG KAMPUS TERPADU • UI • UNAND • ITERA</span>
               </div>
 
               <div className="hero-editorial-title-wrap">
@@ -320,7 +320,7 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
               <div className="map-showcase-mockup">
                 <PilotRadiusMockup />
                 <div className="mockup-caption">
-                  <strong>UI Depok & UNAND Limau Manis</strong>
+                  <strong>UI Depok • UNAND Padang • ITERA Lampung</strong>
                   <span>Garis putus-putus menunjukkan radius survei pilot 4 km</span>
                 </div>
               </div>

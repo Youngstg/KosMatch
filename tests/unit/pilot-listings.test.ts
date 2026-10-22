@@ -5,14 +5,16 @@ import {
 } from "@/data/pilot-listings";
 
 describe("PILOT_LISTINGS dataset", () => {
-  it("contains listings for UI Depok and Unand Limau Manis", () => {
+  it("contains listings for UI Depok, Unand Limau Manis, and ITERA Lampung", () => {
     const uiListings = getListingsByCampus("ui-depok");
     const unandListings = getListingsByCampus("unand-limau-manis");
+    const iteraListings = getListingsByCampus("itera-lampung");
 
     expect(uiListings.length).toBeGreaterThanOrEqual(15);
     expect(unandListings.length).toBeGreaterThanOrEqual(12);
-    expect(PILOT_LISTINGS.length).toBeGreaterThanOrEqual(30);
-    expect(PILOT_LISTINGS.length).toBe(uiListings.length + unandListings.length);
+    expect(iteraListings.length).toBeGreaterThanOrEqual(10);
+    expect(PILOT_LISTINGS.length).toBeGreaterThanOrEqual(40);
+    expect(PILOT_LISTINGS.length).toBe(uiListings.length + unandListings.length + iteraListings.length);
   });
 
   it("verifies every listing has valid coordinates, positive rent, and non-empty facilities", () => {
@@ -44,6 +46,16 @@ describe("PILOT_LISTINGS dataset", () => {
       expect(l.coordinates.latitude).toBeGreaterThan(-1.5);
       expect(l.coordinates.longitude).toBeGreaterThan(100.0);
       expect(l.coordinates.longitude).toBeLessThan(101.0);
+    });
+  });
+
+  it("ensures ITERA Lampung coordinates are within Lampung range", () => {
+    const iteraListings = getListingsByCampus("itera-lampung");
+    iteraListings.forEach((l) => {
+      expect(l.coordinates.latitude).toBeLessThan(-5.0);
+      expect(l.coordinates.latitude).toBeGreaterThan(-5.6);
+      expect(l.coordinates.longitude).toBeGreaterThan(105.1);
+      expect(l.coordinates.longitude).toBeLessThan(105.5);
     });
   });
 });
