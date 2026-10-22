@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { PILOT_CONFIG } from "@/data/pilot-config";
 import { formatRupiah } from "@/lib/currency";
+import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
 
 interface UserProfile {
   userId: string;
@@ -178,15 +179,7 @@ export default function AdminDashboardPage() {
         <header className="topbar">
           <div className="container header-inner">
             <Link href="/" className="brand" style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center", gap: "10px" }}>
-              <span className="logo" style={{ overflow: "hidden", padding: 0, background: "transparent", borderRadius: "10px", width: "36px", height: "36px", border: "1px solid rgba(255,255,255,0.15)", display: "flex" }}>
-                <Image
-                  src="/kosmatch-logo-3d.jpg"
-                  alt="KosMatch Logo"
-                  width={36}
-                  height={36}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }}
-                />
-              </span>
+              <KosMatchLogo size={36} />
               <span>KosMatch Portal Pengelola</span>
             </Link>
             <div className="actions compact">
@@ -320,15 +313,7 @@ export default function AdminDashboardPage() {
         <div className="container header-inner">
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <Link href="/" className="brand" style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center", gap: "10px" }}>
-              <span className="logo" style={{ overflow: "hidden", padding: 0, background: "transparent", borderRadius: "10px", width: "36px", height: "36px", border: "1px solid rgba(255,255,255,0.15)", display: "flex" }}>
-                <Image
-                  src="/kosmatch-logo-3d.jpg"
-                  alt="KosMatch Logo"
-                  width={36}
-                  height={36}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }}
-                />
-              </span>
+              <KosMatchLogo size={36} />
               <span>KosMatch</span>
             </Link>
             <span

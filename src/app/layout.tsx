@@ -61,9 +61,12 @@ export const metadata: Metadata = {
     canonical: "https://kosmatch.us.ci",
   },
   icons: {
-    icon: "/kosmatch-logo-3d.jpg",
-    shortcut: "/kosmatch-logo-3d.jpg",
-    apple: "/kosmatch-logo-3d.jpg",
+    icon: [
+      { url: "/kosmatch-logo.svg", type: "image/svg+xml" },
+      { url: "/kosmatch-logo.png", type: "image/png" },
+    ],
+    shortcut: "/kosmatch-logo.svg",
+    apple: "/kosmatch-logo.png",
   },
 };
 

@@ -41,6 +41,7 @@ import {
 import type { CommuteMode } from "@/lib/db/types";
 import { estimateRoadMeters, formatDistance, haversineMeters } from "@/lib/geo";
 import { formatRupiah } from "@/lib/currency";
+import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
 
 // Dynamically import MapCanvas to prevent SSR window/WebGL issues
 const MapCanvas = dynamic(
@@ -54,15 +55,7 @@ const MapCanvas = dynamic(
 function Brand() {
   return (
     <Link href="/" className="hud-brand" style={{ textDecoration: "none", color: "inherit" }}>
-      <span className="hud-logo">
-        <Image
-          src="/kosmatch-logo-3d.jpg"
-          alt="KosMatch Logo"
-          width={34}
-          height={34}
-          style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }}
-        />
-      </span>
+      <KosMatchLogo size={34} />
       <div className="hud-brand-info">
         <span className="hud-brand-title">KosMatch</span>
         <span className="hud-brand-subtitle">Eksplorasi Kampus</span>

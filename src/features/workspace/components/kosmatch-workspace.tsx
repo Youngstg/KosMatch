@@ -37,6 +37,8 @@ const confidenceLabels = { high: "Tinggi", medium: "Sedang", low: "Rendah" } as 
 const monthlyFieldLabels: Record<string, string> = { rent: "sewa", electricity: "listrik", water: "air", internet: "internet", laundry: "laundry", otherRecurring: "biaya lain", monthlyTransport: "transportasi" };
 type Match = ReturnType<typeof matchAndRank>[number];
 type ComparisonRow = Readonly<{ label: string; render: (match: Match) => string }>;
+import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
+
 type ComparisonGroup = Readonly<{ key: string; label: string; rows: readonly ComparisonRow[] }>;
 
 function formatMoneyValue(value: AccommodationOption["rent"]): string {
@@ -50,15 +52,7 @@ function getFacilityValue(option: AccommodationOption, code: string): boolean | 
 function Brand() {
   return (
     <div className="brand" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-      <span className="logo" style={{ overflow: "hidden", padding: 0, background: "transparent", borderRadius: "10px", width: "36px", height: "36px", border: "1px solid rgba(255,255,255,0.15)", display: "flex" }}>
-        <Image
-          src="/kosmatch-logo-3d.jpg"
-          alt="KosMatch Logo"
-          width={36}
-          height={36}
-          style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }}
-        />
-      </span>
+      <KosMatchLogo size={36} />
       <span>KosMatch</span>
     </div>
   );

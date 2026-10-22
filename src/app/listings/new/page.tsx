@@ -8,6 +8,7 @@ import { PILOT_CONFIG } from "@/data/pilot-config";
 import { fetchPointNeighborhoodProfile, type NeighborhoodProfileResult } from "@/features/map/services/neighborhood-service";
 import { NeighborhoodProfileCard } from "@/features/map/components/neighborhood-profile-card";
 import { formatRupiah } from "@/lib/currency";
+import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
 
 const FACILITY_OPTIONS = [
   { code: "bathroom_inside", label: "Kamar Mandi Dalam" },
@@ -160,15 +161,7 @@ export default function NewListingPage() {
         <header className="topbar">
           <div className="container header-inner">
             <Link href="/" className="brand" style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center", gap: "10px" }}>
-            <span className="logo" style={{ overflow: "hidden", padding: 0, background: "transparent", borderRadius: "10px", width: "36px", height: "36px", border: "1px solid rgba(255,255,255,0.15)", display: "flex" }}>
-              <Image
-                src="/kosmatch-logo-3d.jpg"
-                alt="KosMatch Logo"
-                width={36}
-                height={36}
-                style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }}
-              />
-            </span>
+            <KosMatchLogo size={36} />
             <span>KosMatch</span>
           </Link>
             <div className="actions compact">
@@ -223,15 +216,7 @@ export default function NewListingPage() {
       <header className="topbar">
         <div className="container header-inner">
           <Link href="/" className="brand" style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center", gap: "10px" }}>
-            <span className="logo" style={{ overflow: "hidden", padding: 0, background: "transparent", borderRadius: "10px", width: "36px", height: "36px", border: "1px solid rgba(255,255,255,0.15)", display: "flex" }}>
-              <Image
-                src="/kosmatch-logo-3d.jpg"
-                alt="KosMatch Logo"
-                width={36}
-                height={36}
-                style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }}
-              />
-            </span>
+            <KosMatchLogo size={36} />
             <span>KosMatch</span>
           </Link>
           <div className="actions compact">

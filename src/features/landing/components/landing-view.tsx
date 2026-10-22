@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { ArrowRight, Check, Compass, Info, Save, Sparkles } from "lucide-react";
 import { LandingFaq } from "./landing-faq";
 import { LandingFeatures } from "./landing-features";
+import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
 
 export type LandingViewProps = {
   onStart: () => void;
@@ -13,15 +13,7 @@ export type LandingViewProps = {
 function Brand() {
   return (
     <div className="brand" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-      <span className="logo" style={{ overflow: "hidden", padding: 0, background: "transparent", borderRadius: "10px", width: "38px", height: "38px", border: "1px solid rgba(255,255,255,0.15)", display: "flex" }}>
-        <Image
-          src="/kosmatch-logo-3d.jpg"
-          alt="KosMatch Logo 3D"
-          width={38}
-          height={38}
-          style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }}
-        />
-      </span>
+      <KosMatchLogo size={38} />
       <div style={{ display: "flex", flexDirection: "column" }}>
         <span style={{ fontWeight: 800, fontSize: "19px", letterSpacing: "-0.02em", lineHeight: 1.15 }}>KosMatch</span>
         <span style={{ fontSize: "10px", fontWeight: 700, color: "var(--primary)", letterSpacing: "0.06em", textTransform: "uppercase" }}>Pilot UI & UNAND</span>
@@ -146,13 +138,7 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
             </div>
             <div className="map-showcase-visual">
               <div className="map-showcase-mockup">
-                <Image
-                  src="/kosmatch-logo-3d.jpg"
-                  alt="KosMatch 3D Pilot Visual"
-                  width={140}
-                  height={140}
-                  style={{ borderRadius: "18px", boxShadow: "0 12px 30px rgba(0,0,0,0.4)" }}
-                />
+                <KosMatchLogo size={140} style={{ borderRadius: "24px", boxShadow: "0 12px 30px rgba(0,0,0,0.5)" }} />
                 <div className="mockup-caption">
                   <strong>UI Depok & UNAND Limau Manis</strong>
                   <span>Garis putus-putus menunjukkan radius survei pilot 4 km</span>

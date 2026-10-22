@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, CheckCircle2, Lock, LogIn, Mail, UserPlus } from "lucide-react";
+import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -64,15 +65,7 @@ export default function LoginPage() {
       <header className="topbar">
         <div className="container header-inner">
           <Link href="/" className="brand" style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center", gap: "10px" }}>
-            <span className="logo" style={{ overflow: "hidden", padding: 0, background: "transparent", borderRadius: "10px", width: "36px", height: "36px", border: "1px solid rgba(255,255,255,0.15)", display: "flex" }}>
-              <Image
-                src="/kosmatch-logo-3d.jpg"
-                alt="KosMatch Logo"
-                width={36}
-                height={36}
-                style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }}
-              />
-            </span>
+            <KosMatchLogo size={36} />
             <span>KosMatch</span>
           </Link>
           <div className="actions compact">
