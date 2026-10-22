@@ -60,6 +60,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://kosmatch.us.ci",
   },
+  icons: {
+    icon: "/kosmatch-logo-3d.jpg",
+    shortcut: "/kosmatch-logo-3d.jpg",
+    apple: "/kosmatch-logo-3d.jpg",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
