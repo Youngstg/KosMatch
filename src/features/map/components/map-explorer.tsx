@@ -9,6 +9,7 @@ import {
   Bike,
   Building2,
   Bus,
+  Calculator,
   Car,
   Check,
   ChevronDown,
@@ -340,7 +341,7 @@ export function MapExplorer() {
             <Link href="/explore" className="hud-nav-link active">
               <span className="hud-nav-indicator" /> Eksplorasi
             </Link>
-            <Link href="/#setup" className="hud-nav-link">
+            <Link href="/#calculator" className="hud-nav-link">
               Kalkulator DSS
             </Link>
             <Link href="/methodology" className="hud-nav-link">
@@ -378,8 +379,8 @@ export function MapExplorer() {
             </Link>
 
             {/* Primary Action Button */}
-            <Link href="/#setup" className="hud-btn-primary">
-              Mulai Perbandingan
+            <Link href="/#calculator" className="hud-btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+              <Calculator size={15} /> Buka Kalkulator DSS
             </Link>
           </div>
         </div>
@@ -1031,8 +1032,8 @@ export function MapExplorer() {
               >
                 Tutup
               </button>
-              <Link href="/#setup" className="btn btn-primary btn-sm">
-                Bawa ke KosMatch DSS
+              <Link href="/#calculator" className="btn btn-primary btn-sm" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                <Calculator size={14} /> Buka di Kalkulator DSS
               </Link>
             </div>
           </div>
@@ -1168,8 +1169,8 @@ export function MapExplorer() {
                         >
                           <Utensils size={16} /> Fasilitas
                         </button>
-                        <Link href="/#setup" className="mobile-action-pill highlight">
-                          <Scale size={16} /> Hitung DSS
+                        <Link href="/#calculator" className="mobile-action-pill highlight">
+                          <Calculator size={16} /> Kalkulator DSS
                         </Link>
                         <button
                           type="button"
@@ -1342,8 +1343,8 @@ export function MapExplorer() {
 
             {/* Mobile Sheet Fixed Footer CTA */}
             <div className="mobile-sheet-footer">
-              <Link href="/#setup" className="btn btn-primary" style={{ width: "100%" }}>
-                Bawa ke KosMatch DSS (Bandingkan Biaya)
+              <Link href="/#calculator" className="btn btn-primary" style={{ width: "100%", display: "inline-flex", justifyContent: "center", alignItems: "center", gap: "8px" }}>
+                <Calculator size={16} /> Buka Kalkulator DSS &amp; Simulasi Biaya
               </Link>
             </div>
           </div>

@@ -26,7 +26,7 @@ describe("LandingView Component", () => {
     const leadText = screen.getByText(/Bandingkan biaya bulanan, perjalanan, fasilitas/);
     expect(leadText).not.toBeNull();
 
-    const startButtons = screen.getAllByRole("button", { name: /Mulai Perbandingan/i });
+    const startButtons = screen.getAllByRole("button", { name: /Kalkulator DSS/i });
     expect(startButtons.length).toBeGreaterThan(0);
     fireEvent.click(startButtons[0]);
     expect(onStart).toHaveBeenCalledTimes(1);

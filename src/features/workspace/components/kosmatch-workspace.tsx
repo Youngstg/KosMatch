@@ -332,6 +332,18 @@ export function KosMatchWorkspace() {
         setProject(loaded);
         setOptions(loadedOptions);
         setRepository(nextRepository);
+
+        // Langsung buka Kalkulator DSS / Project jika URL memiliki hash #setup atau #calculator
+        if (typeof window !== "undefined") {
+          const hash = window.location.hash.toLowerCase();
+          if (hash.includes("setup")) {
+            setView("setup");
+          } else if (hash.includes("calculator") || hash.includes("kalkulator")) {
+            setView(loaded !== null ? "project" : "setup");
+          } else if (hash.includes("project") || hash.includes("workspace") || hash.includes("compare")) {
+            setView(loaded !== null ? "project" : "setup");
+          }
+        }
       }
     }).catch((cause: unknown) => {
       if (active) {
@@ -339,10 +351,27 @@ export function KosMatchWorkspace() {
         setView("error");
       }
     });
+
+    const handleHashChange = () => {
+      const hash = window.location.hash.toLowerCase();
+      if (hash.includes("setup")) {
+        setView("setup");
+      } else if (hash.includes("calculator") || hash.includes("kalkulator")) {
+        setView(project !== null ? "project" : "setup");
+      } else if (hash.includes("project") || hash.includes("workspace") || hash.includes("compare")) {
+        setView(project !== null ? "project" : "setup");
+      } else if (!hash || hash === "#" || hash.includes("landing")) {
+        setView("landing");
+      }
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+
     return () => {
       active = false;
+      window.removeEventListener("hashchange", handleHashChange);
     };
-  }, []);
+  }, [project]);
 
   const loadDemo = async () => {
     const activeRepository = repository ?? getBrowserRepository();
@@ -426,6 +455,9 @@ export function KosMatchWorkspace() {
       <>
         <LandingView
           onStart={() => {
+            if (typeof window !== "undefined") {
+              window.location.hash = "setup";
+            }
             if (repository === null) {
               setView("loading");
               const nextRepo = getBrowserRepository();
@@ -439,7 +471,12 @@ export function KosMatchWorkspace() {
           }}
           onDemo={loadDemo}
           hasSaved={project !== null}
-          onResume={() => setView("project")}
+          onResume={() => {
+            if (typeof window !== "undefined") {
+              window.location.hash = "project";
+            }
+            setView("project");
+          }}
         />
       </>
     );
@@ -450,7 +487,15 @@ export function KosMatchWorkspace() {
         <header className="topbar">
           <div className="container header-inner">
             <Brand />
-            <button className="btn btn-ghost" onClick={() => setView("landing")}>
+            <button
+              className="btn btn-ghost"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.location.hash = "";
+                }
+                setView("landing");
+              }}
+            >
               Keluar
             </button>
           </div>
@@ -458,7 +503,12 @@ export function KosMatchWorkspace() {
         <main className="container workspace">
           <PreferencesForm
             mode="create"
-            onCancel={() => setView("landing")}
+            onCancel={() => {
+              if (typeof window !== "undefined") {
+                window.location.hash = "";
+              }
+              setView("landing");
+            }}
             onSave={async (value) => {
               const activeRepo = repository ?? getBrowserRepository();
               await activeRepo.saveProject(value);
@@ -467,6 +517,9 @@ export function KosMatchWorkspace() {
               setProjects((all) => [value, ...all]);
               setProject(value);
               setOptions([]);
+              if (typeof window !== "undefined") {
+                window.location.hash = "project";
+              }
               setView("project");
             }}
           />
@@ -482,8 +535,18 @@ export function KosMatchWorkspace() {
         projects={projects}
         project={project}
         initialOptions={options}
-        onBack={() => setView("landing")}
-        onNewProject={() => setView("setup")}
+        onBack={() => {
+          if (typeof window !== "undefined") {
+            window.location.hash = "";
+          }
+          setView("landing");
+        }}
+        onNewProject={() => {
+          if (typeof window !== "undefined") {
+            window.location.hash = "setup";
+          }
+          setView("setup");
+        }}
         onLoadDemo={loadDemo}
         onSwitchProject={async (id) => {
           const activeRepo = repository ?? getBrowserRepository();

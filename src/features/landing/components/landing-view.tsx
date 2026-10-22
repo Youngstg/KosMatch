@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Compass, Save, Sparkles } from "lucide-react";
+import { ArrowRight, Calculator, Compass, Save, Sparkles } from "lucide-react";
 import { LandingFaq } from "./landing-faq";
 import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
 
@@ -52,8 +52,8 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
               <a className="btn btn-editorial-ghost" href="/auth/login">
                 Akun
               </a>
-              <button className="btn btn-editorial-pill" onClick={onStart}>
-                Mulai Perbandingan
+              <button className="btn btn-editorial-pill" onClick={onStart} style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                <Calculator size={14} /> Kalkulator DSS
               </button>
             </div>
           </div>
@@ -81,8 +81,8 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
               </p>
 
               <div className="actions editorial-actions">
-                <button className="btn btn-editorial-start" onClick={onStart}>
-                  Mulai Perbandingan <ArrowRight size={18} />
+                <button className="btn btn-editorial-start" onClick={onStart} style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+                  <Calculator size={18} /> Buka Kalkulator DSS <ArrowRight size={18} />
                 </button>
                 <button className="btn btn-editorial-secondary" onClick={onDemo}>
                   <Sparkles size={16} /> Coba Data Contoh
@@ -187,8 +187,8 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
             <a className="btn btn-ghost" href="/admin" title="Masuk ke portal pengelolaan kos bagi pemilik dan admin">
               Portal Pemilik &amp; Admin
             </a>
-            <button className="btn btn-editorial-pill" onClick={onStart}>
-              Mulai Perbandingan
+            <button className="btn btn-editorial-pill" onClick={onStart} style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+              <Calculator size={14} /> Buka Kalkulator DSS
             </button>
           </div>
         </div>
