@@ -78,6 +78,9 @@ export function MapExplorer() {
   const [mapTheme, setMapTheme] = useState<"dark" | "light">("dark");
   const [isHudCollapsed, setIsHudCollapsed] = useState<boolean>(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [selectedPoiCategories, setSelectedPoiCategories] = useState<string[]>(
+    () => [...selectedCampus.priorityPoiCategories]
+  );
   const [mobileDrawerState, setMobileDrawerState] = useState<"peek" | "expanded">("peek");
   const [mobileActiveTab, setMobileActiveTab] = useState<"detail" | "route" | "amenities">("detail");
   const [mobileCampusPickerOpen, setMobileCampusPickerOpen] = useState<boolean>(false);
@@ -236,6 +239,21 @@ export function MapExplorer() {
     setLoadingProfile(false);
     setLoadingCommute(false);
     setMobileCampusPickerOpen(false);
+    setSelectedPoiCategories([...pilot.priorityPoiCategories]);
+  };
+
+  const handleTogglePoiCategory = (catKey: string) => {
+    setSelectedPoiCategories((prev) =>
+      prev.includes(catKey) ? prev.filter((k) => k !== catKey) : [...prev, catKey]
+    );
+  };
+
+  const handleSelectAllPoiCategories = () => {
+    setSelectedPoiCategories([...selectedCampus.priorityPoiCategories]);
+  };
+
+  const handleClearAllPoiCategories = () => {
+    setSelectedPoiCategories([]);
   };
 
   const handleSelectListing = (listing: PilotListing) => {
@@ -403,27 +421,31 @@ export function MapExplorer() {
         <div className="mobile-category-scroll">
           <button
             type="button"
-            className={`mobile-chip ${activeCategory === null ? "active" : ""}`}
-            onClick={() => setActiveCategory(null)}
+            className={`mobile-chip ${selectedPoiCategories.length === selectedCampus.priorityPoiCategories.length ? "active" : ""}`}
+            onClick={
+              selectedPoiCategories.length === selectedCampus.priorityPoiCategories.length
+                ? handleClearAllPoiCategories
+                : handleSelectAllPoiCategories
+            }
           >
-            Semua Titik
+            {selectedPoiCategories.length === selectedCampus.priorityPoiCategories.length ? "Semua Aktif" : "Pilih Semua"}
           </button>
           {selectedCampus.priorityPoiCategories.map((catKey) => {
             const config = POI_CATEGORY_CONFIG[catKey];
             if (!config) return null;
-            const isActive = activeCategory === catKey;
+            const isChecked = selectedPoiCategories.includes(catKey);
             return (
               <button
                 key={catKey}
                 type="button"
-                className={`mobile-chip ${isActive ? "active" : ""}`}
-                style={isActive ? { background: config.color, borderColor: config.color, color: "#fff" } : undefined}
-                onClick={() => setActiveCategory(isActive ? null : catKey)}
+                className={`mobile-chip ${isChecked ? "active" : ""}`}
+                style={isChecked ? { background: config.color, borderColor: config.color, color: "#fff" } : undefined}
+                onClick={() => handleTogglePoiCategory(catKey)}
               >
                 <span
                   className="hud-category-dot"
                   style={{
-                    backgroundColor: config.color,
+                    backgroundColor: isChecked ? "#fff" : config.color,
                     boxShadow: `0 0 6px ${config.color}`,
                     width: "8px",
                     height: "8px",
@@ -431,7 +453,7 @@ export function MapExplorer() {
                     display: "inline-block",
                   }}
                 />
-                {config.label}
+                {isChecked ? `✓ ${config.label}` : config.label}
               </button>
             );
           })}
@@ -450,6 +472,7 @@ export function MapExplorer() {
           destinationPoint={activeDestination}
           pois={campusPois}
           activePoiCategory={activeCategory}
+          activePoiCategories={selectedPoiCategories}
           theme={mapTheme}
           onMapClick={handleMapClick}
           onCampusSelect={handleCampusChange}
@@ -563,20 +586,32 @@ export function MapExplorer() {
             </div>
           </article>
 
-          {/* Amenity Categories Rail (Image 1 "Cafés (3)" Style) */}
           {/* Amenity Categories Rail (Legend & Filter for Map POIs) */}
           <div className="hud-category-rail">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-              <span className="hud-section-label" style={{ margin: 0 }}>Kategori Fasilitas Lingkungan OSM</span>
-              {activeCategory && (
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+              <div>
+                <span className="hud-section-label" style={{ margin: 0 }}>Filter Fasilitas di Peta</span>
+                <span className="muted" style={{ fontSize: "11px", display: "block" }}>
+                  Centang untuk menampilkan di peta
+                </span>
+              </div>
+              <div style={{ display: "flex", gap: "8px", fontSize: "11px" }}>
                 <button
                   type="button"
-                  style={{ fontSize: "11px", color: "var(--primary)", background: "transparent", border: 0, cursor: "pointer", fontWeight: 700 }}
-                  onClick={() => setActiveCategory(null)}
+                  style={{ color: "var(--primary)", background: "transparent", border: 0, cursor: "pointer", fontWeight: 750, padding: 0 }}
+                  onClick={handleSelectAllPoiCategories}
                 >
-                  Tampilkan Semua
+                  Pilih Semua
                 </button>
-              )}
+                <span style={{ color: "var(--text-muted)" }}>·</span>
+                <button
+                  type="button"
+                  style={{ color: "var(--text-muted)", background: "transparent", border: 0, cursor: "pointer", padding: 0 }}
+                  onClick={handleClearAllPoiCategories}
+                >
+                  Bersihkan
+                </button>
+              </div>
             </div>
             <div className="hud-category-list">
               {selectedCampus.priorityPoiCategories.map((catKey) => {
@@ -586,33 +621,51 @@ export function MapExplorer() {
                   bgLight: "rgba(156, 163, 175, 0.2)",
                   iconSymbol: "📍",
                 };
-                const foundItem = neighborhoodProfile?.items.find((i) => i.category === catKey);
-                const count = foundItem ? foundItem.count : (catKey === "food" ? 14 : catKey === "laundry" ? 6 : 4);
-                const isActive = activeCategory === catKey;
+                const count = campusPois.filter((p) => p.category === catKey).length;
+                const isChecked = selectedPoiCategories.includes(catKey);
                 return (
-                  <button
+                  <label
                     key={catKey}
-                    type="button"
-                    className={`hud-category-item ${isActive ? "active" : ""}`}
-                    style={isActive ? { borderColor: config.color, background: config.bgLight } : undefined}
-                    onClick={() => setActiveCategory(isActive ? null : catKey)}
-                    title={`Klik untuk melihat titik ${config.label} di peta`}
+                    className={`hud-category-item ${isChecked ? "active" : ""}`}
+                    style={{
+                      cursor: "pointer",
+                      ...(isChecked
+                        ? { borderColor: config.color, background: config.bgLight }
+                        : { opacity: 0.65 }),
+                    }}
+                    title={`Centang untuk menampilkan atau menyembunyikan titik ${config.label} di peta`}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => handleTogglePoiCategory(catKey)}
+                        style={{
+                          accentColor: config.color,
+                          cursor: "pointer",
+                          width: "15px",
+                          height: "15px",
+                        }}
+                      />
                       <span
                         className="hud-category-dot"
                         style={{
                           backgroundColor: config.color,
-                          boxShadow: `0 0 10px ${config.color}`,
+                          boxShadow: isChecked ? `0 0 10px ${config.color}` : "none",
                         }}
                         aria-hidden="true"
                       />
-                      <span className="hud-category-name">{config.label}</span>
+                      <span className="hud-category-name" style={{ fontWeight: isChecked ? 600 : 400 }}>
+                        {config.label}
+                      </span>
                     </div>
-                    <span className="hud-category-count" style={isActive ? { color: config.color, fontWeight: 800 } : undefined}>
+                    <span
+                      className="hud-category-count"
+                      style={isChecked ? { color: config.color, fontWeight: 800 } : undefined}
+                    >
                       ({count})
                     </span>
-                  </button>
+                  </label>
                 );
               })}
             </div>

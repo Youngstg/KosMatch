@@ -17,7 +17,7 @@ export interface NeighborhoodProfileResult {
 }
 
 const CATEGORY_DEFINITIONS: Record<string, { label: string; maxScore: number; walkSpeedMPerMin: number }> = {
-  food: { label: "Warung & Kuliner", maxScore: 2.5, walkSpeedMPerMin: 80 },
+  food: { label: "Warung & Cafe", maxScore: 2.5, walkSpeedMPerMin: 80 },
   laundry: { label: "Laundry", maxScore: 2.0, walkSpeedMPerMin: 80 },
   convenience: { label: "Minimarket", maxScore: 2.0, walkSpeedMPerMin: 80 },
   worship: { label: "Tempat Ibadah", maxScore: 1.5, walkSpeedMPerMin: 80 },
@@ -82,18 +82,18 @@ function generateSimulatedProfile(
   const rawItems = [
     {
       category: "food",
-      count: Math.max(2, Math.round(6 + factor * 8 * (radiusMeters / 800))),
-      nearestMeters: Math.round(60 + factor * 140),
+      count: Math.max(4, Math.round(8 + factor * 8 * (radiusMeters / 800))),
+      nearestMeters: Math.round(50 + factor * 120),
     },
     {
       category: "laundry",
-      count: Math.max(1, Math.round(2 + factor * 4 * (radiusMeters / 800))),
-      nearestMeters: Math.round(120 + factor * 180),
+      count: Math.max(2, Math.round(3 + factor * 4 * (radiusMeters / 800))),
+      nearestMeters: Math.round(100 + factor * 160),
     },
     {
       category: "convenience",
-      count: Math.max(1, Math.round(2 + factor * 3 * (radiusMeters / 800))),
-      nearestMeters: Math.round(180 + factor * 220),
+      count: Math.max(2, Math.round(2 + factor * 3 * (radiusMeters / 800))),
+      nearestMeters: Math.round(140 + factor * 200),
     },
     {
       category: "worship",
@@ -102,18 +102,18 @@ function generateSimulatedProfile(
     },
     {
       category: "pharmacy",
-      count: Math.round(1 + factor * 2),
-      nearestMeters: Math.round(280 + factor * 320),
+      count: Math.max(1, Math.round(1 + factor * 2)),
+      nearestMeters: Math.round(240 + factor * 280),
     },
     {
       category: "bus_stop",
-      count: Math.round(1 + factor * 2),
-      nearestMeters: Math.round(350 + factor * 350),
+      count: Math.max(1, Math.round(1 + factor * 2)),
+      nearestMeters: Math.round(300 + factor * 320),
     },
     {
       category: "atm",
-      count: Math.round(1 + factor * 3),
-      nearestMeters: Math.round(220 + factor * 280),
+      count: Math.max(1, Math.round(2 + factor * 3)),
+      nearestMeters: Math.round(200 + factor * 250),
     },
   ];
 

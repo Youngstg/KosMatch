@@ -45,7 +45,7 @@ export function NeighborhoodProfileCard({
         <div>
           <h3 style={{ fontSize: "16px", margin: "0 0 2px" }}>Profil Fasilitas Lingkungan</h3>
           <p className="muted" style={{ fontSize: "12px", margin: 0 }}>
-            Kerapatan fasilitas harian di sekitar titik kos
+            Kerapatan fasilitas harian di sekitar titik kos (radius jalan kaki lokal)
           </p>
         </div>
         {profile && (
@@ -141,7 +141,7 @@ export function NeighborhoodProfileCard({
           </div>
 
           <p className="disclaimer" style={{ fontSize: "11px", margin: "4px 0 0" }}>
-            <Info size={14} /> Waktu jalan kaki dihitung rata-rata kecepatan 80 meter/menit.
+            <Info size={14} /> Fasilitas harian dalam radius jalan kaki ({currentRadiusMeters >= 1000 ? `${currentRadiusMeters / 1000} km` : `${currentRadiusMeters} m`}) sekitar kos (kecepatan 80 m/mnt), independen dari jarak ke kampus.
           </p>
         </div>
       ) : (

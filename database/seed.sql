@@ -21,6 +21,16 @@ INSERT INTO public.pois (osm_type, osm_id, category, name, tags, geom) VALUES
   ('N', 10006, 'worship', 'Masjid Al-Falah Pondok Cina', '{"religion": "muslim"}', ST_SetSRID(ST_MakePoint(106.8332, -6.3628), 4326)::geography),
   ('N', 10007, 'bus_stop', 'Halte Bus Kuning FIB UI', '{"highway": "bus_stop"}', ST_SetSRID(ST_MakePoint(106.8305, -6.3645), 4326)::geography),
   ('N', 10008, 'atm', 'ATM Center Stasiun UI', '{"amenity": "atm"}', ST_SetSRID(ST_MakePoint(106.8315, -6.3610), 4326)::geography),
+  ('N', 10009, 'food', 'Ayam Bakar Mas Mono Margonda', '{"cuisine": "indonesian"}', ST_SetSRID(ST_MakePoint(106.8335, -6.3625), 4326)::geography),
+  ('N', 10010, 'food', 'Bebek Madura Pak Slamet Margonda', '{"cuisine": "indonesian"}', ST_SetSRID(ST_MakePoint(106.8315, -6.3720), 4326)::geography),
+  ('N', 10011, 'laundry', 'Smart Laundry Express Margonda', '{"service": "laundry"}', ST_SetSRID(ST_MakePoint(106.8318, -6.3695), 4326)::geography),
+  ('N', 10012, 'convenience', 'Indomaret Point Margonda Raya', '{"shop": "convenience"}', ST_SetSRID(ST_MakePoint(106.8338, -6.3650), 4326)::geography),
+  ('N', 10013, 'atm', 'ATM Bank Mandiri KCP Margonda', '{"amenity": "atm"}', ST_SetSRID(ST_MakePoint(106.8325, -6.3665), 4326)::geography),
+  ('N', 10014, 'food', 'Nasi Uduk & Pecel Lele Kukel', '{"cuisine": "indonesian"}', ST_SetSRID(ST_MakePoint(106.8248, -6.3572), 4326)::geography),
+  ('N', 10015, 'laundry', 'Cuci Kering Setrika Kukel', '{"service": "laundry"}', ST_SetSRID(ST_MakePoint(106.8245, -6.3580), 4326)::geography),
+  ('N', 10016, 'convenience', 'Alfamart Kukusan Kelurahan', '{"shop": "convenience"}', ST_SetSRID(ST_MakePoint(106.8235, -6.3590), 4326)::geography),
+  ('N', 10017, 'food', 'Mie Ayam & Bakso Kober Berkah', '{"cuisine": "indonesian"}', ST_SetSRID(ST_MakePoint(106.8348, -6.3642), 4326)::geography),
+  ('N', 10018, 'laundry', 'Super Wash Kiloan Kober', '{"service": "laundry"}', ST_SetSRID(ST_MakePoint(106.8350, -6.3655), 4326)::geography),
 
   -- Unand Padang POIs
   ('N', 20001, 'food', 'Rumah Makan Ampera Simpang Kampus', '{"cuisine": "padang"}', ST_SetSRID(ST_MakePoint(100.4485, -0.9230), 4326)::geography),

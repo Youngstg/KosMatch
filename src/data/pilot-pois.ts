@@ -12,7 +12,7 @@ export const POI_CATEGORY_CONFIG: Record<
   { label: string; color: string; bgLight: string; iconSymbol: string }
 > = {
   food: {
-    label: "Warung & Kuliner",
+    label: "Warung & Cafe",
     color: "#F97316", // Vibrant Warm Orange
     bgLight: "rgba(249, 115, 22, 0.18)",
     iconSymbol: "🍲",

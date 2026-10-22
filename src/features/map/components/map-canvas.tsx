@@ -33,6 +33,7 @@ export interface MapCanvasProps {
   destinationPoint?: { latitude: number; longitude: number; name?: string } | null;
   pois?: readonly PilotPoi[];
   activePoiCategory?: string | null;
+  activePoiCategories?: readonly string[] | null;
   theme?: "dark" | "light";
   onMapClick?: (coords: { latitude: number; longitude: number }) => void;
   onCampusSelect?: (campus: PilotSpecification) => void;
@@ -91,6 +92,7 @@ export function MapCanvas({
   destinationPoint = null,
   pois = [],
   activePoiCategory = null,
+  activePoiCategories,
   theme = "dark",
   onMapClick,
   onCampusSelect,
@@ -289,9 +291,10 @@ export function MapCanvas({
     poiMarkersRef.current.forEach((m) => m.remove());
     poiMarkersRef.current = [];
 
-    const visiblePois = activePoiCategory
-      ? pois.filter((poi) => poi.category === activePoiCategory)
-      : pois;
+    const visiblePois =
+      activePoiCategories !== undefined
+        ? (activePoiCategories ? pois.filter((poi) => activePoiCategories.includes(poi.category)) : [])
+        : (activePoiCategory ? pois.filter((poi) => poi.category === activePoiCategory) : pois);
 
     visiblePois.forEach((poi) => {
       const config = POI_CATEGORY_CONFIG[poi.category] ?? {
@@ -301,8 +304,9 @@ export function MapCanvas({
         iconSymbol: "📍",
       };
 
+      const isHighlighted = activePoiCategory === poi.category || (activePoiCategories && activePoiCategories.includes(poi.category));
       const markerEl = document.createElement("div");
-      markerEl.className = `map-poi-marker ${activePoiCategory === poi.category ? "highlight" : ""}`;
+      markerEl.className = `map-poi-marker ${isHighlighted ? "highlight" : ""}`;
       markerEl.setAttribute("role", "button");
       markerEl.setAttribute("aria-label", `${config.label}: ${poi.name}`);
       markerEl.innerHTML = `
@@ -337,7 +341,7 @@ export function MapCanvas({
       poiMarkersRef.current.forEach((m) => m.remove());
       poiMarkersRef.current = [];
     };
-  }, [pois, activePoiCategory]);
+  }, [pois, activePoiCategory, activePoiCategories]);
 
   // Update candidate marker position
   useEffect(() => {
