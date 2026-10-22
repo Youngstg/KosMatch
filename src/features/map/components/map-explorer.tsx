@@ -6,25 +6,35 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   ArrowLeft,
+  Bike,
   Building2,
+  Bus,
+  Car,
+  Check,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   ChevronUp,
   Compass,
+  CreditCard,
   Footprints,
   Info,
+  Landmark,
   Layers,
   MapPin,
   Moon,
   Navigation,
   Navigation2,
+  Pill,
   Scale,
   Share2,
+  Shirt,
   Sparkles,
   Star,
+  Store,
   Sun,
   Utensils,
+  UtensilsCrossed,
   X,
 } from "lucide-react";
 import { PILOT_CONFIG, type PilotGate, type PilotSpecification } from "@/data/pilot-config";
@@ -42,6 +52,35 @@ import type { CommuteMode } from "@/lib/db/types";
 import { estimateRoadMeters, formatDistance, haversineMeters } from "@/lib/geo";
 import { formatRupiah } from "@/lib/currency";
 import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
+
+function PoiCategoryIcon({
+  category,
+  size = 14,
+  color,
+}: {
+  readonly category: string;
+  readonly size?: number;
+  readonly color?: string;
+}) {
+  switch (category) {
+    case "food":
+      return <UtensilsCrossed size={size} color={color} />;
+    case "laundry":
+      return <Shirt size={size} color={color} />;
+    case "convenience":
+      return <Store size={size} color={color} />;
+    case "pharmacy":
+      return <Pill size={size} color={color} />;
+    case "worship":
+      return <Landmark size={size} color={color} />;
+    case "bus_stop":
+      return <Bus size={size} color={color} />;
+    case "atm":
+      return <CreditCard size={size} color={color} />;
+    default:
+      return <MapPin size={size} color={color} />;
+  }
+}
 
 // Dynamically import MapCanvas to prevent SSR window/WebGL issues
 const MapCanvas = dynamic(
@@ -439,21 +478,30 @@ export function MapExplorer() {
                 key={catKey}
                 type="button"
                 className={`mobile-chip ${isChecked ? "active" : ""}`}
-                style={isChecked ? { background: config.color, borderColor: config.color, color: "#fff" } : undefined}
+                style={
+                  isChecked
+                    ? {
+                        background: config.color,
+                        borderColor: config.color,
+                        color: "#FFFFFF",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "6px",
+                      }
+                    : {
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "6px",
+                      }
+                }
                 onClick={() => handleTogglePoiCategory(catKey)}
               >
-                <span
-                  className="hud-category-dot"
-                  style={{
-                    backgroundColor: isChecked ? "#fff" : config.color,
-                    boxShadow: `0 0 6px ${config.color}`,
-                    width: "8px",
-                    height: "8px",
-                    marginRight: "6px",
-                    display: "inline-block",
-                  }}
-                />
-                {isChecked ? `✓ ${config.label}` : config.label}
+                {isChecked ? (
+                  <Check size={12} strokeWidth={2.5} color="#FFFFFF" />
+                ) : (
+                  <PoiCategoryIcon category={catKey} size={12} color={config.color} />
+                )}
+                <span>{config.label}</span>
               </button>
             );
           })}
@@ -484,7 +532,7 @@ export function MapExplorer() {
           <div className="hud-map-disclaimer-pill">
             <span className="hud-dashed-radius-badge" aria-hidden="true" />
             <span className="hud-map-disclaimer-text">
-              Peta dasar disediakan oleh <strong>OpenStreetMap/CARTO</strong>. Lingkaran putus-putus menunjukkan <strong>radius survei pilot {selectedCampus.radiusKm} km</strong>.
+              Peta dasar CARTO/OSM · Radius survei <strong>{selectedCampus.radiusKm} km</strong> ({selectedCampus.shortName})
             </span>
           </div>
         </div>
@@ -619,7 +667,7 @@ export function MapExplorer() {
                   label: catKey,
                   color: "#9CA3AF",
                   bgLight: "rgba(156, 163, 175, 0.2)",
-                  iconSymbol: "📍",
+                  iconSymbol: "",
                 };
                 const count = campusPois.filter((p) => p.category === catKey).length;
                 const isChecked = selectedPoiCategories.includes(catKey);
@@ -627,43 +675,56 @@ export function MapExplorer() {
                   <label
                     key={catKey}
                     className={`hud-category-item ${isChecked ? "active" : ""}`}
-                    style={{
-                      cursor: "pointer",
-                      ...(isChecked
-                        ? { borderColor: config.color, background: config.bgLight }
-                        : { opacity: 0.65 }),
-                    }}
-                    title={`Centang untuk menampilkan atau menyembunyikan titik ${config.label} di peta`}
+                    style={
+                      isChecked
+                        ? {
+                            borderColor: config.color,
+                            backgroundColor: config.bgLight,
+                          }
+                        : undefined
+                    }
+                    title={`Klik untuk ${isChecked ? "menyembunyikan" : "menampilkan"} titik ${config.label} di peta`}
                   >
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={() => handleTogglePoiCategory(catKey)}
+                      className="sr-only"
+                    />
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                      <input
-                        type="checkbox"
-                        checked={isChecked}
-                        onChange={() => handleTogglePoiCategory(catKey)}
-                        style={{
-                          accentColor: config.color,
-                          cursor: "pointer",
-                          width: "15px",
-                          height: "15px",
-                        }}
-                      />
                       <span
-                        className="hud-category-dot"
-                        style={{
-                          backgroundColor: config.color,
-                          boxShadow: isChecked ? `0 0 10px ${config.color}` : "none",
-                        }}
+                        className={`hud-custom-checkbox ${isChecked ? "checked" : ""}`}
+                        style={
+                          isChecked
+                            ? { backgroundColor: config.color, borderColor: config.color }
+                            : undefined
+                        }
                         aria-hidden="true"
-                      />
-                      <span className="hud-category-name" style={{ fontWeight: isChecked ? 600 : 400 }}>
+                      >
+                        {isChecked && <Check size={11} strokeWidth={3} color="#FFFFFF" />}
+                      </span>
+                      <span
+                        className="hud-category-icon-pill"
+                        style={{
+                          backgroundColor: isChecked ? "rgba(255, 255, 255, 0.85)" : "var(--surface-subtle)",
+                          color: config.color,
+                        }}
+                      >
+                        <PoiCategoryIcon category={catKey} size={13} color={config.color} />
+                      </span>
+                      <span className="hud-category-name" style={{ fontWeight: isChecked ? 700 : 500 }}>
                         {config.label}
                       </span>
                     </div>
                     <span
-                      className="hud-category-count"
-                      style={isChecked ? { color: config.color, fontWeight: 800 } : undefined}
+                      className={`hud-category-count-badge ${isChecked ? "active" : ""}`}
+                      style={
+                        isChecked
+                          ? { backgroundColor: "rgba(255, 255, 255, 0.85)", color: config.color, fontWeight: 750 }
+                          : undefined
+                      }
                     >
-                      ({count})
+                      {count} titik
                     </span>
                   </label>
                 );
@@ -687,10 +748,17 @@ export function MapExplorer() {
                     key={m}
                     type="button"
                     className={`chip ${commuteMode === m ? "selected" : ""}`}
-                    style={{ minHeight: "28px", padding: "2px 8px", fontSize: "11px" }}
+                    style={{ minHeight: "28px", padding: "2px 8px", fontSize: "11px", display: "inline-flex", alignItems: "center", gap: "5px" }}
                     onClick={() => setCommuteMode(m)}
                   >
-                    {m === "walking" ? "🚶 Jalan Kaki" : m === "motorcycle" ? "🛵 Motor" : "🚗 Mobil"}
+                    {m === "walking" ? (
+                      <Footprints size={13} />
+                    ) : m === "motorcycle" ? (
+                      <Bike size={13} />
+                    ) : (
+                      <Car size={13} />
+                    )}
+                    <span>{m === "walking" ? "Jalan Kaki" : m === "motorcycle" ? "Motor" : "Mobil"}</span>
                   </button>
                 ))}
               </div>
@@ -744,9 +812,17 @@ export function MapExplorer() {
                       <span className="muted" style={{ fontSize: "12px" }}>
                         {listing.area} · {listing.gender === "all" ? "Campur" : listing.gender === "male" ? "Putra" : "Putri"}
                       </span>
-                      <span className="commute-pill">
-                        {commuteMode === "walking" ? "🚶" : commuteMode === "motorcycle" ? "🛵" : "🚗"}{" "}
-                        {listing.commuteMinutes} mnt ({formatDistance(listing.commuteDistanceMeters)})
+                      <span className="commute-pill" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                        {commuteMode === "walking" ? (
+                          <Footprints size={12} />
+                        ) : commuteMode === "motorcycle" ? (
+                          <Bike size={12} />
+                        ) : (
+                          <Car size={12} />
+                        )}
+                        <span>
+                          {listing.commuteMinutes} mnt ({formatDistance(listing.commuteDistanceMeters)})
+                        </span>
                       </span>
                     </div>
                     <div className="badges" style={{ gap: "4px" }}>
@@ -802,7 +878,9 @@ export function MapExplorer() {
                           border: commuteMode === "walking" ? "1px solid var(--primary)" : "1px solid var(--border)",
                         }}
                       >
-                        <div style={{ fontSize: "11px", color: "var(--text-muted)" }}>🚶 Jalan Kaki</div>
+                        <div style={{ fontSize: "11px", color: "var(--text-muted)", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>
+                          <Footprints size={12} /> Jalan Kaki
+                        </div>
                         <strong style={{ fontSize: "14px", color: "var(--primary)", display: "block" }}>
                           {displayedCommute.walking.minutes} mnt
                         </strong>
@@ -819,7 +897,9 @@ export function MapExplorer() {
                           border: commuteMode === "motorcycle" ? "1px solid var(--primary)" : "1px solid var(--border)",
                         }}
                       >
-                        <div style={{ fontSize: "11px", color: "var(--text-muted)" }}>🛵 Motor</div>
+                        <div style={{ fontSize: "11px", color: "var(--text-muted)", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>
+                          <Bike size={12} /> Motor
+                        </div>
                         <strong style={{ fontSize: "14px", color: "var(--primary)", display: "block" }}>
                           {displayedCommute.motorcycle.minutes} mnt
                         </strong>
@@ -836,7 +916,9 @@ export function MapExplorer() {
                           border: commuteMode === "driving-car" ? "1px solid var(--primary)" : "1px solid var(--border)",
                         }}
                       >
-                        <div style={{ fontSize: "11px", color: "var(--text-muted)" }}>🚗 Mobil</div>
+                        <div style={{ fontSize: "11px", color: "var(--text-muted)", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>
+                          <Car size={12} /> Mobil
+                        </div>
                         <strong style={{ fontSize: "14px", color: "var(--primary)", display: "block" }}>
                           {displayedCommute["driving-car"].minutes} mnt
                         </strong>
@@ -902,12 +984,12 @@ export function MapExplorer() {
           <div className="hud-disclaimer-card" role="note" aria-label="Klaim peta dasar dan radius pilot">
             <div className="hud-disclaimer-card-header">
               <span className="hud-dashed-radius-badge" aria-hidden="true" />
-              <strong>Peta Dasar & Radius Survei Pilot</strong>
+              <strong>Radius Survei Pilot {selectedCampus.radiusKm} km</strong>
             </div>
             <div className="hud-disclaimer-card-content">
-              <Info size={15} className="hud-info-icon" />
+              <Info size={14} className="hud-info-icon" />
               <p className="hud-disclaimer-card-text">
-                Peta dasar disediakan oleh <strong>OpenStreetMap/CARTO</strong>. Lingkaran putus-putus menunjukkan <strong>radius survei pilot {selectedCampus.radiusKm} km</strong> di sekitar kampus {selectedCampus.campusName}.
+                Peta dasar didukung <strong>OpenStreetMap/CARTO</strong>. Area putus-putus menandai radius survei <strong>{selectedCampus.radiusKm} km</strong> di sekitar kampus <span className="campus-highlight-chip">{selectedCampus.shortName}</span>.
               </p>
             </div>
           </div>
@@ -931,8 +1013,9 @@ export function MapExplorer() {
               <div className="hud-bottom-meta">
                 <span>{selectedListing.area} · {selectedListing.gender === "all" ? "Campur" : selectedListing.gender === "male" ? "Putra" : "Putri"}</span>
                 {displayedCommute && (
-                  <span className="hud-bottom-commute">
-                    🛵 {displayedCommute.motorcycle.minutes} mnt ({formatDistance(displayedCommute.motorcycle.distanceMeters)}) ke {activeDestination.name}
+                  <span className="hud-bottom-commute" style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                    <Bike size={13} color="var(--primary)" />
+                    <span>{displayedCommute.motorcycle.minutes} mnt ({formatDistance(displayedCommute.motorcycle.distanceMeters)}) ke {activeDestination.name}</span>
                   </span>
                 )}
               </div>
@@ -983,9 +1066,9 @@ export function MapExplorer() {
                   </div>
                 </div>
                 <div className="mobile-peek-right">
-                  <span className="commute-pill">
-                    {commuteMode === "walking" ? "🚶" : commuteMode === "motorcycle" ? "🛵" : "🚗"}{" "}
-                    {sortedListings.find((l) => l.id === selectedListing.id)?.commuteMinutes ?? 12} mnt
+                  <span className="commute-pill" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                    {commuteMode === "walking" ? <Footprints size={12} /> : commuteMode === "motorcycle" ? <Bike size={12} /> : <Car size={12} />}
+                    <span>{sortedListings.find((l) => l.id === selectedListing.id)?.commuteMinutes ?? 12} mnt</span>
                   </span>
                   <ChevronUp size={16} className="text-muted" />
                 </div>
@@ -1141,8 +1224,9 @@ export function MapExplorer() {
                                 {l.area} · {formatRupiah(l.rentMonthly)}
                               </div>
                             </div>
-                            <span className="commute-pill">
-                              🛵 {l.commuteMinutes} mnt
+                            <span className="commute-pill" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                              <Bike size={11} />
+                              <span>{l.commuteMinutes} mnt</span>
                             </span>
                           </div>
                         ))}
@@ -1181,7 +1265,7 @@ export function MapExplorer() {
                       className={`mobile-mode-btn ${commuteMode === "motorcycle" ? "active" : ""}`}
                       onClick={() => setCommuteMode("motorcycle")}
                     >
-                      <Navigation size={16} />
+                      <Bike size={16} />
                       <span>{displayedCommute ? `${displayedCommute.motorcycle.minutes} mnt` : "Motor"}</span>
                     </button>
                     <button
@@ -1189,7 +1273,7 @@ export function MapExplorer() {
                       className={`mobile-mode-btn ${commuteMode === "driving-car" ? "active" : ""}`}
                       onClick={() => setCommuteMode("driving-car")}
                     >
-                      <Building2 size={16} />
+                      <Car size={16} />
                       <span>{displayedCommute ? `${displayedCommute["driving-car"].minutes} mnt` : "Mobil"}</span>
                     </button>
                   </div>
@@ -1251,7 +1335,7 @@ export function MapExplorer() {
                   <strong>Radius Survei Pilot {selectedCampus.radiusKm} km</strong>
                 </div>
                 <p className="hud-disclaimer-card-text">
-                  Peta dasar disediakan oleh <strong>OpenStreetMap/CARTO</strong>. Lingkaran putus-putus menunjukkan <strong>radius survei pilot {selectedCampus.radiusKm} km</strong>.
+                  Peta dasar didukung <strong>OpenStreetMap/CARTO</strong>. Area putus-putus menandai zona survei pilot {selectedCampus.radiusKm} km sekitar kampus <span className="campus-highlight-chip">{selectedCampus.shortName}</span>.
                 </p>
               </div>
             </div>

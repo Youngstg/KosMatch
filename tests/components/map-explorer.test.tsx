@@ -36,13 +36,13 @@ describe("MapExplorer Component", () => {
     // Default primary campus is UI Depok
     const uiHeading = screen.getByRole("heading", { level: 2, name: /Universitas Indonesia \(Depok\)/i });
     expect(uiHeading).not.toBeNull();
-    expect(screen.getByText("4 km")).not.toBeNull();
+    expect(screen.getAllByText("4 km").length).toBeGreaterThan(0);
 
     // Switch campus to Unand Limau Manis
     fireEvent.click(unandBtn);
     const unandHeading = screen.getByRole("heading", { level: 2, name: /Universitas Andalas \(Limau Manis\)/i });
     expect(unandHeading).not.toBeNull();
-    expect(screen.getByText("5 km")).not.toBeNull();
+    expect(screen.getAllByText("5 km").length).toBeGreaterThan(0);
 
     // Switch campus to ITERA Lampung
     fireEvent.click(iteraBtn);

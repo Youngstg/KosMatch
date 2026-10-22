@@ -1,6 +1,17 @@
 "use client";
 
-import { Coffee, Footprints, Info, Landmark, MapPin, Navigation, ShoppingBag, ShoppingCart, Sparkles, Stethoscope, Utensils } from "lucide-react";
+import {
+  Bus,
+  CreditCard,
+  Footprints,
+  Info,
+  Landmark,
+  MapPin,
+  Pill,
+  Shirt,
+  Store,
+  UtensilsCrossed,
+} from "lucide-react";
 import type { NeighborhoodProfileResult } from "../services/neighborhood-service";
 
 export interface NeighborhoodProfileCardProps {
@@ -13,21 +24,21 @@ export interface NeighborhoodProfileCardProps {
 function getCategoryIcon(category: string) {
   switch (category) {
     case "food":
-      return <Utensils size={15} color="var(--primary)" />;
+      return <UtensilsCrossed size={15} color="#F97316" />;
     case "laundry":
-      return <Sparkles size={15} color="var(--accent)" />;
+      return <Shirt size={15} color="#06B6D4" />;
     case "convenience":
-      return <ShoppingCart size={15} color="#D97706" />;
+      return <Store size={15} color="#10B981" />;
     case "pharmacy":
-      return <Stethoscope size={15} color="#DC2626" />;
+      return <Pill size={15} color="#F43F5E" />;
     case "worship":
-      return <Landmark size={15} color="#059669" />;
+      return <Landmark size={15} color="#8B5CF6" />;
     case "bus_stop":
-      return <Navigation size={15} color="#2563EB" />;
+      return <Bus size={15} color="#EAB308" />;
     case "atm":
-      return <ShoppingBag size={15} color="#4F46E5" />;
+      return <CreditCard size={15} color="#3B82F6" />;
     default:
-      return <Coffee size={15} />;
+      return <MapPin size={15} color="var(--primary)" />;
   }
 }
 

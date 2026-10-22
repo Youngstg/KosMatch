@@ -17,6 +17,7 @@ export interface PilotSpecification {
   readonly id: string;
   readonly campusId: string;
   readonly campusName: string;
+  readonly shortName: string;
   readonly city: string;
   readonly centerCoordinates: { readonly latitude: number; readonly longitude: number };
   readonly gates: readonly PilotGate[];
@@ -32,6 +33,7 @@ export const PILOT_CONFIG = {
     id: "pilot-depok-ui",
     campusId: "ui-depok",
     campusName: "Universitas Indonesia (Depok)",
+    shortName: "UI Depok",
     city: "Depok",
     centerCoordinates: { latitude: -6.362, longitude: 106.827 },
     gates: [
@@ -74,6 +76,7 @@ export const PILOT_CONFIG = {
     id: "pilot-padang-unand",
     campusId: "unand-limau-manis",
     campusName: "Universitas Andalas (Limau Manis)",
+    shortName: "UNAND",
     city: "Padang",
     centerCoordinates: { latitude: -0.9143, longitude: 100.4602 },
     gates: [
@@ -109,6 +112,7 @@ export const PILOT_CONFIG = {
     id: "pilot-lampung-itera",
     campusId: "itera-lampung",
     campusName: "Institut Teknologi Sumatera (ITERA)",
+    shortName: "ITERA",
     city: "Lampung Selatan",
     centerCoordinates: { latitude: -5.3584, longitude: 105.3148 },
     gates: [

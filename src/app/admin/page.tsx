@@ -505,18 +505,31 @@ export default function AdminDashboardPage() {
                                 : "#EF4444",
                             fontSize: "11px",
                             fontWeight: 700,
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "4px",
                           }}
                         >
-                          {item.status === "verified"
-                            ? "✓ Terverifikasi"
-                            : item.status === "pending"
-                            ? "⏳ Menunggu Review"
-                            : "✕ Ditolak"}
+                          {item.status === "verified" ? (
+                            <>
+                              <CheckCircle2 size={12} /> Terverifikasi
+                            </>
+                          ) : item.status === "pending" ? (
+                            <>
+                              <Clock size={12} /> Menunggu Review
+                            </>
+                          ) : (
+                            <>
+                              <XCircle size={12} /> Ditolak
+                            </>
+                          )}
                         </span>
                       </div>
 
-                      <div className="muted" style={{ fontSize: "13px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
-                        <span>📍 {campus?.campusName ?? item.campusId}</span>
+                      <div className="muted" style={{ fontSize: "13px", display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center" }}>
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                          <MapPin size={12} /> {campus?.campusName ?? item.campusId}
+                        </span>
                         <span>·</span>
                         <strong style={{ color: "var(--primary)" }}>{formatRupiah(item.rentMonthly)}/bln</strong>
                         {item.facilities && item.facilities.length > 0 && (

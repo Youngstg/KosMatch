@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Compass, Play, Save, Sparkles } from "lucide-react";
+import { ArrowRight, Compass, Save, Sparkles } from "lucide-react";
 import { LandingFaq } from "./landing-faq";
 import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
 
@@ -27,14 +26,11 @@ function Brand() {
 }
 
 export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingViewProps) {
-  const [activeTab, setActiveTab] = useState<"kamar" | "fasilitas" | "3d">("kamar");
-  const [activeHotspot, setActiveHotspot] = useState<"roomtour" | "access" | "amenity">("roomtour");
-
   return (
     <div className="shell landing-shell landing-editorial-theme">
       {/* =========================================================================
           HERO SECTION: FULLSCREEN ARCHITECTURAL CANVAS (RANTY REFERENCE STYLE)
-          Full-bleed landscape background image with content layered directly on top
+          Full-bleed landscape background image with unobstructed student residence
       ========================================================================== */}
       <section className="hero-editorial-fullscreen" aria-label="Beranda KosMatch">
         {/* Editorial Floating Glass Header */}
@@ -65,7 +61,7 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
 
         {/* Hero Body: Content layered over the full landscape */}
         <div className="container hero-editorial-body">
-          {/* Top Hero Grid: Left Typography + Right Floating Architectural Card */}
+          {/* Top Hero Grid: Left Typography + Open Architectural Showcase */}
           <div className="hero-editorial-grid">
             {/* Left Column: High-Fashion Serif Headline & DSS Actions */}
             <div className="hero-editorial-left">
@@ -102,102 +98,25 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
               </div>
             </div>
 
-            {/* Right Column: Floating Architectural Card with Hotspots & Roomtour */}
+            {/* Right Column: Clean, Unobstructed View with Minimalist Accent Pill */}
             <div className="hero-editorial-right">
-              <div className="editorial-card-wrapper">
-                {/* Mode Pills on top of card */}
-                <div className="editorial-card-header">
-                  <div className="editorial-pills-row">
-                    <button
-                      type="button"
-                      className={`editorial-filter-pill ${activeTab === "kamar" ? "active" : ""}`}
-                      onClick={() => setActiveTab("kamar")}
-                    >
-                      Kamar
-                    </button>
-                    <button
-                      type="button"
-                      className={`editorial-filter-pill ${activeTab === "fasilitas" ? "active" : ""}`}
-                      onClick={() => setActiveTab("fasilitas")}
-                    >
-                      Fasilitas
-                    </button>
-                    <button
-                      type="button"
-                      className={`editorial-filter-pill dark-pill ${activeTab === "3d" ? "active" : ""}`}
-                      onClick={() => setActiveTab("3d")}
-                    >
-                      3D
-                    </button>
-                  </div>
-                </div>
-
-                <div className="editorial-card-body">
-                  <h2 className="editorial-card-title">Desain Nyaman &amp; Efisiensi</h2>
-                  <p className="editorial-card-subtitle">Dari blueprints hingga simulasi harian.</p>
-
-                  {/* Hotspots & Roomtour Preview Overlay */}
-                  <div className="editorial-hotspot-container">
-                    {/* Interactive Hotspot 1: Roomtour */}
-                    <div
-                      className={`editorial-hotspot hotspot-roomtour ${activeHotspot === "roomtour" ? "active" : ""}`}
-                      onClick={() => setActiveHotspot("roomtour")}
-                    >
-                      <span className="hotspot-pulse" />
-                      <span className="hotspot-dot" />
-
-                      <div className="editorial-callout-roomtour">
-                        <div className="callout-thumb-wrap">
-                          <Image
-                            src="/images/landing-roomtour-preview.webp"
-                            alt="Roomtour Studio Preview"
-                            width={54}
-                            height={54}
-                            className="callout-thumb"
-                          />
-                          <span className="callout-play-badge">
-                            <Play size={10} fill="#fff" />
-                          </span>
-                        </div>
-                        <div className="callout-meta">
-                          <span className="callout-badge-title">ROOMTOUR</span>
-                          <strong className="callout-name">Studio 3x4m</strong>
-                          <span className="callout-sub">AC &amp; Meja Belajar</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Interactive Hotspot 2: Akses & Radius Kampus */}
-                    <div
-                      className={`editorial-hotspot hotspot-access ${activeHotspot === "access" ? "active" : ""}`}
-                      onClick={() => setActiveHotspot("access")}
-                    >
-                      <span className="hotspot-pulse" />
-                      <span className="hotspot-dot" />
-                      <div className="editorial-callout-pill">
-                        <span className="hud-dashed-radius-badge" style={{ width: 8, height: 8 }} />
-                        <span>3 Mnt ke Kampus · Radius 4 km</span>
-                      </div>
-                    </div>
-
-                    {/* Interactive Hotspot 3: Fasilitas Sekitar */}
-                    <div
-                      className={`editorial-hotspot hotspot-amenity ${activeHotspot === "amenity" ? "active" : ""}`}
-                      onClick={() => setActiveHotspot("amenity")}
-                    >
-                      <span className="hotspot-pulse" />
-                      <span className="hotspot-dot" />
-                      <div className="editorial-callout-pill">
-                        <span>🍲 Warung &amp; Laundry &lt; 100m</span>
-                      </div>
-                    </div>
-                  </div>
+              <div className="hero-residence-badge">
+                <span className="hero-residence-badge-dot" />
+                <div className="hero-residence-badge-text">
+                  <strong>Hunian Mahasiswa Terverifikasi</strong>
+                  <span>Radius 4 km Kampus &amp; Data Spasial Real</span>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Bottom Feature Trio (Directly layered on top of the foreground meadow) */}
+      {/* =========================================================================
+          EDITORIAL FEATURE HIGHLIGHTS SECTION (Cleanly positioned with breathing room)
+      ========================================================================== */}
+      <section className="landing-editorial-highlights-section" aria-label="Keunggulan KosMatch">
+        <div className="container">
           <div className="hero-editorial-trio">
             {/* Card 1: Warm Clay Brown Box with 3D Cutaway Diagram */}
             <div className="editorial-trio-card clay-card">
@@ -214,8 +133,8 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
                 <Image
                   src="/images/landing-isometric-cutaway.webp"
                   alt="Potongan 3D Kamar Kos"
-                  width={140}
-                  height={140}
+                  width={130}
+                  height={130}
                   className="clay-cutaway-img"
                 />
               </div>

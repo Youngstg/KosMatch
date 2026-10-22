@@ -301,7 +301,7 @@ export function MapCanvas({
         color: "#F59E0B",
         bgLight: "rgba(245, 158, 11, 0.2)",
         label: poi.category,
-        iconSymbol: "📍",
+        iconSymbol: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle;"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`,
       };
 
       const isHighlighted = activePoiCategory === poi.category || (activePoiCategories && activePoiCategories.includes(poi.category));
@@ -318,7 +318,7 @@ export function MapCanvas({
       const popup = new Popup({ offset: 12, closeButton: false }).setHTML(`
         <div class="poi-popup-card">
           <div class="poi-popup-tag" style="color: ${config.color}; background: ${config.bgLight}">
-            <span>${config.iconSymbol}</span> ${config.label}
+            <span style="display:inline-flex;align-items:center;margin-right:4px;">${config.iconSymbol}</span> ${config.label}
           </div>
           <strong class="poi-popup-name">${poi.name}</strong>
           ${poi.description ? `<p class="poi-popup-desc">${poi.description}</p>` : ""}
