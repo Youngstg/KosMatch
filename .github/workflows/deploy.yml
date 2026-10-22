@@ -84,6 +84,8 @@ jobs:
           echo "Syncing build files to release directory..."
           rsync -avz -e "ssh $SSH_OPTS" --delete .next/ "$SERVER_USER@$SERVER_IP:$RELEASE_PATH/.next/"
           rsync -avz -e "ssh $SSH_OPTS" public/ "$SERVER_USER@$SERVER_IP:$RELEASE_PATH/public/"
+          rsync -avz -e "ssh $SSH_OPTS" database/ "$SERVER_USER@$SERVER_IP:$RELEASE_PATH/database/"
+          rsync -avz -e "ssh $SSH_OPTS" scripts/ "$SERVER_USER@$SERVER_IP:$RELEASE_PATH/scripts/"
           scp $SSH_OPTS package.json package-lock.json "$SERVER_USER@$SERVER_IP:$RELEASE_PATH/"
 
           echo "Activating release, restarting PM2, running smoke tests, and cleaning up..."
