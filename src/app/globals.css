@@ -880,6 +880,84 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   font-weight: 800;
   opacity: 0.8;
 }
+.hud-category-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  display: inline-block;
+  transition: transform var(--duration-fast);
+}
+.hud-category-item:hover .hud-category-dot,
+.hud-category-item.active .hud-category-dot {
+  transform: scale(1.35);
+}
+
+/* Map POI Markers (Colored Reference Dots) */
+.map-poi-marker {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--duration-fast);
+  z-index: 5;
+}
+
+.map-poi-marker:hover,
+.map-poi-marker.highlight {
+  transform: scale(1.45);
+  z-index: 10;
+}
+
+.poi-marker-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  border: 2px solid #FFFFFF;
+  display: grid;
+  place-items: center;
+  transition: all var(--duration-fast);
+}
+
+.poi-marker-inner {
+  width: 3.5px;
+  height: 3.5px;
+  border-radius: 999px;
+  background: #FFFFFF;
+}
+
+.poi-popup-card {
+  font-family: inherit;
+  padding: 6px 8px;
+  max-width: 220px;
+}
+
+.poi-popup-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+
+.poi-popup-name {
+  display: block;
+  font-size: 12px;
+  line-height: 1.3;
+  color: #182033;
+}
+
+.poi-popup-desc {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: #667085;
+  line-height: 1.35;
+}
 
 /* Listing Card in Rail */
 .hud-listing-card {

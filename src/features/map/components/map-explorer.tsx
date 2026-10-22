@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { PILOT_CONFIG, type PilotGate, type PilotSpecification } from "@/data/pilot-config";
 import { getListingsByCampus, type PilotListing } from "@/data/pilot-listings";
+import { getPoisByCampus, POI_CATEGORY_CONFIG } from "@/data/pilot-pois";
 import { MapSkeleton } from "./map-skeleton";
 import { NeighborhoodProfileCard } from "./neighborhood-profile-card";
 import { fetchPointNeighborhoodProfile, type NeighborhoodProfileResult } from "../services/neighborhood-service";
@@ -69,16 +70,6 @@ function Brand() {
     </Link>
   );
 }
-
-const POI_CATEGORY_LABELS: Record<string, string> = {
-  food: "Warung & Kuliner",
-  laundry: "Laundry Kiloan",
-  convenience: "Minimarket",
-  pharmacy: "Apotek & Klinik",
-  worship: "Tempat Ibadah",
-  bus_stop: "Halte & Angkot",
-  atm: "ATM & Bank",
-};
 
 export function MapExplorer() {
   const [selectedCampus, setSelectedCampus] = useState<PilotSpecification>(PILOT_CONFIG.primaryPilot);
@@ -121,6 +112,11 @@ export function MapExplorer() {
         };
   }, [selectedGate, selectedCampus]);
   const activeDestId = selectedGate ? selectedGate.id : selectedCampus.campusId;
+
+  // Curated pilot POIs for the active campus
+  const campusPois = useMemo(() => {
+    return getPoisByCampus(selectedCampus.campusId as "ui-depok" | "unand-limau-manis");
+  }, [selectedCampus.campusId]);
 
   // Filter listings based on campus, gender, and optional category/price chip
   const campusListings = getListingsByCampus(selectedCampus.campusId);
@@ -413,43 +409,42 @@ export function MapExplorer() {
           </div>
         )}
 
-        {/* Mobile Horizontal Category Filter Chips (Image 2 Screen 1) */}
+        {/* Mobile Horizontal Category Filter Chips */}
         <div className="mobile-category-scroll">
           <button
             type="button"
             className={`mobile-chip ${activeCategory === null ? "active" : ""}`}
             onClick={() => setActiveCategory(null)}
           >
-            Semua ({filteredListings.length})
+            Semua Titik
           </button>
-          <button
-            type="button"
-            className={`mobile-chip ${activeCategory === "cheap" ? "active" : ""}`}
-            onClick={() => setActiveCategory(activeCategory === "cheap" ? null : "cheap")}
-          >
-            Kos Murah (&lt;1.5jt)
-          </button>
-          <button
-            type="button"
-            className={`mobile-chip ${activeCategory === "female" ? "active" : ""}`}
-            onClick={() => setActiveCategory(activeCategory === "female" ? null : "female")}
-          >
-            Kos Putri
-          </button>
-          <button
-            type="button"
-            className={`mobile-chip ${activeCategory === "km_dalam" ? "active" : ""}`}
-            onClick={() => setActiveCategory(activeCategory === "km_dalam" ? null : "km_dalam")}
-          >
-            KM Dalam
-          </button>
-          <button
-            type="button"
-            className={`mobile-chip ${activeCategory === "wifi" ? "active" : ""}`}
-            onClick={() => setActiveCategory(activeCategory === "wifi" ? null : "wifi")}
-          >
-            Free WiFi
-          </button>
+          {selectedCampus.priorityPoiCategories.map((catKey) => {
+            const config = POI_CATEGORY_CONFIG[catKey];
+            if (!config) return null;
+            const isActive = activeCategory === catKey;
+            return (
+              <button
+                key={catKey}
+                type="button"
+                className={`mobile-chip ${isActive ? "active" : ""}`}
+                style={isActive ? { background: config.color, borderColor: config.color, color: "#fff" } : undefined}
+                onClick={() => setActiveCategory(isActive ? null : catKey)}
+              >
+                <span
+                  className="hud-category-dot"
+                  style={{
+                    backgroundColor: config.color,
+                    boxShadow: `0 0 6px ${config.color}`,
+                    width: "8px",
+                    height: "8px",
+                    marginRight: "6px",
+                    display: "inline-block",
+                  }}
+                />
+                {config.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -463,6 +458,8 @@ export function MapExplorer() {
           selectedListingId={selectedListing?.id ?? null}
           candidatePoint={candidatePoint}
           destinationPoint={activeDestination}
+          pois={campusPois}
+          activePoiCategory={activeCategory}
           theme={mapTheme}
           onMapClick={handleMapClick}
           onCampusSelect={handleCampusChange}
@@ -577,11 +574,28 @@ export function MapExplorer() {
           </article>
 
           {/* Amenity Categories Rail (Image 1 "Cafés (3)" Style) */}
+          {/* Amenity Categories Rail (Legend & Filter for Map POIs) */}
           <div className="hud-category-rail">
-            <span className="hud-section-label">Kategori Fasilitas Lingkungan OSM</span>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+              <span className="hud-section-label" style={{ margin: 0 }}>Kategori Fasilitas Lingkungan OSM</span>
+              {activeCategory && (
+                <button
+                  type="button"
+                  style={{ fontSize: "11px", color: "var(--primary)", background: "transparent", border: 0, cursor: "pointer", fontWeight: 700 }}
+                  onClick={() => setActiveCategory(null)}
+                >
+                  Tampilkan Semua
+                </button>
+              )}
+            </div>
             <div className="hud-category-list">
               {selectedCampus.priorityPoiCategories.map((catKey) => {
-                const label = POI_CATEGORY_LABELS[catKey] ?? catKey;
+                const config = POI_CATEGORY_CONFIG[catKey] ?? {
+                  label: catKey,
+                  color: "#9CA3AF",
+                  bgLight: "rgba(156, 163, 175, 0.2)",
+                  iconSymbol: "📍",
+                };
                 const foundItem = neighborhoodProfile?.items.find((i) => i.category === catKey);
                 const count = foundItem ? foundItem.count : (catKey === "food" ? 14 : catKey === "laundry" ? 6 : 4);
                 const isActive = activeCategory === catKey;
@@ -590,10 +604,24 @@ export function MapExplorer() {
                     key={catKey}
                     type="button"
                     className={`hud-category-item ${isActive ? "active" : ""}`}
+                    style={isActive ? { borderColor: config.color, background: config.bgLight } : undefined}
                     onClick={() => setActiveCategory(isActive ? null : catKey)}
+                    title={`Klik untuk melihat titik ${config.label} di peta`}
                   >
-                    <span className="hud-category-name">{label}</span>
-                    <span className="hud-category-count">({count})</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                      <span
+                        className="hud-category-dot"
+                        style={{
+                          backgroundColor: config.color,
+                          boxShadow: `0 0 10px ${config.color}`,
+                        }}
+                        aria-hidden="true"
+                      />
+                      <span className="hud-category-name">{config.label}</span>
+                    </div>
+                    <span className="hud-category-count" style={isActive ? { color: config.color, fontWeight: 800 } : undefined}>
+                      ({count})
+                    </span>
                   </button>
                 );
               })}

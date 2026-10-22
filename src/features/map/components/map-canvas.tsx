@@ -15,6 +15,8 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import type { PilotSpecification } from "@/data/pilot-config";
 import { PILOT_CONFIG } from "@/data/pilot-config";
 import type { PilotListing } from "@/data/pilot-listings";
+import type { PilotPoi } from "@/data/pilot-pois";
+import { POI_CATEGORY_CONFIG } from "@/data/pilot-pois";
 import { createGeoJsonCircle } from "../utils/geo-circle";
 
 export interface MapCanvasProps {
@@ -23,6 +25,8 @@ export interface MapCanvasProps {
   selectedListingId?: string | null;
   candidatePoint: { latitude: number; longitude: number } | null;
   destinationPoint?: { latitude: number; longitude: number; name?: string } | null;
+  pois?: readonly PilotPoi[];
+  activePoiCategory?: string | null;
   theme?: "dark" | "light";
   onMapClick?: (coords: { latitude: number; longitude: number }) => void;
   onCampusSelect?: (campus: PilotSpecification) => void;
@@ -79,6 +83,8 @@ export function MapCanvas({
   selectedListingId = null,
   candidatePoint,
   destinationPoint = null,
+  pois = [],
+  activePoiCategory = null,
   theme = "dark",
   onMapClick,
   onCampusSelect,
@@ -89,6 +95,7 @@ export function MapCanvas({
   const candidateMarkerRef = useRef<Marker | null>(null);
   const destinationMarkerRef = useRef<Marker | null>(null);
   const listingMarkersRef = useRef<Marker[]>([]);
+  const poiMarkersRef = useRef<Marker[]>([]);
   const circleSourceId = "campus-radius-source";
   const circleFillId = "campus-radius-fill";
   const circleLineId = "campus-radius-line";
@@ -266,6 +273,65 @@ export function MapCanvas({
       listingMarkersRef.current = [];
     };
   }, [listings, selectedListingId]);
+
+  // Update POI category markers (colored dots for map reference)
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    // Remove old POI markers
+    poiMarkersRef.current.forEach((m) => m.remove());
+    poiMarkersRef.current = [];
+
+    const visiblePois = activePoiCategory
+      ? pois.filter((poi) => poi.category === activePoiCategory)
+      : pois;
+
+    visiblePois.forEach((poi) => {
+      const config = POI_CATEGORY_CONFIG[poi.category] ?? {
+        color: "#F59E0B",
+        bgLight: "rgba(245, 158, 11, 0.2)",
+        label: poi.category,
+        iconSymbol: "📍",
+      };
+
+      const markerEl = document.createElement("div");
+      markerEl.className = `map-poi-marker ${activePoiCategory === poi.category ? "highlight" : ""}`;
+      markerEl.setAttribute("role", "button");
+      markerEl.setAttribute("aria-label", `${config.label}: ${poi.name}`);
+      markerEl.innerHTML = `
+        <span class="poi-marker-dot" style="background-color: ${config.color}; box-shadow: 0 0 10px ${config.color}99;">
+          <span class="poi-marker-inner"></span>
+        </span>
+      `;
+
+      const popup = new Popup({ offset: 12, closeButton: false }).setHTML(`
+        <div class="poi-popup-card">
+          <div class="poi-popup-tag" style="color: ${config.color}; background: ${config.bgLight}">
+            <span>${config.iconSymbol}</span> ${config.label}
+          </div>
+          <strong class="poi-popup-name">${poi.name}</strong>
+          ${poi.description ? `<p class="poi-popup-desc">${poi.description}</p>` : ""}
+        </div>
+      `);
+
+      const marker = new Marker({ element: markerEl })
+        .setLngLat([poi.coordinates.longitude, poi.coordinates.latitude])
+        .setPopup(popup)
+        .addTo(map);
+
+      // Show popup on hover
+      markerEl.addEventListener("mouseenter", () => popup.addTo(map));
+      markerEl.addEventListener("mouseleave", () => popup.remove());
+
+      poiMarkersRef.current.push(marker);
+    });
+
+    return () => {
+      poiMarkersRef.current.forEach((m) => m.remove());
+      poiMarkersRef.current = [];
+    };
+  }, [pois, activePoiCategory]);
 
   // Update candidate marker position
   useEffect(() => {
