@@ -1,4 +1,5 @@
-import { ArrowRight, Check, Info, Save, Scale, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, Check, Compass, Info, Save, Sparkles } from "lucide-react";
 import { LandingFaq } from "./landing-faq";
 import { LandingFeatures } from "./landing-features";
 
@@ -11,24 +12,33 @@ export type LandingViewProps = {
 
 function Brand() {
   return (
-    <div className="brand">
-      <span className="logo">
-        <Scale size={21} aria-hidden="true" />
+    <div className="brand" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+      <span className="logo" style={{ overflow: "hidden", padding: 0, background: "transparent", borderRadius: "10px", width: "38px", height: "38px", border: "1px solid rgba(255,255,255,0.15)", display: "flex" }}>
+        <Image
+          src="/kosmatch-logo-3d.jpg"
+          alt="KosMatch Logo 3D"
+          width={38}
+          height={38}
+          style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }}
+        />
       </span>
-      <span>KosMatch</span>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <span style={{ fontWeight: 800, fontSize: "19px", letterSpacing: "-0.02em", lineHeight: 1.15 }}>KosMatch</span>
+        <span style={{ fontSize: "10px", fontWeight: 700, color: "var(--primary)", letterSpacing: "0.06em", textTransform: "uppercase" }}>Pilot UI & UNAND</span>
+      </div>
     </div>
   );
 }
 
 export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingViewProps) {
   return (
-    <div className="shell">
+    <div className="shell landing-shell">
       <header className="topbar">
         <div className="container header-inner">
           <Brand />
           <div className="actions compact">
-            <a className="btn btn-ghost" href="/explore">
-              Peta Eksplorasi
+            <a className="btn btn-ghost highlight-pill" href="/explore">
+              <Compass size={15} /> Peta Eksplorasi
             </a>
             <a className="btn btn-ghost" href="/listings/new">
               Tambah Kos
@@ -47,7 +57,11 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
       </header>
       <main>
         <section className="container hero">
-          <div>
+          <div className="hero-content">
+            <div className="hero-pilot-pill">
+              <span className="live-indicator" />
+              <span>PILOT FASE 1 • UI DEPOK & UNAND LIMAU MANIS</span>
+            </div>
             <h1>Kos murah belum tentu paling hemat.</h1>
             <p className="lead">
               Bandingkan biaya bulanan, perjalanan, fasilitas, dan kebutuhan pribadi dalam satu keputusan yang transparan.
@@ -56,6 +70,9 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
               <button className="btn btn-primary" onClick={onStart}>
                 Mulai Perbandingan <ArrowRight size={18} />
               </button>
+              <a className="btn btn-explore" href="/explore">
+                <Compass size={18} /> Buka Peta Pilot
+              </a>
               <button className="btn btn-secondary" onClick={onDemo}>
                 <Sparkles size={18} /> Coba Data Contoh
               </button>
@@ -67,11 +84,16 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
             </div>
           </div>
           <article className="hero-card" aria-label="Pratinjau hasil perbandingan">
-            <p className="muted">
-              <strong>Kos Anggrek 12</strong> · Menteng
-            </p>
-            <div className="preview-score">86% cocok</div>
-            <p>
+            <div className="hero-card-header">
+              <div className="hero-card-title">
+                <p className="muted" style={{ margin: 0 }}>
+                  <strong>Kos Anggrek 12</strong> · Menteng
+                </p>
+                <span className="hero-card-badge">Pilihan Teratas</span>
+              </div>
+              <div className="preview-score">86% cocok</div>
+            </div>
+            <p className="hero-card-price">
               <strong>Rp1.850.000 per bulan</strong>
             </p>
             <div className="preview-row">
@@ -89,6 +111,58 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
               </strong>
             </div>
           </article>
+        </section>
+
+        {/* Pilot Map Interactive Showcase Feature */}
+        <section className="container map-showcase-section" aria-labelledby="map-showcase-title">
+          <div className="map-showcase-card">
+            <div className="map-showcase-content">
+              <div className="eyebrow" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <span className="hud-dashed-radius-badge" aria-hidden="true" />
+                <span>PETA EKSPLORASI KAMPUS</span>
+              </div>
+              <h2 id="map-showcase-title" className="section-title" style={{ marginTop: "8px" }}>
+                Eksplorasi Radius 4 km & Fasilitas Sekitar Kampus
+              </h2>
+              <p className="lead" style={{ fontSize: "16px", marginBottom: "16px" }}>
+                Peta dasar didukung oleh <strong>OpenStreetMap/CARTO</strong> dengan lingkaran putus-putus beradius 4 km. Hitung waktu tempuh jalan kaki & motor langsung ke gerbang kampus, serta periksa ketersediaan warung makan, laundry, dan minimarket di sekitar kos.
+              </p>
+              <div className="map-showcase-pills">
+                <span className="showcase-pill">
+                  <span className="hud-dashed-radius-badge" style={{ width: "12px", height: "12px" }} /> Radius Pilot 4 km
+                </span>
+                <span className="showcase-pill">
+                  🗺️ CARTO & OSM Official
+                </span>
+                <span className="showcase-pill">
+                  🛵 Rute Nyata Haversine & OSRM
+                </span>
+                <span className="showcase-pill">
+                  🍜 Profil Fasilitas Sekitar
+                </span>
+              </div>
+              <div style={{ marginTop: "20px" }}>
+                <a href="/explore" className="btn btn-primary">
+                  Buka Peta Eksplorasi Sekarang <ArrowRight size={18} />
+                </a>
+              </div>
+            </div>
+            <div className="map-showcase-visual">
+              <div className="map-showcase-mockup">
+                <Image
+                  src="/kosmatch-logo-3d.jpg"
+                  alt="KosMatch 3D Pilot Visual"
+                  width={140}
+                  height={140}
+                  style={{ borderRadius: "18px", boxShadow: "0 12px 30px rgba(0,0,0,0.4)" }}
+                />
+                <div className="mockup-caption">
+                  <strong>UI Depok & UNAND Limau Manis</strong>
+                  <span>Garis putus-putus menunjukkan radius survei pilot 4 km</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
 
         <section className="container steps" aria-labelledby="rent-problem-title">

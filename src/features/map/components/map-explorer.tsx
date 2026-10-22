@@ -468,6 +468,16 @@ export function MapExplorer() {
           onCampusSelect={handleCampusChange}
           onListingSelect={handleSelectListing}
         />
+
+        {/* Floating Map Disclaimer & Pilot Radius Claim Overlay */}
+        <div className="hud-map-disclaimer-overlay" role="note" aria-label="Informasi radius survei pilot dan peta dasar">
+          <div className="hud-map-disclaimer-pill">
+            <span className="hud-dashed-radius-badge" aria-hidden="true" />
+            <span className="hud-map-disclaimer-text">
+              Peta dasar disediakan oleh <strong>OpenStreetMap/CARTO</strong>. Lingkaran putus-putus menunjukkan <strong>radius survei pilot {selectedCampus.radiusKm} km</strong>.
+            </span>
+          </div>
+        </div>
       </main>
 
       {/* =========================================================================
@@ -817,9 +827,16 @@ export function MapExplorer() {
             onRadiusChange={handleRadiusChange}
           />
 
-          <p className="disclaimer" style={{ fontSize: "12px", margin: 0 }}>
-            <Info size={15} /> Peta dasar disediakan oleh OpenStreetMap/CARTO. Lingkaran putus-putus menunjukkan radius survei pilot {selectedCampus.radiusKm} km.
-          </p>
+          {/* Prominent Pilot Radius & Basemap Claim Card */}
+          <div className="hud-disclaimer-card" role="note" aria-label="Klaim peta dasar dan radius pilot">
+            <div className="hud-disclaimer-card-header">
+              <span className="hud-dashed-radius-badge" aria-hidden="true" />
+              <strong>Peta Dasar & Radius Survei Pilot</strong>
+            </div>
+            <p className="hud-disclaimer-card-text">
+              <Info size={14} className="hud-info-icon" /> Peta dasar disediakan oleh <strong>OpenStreetMap/CARTO</strong>. Lingkaran putus-putus menunjukkan <strong>radius survei pilot {selectedCampus.radiusKm} km</strong> di sekitar kampus {selectedCampus.campusName}.
+            </p>
+          </div>
         </div>
       </aside>
 
@@ -1152,6 +1169,17 @@ export function MapExplorer() {
                   />
                 </div>
               )}
+
+              {/* Mobile Pilot Radius & Basemap Claim Card */}
+              <div className="hud-disclaimer-card mobile-disclaimer-card" role="note" aria-label="Klaim peta dasar dan radius pilot">
+                <div className="hud-disclaimer-card-header">
+                  <span className="hud-dashed-radius-badge" aria-hidden="true" />
+                  <strong>Radius Survei Pilot {selectedCampus.radiusKm} km</strong>
+                </div>
+                <p className="hud-disclaimer-card-text">
+                  Peta dasar disediakan oleh <strong>OpenStreetMap/CARTO</strong>. Lingkaran putus-putus menunjukkan <strong>radius survei pilot {selectedCampus.radiusKm} km</strong>.
+                </p>
+              </div>
             </div>
 
             {/* Mobile Sheet Fixed Footer CTA */}

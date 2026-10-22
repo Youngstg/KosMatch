@@ -132,13 +132,14 @@ export function MapCanvas({
         data: circleGeoJson,
       });
 
+      const circleColor = theme === "dark" ? "#F59E0B" : "#4F46E5";
       map.addLayer({
         id: circleFillId,
         type: "fill",
         source: circleSourceId,
         paint: {
-          "fill-color": "#4F46E5",
-          "fill-opacity": 0.12,
+          "fill-color": circleColor,
+          "fill-opacity": theme === "dark" ? 0.08 : 0.12,
         },
       });
 
@@ -147,9 +148,10 @@ export function MapCanvas({
         type: "line",
         source: circleSourceId,
         paint: {
-          "line-color": "#4F46E5",
-          "line-width": 2,
-          "line-dasharray": [2, 2],
+          "line-color": circleColor,
+          "line-width": 3,
+          "line-dasharray": [4, 4],
+          "line-opacity": 0.95,
         },
       });
 
@@ -353,6 +355,15 @@ export function MapCanvas({
       const source = map.getSource("osm-tiles") as unknown as { setTiles?: (urls: string[]) => void };
       if (source && typeof source.setTiles === "function") {
         source.setTiles(getTileUrls(theme, CARTO_API_KEY));
+      }
+
+      const circleColor = theme === "dark" ? "#F59E0B" : "#4F46E5";
+      if (map.getLayer(circleFillId)) {
+        map.setPaintProperty(circleFillId, "fill-color", circleColor);
+        map.setPaintProperty(circleFillId, "fill-opacity", theme === "dark" ? 0.08 : 0.12);
+      }
+      if (map.getLayer(circleLineId)) {
+        map.setPaintProperty(circleLineId, "line-color", circleColor);
       }
     };
 
