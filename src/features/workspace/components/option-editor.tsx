@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { ArrowLeft, Check, Info, Save } from "lucide-react";
+import { ArrowLeft, Check, Info, Save, Sparkles } from "lucide-react";
 import type { AccommodationOption, Availability, ComparisonProject, DataOrigin, MoneyValue } from "@/domain/entities";
 import { accommodationOptionSchema, FACILITY_DEFINITIONS, RULE_DEFINITIONS } from "@/domain/validation";
 import { calculateCost } from "@/domain/costing";
@@ -10,6 +10,7 @@ import { DistanceSummary } from "@/features/geo/components/distance-summary";
 import { LocationInput } from "@/features/geo/components/location-input";
 import { QuickAddOption } from "@/features/workspace/components/quick-add-option";
 import { createEmptyOption, unknownMoney } from "@/features/workspace/option-factory";
+import { extractListingFromText } from "@/features/listings/services/extract-listing";
 
 const moneyFields = [
   ["rent", "Harga sewa bulanan"], ["electricity", "Listrik per bulan"], ["water", "Air per bulan"],
@@ -44,6 +45,37 @@ function FullOptionEditor({ project, initialOption, seed, onSaveAction, onCancel
   const [option, setOption] = useState<AccommodationOption>(() => restoreDraft(project.id, initialOption, draftKey, seed));
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const [showExtractor, setShowExtractor] = useState(false);
+  const [pastedText, setPastedText] = useState("");
+  const [extractNotice, setExtractNotice] = useState<string | null>(null);
+
+  const handleExtractText = () => {
+    if (!pastedText.trim()) return;
+    const extracted = extractListingFromText(pastedText);
+    setOption((current) => {
+      const next = { ...current };
+      if (extracted.name && !current.name) next.name = extracted.name;
+      if (extracted.rentMonthly !== null) next.rent = { amount: extracted.rentMonthly, origin: "estimated" };
+      if (extracted.electricity.amount !== null || extracted.electricity.origin !== "unknown") next.electricity = extracted.electricity;
+      if (extracted.water.amount !== null || extracted.water.origin !== "unknown") next.water = extracted.water;
+      if (extracted.deposit.amount !== null) next.deposit = extracted.deposit;
+
+      const nextFacilityValues = { ...current.facilityValues };
+      for (const code of extracted.facilityCodes) {
+        nextFacilityValues[code] = true;
+      }
+      next.facilityValues = nextFacilityValues;
+      next.facilityCodes = [...new Set([...current.facilityCodes, ...extracted.facilityCodes])];
+      next.ruleValues = { ...current.ruleValues, ...extracted.ruleValues };
+
+      if (extracted.contactPhone) {
+        next.notes = (current.notes ? current.notes + "\n" : "") + `Kontak: ${extracted.contactPhone}`;
+      }
+      next.updatedAt = new Date().toISOString();
+      return next;
+    });
+    setExtractNotice(`Berhasil mengekstrak ${extracted.extractedSummary.length} data: ${extracted.extractedSummary.join(", ")}`);
+  };
 
 
   useEffect(() => {
@@ -88,6 +120,52 @@ function FullOptionEditor({ project, initialOption, seed, onSaveAction, onCancel
   return <main className="container workspace"><button className="btn btn-ghost" type="button" onClick={onCancelAction}><ArrowLeft size={18} /> Kembali ke hasil</button><div className="workspace-head"><div><div className="eyebrow">{initialOption ? "Edit pilihan" : "Pilihan baru"}</div><h1>{initialOption ? `Edit ${initialOption.name}` : "Tambahkan pilihan kos"}</h1><p className="muted">Data yang belum diketahui tidak akan dianggap nol. Anda tetap dapat menyimpan pilihan yang belum lengkap.</p></div><span className={`badge ${saveState === "error" ? "bad" : "good"}`} aria-live="polite">{saveState === "saving" ? "Menyimpan…" : saveState === "error" ? "Gagal menyimpan" : saveState === "saved" ? "Tersimpan" : "Draf baru"}</span></div>
     <form className="editor-layout" onSubmit={submit}>
       <div className="editor-sections">
+        {/* Tahap C Roadmap ML/DL: Ekstraksi Iklan Teks Otomatis */}
+        <div className="panel" style={{ padding: "12px 16px", background: "rgba(245, 158, 11, 0.08)", border: "1px solid rgba(245, 158, 11, 0.3)", borderRadius: "var(--radius-control)", marginBottom: "16px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <Sparkles size={17} color="var(--primary)" />
+              <strong>Punya Teks Iklan Kos / Chat WhatsApp?</strong>
+            </div>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              onClick={() => setShowExtractor(!showExtractor)}
+            >
+              {showExtractor ? "Tutup Ekstraktor" : "✨ Ekstrak Otomatis dari Teks"}
+            </button>
+          </div>
+          {showExtractor && (
+            <div style={{ marginTop: "12px", display: "grid", gap: "8px" }}>
+              <textarea
+                className="input textarea"
+                rows={4}
+                placeholder="Tempel teks iklan kos dari WhatsApp, OLX, atau media sosial di sini... (Contoh: Disewakan kos putri Kukusan UI 1.350.000/bln free air & wifi, AC, KM Dalam, hubungi 0812...)"
+                value={pastedText}
+                onChange={(e) => setPastedText(e.target.value)}
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
+                <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
+                  Parser otomatis mengekstrak nama, sewa bulanan, listrik, air, dan fasilitas kamar.
+                </span>
+                <button
+                  type="button"
+                  className="btn btn-primary btn-sm"
+                  disabled={!pastedText.trim()}
+                  onClick={handleExtractText}
+                >
+                  <Sparkles size={14} /> Proses &amp; Isi Form
+                </button>
+              </div>
+              {extractNotice && (
+                <div className="inline-alert good" style={{ padding: "6px 10px", fontSize: "12px", marginTop: "4px" }}>
+                  <Check size={14} /> {extractNotice}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
         <fieldset className="panel form-section"><legend>1. Informasi dasar</legend><div className="form-grid"><div className="field"><label htmlFor="option-name">Nama pilihan kos</label><input id="option-name" className="input" required maxLength={100} value={option.name} onChange={(e) => update("name", e.target.value)} /></div><div className="field"><label htmlFor="option-area">Area atau lingkungan</label><input id="option-area" className="input" maxLength={120} value={option.area} onChange={(e) => update("area", e.target.value)} /></div><div className="field"><label htmlFor="source-url">URL sumber (opsional)</label><input id="source-url" className="input" type="url" placeholder="https://..." value={option.sourceUrl ?? ""} onChange={(e) => update("sourceUrl", e.target.value || null)} /></div><div className="field"><label htmlFor="checked-date">Terakhir diperiksa</label><input id="checked-date" className="input" type="date" max={new Date().toISOString().slice(0,10)} value={option.lastCheckedAt ?? ""} onChange={(e) => update("lastCheckedAt", e.target.value || null)} /></div></div></fieldset>
         <fieldset className="panel form-section"><legend>2. Biaya bulanan</legend><div className="form-grid">{moneyFields.map(([key,label]) => <MoneyField key={key} id={key} label={label} value={option[key]} onChange={(value) => updateMoney(key,value)} />)}</div></fieldset>
         <fieldset className="panel form-section"><legend>3. Biaya awal masuk</legend><div className="form-grid">{moveInFields.map(([key,label]) => <MoneyField key={key} id={key} label={label} value={option[key]} onChange={(value) => updateMoney(key,value)} helper="Biaya satu kali; tidak dicampur ke estimasi bulanan." />)}</div></fieldset>

@@ -13,12 +13,16 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 import type { NeighborhoodProfileResult } from "../services/neighborhood-service";
+import { estimateFoodCost } from "@/domain/costing/food-cost-estimator";
+import { formatRupiah } from "@/lib/currency";
 
 export interface NeighborhoodProfileCardProps {
   readonly profile: NeighborhoodProfileResult | null;
   readonly loading?: boolean;
   readonly currentRadiusMeters: number;
   readonly onRadiusChange: (radiusMeters: number) => void;
+  readonly campusId?: string;
+  readonly area?: string;
 }
 
 function getCategoryIcon(category: string) {
@@ -47,8 +51,15 @@ export function NeighborhoodProfileCard({
   loading = false,
   currentRadiusMeters,
   onRadiusChange,
+  campusId = "ui-depok",
+  area = "",
 }: NeighborhoodProfileCardProps) {
   const radiuses = [500, 800, 1200] as const;
+  const foodItem = profile?.items.find((i) => i.category === "food");
+  const foodEstimate =
+    foodItem && foodItem.count > 0
+      ? estimateFoodCost(campusId, area, foodItem.count, foodItem.nearestMeters)
+      : null;
 
   return (
     <article className="panel" style={{ padding: "var(--space-4)" }}>
@@ -120,6 +131,37 @@ export function NeighborhoodProfileCard({
               <strong style={{ fontSize: "16px" }}>{profile.totalPois} titik</strong>
             </div>
           </div>
+
+          {/* Tahap B Roadmap ML: Estimasi Biaya Makan Realistis per Area */}
+          {foodEstimate && (
+            <div
+              style={{
+                padding: "10px 12px",
+                background: "rgba(249, 115, 22, 0.08)",
+                border: "1px solid rgba(249, 115, 22, 0.25)",
+                borderRadius: "var(--radius-control)",
+                fontSize: "12px",
+                display: "grid",
+                gap: "4px",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ fontWeight: 600, color: "#EA580C" }}>
+                  🍜 Estimasi Biaya Makan Sekitar
+                </span>
+                <span className="badge" style={{ fontSize: "10px", padding: "1px 6px" }}>
+                  {foodEstimate.clusterLabel}
+                </span>
+              </div>
+              <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--text)" }}>
+                {formatRupiah(foodEstimate.monthlyCostEstimate.min)} – {formatRupiah(foodEstimate.monthlyCostEstimate.max)}
+                <span style={{ fontSize: "11px", fontWeight: "normal", color: "var(--text-muted)" }}> / bln</span>
+              </div>
+              <p style={{ margin: 0, fontSize: "11px", color: "var(--text-muted)", lineHeight: 1.35 }}>
+                {foodEstimate.explanation}
+              </p>
+            </div>
+          )}
 
           {/* Categories List */}
           <div style={{ display: "grid", gap: "6px" }}>

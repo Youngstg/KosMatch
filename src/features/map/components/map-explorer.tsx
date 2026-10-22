@@ -44,6 +44,7 @@ import { getPoisByCampus, POI_CATEGORY_CONFIG } from "@/data/pilot-pois";
 import { MapSkeleton } from "./map-skeleton";
 import { NeighborhoodProfileCard } from "./neighborhood-profile-card";
 import { fetchPointNeighborhoodProfile, type NeighborhoodProfileResult } from "../services/neighborhood-service";
+import { evaluatePriceFairness } from "@/domain/analytics/price-fairness";
 import {
   calculateAllModesCommute,
   estimateCommuteQuick,
@@ -851,6 +852,9 @@ export function MapExplorer() {
                 {selectedListing && (
                   <div className="badges" style={{ marginBottom: "4px" }}>
                     <span className="badge good">{formatRupiah(selectedListing.rentMonthly)} / bln</span>
+                    <span className={`badge ${evaluatePriceFairness(selectedListing.rentMonthly, selectedListing.campusId, selectedListing.area, selectedListing.facilityCodes.includes("ac"), selectedListing.facilityCodes.includes("bathroom_inside")).badgeColorClass}`}>
+                      {evaluatePriceFairness(selectedListing.rentMonthly, selectedListing.campusId, selectedListing.area, selectedListing.facilityCodes.includes("ac"), selectedListing.facilityCodes.includes("bathroom_inside")).statusLabel}
+                    </span>
                     <span className="badge">Area: {selectedListing.area}</span>
                     <span className="badge">Tipe: {selectedListing.gender === "all" ? "Campur" : selectedListing.gender === "male" ? "Putra" : "Putri"}</span>
                   </div>
@@ -979,6 +983,8 @@ export function MapExplorer() {
             loading={loadingProfile}
             currentRadiusMeters={radiusMeters}
             onRadiusChange={handleRadiusChange}
+            campusId={selectedCampus.id}
+            area={selectedListing?.area ?? ""}
           />
 
           {/* Prominent Pilot Radius & Basemap Claim Card */}
@@ -1010,6 +1016,9 @@ export function MapExplorer() {
               <div className="hud-bottom-title-row">
                 <strong>{selectedListing.name}</strong>
                 <span className="badge good">{formatRupiah(selectedListing.rentMonthly)}/bln</span>
+                <span className={`badge ${evaluatePriceFairness(selectedListing.rentMonthly, selectedListing.campusId, selectedListing.area, selectedListing.facilityCodes.includes("ac"), selectedListing.facilityCodes.includes("bathroom_inside")).badgeColorClass}`}>
+                  {evaluatePriceFairness(selectedListing.rentMonthly, selectedListing.campusId, selectedListing.area, selectedListing.facilityCodes.includes("ac"), selectedListing.facilityCodes.includes("bathroom_inside")).statusLabel}
+                </span>
               </div>
               <div className="hud-bottom-meta">
                 <span>{selectedListing.area} · {selectedListing.gender === "all" ? "Campur" : selectedListing.gender === "male" ? "Putra" : "Putri"}</span>
@@ -1134,6 +1143,9 @@ export function MapExplorer() {
                         <div className="mobile-detail-price">
                           <strong>{formatRupiah(selectedListing.rentMonthly)}</strong>
                           <small>/ bulan</small>
+                          <span className={`badge ${evaluatePriceFairness(selectedListing.rentMonthly, selectedListing.campusId, selectedListing.area, selectedListing.facilityCodes.includes("ac"), selectedListing.facilityCodes.includes("bathroom_inside")).badgeColorClass}`} style={{ fontSize: "10px", marginTop: "2px" }}>
+                            {evaluatePriceFairness(selectedListing.rentMonthly, selectedListing.campusId, selectedListing.area, selectedListing.facilityCodes.includes("ac"), selectedListing.facilityCodes.includes("bathroom_inside")).statusLabel}
+                          </span>
                         </div>
                       </div>
 
@@ -1325,6 +1337,8 @@ export function MapExplorer() {
                     loading={loadingProfile}
                     currentRadiusMeters={radiusMeters}
                     onRadiusChange={handleRadiusChange}
+                    campusId={selectedCampus.id}
+                    area={selectedListing?.area ?? ""}
                   />
                 </div>
               )}
