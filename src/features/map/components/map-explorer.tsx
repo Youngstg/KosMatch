@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowLeft,
   Building2,
@@ -53,7 +54,13 @@ function Brand() {
   return (
     <Link href="/" className="hud-brand" style={{ textDecoration: "none", color: "inherit" }}>
       <span className="hud-logo">
-        <Scale size={18} aria-hidden="true" />
+        <Image
+          src="/kosmatch-logo-3d.jpg"
+          alt="KosMatch Logo"
+          width={34}
+          height={34}
+          style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }}
+        />
       </span>
       <div className="hud-brand-info">
         <span className="hud-brand-title">KosMatch</span>
