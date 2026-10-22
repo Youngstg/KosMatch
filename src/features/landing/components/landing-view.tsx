@@ -2,6 +2,7 @@ import { ArrowRight, Check, Compass, Info, Save, Sparkles } from "lucide-react";
 import { LandingFaq } from "./landing-faq";
 import { LandingFeatures } from "./landing-features";
 import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
+import { PilotRadiusMockup } from "./pilot-radius-mockup";
 
 export type LandingViewProps = {
   onStart: () => void;
@@ -138,7 +139,7 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
             </div>
             <div className="map-showcase-visual">
               <div className="map-showcase-mockup">
-                <KosMatchLogo size={140} style={{ borderRadius: "24px", boxShadow: "0 12px 30px rgba(0,0,0,0.5)" }} />
+                <PilotRadiusMockup />
                 <div className="mockup-caption">
                   <strong>UI Depok & UNAND Limau Manis</strong>
                   <span>Garis putus-putus menunjukkan radius survei pilot 4 km</span>

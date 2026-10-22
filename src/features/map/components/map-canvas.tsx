@@ -7,11 +7,17 @@ import {
   Popup,
   NavigationControl,
   ScaleControl,
+  setWorkerUrl,
   type StyleSpecification,
   type GeoJSONSource,
   type MapMouseEvent,
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+
+if (typeof window !== "undefined") {
+  setWorkerUrl("/maplibre-gl-worker.mjs");
+}
+
 import type { PilotSpecification } from "@/data/pilot-config";
 import { PILOT_CONFIG } from "@/data/pilot-config";
 import type { PilotListing } from "@/data/pilot-listings";
@@ -123,7 +129,7 @@ export function MapCanvas({
       container: containerRef.current,
       style: getOsmRasterStyle(theme),
       center: initialCenter,
-      zoom: 13,
+      zoom: selectedCampus.radiusKm > 4 ? 12.0 : 12.5,
       minZoom: 5,
       maxZoom: 18,
     });
@@ -146,7 +152,7 @@ export function MapCanvas({
         source: circleSourceId,
         paint: {
           "fill-color": circleColor,
-          "fill-opacity": theme === "dark" ? 0.08 : 0.12,
+          "fill-opacity": theme === "dark" ? 0.14 : 0.18,
         },
       });
 
@@ -156,8 +162,8 @@ export function MapCanvas({
         source: circleSourceId,
         paint: {
           "line-color": circleColor,
-          "line-width": 3,
-          "line-dasharray": [4, 4],
+          "line-width": 3.5,
+          "line-dasharray": [4, 3],
           "line-opacity": 0.95,
         },
       });
@@ -226,7 +232,7 @@ export function MapCanvas({
 
     map.flyTo({
       center: targetCenter,
-      zoom: 13,
+      zoom: selectedCampus.radiusKm > 4 ? 12.0 : 12.5,
       speed: 1.2,
       curve: 1.4,
     });
