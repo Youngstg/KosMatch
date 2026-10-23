@@ -122,16 +122,8 @@ export function LandingView({ onStart }: LandingViewProps) {
               </div>
             </div>
 
-            {/* Right Column: Clean, Unobstructed View with Minimalist Accent Pill */}
-            <div className="hero-editorial-right">
-              <div className="hero-residence-badge">
-                <span className="hero-residence-badge-dot" />
-                <div className="hero-residence-badge-text">
-                  <strong>Hunian Mahasiswa Terverifikasi</strong>
-                  <span>Radius 4 km Kampus &amp; Data Spasial Real</span>
-                </div>
-              </div>
-            </div>
+            {/* Right Column: Clean, Unobstructed View */}
+            <div className="hero-editorial-right" aria-hidden="true" />
           </div>
         </div>
       </section>

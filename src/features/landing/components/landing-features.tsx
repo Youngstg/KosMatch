@@ -40,8 +40,11 @@ const features = [
 ] as const;
 
 export function LandingFeatures() {
+  const col1 = features.slice(0, 3);
+  const col2 = features.slice(3, 6);
+
   return (
-    <section className="container steps" aria-labelledby="features-section-title">
+    <section className="container steps landing-features-section" aria-labelledby="features-section-title">
       <div className="eyebrow">Fitur unggulan</div>
       <h2 id="features-section-title" className="section-title">
         Fitur Utama untuk Keputusan Kos yang Cerdas
@@ -49,19 +52,73 @@ export function LandingFeatures() {
       <p className="lead">
         Dirancang khusus untuk mahasiswa dan pekerja yang ingin memilih tempat tinggal secara rasional, terukur, dan objektif.
       </p>
-      <div className="feature-grid">
-        {features.map((feature) => {
-          const Icon = feature.icon;
-          return (
-            <article className="feature-card" key={feature.title}>
-              <div className="step-number" aria-hidden="true">
-                <Icon size={18} />
-              </div>
-              <h3>{feature.title}</h3>
-              <p className="muted">{feature.description}</p>
-            </article>
-          );
-        })}
+
+      <div className="features-stepped-grid">
+        {/* Kolom Kiri: 1, 2, 3 */}
+        <div className="features-stepped-col" role="list">
+          {col1.map((feature, idx) => {
+            const Icon = feature.icon;
+            const stepNum = idx + 1;
+            const isLast = idx === col1.length - 1;
+
+            return (
+              <article
+                className={`feature-step-item ${isLast ? "is-last-in-col" : ""}`}
+                key={feature.title}
+                role="listitem"
+              >
+                <div className="feature-step-marker">
+                  <div className="feature-step-badge" aria-label={`Langkah ${stepNum}`}>
+                    {stepNum}
+                  </div>
+                  <div className="feature-step-line" aria-hidden="true" />
+                </div>
+                <div className="feature-step-body">
+                  <div className="feature-step-head">
+                    <span className="feature-step-icon" aria-hidden="true">
+                      <Icon size={16} />
+                    </span>
+                    <h3 className="feature-step-title">{feature.title}</h3>
+                  </div>
+                  <p className="feature-step-desc">{feature.description}</p>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        {/* Kolom Kanan: 4, 5, 6 */}
+        <div className="features-stepped-col" role="list">
+          {col2.map((feature, idx) => {
+            const Icon = feature.icon;
+            const stepNum = idx + 4;
+            const isLast = idx === col2.length - 1;
+
+            return (
+              <article
+                className={`feature-step-item ${isLast ? "is-last-in-col is-last-overall" : ""}`}
+                key={feature.title}
+                role="listitem"
+              >
+                <div className="feature-step-marker">
+                  <div className="feature-step-badge" aria-label={`Langkah ${stepNum}`}>
+                    {stepNum}
+                  </div>
+                  {!isLast && <div className="feature-step-line" aria-hidden="true" />}
+                </div>
+                <div className="feature-step-body">
+                  <div className="feature-step-head">
+                    <span className="feature-step-icon" aria-hidden="true">
+                      <Icon size={16} />
+                    </span>
+                    <h3 className="feature-step-title">{feature.title}</h3>
+                  </div>
+                  <p className="feature-step-desc">{feature.description}</p>
+                </div>
+              </article>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

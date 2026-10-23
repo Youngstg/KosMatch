@@ -2527,6 +2527,143 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   color: #6B6760;
 }
 
+/* Stepped Feature Connected Timeline Layout (No Boxed Cards) */
+.features-stepped-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 64px;
+  margin-top: 48px;
+}
+
+.features-stepped-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  position: relative;
+  padding-bottom: 36px;
+}
+
+.feature-step-item.is-last-overall,
+.features-stepped-col .feature-step-item:last-child {
+  padding-bottom: 12px;
+}
+
+.feature-step-marker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 44px;
+  flex-shrink: 0;
+}
+
+.feature-step-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: #8D654C;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  box-shadow: 0 4px 14px rgba(141, 101, 76, 0.28);
+  border: 3px solid #F6F4EF;
+  z-index: 2;
+  transition: transform var(--duration-fast), background var(--duration-fast), box-shadow var(--duration-fast);
+}
+
+.feature-step-item:hover .feature-step-badge {
+  transform: scale(1.08);
+  background: #73503A;
+  box-shadow: 0 6px 20px rgba(141, 101, 76, 0.38);
+}
+
+.feature-step-line {
+  position: absolute;
+  top: 44px;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  background: linear-gradient(180deg, #8D654C 0%, rgba(141, 101, 76, 0.25) 100%);
+  z-index: 1;
+}
+
+@media (min-width: 769px) {
+  .features-stepped-col .is-last-in-col .feature-step-line {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .features-stepped-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .features-stepped-col .is-last-in-col .feature-step-line {
+    display: block;
+  }
+}
+
+.feature-step-body {
+  flex: 1;
+  padding: 2px 14px 10px 8px;
+  border-radius: 14px;
+  transition: background-color var(--duration-fast);
+}
+
+.feature-step-item:hover .feature-step-body {
+  background: rgba(141, 101, 76, 0.04);
+}
+
+.feature-step-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.feature-step-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(141, 101, 76, 0.12);
+  color: #8D654C;
+  flex-shrink: 0;
+}
+
+.feature-step-title {
+  font-size: 17.5px;
+  font-weight: 750;
+  color: #1C1B19;
+  letter-spacing: -0.015em;
+  margin: 0;
+  line-height: 1.35;
+  transition: color var(--duration-fast);
+}
+
+.feature-step-item:hover .feature-step-title {
+  color: #8D654C;
+}
+
+.feature-step-desc {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: #5C5852;
+}
+
 .editorial-cta-banner {
   background: #1C1B19 !important;
   color: #FFFFFF !important;
