@@ -22,11 +22,13 @@ import {
   Info,
   Landmark,
   Layers,
+  Loader2,
   MapPin,
   Moon,
   Navigation,
   Navigation2,
   Pill,
+  Plus,
   Scale,
   Share2,
   Shirt,
@@ -60,6 +62,8 @@ import type { CommuteMode } from "@/lib/db/types";
 import { estimateRoadMeters, formatDistance, haversineMeters } from "@/lib/geo";
 import { formatRupiah } from "@/lib/currency";
 import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
+import { sendListingsToDssProject } from "../services/dss-bridge";
+
 
 
 function PoiCategoryIcon({
@@ -112,11 +116,19 @@ function Brand() {
   );
 }
 
+function navigateToCalculator() {
+  if (typeof window !== "undefined") {
+    window.location.href = "/#calculator";
+  }
+}
+
 export function MapExplorer() {
   const [selectedCampus, setSelectedCampus] = useState<PilotSpecification>(PILOT_CONFIG.primaryPilot);
   const [selectedGate, setSelectedGate] = useState<PilotGate | null>(PILOT_CONFIG.primaryPilot.gates[0] ?? null);
   const [selectedListing, setSelectedListing] = useState<PilotListing | null>(null);
   const [candidatePoint, setCandidatePoint] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [compareIds, setCompareIds] = useState<string[]>([]);
+  const [exportingDss, setExportingDss] = useState<boolean>(false);
   const [genderFilter, setGenderFilter] = useState<"all" | "male" | "female">("all");
   const [commuteMode, setCommuteMode] = useState<CommuteMode>("walking");
   const [sortBy, setSortBy] = useState<"relevance" | "commute" | "price_asc" | "price_desc">("commute");
@@ -375,6 +387,40 @@ export function MapExplorer() {
 
   const displayedProfile = activePoint ? neighborhoodProfile : null;
   const displayedCommute = activePoint ? commuteBreakdown : null;
+
+  const toggleCompare = (listingId: string, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setCompareIds((prev) => {
+      if (prev.includes(listingId)) {
+        return prev.filter((id) => id !== listingId);
+      }
+      if (prev.length >= 3) {
+        return [...prev.slice(1), listingId];
+      }
+      return [...prev, listingId];
+    });
+  };
+
+  const handleOpenInDss = async (listings: readonly PilotListing[]) => {
+    if (listings.length === 0) return;
+    try {
+      setExportingDss(true);
+      const commuteMap: Record<string, number> = {};
+      for (const l of listings) {
+        const found = listingsWithCommute.find((item) => item.id === l.id);
+        if (found) {
+          commuteMap[l.id] = found.commuteMinutes;
+        }
+      }
+      await sendListingsToDssProject(listings, selectedCampus, commuteMap);
+      navigateToCalculator();
+    } catch (error) {
+      console.error("Gagal mengirim data kos ke DSS:", error);
+      navigateToCalculator();
+    } finally {
+      setExportingDss(false);
+    }
+  };
 
   return (
     <div className={`map-explorer-container theme-${mapTheme}`}>
@@ -894,9 +940,34 @@ export function MapExplorer() {
                     )}
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px" }}>
                       <h4 style={{ margin: 0, fontSize: "14px" }}>{listing.name}</h4>
-                      <strong style={{ fontSize: "13px", color: "var(--primary)", whiteSpace: "nowrap" }}>
-                        {formatRupiah(listing.rentMonthly)}
-                      </strong>
+                      <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                        <strong style={{ fontSize: "13px", color: "var(--primary)", whiteSpace: "nowrap" }}>
+                          {formatRupiah(listing.rentMonthly)}
+                        </strong>
+                        <button
+                          type="button"
+                          className="btn-icon"
+                          style={{
+                            width: "24px",
+                            height: "24px",
+                            padding: 0,
+                            borderRadius: "6px",
+                            background: compareIds.includes(listing.id) ? "var(--primary)" : "transparent",
+                            color: compareIds.includes(listing.id) ? "#FFFFFF" : "var(--text-muted)",
+                            border: compareIds.includes(listing.id) ? "1px solid var(--primary)" : "1px solid var(--border)",
+                            cursor: "pointer",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexShrink: 0,
+                          }}
+                          title={compareIds.includes(listing.id) ? "Hapus dari perbandingan DSS" : "Tambah ke perbandingan DSS (maks 3)"}
+                          aria-label={compareIds.includes(listing.id) ? `Hapus ${listing.name} dari perbandingan DSS` : `Bandingkan ${listing.name} di DSS`}
+                          onClick={(e) => toggleCompare(listing.id, e)}
+                        >
+                          {compareIds.includes(listing.id) ? <Check size={13} /> : <Plus size={13} />}
+                        </button>
+                      </div>
                     </div>
 
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", margin: "4px 0 6px", flexWrap: "wrap", gap: "4px" }}>
@@ -1049,13 +1120,22 @@ export function MapExplorer() {
                   >
                     Reset Titik
                   </button>
-                  <Link
+                  <button
+                    type="button"
                     className="btn btn-primary"
-                    style={{ flex: 1, minHeight: "36px", fontSize: "12px" }}
-                    href="/"
+                    style={{ flex: 1, minHeight: "36px", fontSize: "12px", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px" }}
+                    disabled={exportingDss}
+                    onClick={() => {
+                      if (selectedListing) {
+                        void handleOpenInDss([selectedListing]);
+                      } else {
+                        navigateToCalculator();
+                      }
+                    }}
                   >
-                    Bawa ke KosMatch
-                  </Link>
+                    {exportingDss ? <Loader2 size={13} className="animate-spin" /> : <Calculator size={13} />}
+                    Analisis di DSS
+                  </button>
                 </div>
               </div>
             ) : (
@@ -1130,9 +1210,15 @@ export function MapExplorer() {
               >
                 Tutup
               </button>
-              <Link href="/#calculator" className="btn btn-primary btn-sm" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                <Calculator size={14} /> Buka di Kalkulator DSS
-              </Link>
+              <button
+                type="button"
+                className="btn btn-primary btn-sm"
+                style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+                disabled={exportingDss}
+                onClick={() => void handleOpenInDss([selectedListing])}
+              >
+                {exportingDss ? <Loader2 size={14} className="animate-spin" /> : <Calculator size={14} />} Buka di Kalkulator DSS
+              </button>
             </div>
           </div>
         </div>
@@ -1270,9 +1356,14 @@ export function MapExplorer() {
                         >
                           <Utensils size={16} /> Fasilitas
                         </button>
-                        <Link href="/#calculator" className="mobile-action-pill highlight">
-                          <Calculator size={16} /> Kalkulator DSS
-                        </Link>
+                        <button
+                          type="button"
+                          className="mobile-action-pill highlight"
+                          disabled={exportingDss}
+                          onClick={() => void handleOpenInDss([selectedListing])}
+                        >
+                          {exportingDss ? <Loader2 size={16} className="animate-spin" /> : <Calculator size={16} />} Kalkulator DSS
+                        </button>
                         <button
                           type="button"
                           className="mobile-action-pill"
@@ -1353,10 +1444,35 @@ export function MapExplorer() {
                                 {l.area} · {formatRupiah(l.rentMonthly)}
                               </div>
                             </div>
-                            <span className="commute-pill" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
-                              <Bike size={11} />
-                              <span>{l.commuteMinutes} mnt</span>
-                            </span>
+                            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                              <span className="commute-pill" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                                <Bike size={11} />
+                                <span>{l.commuteMinutes} mnt</span>
+                              </span>
+                              <button
+                                type="button"
+                                className="btn-icon"
+                                style={{
+                                  width: "24px",
+                                  height: "24px",
+                                  padding: 0,
+                                  borderRadius: "6px",
+                                  background: compareIds.includes(l.id) ? "var(--primary)" : "transparent",
+                                  color: compareIds.includes(l.id) ? "#FFFFFF" : "var(--text-muted)",
+                                  border: compareIds.includes(l.id) ? "1px solid var(--primary)" : "1px solid var(--border)",
+                                  cursor: "pointer",
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  flexShrink: 0,
+                                }}
+                                title={compareIds.includes(l.id) ? "Hapus dari perbandingan DSS" : "Tambah ke perbandingan DSS"}
+                                aria-label={compareIds.includes(l.id) ? `Hapus ${l.name} dari perbandingan DSS` : `Bandingkan ${l.name} di DSS`}
+                                onClick={(e) => toggleCompare(l.id, e)}
+                              >
+                                {compareIds.includes(l.id) ? <Check size={12} /> : <Plus size={12} />}
+                              </button>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -1474,13 +1590,81 @@ export function MapExplorer() {
 
             {/* Mobile Sheet Fixed Footer CTA */}
             <div className="mobile-sheet-footer">
-              <Link href="/#calculator" className="btn btn-primary" style={{ width: "100%", display: "inline-flex", justifyContent: "center", alignItems: "center", gap: "8px" }}>
-                <Calculator size={16} /> Buka Kalkulator DSS &amp; Simulasi Biaya
-              </Link>
+              <button
+                type="button"
+                className="btn btn-primary"
+                style={{ width: "100%", display: "inline-flex", justifyContent: "center", alignItems: "center", gap: "8px" }}
+                disabled={exportingDss}
+                onClick={() => {
+                  if (selectedListing) {
+                    void handleOpenInDss([selectedListing]);
+                  } else {
+                    navigateToCalculator();
+                  }
+                }}
+              >
+                {exportingDss ? <Loader2 size={16} className="animate-spin" /> : <Calculator size={16} />}
+                Buka Kalkulator DSS &amp; Simulasi Biaya
+              </button>
             </div>
           </div>
         )}
       </div>
+
+      {/* =========================================================================
+          7. FLOATING COMPARE & DSS MULTI-SELECTION TRAY
+      ========================================================================== */}
+      {compareIds.length > 0 && (
+        <aside className="hud-compare-floating-bar" aria-label="Bilah Perbandingan DSS">
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <Scale size={16} color="var(--primary)" />
+            <span style={{ fontSize: "13px", fontWeight: 700 }}>
+              {compareIds.length} Kos Dipilih
+            </span>
+          </div>
+          <div className="hud-compare-chips">
+            {compareIds.map((id) => {
+              const item = campusListings.find((l) => l.id === id);
+              if (!item) return null;
+              return (
+                <span key={id} className="hud-compare-chip">
+                  {item.name.replace(/^Kos\s+/i, "")}
+                  <button
+                    type="button"
+                    aria-label={`Hapus ${item.name}`}
+                    onClick={(e) => toggleCompare(id, e)}
+                  >
+                    <X size={12} />
+                  </button>
+                </span>
+              );
+            })}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              style={{ fontSize: "12px", padding: "4px 10px" }}
+              onClick={() => setCompareIds([])}
+            >
+              Batal
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary btn-sm"
+              style={{ fontSize: "12px", padding: "4px 12px", display: "inline-flex", alignItems: "center", gap: "6px" }}
+              disabled={exportingDss}
+              onClick={() => {
+                const selected = campusListings.filter((l) => compareIds.includes(l.id));
+                void handleOpenInDss(selected);
+              }}
+            >
+              {exportingDss ? <Loader2 size={13} className="animate-spin" /> : <Calculator size={13} />}
+              Bandingkan di DSS
+            </button>
+          </div>
+        </aside>
+      )}
     </div>
   );
 }

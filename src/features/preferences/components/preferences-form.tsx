@@ -18,8 +18,20 @@ import { formatRupiah } from "@/lib/currency";
 import type { GeoPoint } from "@/lib/geo";
 import { CAMPUSES } from "@/data/campuses";
 import { CampusPicker, inferCampusId } from "@/features/geo/components/campus-picker";
+import { Brain, Sparkles } from "lucide-react";
+import { PairwiseWeightingModal } from "./pairwise-weighting-modal";
+import type { PersonaProfile } from "@/domain/preferences/personal-weighting";
 
 import styles from "./preferences-form.module.css";
+
+function percentageToImportance(percent: number): Importance {
+  if (percent >= 28) return 5;
+  if (percent >= 22) return 4;
+  if (percent >= 16) return 3;
+  if (percent >= 10) return 2;
+  return 1;
+}
+
 
 type FacilityCode = keyof typeof FACILITY_DEFINITIONS;
 type RuleCode = keyof typeof RULE_DEFINITIONS;
@@ -183,8 +195,26 @@ export function PreferencesForm(props: PreferencesFormProps) {
   const [step, setStep] = useState<Step>(1);
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [isPairwiseModalOpen, setIsPairwiseModalOpen] = useState(false);
+  const [persona, setPersona] = useState<PersonaProfile | null>(null);
   const formId = useId();
   const errorRef = useRef<HTMLDivElement>(null);
+
+  const handleApplyPairwiseWeights = (
+    weights: Record<CriterionKey, number>,
+    appliedPersona: PersonaProfile
+  ) => {
+    const newImportance: Record<CriterionKey, Importance> = {
+      cost: percentageToImportance(weights.cost),
+      commute: percentageToImportance(weights.commute),
+      facilities: percentageToImportance(weights.facilities),
+      environment: percentageToImportance(weights.environment),
+      ruleFit: percentageToImportance(weights.ruleFit),
+    };
+    updateDraft("weights", newImportance);
+    setPersona(appliedPersona);
+  };
+
 
   useEffect(() => {
     if (error !== null) errorRef.current?.focus();
@@ -532,9 +562,58 @@ export function PreferencesForm(props: PreferencesFormProps) {
           <fieldset className={styles.stepPanel} disabled={saveState === "saving"}>
             <legend>Langkah 4 dari 4: Prioritas dan ringkasan</legend>
             <p className={styles.explanation}>
-              Beri nilai 1 (tidak penting) sampai 5 (sangat penting) untuk setiap kriteria.
+              Beri nilai 1 (tidak penting) sampai 5 (sangat penting) untuk setiap kriteria, atau gunakan kuis A/B pintar untuk menghitungnya otomatis.
             </p>
+
+            {/* Tahap F: ML Bradley-Terry Pairwise Elicitation trigger button & badge */}
+            <div style={{ margin: "10px 0 16px" }}>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => setIsPairwiseModalOpen(true)}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  borderColor: "var(--primary)",
+                  padding: "8px 14px",
+                  fontWeight: 650,
+                  fontSize: "13px",
+                  cursor: "pointer",
+                }}
+              >
+                <Brain size={16} color="#F59E0B" />
+                <span>{persona ? "Ubah Bobot via Kuis A/B" : "Temukan Bobot Personal via Kuis A/B (Bradley-Terry)"}</span>
+              </button>
+              {persona && (
+                <div
+                  className="panel"
+                  style={{
+                    marginTop: "10px",
+                    padding: "10px 14px",
+                    borderRadius: "10px",
+                    background: "rgba(245, 158, 11, 0.08)",
+                    border: "1px solid rgba(245, 158, 11, 0.3)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <Sparkles size={16} color="#F59E0B" />
+                  <div>
+                    <strong style={{ fontSize: "13px", color: persona.badgeColor }}>
+                      Profil Teridentifikasi: {persona.title}
+                    </strong>
+                    <span className="muted" style={{ display: "block", fontSize: "11.5px" }}>
+                      {persona.description}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div className={styles.importanceList}>
+
               {criteria.map(({ key, label }) => (
                 <fieldset className={styles.importanceGroup} key={key}>
                   <legend>{label}</legend>
@@ -649,6 +728,13 @@ export function PreferencesForm(props: PreferencesFormProps) {
           )}
         </div>
       </form>
+
+      <PairwiseWeightingModal
+        isOpen={isPairwiseModalOpen}
+        onClose={() => setIsPairwiseModalOpen(false)}
+        onApplyWeights={handleApplyPairwiseWeights}
+      />
     </section>
   );
 }
+
