@@ -1974,263 +1974,245 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
 }
 
 /* =========================================================================
-   SUNFLOWER RADIAL SELECTOR (Bunga Matahari Kampus & Titik Tujuan)
+   SUNFLOWER FLOATING SELECTOR (Ujung Kanan Atas - Bulat Besar & Anakan Terpisah)
 ========================================================================== */
-.hud-sunflower-widget {
+.hud-sunflower-corner {
   position: absolute;
-  top: 92px;
-  right: 20px;
-  z-index: 25;
-  width: 324px;
-  background: var(--hud-bg);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid var(--hud-border);
-  border-radius: 24px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
-  padding: 16px 16px 14px;
-  transition: all var(--duration-base) var(--easing-standard);
+  top: 86px;
+  right: 28px;
+  z-index: 28;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  pointer-events: auto;
   user-select: none;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
 }
 
-.hud-sunflower-widget.collapsed {
-  width: auto;
-  padding: 8px 16px;
+/* Bulat besar di ujung kanan atas (Klik pertama buka, klik kedua tutup kembali) */
+.hud-sunflower-fab {
+  width: 66px;
+  height: 66px;
   border-radius: 999px;
+  background: radial-gradient(circle at 35% 35%, #FBBF24 0%, #D97706 60%, #8D654C 100%);
+  color: #FFFFFF;
+  border: 3px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 24px rgba(217, 119, 6, 0.38), 0 2px 8px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
   cursor: pointer;
-  background: var(--hud-surface);
-  border: 1.5px solid rgba(245, 158, 11, 0.4);
-  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.2);
+  transition: all var(--duration-fast, 0.18s) cubic-bezier(0.2, 0.8, 0.2, 1);
+  padding: 0;
+  outline: none;
 }
 
-.hud-sunflower-collapsed-pill {
+.hud-sunflower-fab:hover {
+  transform: scale(1.06);
+  box-shadow: 0 12px 32px rgba(217, 119, 6, 0.52), 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.hud-sunflower-fab:active {
+  transform: scale(0.96);
+}
+
+.hud-sunflower-fab.active {
+  border-color: #FEF3C7;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.35), 0 12px 32px rgba(217, 119, 6, 0.55);
+}
+
+.hud-sunflower-fab-icon {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.hud-sunflower-fab-acronym {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #FFFFFF;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  line-height: 1;
+}
+
+/* Anakan Terpisah: Tanpa kotak putih, melayang bebas di atas peta */
+.hud-sunflower-orbit-wrap {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 170px;
+  height: 120px;
+  pointer-events: none;
+  animation: sunflowerPetalsFade 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes sunflowerPetalsFade {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* UI: Diatas, mendekat ke bola */
+.hud-sunflower-campus-pill.orbit-ui {
+  position: absolute;
+  top: -4px;
+  right: 76px;
+  pointer-events: auto;
+}
+
+/* UNAND: Tenggara / serong diagonal, mendekat ke bola */
+.hud-sunflower-campus-pill.orbit-unand {
+  position: absolute;
+  top: 42px;
+  right: 78px;
+  pointer-events: auto;
+}
+
+/* ITERA: Dibawah, mendekat ke bola */
+.hud-sunflower-campus-pill.orbit-itera {
+  position: absolute;
+  top: 78px;
+  right: 6px;
+  pointer-events: auto;
+}
+
+.hud-sunflower-campus-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 800;
+  font-family: 'Playfair Display', Georgia, serif;
+  background: var(--hud-surface, rgba(255, 255, 255, 0.94));
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  color: var(--hud-text, #1C1B19);
+  border: 1.5px solid rgba(245, 158, 11, 0.38);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: all var(--duration-fast, 0.18s) cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.hud-sunflower-campus-pill:hover {
+  background: var(--hud-surface-subtle, #FFFDF8);
+  color: #D97706;
+  border-color: #F59E0B;
+  transform: scale(1.08);
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+}
+
+.hud-sunflower-campus-pill.selected {
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+  color: #FFFFFF;
+  border-color: #FFFFFF;
+  box-shadow: 0 5px 16px rgba(217, 119, 6, 0.45);
+}
+
+.hud-sunflower-campus-pill.expanded {
+  border-color: #FEF3C7;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.4), 0 6px 16px rgba(217, 119, 6, 0.5);
+}
+
+/* Branch Anakan Titik Tujuan: Menjalar ke kiri, tenggara (diagonal), dan bawah */
+.hud-sunflower-gates-branch {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 120px;
+  animation: sunflowerBranchSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
+}
+
+@keyframes sunflowerBranchSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Anakan Titik Tujuan: Masing-masing mengambang terpisah (kelopak mandiri) */
+.hud-sunflower-petal {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--hud-surface, rgba(255, 255, 255, 0.94));
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1.5px solid rgba(245, 158, 11, 0.38);
+  color: var(--hud-text, #1C1B19);
   font-size: 12.5px;
   font-weight: 750;
-  color: var(--hud-text);
-  background: transparent;
-  border: 0;
-  padding: 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.06);
   cursor: pointer;
-}
-
-.hud-sunflower-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--hud-border);
-}
-
-.hud-sunflower-title-wrap {
-  display: flex;
-  flex-direction: column;
-}
-
-.hud-sunflower-eyebrow {
-  font-size: 9.5px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: #D97706;
-  text-transform: uppercase;
-}
-
-.hud-sunflower-title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--hud-text);
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.hud-sunflower-toggle-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.04);
-  border: 1px solid var(--hud-border);
-  color: var(--hud-text);
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  transition: all var(--duration-fast);
-}
-
-.hud-sunflower-toggle-btn:hover {
-  background: rgba(245, 158, 11, 0.15);
-  color: #F59E0B;
-}
-
-/* Sunflower Radial Dial Canvas */
-.hud-sunflower-dial {
-  position: relative;
-  width: 290px;
-  height: 260px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* SVG Ray Lines connecting center to petals */
-.hud-sunflower-svg-rays {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-/* Central Sunflower Core (Inti Bunga Matahari) */
-.hud-sunflower-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 82px;
-  height: 82px;
-  border-radius: 999px;
-  background: radial-gradient(circle at 35% 35%, #FBBF24 0%, #D97706 55%, #8D654C 100%);
-  color: #FFFFFF;
-  border: 3px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 0 24px rgba(245, 158, 11, 0.45), 0 4px 14px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  cursor: pointer;
-  z-index: 10;
-  transition: all var(--duration-fast);
-  padding: 4px;
-}
-
-.hud-sunflower-center:hover {
-  transform: translate(-50%, -50%) scale(1.06);
-  box-shadow: 0 0 32px rgba(245, 158, 11, 0.65), 0 6px 18px rgba(0, 0, 0, 0.25);
-}
-
-.hud-sunflower-center-name {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 11px;
-  font-weight: 750;
-  line-height: 1.15;
-  margin-top: 2px;
-  max-width: 68px;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.hud-sunflower-center-action {
-  font-size: 8.5px;
-  font-weight: 750;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  opacity: 0.95;
-  background: rgba(0, 0, 0, 0.28);
-  padding: 1px 6px;
-  border-radius: 999px;
-  margin-top: 2px;
-}
-
-/* Petals (Kelopak Bunga Matahari) */
-.hud-sunflower-petal {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  padding: 5px 11px;
-  border-radius: 999px;
-  background: var(--hud-surface, #FFFFFF);
-  border: 1.5px solid rgba(245, 158, 11, 0.35);
-  color: var(--hud-text, #1C1B19);
-  font-size: 11px;
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  cursor: pointer;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
-  white-space: nowrap;
-  transition: all var(--duration-fast);
-  z-index: 5;
-  max-width: 140px;
+  transition: all var(--duration-fast, 0.18s) cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .hud-sunflower-petal:hover {
-  transform: translate(-50%, -50%) scale(1.08);
+  transform: translateX(-8px) scale(1.03);
+  background: var(--hud-surface-subtle, #FFFDF8);
   border-color: #F59E0B;
-  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
-  background: var(--hud-surface-subtle, #FDF8F3);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.38);
+  color: #D97706;
 }
 
 .hud-sunflower-petal.active {
   background: linear-gradient(135deg, #F59E0B, #D97706);
   color: #FFFFFF;
   border-color: #FFFFFF;
-  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.5);
+  box-shadow: 0 6px 20px rgba(217, 119, 6, 0.48);
   font-weight: 800;
-  transform: translate(-50%, -50%) scale(1.05);
+  transform: translateX(-4px);
 }
 
 .hud-sunflower-petal-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 999px;
-  background: #F59E0B;
+  background: #D97706;
   flex-shrink: 0;
+  transition: all var(--duration-fast, 0.15s) ease;
 }
 
 .hud-sunflower-petal.active .hud-sunflower-petal-dot {
   background: #FFFFFF;
+  box-shadow: 0 0 6px #FFFFFF;
 }
 
 .hud-sunflower-petal-label {
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.25;
 }
 
-/* Mode Switcher Pill underneath the dial */
-.hud-sunflower-footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 6px;
-  padding-top: 8px;
-  border-top: 1px solid var(--hud-border);
-}
-
-.hud-sunflower-mode-pill {
-  padding: 4px 10px;
-  border-radius: 999px;
+.hud-sunflower-petal-check {
   font-size: 11px;
-  font-weight: 700;
-  border: 1px solid var(--hud-border);
-  background: transparent;
-  color: var(--hud-text-muted);
-  cursor: pointer;
-  transition: all var(--duration-fast);
-}
-
-.hud-sunflower-mode-pill:hover {
-  color: var(--hud-text);
-  border-color: #F59E0B;
-}
-
-.hud-sunflower-mode-pill.active {
-  background: rgba(245, 158, 11, 0.15);
-  color: #D97706;
-  border-color: rgba(245, 158, 11, 0.4);
   font-weight: 800;
+  color: #FFFFFF;
+  margin-left: 2px;
+  flex-shrink: 0;
 }
+
 
 /* =========================================================================
    ARCHITECTURAL EDITORIAL LANDING PAGE (RANTY LUXURY SPECIFICATION)
