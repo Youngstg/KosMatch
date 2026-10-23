@@ -47,6 +47,7 @@ import { NeighborhoodProfileCard } from "./neighborhood-profile-card";
 import { fetchPointNeighborhoodProfile, type NeighborhoodProfileResult } from "../services/neighborhood-service";
 import { evaluatePriceFairness } from "@/domain/analytics/price-fairness";
 import { SemanticSearchBar } from "./semantic-search-bar";
+import { CustomSelect } from "@/components/ui/custom-select";
 
 import {
   searchListingsSemantically,
@@ -849,21 +850,21 @@ export function MapExplorer() {
                 ))}
               </div>
 
-              {/* Sort dropdown */}
-              <select
-                className="field-input hud-select"
-                style={{ width: "auto", minHeight: "28px", padding: "2px 8px", fontSize: "11px" }}
+              {/* Sort dropdown with custom UI popover */}
+              <CustomSelect
+                ariaLabel="Urutkan Kos"
                 value={sortBy}
-                aria-label="Urutkan Kos"
-                onChange={(e) => setSortBy(e.target.value as "relevance" | "commute" | "price_asc" | "price_desc")}
-              >
-                {searchQuery.trim() && (
-                  <option value="relevance">Relevansi Semantik</option>
-                )}
-                <option value="commute">Waktu Tempuh (Tercepat)</option>
-                <option value="price_asc">Harga (Termurah)</option>
-                <option value="price_desc">Harga (Tertinggi)</option>
-              </select>
+                onChange={(val) => setSortBy(val as "relevance" | "commute" | "price_asc" | "price_desc")}
+                options={[
+                  ...(searchQuery.trim()
+                    ? [{ value: "relevance" as const, label: "Relevansi Semantik", icon: <Sparkles size={13} /> }]
+                    : []),
+                  { value: "commute" as const, label: "Waktu Tempuh (Tercepat)", icon: <Navigation size={13} /> },
+                  { value: "price_asc" as const, label: "Harga (Termurah)", icon: <CreditCard size={13} /> },
+                  { value: "price_desc" as const, label: "Harga (Tertinggi)", icon: <CreditCard size={13} /> },
+                ]}
+                size="sm"
+              />
             </div>
 
             {/* Gender Filter Chips */}
@@ -1010,63 +1011,60 @@ export function MapExplorer() {
                   </div>
                   {displayedCommute ? (
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "6px" }}>
-                      <div
-                        className="panel"
-                        style={{
-                          padding: "6px 8px",
-                          textAlign: "center",
-                          background: commuteMode === "walking" ? "rgba(245, 158, 11, 0.15)" : "var(--surface)",
-                          border: commuteMode === "walking" ? "1px solid var(--primary)" : "1px solid var(--border)",
-                        }}
+                      <button
+                        type="button"
+                        className={`hud-commute-mode-tile ${commuteMode === "walking" ? "active" : ""}`}
+                        onClick={() => setCommuteMode("walking")}
+                        title="Klik untuk memilih moda Jalan Kaki"
+                        aria-pressed={commuteMode === "walking"}
                       >
-                        <div style={{ fontSize: "11px", color: "var(--text-muted)", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>
+                        <div className="tile-mode-label">
                           <Footprints size={12} /> Jalan Kaki
                         </div>
-                        <strong style={{ fontSize: "14px", color: "var(--primary)", display: "block" }}>
+                        <strong className="tile-minutes">
                           {displayedCommute.walking.minutes} mnt
                         </strong>
-                        <span style={{ fontSize: "10px", color: "var(--text-muted)" }}>
+                        <span className="tile-distance">
                           {formatDistance(displayedCommute.walking.distanceMeters)}
                         </span>
-                      </div>
-                      <div
-                        className="panel"
-                        style={{
-                          padding: "6px 8px",
-                          textAlign: "center",
-                          background: commuteMode === "motorcycle" ? "rgba(245, 158, 11, 0.15)" : "var(--surface)",
-                          border: commuteMode === "motorcycle" ? "1px solid var(--primary)" : "1px solid var(--border)",
-                        }}
+                        {commuteMode === "walking" && <span className="tile-active-badge">Aktif</span>}
+                      </button>
+                      <button
+                        type="button"
+                        className={`hud-commute-mode-tile ${commuteMode === "motorcycle" ? "active" : ""}`}
+                        onClick={() => setCommuteMode("motorcycle")}
+                        title="Klik untuk memilih moda Motor"
+                        aria-pressed={commuteMode === "motorcycle"}
                       >
-                        <div style={{ fontSize: "11px", color: "var(--text-muted)", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>
+                        <div className="tile-mode-label">
                           <Bike size={12} /> Motor
                         </div>
-                        <strong style={{ fontSize: "14px", color: "var(--primary)", display: "block" }}>
+                        <strong className="tile-minutes">
                           {displayedCommute.motorcycle.minutes} mnt
                         </strong>
-                        <span style={{ fontSize: "10px", color: "var(--text-muted)" }}>
+                        <span className="tile-distance">
                           {formatDistance(displayedCommute.motorcycle.distanceMeters)}
                         </span>
-                      </div>
-                      <div
-                        className="panel"
-                        style={{
-                          padding: "6px 8px",
-                          textAlign: "center",
-                          background: commuteMode === "driving-car" ? "rgba(245, 158, 11, 0.15)" : "var(--surface)",
-                          border: commuteMode === "driving-car" ? "1px solid var(--primary)" : "1px solid var(--border)",
-                        }}
+                        {commuteMode === "motorcycle" && <span className="tile-active-badge">Aktif</span>}
+                      </button>
+                      <button
+                        type="button"
+                        className={`hud-commute-mode-tile ${commuteMode === "driving-car" ? "active" : ""}`}
+                        onClick={() => setCommuteMode("driving-car")}
+                        title="Klik untuk memilih moda Mobil"
+                        aria-pressed={commuteMode === "driving-car"}
                       >
-                        <div style={{ fontSize: "11px", color: "var(--text-muted)", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>
+                        <div className="tile-mode-label">
                           <Car size={12} /> Mobil
                         </div>
-                        <strong style={{ fontSize: "14px", color: "var(--primary)", display: "block" }}>
+                        <strong className="tile-minutes">
                           {displayedCommute["driving-car"].minutes} mnt
                         </strong>
-                        <span style={{ fontSize: "10px", color: "var(--text-muted)" }}>
+                        <span className="tile-distance">
                           {formatDistance(displayedCommute["driving-car"].distanceMeters)}
                         </span>
-                      </div>
+                        {commuteMode === "driving-car" && <span className="tile-active-badge">Aktif</span>}
+                      </button>
                     </div>
                   ) : loadingCommute ? (
                     <div className="skeleton" style={{ height: "48px", borderRadius: "6px" }} />

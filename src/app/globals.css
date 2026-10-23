@@ -2908,4 +2908,333 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   text-align: center;
 }
 
+/* =========================================================================
+   INTERACTIVE COMMUTE MODE TILES (Jalan Kaki, Motor, Mobil)
+========================================================================== */
+.hud-commute-mode-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 8px 6px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border, #E5DFD7);
+  background: var(--surface, #FFFFFF);
+  color: var(--text, #1C1B19);
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+  position: relative;
+  width: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.hud-commute-mode-tile:hover {
+  border-color: #8D654C;
+  background: rgba(141, 101, 76, 0.04);
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 10px rgba(141, 101, 76, 0.1);
+}
+
+.hud-commute-mode-tile.active {
+  border-color: #8D654C;
+  background: #F4EFEB;
+  box-shadow: 0 2px 8px rgba(141, 101, 76, 0.2);
+}
+
+[data-theme="dark"] .hud-commute-mode-tile.active {
+  border-color: #E0A96D;
+  background: rgba(224, 169, 109, 0.18);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.tile-mode-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted, #6B7280);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.hud-commute-mode-tile.active .tile-mode-label {
+  color: #8D654C;
+}
+
+[data-theme="dark"] .hud-commute-mode-tile.active .tile-mode-label {
+  color: #E0A96D;
+}
+
+.tile-minutes {
+  font-size: 14px;
+  font-weight: 800;
+  color: #8D654C;
+  letter-spacing: -0.01em;
+  display: block;
+}
+
+[data-theme="dark"] .tile-minutes {
+  color: #E0A96D;
+}
+
+.tile-distance {
+  font-size: 10px;
+  color: var(--text-muted, #6B7280);
+}
+
+.tile-active-badge {
+  font-size: 8.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #FFFFFF;
+  background: #8D654C;
+  padding: 1px 7px;
+  border-radius: 999px;
+  margin-top: 2px;
+}
+
+[data-theme="dark"] .tile-active-badge {
+  background: #E0A96D;
+  color: #1C1B19;
+}
+
+/* =========================================================================
+   CUSTOM LUXURY DROPDOWN (CustomSelect)
+========================================================================== */
+.custom-select-container {
+  position: relative;
+  display: inline-block;
+  font-family: inherit;
+  width: auto;
+}
+
+.custom-select-native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.custom-select-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border, #E5DFD7);
+  background: var(--surface, #FFFFFF);
+  color: var(--text, #1C1B19);
+  cursor: pointer;
+  transition: all 0.16s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  font-family: inherit;
+}
+
+.custom-select-container.size-sm .custom-select-trigger {
+  min-height: 28px;
+  padding: 3px 9px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.custom-select-container.size-md .custom-select-trigger {
+  min-height: 38px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.custom-select-trigger:hover:not(:disabled) {
+  border-color: #8D654C;
+  background: var(--surface-subtle, #F4EFEB);
+}
+
+.custom-select-container.is-open .custom-select-trigger {
+  border-color: #8D654C;
+  box-shadow: 0 0 0 3px rgba(141, 101, 76, 0.15);
+  background: var(--surface, #FFFFFF);
+}
+
+.custom-select-trigger-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.custom-select-icon {
+  display: inline-flex;
+  align-items: center;
+  color: #8D654C;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .custom-select-icon {
+  color: #E0A96D;
+}
+
+.custom-select-chevron {
+  color: var(--text-muted, #6B7280);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.custom-select-chevron.is-rotated {
+  transform: rotate(180deg);
+  color: #8D654C;
+}
+
+/* Custom Dropdown Popover */
+.custom-select-popover {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  min-width: 190px;
+  max-height: 280px;
+  overflow-y: auto;
+  background: var(--surface, #FFFFFF);
+  border: 1px solid var(--border, #E5DFD7);
+  border-radius: 10px;
+  padding: 4px;
+  box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.15), 0 4px 10px -2px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 120;
+  animation: select-popover-in 0.14s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes select-popover-in {
+  from {
+    opacity: 0;
+    transform: translateY(-5px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.custom-select-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text, #1C1B19);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  font-family: inherit;
+}
+
+.custom-select-option:hover {
+  background: var(--surface-subtle, #F4EFEB);
+  color: #1C1B19;
+}
+
+.custom-select-option.is-selected {
+  background: rgba(141, 101, 76, 0.12);
+  color: #8D654C;
+  font-weight: 750;
+}
+
+[data-theme="dark"] .custom-select-option.is-selected {
+  background: rgba(224, 169, 109, 0.18);
+  color: #E0A96D;
+}
+
+.custom-select-option-body {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.custom-select-check {
+  color: #8D654C;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+[data-theme="dark"] .custom-select-check {
+  color: #E0A96D;
+}
+
+.custom-select-badge {
+  font-size: 10px;
+  font-weight: 750;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(141, 101, 76, 0.12);
+  color: #8D654C;
+}
+
+/* =========================================================================
+   GLOBAL HTML <select> MODERNIZATION (No more raw/basic HTML styling)
+========================================================================== */
+select.input,
+select.field-input,
+select.hud-select,
+.select-modern {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: var(--surface, #FFFFFF);
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238D654C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 13px 13px;
+  padding-right: 32px !important;
+  border-radius: 8px;
+  border: 1px solid var(--border, #E5DFD7);
+  color: var(--text, #1C1B19);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  cursor: pointer;
+}
+
+select.input:hover,
+select.field-input:hover,
+select.hud-select:hover {
+  border-color: #8D654C;
+  background-color: var(--surface-subtle, #F4EFEB);
+}
+
+select.input:focus,
+select.field-input:focus,
+select.hud-select:focus {
+  outline: none;
+  border-color: #8D654C;
+  box-shadow: 0 0 0 3px rgba(141, 101, 76, 0.16);
+}
+
+select.input option,
+select.field-input option,
+select.hud-select option {
+  background-color: var(--surface, #FFFFFF);
+  color: var(--text, #1C1B19);
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+
 
