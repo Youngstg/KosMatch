@@ -70,10 +70,10 @@ describe("LandingView Component", () => {
     );
 
     expect(
-      screen.getByRole("heading", { name: /Tata Letak Kamar Kos Mahasiswa/i })
+      screen.getByRole("heading", { name: /Kamar Nyaman, Istirahat Tenang, Belajar Makin Fokus/i })
     ).not.toBeNull();
-    expect(screen.getByText("Kasur & Bantal")).not.toBeNull();
-    expect(screen.getByText("Lemari Pakaian")).not.toBeNull();
+    expect(screen.getByText(/Kasur & Bantal/)).not.toBeNull();
+    expect(screen.getByText(/Lemari Pakaian/)).not.toBeNull();
     expect(
       screen.getByRole("heading", { name: "Pertanyaan yang Sering Diajukan" })
     ).not.toBeNull();

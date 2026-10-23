@@ -96,14 +96,9 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
           <div className="hero-editorial-grid">
             {/* Left Column: High-Fashion Serif Headline & DSS Actions */}
             <div className="hero-editorial-left">
-              <div className="hero-pilot-pill editorial-pill">
-                <span className="live-indicator" />
-                <span>KATALOG KAMPUS TERPADU • UI • UNAND • ITERA</span>
-              </div>
-
               <div className="hero-editorial-title-wrap">
-                <span className="hero-editorial-super">THE PERFECT KOS®</span>
-                <div className="hero-editorial-sub">/ Temukan &amp; Bandingkan Kos Terbaik /</div>
+                <span className="hero-editorial-super">TEMUKAN KOS TERBAIK</span>
+                <div className="hero-editorial-sub">/ Keputusan Hunian Cerdas, Objektif &amp; Bebas Penyesalan /</div>
                 <h1 className="hero-editorial-h1">Kos murah belum tentu paling hemat.</h1>
               </div>
 
@@ -150,21 +145,21 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
         <div className="container">
           <div className="clay-card layout-card-full">
             <div className="clay-card-content" style={{ maxWidth: "580px" }}>
-              <span className="hero-editorial-super" style={{ color: "#E0A96D", fontSize: "12px", letterSpacing: "1px", marginBottom: "8px", display: "block" }}>
-                LAYOUT STANDAR KAMAR KOS MAHASISWA
+              <span className="hero-editorial-super" style={{ color: "#E0A96D", fontSize: "12px", letterSpacing: "1.2px", marginBottom: "8px", display: "block", textTransform: "uppercase", fontWeight: 700 }}>
+                Standar Kenyamanan Hunian
               </span>
               <h2 className="clay-card-title" style={{ fontSize: "24px", lineHeight: "1.3", margin: "0 0 10px" }}>
-                Tata Letak Kamar Kos Mahasiswa: Kasur, Lemari &amp; Meja Belajar
+                Kamar Nyaman, Istirahat Tenang, Belajar Makin Fokus
               </h2>
-              <p className="clay-card-sub" style={{ fontSize: "14px", lineHeight: "1.6", color: "rgba(255, 255, 255, 0.82)", margin: "0 0 16px" }}>
-                Standar tata letak kamar kos mahasiswa yang fungsional dan nyaman. Pastikan kasur, lemari pakaian, meja belajar yang cukup penerangan, serta kamar mandi dalam tersedia sebelum Anda membayar uang muka.
+              <p className="clay-card-sub" style={{ fontSize: "14px", lineHeight: "1.6", color: "rgba(255, 255, 255, 0.86)", margin: "0 0 16px" }}>
+                Kamar kos adalah ruang hidup utama selama masa studi Anda. KosMatch memverifikasi perabot esensial—mulai dari tempat tidur empuk, lemari pakaian lapang, meja belajar privat yang kondusif, hingga sirkulasi udara alami—sebelum Anda menentukan pilihan sewa.
               </p>
               <div className="clay-card-badges" style={{ gap: "8px", marginBottom: "20px" }}>
-                <span className="clay-pill">Kasur &amp; Bantal</span>
-                <span className="clay-pill">Lemari Pakaian</span>
-                <span className="clay-pill">Meja Belajar &amp; Kursi</span>
+                <span className="clay-pill">Kasur &amp; Bantal Ergonomis</span>
+                <span className="clay-pill">Lemari Pakaian Lapang</span>
+                <span className="clay-pill">Meja &amp; Kursi Belajar</span>
                 <span className="clay-pill">Kamar Mandi Dalam</span>
-                <span className="clay-pill">Ventilasi Jendela</span>
+                <span className="clay-pill">Sirkulasi &amp; Jendela Alami</span>
               </div>
               <a
                 href="/explore"
@@ -182,7 +177,7 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
                   textDecoration: "none",
                 }}
               >
-                <Compass size={15} /> Jelajahi Kos &amp; Fasilitas di Peta Kampus &rarr;
+                <Compass size={15} /> Eksplorasi Kos Siap Huni di Peta Kampus &rarr;
               </a>
             </div>
             <div className="layout-card-visual">
