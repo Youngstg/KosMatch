@@ -3,15 +3,16 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Calculator, Compass, LogIn, Save, Sparkles, User } from "lucide-react";
+import { ArrowRight, Calculator, Compass, LogIn, User } from "lucide-react";
+import { LandingFeatures } from "./landing-features";
 import { LandingFaq } from "./landing-faq";
 import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
 
 export type LandingViewProps = {
   onStart: () => void;
-  onDemo: () => void;
-  hasSaved: boolean;
-  onResume: () => void;
+  onDemo?: () => void;
+  hasSaved?: boolean;
+  onResume?: () => void;
 };
 
 function Brand() {
@@ -26,7 +27,7 @@ function Brand() {
   );
 }
 
-export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingViewProps) {
+export function LandingView({ onStart }: LandingViewProps) {
   const [currentUser, setCurrentUser] = useState<{ email: string; role: string } | null>(null);
 
   useEffect(() => {
@@ -106,21 +107,21 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
                 Bandingkan biaya bulanan, perjalanan, fasilitas, dan kebutuhan pribadi dalam satu keputusan yang transparan dan terukur berbasis PostGIS.
               </p>
 
-              <div className="actions editorial-actions">
-                <button className="btn btn-editorial-start" onClick={onStart} style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
-                  <Calculator size={18} /> Buka Kalkulator DSS <ArrowRight size={18} />
+              <div className="actions editorial-actions" style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
+                <Link
+                  href="/explore"
+                  className="btn btn-editorial-start"
+                  style={{ display: "inline-flex", alignItems: "center", gap: "8px", textDecoration: "none" }}
+                >
+                  <Compass size={18} /> Jelajahi Kos di Peta Kampus <ArrowRight size={18} />
+                </Link>
+                <button
+                  className="btn btn-editorial-outline"
+                  onClick={onStart}
+                  style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}
+                >
+                  <Calculator size={18} /> Buka Kalkulator DSS
                 </button>
-                <button className="btn btn-editorial-secondary" onClick={onDemo}>
-                  <Sparkles size={16} /> Coba Data Contoh
-                </button>
-                <a className="btn btn-editorial-outline" href="/explore">
-                  <Compass size={16} /> Buka Peta Kampus
-                </a>
-                {hasSaved && (
-                  <button className="btn btn-editorial-ghost" onClick={onResume}>
-                    <Save size={16} /> Lanjutkan proyek
-                  </button>
-                )}
               </div>
             </div>
 
@@ -193,8 +194,9 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
         </div>
       </section>
 
-      {/* Main Content: Clean FAQ Section */}
+      {/* Main Content: Features & FAQ */}
       <main>
+        <LandingFeatures />
         <div id="faq">
           <LandingFaq />
         </div>

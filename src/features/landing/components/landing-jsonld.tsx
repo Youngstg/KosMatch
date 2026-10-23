@@ -20,7 +20,7 @@ export function LandingJsonLd() {
           "Penyaringan fasilitas wajib vs preferensi fleksibel",
           "Perbandingan berdampingan hingga 3 kos",
           "Simulator biaya dan skenario komutasi",
-          "Penyimpanan lokal di browser (IndexedDB) yang aman dan privat",
+          "Sistem analisis data dan perbandingan yang aman & terproteksi",
           "Ekspor ringkasan keputusan PDF dan backup JSON",
         ],
       },
@@ -48,7 +48,7 @@ export function LandingJsonLd() {
             "name": "Apakah data kos saya aman dan privat?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Ya, 100% data proyek dan catatan perbandingan kos Anda disimpan secara lokal di browser Anda menggunakan IndexedDB. Tidak ada data yang dikirim ke server tanpa tindakan sengaja dari Anda.",
+              "text": "Ya, data proyek dan catatan perbandingan kos Anda diproses secara privat dan terlindungi dengan standar keamanan modern. Tidak ada data yang dijual atau dibagikan ke pihak ketiga.",
             },
           },
           {

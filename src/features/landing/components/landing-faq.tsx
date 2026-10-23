@@ -12,7 +12,7 @@ const faqs = [
   {
     question: "Apakah data dan catatan pribadi saya aman?",
     answer:
-      "Sangat aman. KosMatch memproses seluruh komputasi dan menyimpan data perbandingan Anda secara lokal di browser Anda menggunakan IndexedDB. Tidak ada data pribadi, nominal anggaran, atau catatan kos yang dikirim ke server pihak ketiga tanpa persetujuan Anda.",
+      "Sangat aman. KosMatch memproses seluruh komputasi dan analisis perbandingan Anda secara terproteksi. Data preferensi, anggaran, dan simulasi Anda dijaga kerahasiaannya dengan standar privasi modern tanpa manipulasi atau penjualan data ke pihak ketiga.",
   },
   {
     question: "Mengapa kos yang lebih murah tidak selalu berada di urutan teratas?",

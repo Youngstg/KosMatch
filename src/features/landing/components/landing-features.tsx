@@ -33,9 +33,9 @@ const features = [
   },
   {
     icon: Lock,
-    title: "100% Privat di Browser",
+    title: "Aman, Terproteksi & Bebas Iklan",
     description:
-      "Seluruh data proyek dan catatan tersimpan di IndexedDB browser Anda sendiri. Tidak ada pelacakan, iklan terselubung, atau komisi calo.",
+      "Seluruh data perbandingan dan preferensi Anda terproteksi secara privat. Tanpa pelacakan komersial tersembunyi, tanpa spam, dan tanpa manipulasi rekomendasi calo.",
   },
 ] as const;
 

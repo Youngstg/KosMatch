@@ -13,7 +13,7 @@ Berbeda dengan platform listing komersial konvensional yang menitikberatkan pada
 1. **Total Real Cost of Living**: Mengintegrasikan harga sewa dasar, biaya utilitas listrik/air, estimasi makan harian berbasis kepadatan warung lokal, dan biaya komuter perjalanan.
 2. **Geospatial Real-Routing**: Mengukur jarak tempuh dan waktu perjalanan nyata (*walking, motorcycle, driving*) menuju gerbang kampus spesifik menggunakan data spasial PostGIS dan OpenStreetMap.
 3. **Multi-Criteria Decision Analysis (MCDA)**: Menerapkan algoritma pembobotan preferensi pribadi (*Bradley-Terry Model* dan *Weighted Sum Model*) yang transparan dan dapat dijelaskan (*explainable*).
-4. **Data Privacy & Local-First**: Kemampuan beroperasi tanpa login dengan penyimpanan data privat di browser (IndexedDB) serta opsi akun pengguna berbasis PostgreSQL dan Google OAuth 2.0 resmi.
+4. **Data Privacy & Modern Security**: Arsitektur perlindungan privasi data pengguna, validasi skema Zod, serta autentikasi berbasis PostgreSQL dan Google OAuth 2.0 resmi.
 
 ---
 
@@ -31,8 +31,8 @@ Berikut adalah rincian seluruh modul dan fitur yang telah selesai dibangun dan b
 │ - Trade-off Engine  │   UNAND/ITERA)            │ - Rent Ceiling & Floor Filter │
 │ - Bradley-Terry Fit │ - Multi-Modal Routing     │ - Neighborhood Profile Radar  │
 ├─────────────────────┼───────────────────────────┼───────────────────────────────┤
-│ 4. PENYIMPANAN DATA │ 5. OTENTIKASI & KEAMANAN  │ 6. PORTAL & ANTARMUKA         │
-│ - IndexedDB Local   │ - Google OAuth 2.0 Resmi  │ - Landing Page Editorial      │
+│ 4. INTEGRASI DATA   │ 5. OTENTIKASI & KEAMANAN  │ 6. PORTAL & ANTARMUKA         │
+│ - Validasi Zod      │ - Google OAuth 2.0 Resmi  │ - Landing Page Editorial      │
 │ - Backup JSON Ex/Im │ - Password Hashing Scrypt │ - 3D Room Layout Showcase     │
 │ - PostGIS PG Pool   │ - HMAC-SHA256 Session     │ - Portal Admin & Pemilik Kos  │
 └─────────────────────┴───────────────────────────┴───────────────────────────────┘
@@ -153,15 +153,14 @@ Modul inti sistem yang menghitung kelayakan hunian secara matematis dan objektif
 
 ---
 
-### Modul 5: Penyimpanan Data & Manajemen Proyek (Local-First IndexedDB)
+### Modul 5: Manajemen Data & Keamanan Proyek (Data Integrity & Export)
 
-1. **Penyimpanan Privat di Peramban (IndexedDB)**:
-   - Proyek perbandingan disimpan secara lokal di browser menggunakan database IndexedDB (`idb`).
-   - Tidak memerlukan akun atau koneksi server untuk menyimpan proyek simulasi.
-   - Fitur **"Lanjutkan Proyek"** di Landing Page langsung mendeteksi proyek yang tersimpan sebelumnya.
+1. **Integritas Skema & Validasi Data (Zod Schema)**:
+   - Seluruh data perbandingan, simulasi biaya, dan profil preferensi diverifikasi dengan skema validasi Zod yang ketat sebelum diproses atau disimpan.
+   - Menjamin tidak ada data anomali atau injeksi nilai tak valid yang dapat merusak perhitungan matematis DSS.
 2. **Ekspor & Impor Cadangan Proyek (JSON Backup)**:
    - Pengguna dapat mengunduh seluruh data proyek simulasi dalam format `.json`.
-   - File cadangan dapat diimpor kembali di komputer/browser lain dengan validasi skema Zod dan pembatasan ukuran aman (*guardrail max 2MB*).
+   - File cadangan dapat diimpor kembali secara aman dengan validasi skema Zod dan pembatasan ukuran aman (*guardrail max 2MB*).
 
 ---
 
@@ -234,8 +233,8 @@ Modul inti sistem yang menghitung kelayakan hunian secara matematis dan objektif
 | **Geospatial** | One-Click DSS Bridge | **Aktif (100%)** | [`src/features/map/services/dss-bridge.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/features/map/services/dss-bridge.ts) |
 | **AI / NLP** | Semantic Search Natural Language | **Aktif (100%)** | [`src/domain/search/semantic-search.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/domain/search/semantic-search.ts) |
 | **AI / NLP** | Smart Ad Listing Extractor | **Aktif (100%)** | [`src/features/listings/services/extract-listing.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/features/listings/services/extract-listing.ts) |
-| **Storage** | Local IndexedDB Repository | **Aktif (100%)** | [`src/data/indexeddb/indexeddb-repository.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/data/indexeddb/indexeddb-repository.ts) |
-| **Storage** | Backup & Restore JSON Project | **Aktif (100%)** | [`src/features/projects/services/project-backup.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/features/projects/services/project-backup.ts) |
+| **Data & Backup** | Zod Schema Validation | **Aktif (100%)** | [`src/domain/validation/project-schema.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/domain/validation/project-schema.ts) |
+| **Data & Backup** | Backup & Restore JSON Project | **Aktif (100%)** | [`src/features/projects/services/project-backup.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/features/projects/services/project-backup.ts) |
 | **Auth** | Google OAuth 2.0 Flow | **Aktif (100%)** | [`src/app/api/auth/google/route.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/app/api/auth/google/route.ts) |
 | **Auth** | Google Callback Token Exchange | **Aktif (100%)** | [`src/app/api/auth/google/callback/route.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/app/api/auth/google/callback/route.ts) |
 | **Auth** | Scrypt Password & HMAC Session | **Aktif (100%)** | [`src/lib/auth/password.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/lib/auth/password.ts) |

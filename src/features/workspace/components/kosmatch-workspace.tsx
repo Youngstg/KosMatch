@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
-import { AlertTriangle, Check, Clock3, Compass, Download, FileUp, Info, MapPin, Pencil, Plus, Printer, RotateCcw, Scale, Sparkles, Star, Trash2 } from "lucide-react";
-import { demoOptions, demoProject } from "@/data/demo";
+import { AlertTriangle, Check, Clock3, Compass, Download, FileUp, Info, MapPin, Pencil, Plus, Printer, RotateCcw, Scale, Star, Trash2 } from "lucide-react";
 import { IndexedDbProjectRepository } from "@/data/indexeddb";
 import { calculateCost } from "@/domain/costing";
 import type { AccommodationOption, ComparisonProject, CriterionKey } from "@/domain/entities";
@@ -57,7 +56,6 @@ function Brand() {
     </div>
   );
 }
-function newId() { return crypto.randomUUID(); }
 
 let browserRepository: IndexedDbProjectRepository | null = null;
 function getBrowserRepository(): IndexedDbProjectRepository {
@@ -266,7 +264,7 @@ function OptionCard({ project, option, match, onEdit, onDelete, onShortlist, onC
   );
 }
 
-function ProjectWorkspace({ repository, projects, project, initialOptions, onProjectDeleted, onBack, onSwitchProject, onNewProject, onLoadDemo }: { repository:IndexedDbProjectRepository; projects:readonly ComparisonProject[]; project:ComparisonProject; initialOptions:AccommodationOption[]; onProjectDeleted:()=>void; onBack:()=>void; onSwitchProject:(id:string)=>Promise<void>; onNewProject:()=>void; onLoadDemo:()=>Promise<void> }) {
+function ProjectWorkspace({ repository, projects, project, initialOptions, onProjectDeleted, onBack, onSwitchProject, onNewProject }: { repository:IndexedDbProjectRepository; projects:readonly ComparisonProject[]; project:ComparisonProject; initialOptions:AccommodationOption[]; onProjectDeleted:()=>void; onBack:()=>void; onSwitchProject:(id:string)=>Promise<void>; onNewProject:()=>void }) {
   const [currentProject,setCurrentProject]=useState(project); const [options,setOptions]=useState<AccommodationOption[]>(initialOptions); const [tab,setTab]=useState<Tab>("overview"); const [editing,setEditing]=useState<AccommodationOption|undefined>(); const [showEditor,setShowEditor]=useState(false); const [sort,setSort]=useState<Sort>("match"); const [filter,setFilter]=useState<Filter>("all"); const [simulated,setSimulated]=useState<string|null>(null); const [notice,setNotice]=useState<string|null>(null); const [requestedComparisonOptionId,setRequestedComparisonOptionId]=useState<string|null>(null);
   const matches=useMemo(()=>matchAndRank(currentProject,options),[currentProject,options]);
   const visible=useMemo(()=>{const list=matches.filter((m)=>{const cost=calculateCost(currentProject,options.find((o)=>o.id===m.optionId)!);return filter==="all"||(filter==="eligible"&&m.eligible)||(filter==="withinBudget"&&!cost.hasUnknownMonthlyValues&&cost.knownMonthlyTotal<=currentProject.monthlyBudget)||(filter==="complete"&&!cost.hasUnknownMonthlyValues)||(filter==="unknown"&&cost.hasUnknownMonthlyValues)||(filter==="needsVerification"&&options.find((o)=>o.id===m.optionId)!.verificationQuestions.some((q)=>q.status!=="confirmed"));});if(sort==="cost")list.sort((a,b)=>calculateCost(currentProject,options.find(o=>o.id===a.optionId)!).knownMonthlyTotal-calculateCost(currentProject,options.find(o=>o.id===b.optionId)!).knownMonthlyTotal);if(sort==="commute")list.sort((a,b)=>(options.find(o=>o.id===a.optionId)!.oneWayCommuteMinutes??999)-(options.find(o=>o.id===b.optionId)!.oneWayCommuteMinutes??999));if(sort==="distance"){const dist=(id:string)=>calculateDestinationDistance(currentProject,options.find((x)=>x.id===id)!)?.straightMeters??Number.MAX_SAFE_INTEGER;list.sort((a,b)=>dist(a.optionId)-dist(b.optionId));}if(sort==="recent")list.sort((a,b)=>options.find(o=>o.id===b.optionId)!.createdAt.localeCompare(options.find(o=>o.id===a.optionId)!.createdAt));return list;},[matches,sort,filter,currentProject,options]);
@@ -276,8 +274,8 @@ function ProjectWorkspace({ repository, projects, project, initialOptions, onPro
   const deleteOption=async(option:AccommodationOption)=>{if(!confirm("Hapus pilihan kos ini? Tindakan ini hanya memengaruhi opsi ini, bukan seluruh proyek."))return;await repository.deleteOption(option.id);if(currentProject.favoriteOptionId===option.id){const updatedProject={...currentProject,favoriteOptionId:null,updatedAt:new Date().toISOString()};await repository.saveProject(updatedProject);setCurrentProject(updatedProject);}setOptions((all)=>all.filter((item)=>item.id!==option.id));setNotice("Pilihan dihapus.");};
   if(showEditor)return <OptionEditor project={currentProject} initialOption={editing} onSaveAction={saveOption} onCancelAction={()=>{setShowEditor(false);setEditing(undefined);}}/>;
   const eligibleCount=matches.filter((m)=>m.eligible).length; const simulatedOption=options.find((o)=>o.id===(simulated??options[0]?.id));
-  return <div className="shell"><header className="topbar no-print"><div className="container header-inner"><div className="project-switcher"><Brand/><label className="sr-only" htmlFor="project-switcher">Pilih proyek</label><select id="project-switcher" className="input" value={currentProject.id} onChange={(event)=>void onSwitchProject(event.target.value)}>{projects.map((item)=><option value={item.id} key={item.id}>{item.name}</option>)}</select></div><div className="actions compact"><button className="btn btn-ghost" onClick={onBack}>Beranda</button><Link href="/explore" className="btn btn-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><Compass size={17}/> Peta Kampus</Link><button className="btn btn-secondary" onClick={onNewProject}><Plus size={18}/> Proyek baru</button><button className="btn btn-primary" onClick={()=>{setEditing(undefined);setShowEditor(true);}}><Plus size={18}/> Tambah Kos Manual</button></div></div></header><main className="container workspace"><div className="workspace-head"><div><div className="eyebrow">Ruang keputusan</div><h1>{currentProject.name}</h1><p className="muted"><MapPin size={15}/> Tujuan: {currentProject.destinationLabel}</p></div><div className="badges">{currentProject.name.includes("(Demo)")&&<span className="badge warn"><Info size={14}/> Data contoh fiktif</span>}<span className="badge good">Tersimpan di perangkat</span></div></div>{currentProject.name.includes("(Demo)")&&<p className="disclaimer"><Info size={17}/> Nama, harga, alamat, dan ketersediaan pada data contoh ini bersifat fiktif.</p>}{notice&&<div className="inline-alert good" role="status"><Check size={18}/>{notice}<button className="btn btn-ghost" onClick={()=>setNotice(null)}>Tutup</button></div>}<nav className="nav-tabs no-print" aria-label="Navigasi proyek">{([['overview','Ringkasan'],['compare','Bandingkan'],['decision','Keputusan'],['simulator','Simulator'],['preferences','Preferensi'],['data','Data & backup']] as const).map(([key,label])=><button className={`nav-tab ${tab===key?"active":""}`} aria-current={tab===key?"page":undefined} onClick={()=>setTab(key)} key={key}>{label}</button>)}</nav><div className="summary-strip"><div className="summary-item"><span className="muted">Anggaran total</span><strong>{formatRupiah(currentProject.monthlyBudget)} / bulan</strong></div><div className="summary-item"><span className="muted">Batas perjalanan</span><strong>{currentProject.maxOneWayCommuteMinutes} menit</strong></div><div className="summary-item"><span className="muted">Memenuhi wajib</span><strong>{eligibleCount} dari {matches.length} pilihan</strong></div></div>
-    {tab==="overview"&&(options.length===0?<Empty title="Belum ada pilihan kos. Tambahkan dari peta atau coba data contoh." text="Pilih kos terverifikasi langsung dari peta kampus untuk analisis biaya nyata dan perbandingan DSS otomatis." action={<div className="actions compact" style={{ flexWrap: "wrap", justifyContent: "center" }}><Link href="/explore" className="btn btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}><Compass size={18}/> Pilih dari Peta Kampus (UI / UNAND / ITERA)</Link><button className="btn btn-secondary" aria-label="Tambah pilihan manual" onClick={()=>setShowEditor(true)}><Plus size={18}/> Tambah Kos Manual</button><button className="btn btn-ghost" onClick={()=>void onLoadDemo()}><Sparkles size={18}/> Coba Data Contoh</button></div>}/>:<><div className="toolbar"><div className="field"><label htmlFor="sort">Urutkan</label><select id="sort" className="input" value={sort} onChange={(e)=>setSort(e.target.value as Sort)}><option value="match">Kecocokan</option><option value="cost">Biaya bulanan</option><option value="commute">Perjalanan</option><option value="distance">Jarak ke tujuan</option><option value="recent">Baru ditambahkan</option></select></div><div className="field"><label htmlFor="filter">Filter</label><select id="filter" className="input" value={filter} onChange={(e)=>setFilter(e.target.value as Filter)}><option value="all">Semua pilihan</option><option value="eligible">Memenuhi fasilitas wajib</option><option value="withinBudget">Dalam anggaran</option><option value="complete">Biaya lengkap</option><option value="unknown">Ada biaya belum diketahui</option><option value="needsVerification">Perlu verifikasi</option></select></div></div>{visible.length===0?<Empty title="Tidak ada hasil" text="Ubah filter untuk melihat pilihan lain."/>:<div>{([{eligible:true,title:"Memenuhi kebutuhan wajib"},{eligible:false,title:"Perlu dipertimbangkan ulang"}] as const).map((group)=>{const grouped=visible.filter((match)=>match.eligible===group.eligible);return grouped.length===0?null:<section aria-label={group.title} key={group.title}><h2 className="group-title">{group.eligible?<Check size={21} color="var(--accent)"/>:<AlertTriangle size={21} color="var(--danger)"/>}{group.title}</h2><div className="option-grid">{grouped.map((match)=>{const option=options.find((o)=>o.id===match.optionId)!;return <OptionCard project={currentProject} option={option} match={match} onEdit={()=>{setEditing(option);setShowEditor(true);}} onDelete={()=>deleteOption(option)} onShortlist={()=>toggleShortlist(option.id)} onCompare={()=>{setRequestedComparisonOptionId(option.id);setTab("compare");}} onSimulate={()=>{setSimulated(option.id);setTab("simulator");}} key={option.id}/>})}</div></section>;})}</div>}</>)}
+  return <div className="shell"><header className="topbar no-print"><div className="container header-inner"><div className="project-switcher"><Brand/><label className="sr-only" htmlFor="project-switcher">Pilih proyek</label><select id="project-switcher" className="input" value={currentProject.id} onChange={(event)=>void onSwitchProject(event.target.value)}>{projects.map((item)=><option value={item.id} key={item.id}>{item.name}</option>)}</select></div><div className="actions compact"><button className="btn btn-ghost" onClick={onBack}>Beranda</button><Link href="/explore" className="btn btn-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><Compass size={17}/> Peta Kampus</Link><button className="btn btn-secondary" onClick={onNewProject}><Plus size={18}/> Proyek baru</button><button className="btn btn-primary" onClick={()=>{setEditing(undefined);setShowEditor(true);}}><Plus size={18}/> Tambah Kos Manual</button></div></div></header><main className="container workspace"><div className="workspace-head"><div><div className="eyebrow">Ruang keputusan</div><h1>{currentProject.name}</h1><p className="muted"><MapPin size={15}/> Tujuan: {currentProject.destinationLabel}</p></div><div className="badges"><span className="badge good">Proyek Aktif</span></div></div>{notice&&<div className="inline-alert good" role="status"><Check size={18}/>{notice}<button className="btn btn-ghost" onClick={()=>setNotice(null)}>Tutup</button></div>}<nav className="nav-tabs no-print" aria-label="Navigasi proyek">{([['overview','Ringkasan'],['compare','Bandingkan'],['decision','Keputusan'],['simulator','Simulator'],['preferences','Preferensi'],['data','Data & backup']] as const).map(([key,label])=><button className={`nav-tab ${tab===key?"active":""}`} aria-current={tab===key?"page":undefined} onClick={()=>setTab(key)} key={key}>{label}</button>)}</nav><div className="summary-strip"><div className="summary-item"><span className="muted">Anggaran total</span><strong>{formatRupiah(currentProject.monthlyBudget)} / bulan</strong></div><div className="summary-item"><span className="muted">Batas perjalanan</span><strong>{currentProject.maxOneWayCommuteMinutes} menit</strong></div><div className="summary-item"><span className="muted">Memenuhi wajib</span><strong>{eligibleCount} dari {matches.length} pilihan</strong></div></div>
+    {tab==="overview"&&(options.length===0?<Empty title="Belum ada pilihan kos yang dianalisis." text="Pilih kos terverifikasi langsung dari peta kampus untuk analisis biaya nyata dan perbandingan DSS otomatis." action={<div className="actions compact" style={{ flexWrap: "wrap", justifyContent: "center" }}><Link href="/explore" className="btn btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}><Compass size={18}/> Pilih dari Peta Kampus</Link><button className="btn btn-secondary" aria-label="Tambah pilihan manual" onClick={()=>setShowEditor(true)}><Plus size={18}/> Tambah Kos Manual</button></div>}/>:<><div className="toolbar"><div className="field"><label htmlFor="sort">Urutkan</label><select id="sort" className="input" value={sort} onChange={(e)=>setSort(e.target.value as Sort)}><option value="match">Kecocokan</option><option value="cost">Biaya bulanan</option><option value="commute">Perjalanan</option><option value="distance">Jarak ke tujuan</option><option value="recent">Baru ditambahkan</option></select></div><div className="field"><label htmlFor="filter">Filter</label><select id="filter" className="input" value={filter} onChange={(e)=>setFilter(e.target.value as Filter)}><option value="all">Semua pilihan</option><option value="eligible">Memenuhi fasilitas wajib</option><option value="withinBudget">Dalam anggaran</option><option value="complete">Biaya lengkap</option><option value="unknown">Ada biaya belum diketahui</option><option value="needsVerification">Perlu verifikasi</option></select></div></div>{visible.length===0?<Empty title="Tidak ada hasil" text="Ubah filter untuk melihat pilihan lain."/>:<div>{([{eligible:true,title:"Memenuhi kebutuhan wajib"},{eligible:false,title:"Perlu dipertimbangkan ulang"}] as const).map((group)=>{const grouped=visible.filter((match)=>match.eligible===group.eligible);return grouped.length===0?null:<section aria-label={group.title} key={group.title}><h2 className="group-title">{group.eligible?<Check size={21} color="var(--accent)"/>:<AlertTriangle size={21} color="var(--danger)"/>}{group.title}</h2><div className="option-grid">{grouped.map((match)=>{const option=options.find((o)=>o.id===match.optionId)!;return <OptionCard project={currentProject} option={option} match={match} onEdit={()=>{setEditing(option);setShowEditor(true);}} onDelete={()=>deleteOption(option)} onShortlist={()=>toggleShortlist(option.id)} onCompare={()=>{setRequestedComparisonOptionId(option.id);setTab("compare");}} onSimulate={()=>{setSimulated(option.id);setTab("simulator");}} key={option.id}/>})}</div></section>;})}</div>}</>)}
     {tab==="compare"&&<Compare project={currentProject} options={options} matches={matches} requestedOptionId={requestedComparisonOptionId}/>} {tab==="decision"&&<><DecisionBoard state={{project:currentProject,options}} onChange={saveDecision}/><div className="print-block"><PrintSummaryView project={currentProject} options={options}/></div></>} {tab==="simulator"&&(simulatedOption?<><div className="field simulator-select"><label htmlFor="simulate-option">Pilihan yang disimulasikan</label><select id="simulate-option" className="input" value={simulatedOption.id} onChange={(e)=>setSimulated(e.target.value)}>{options.map((o)=><option value={o.id} key={o.id}>{o.name}</option>)}</select></div><CostSimulator project={currentProject} option={simulatedOption} onApply={async(projectValue,optionValue)=>{await repository.saveProject(projectValue);await repository.saveOption(optionValue);setCurrentProject(projectValue);setOptions((all)=>all.map((item)=>item.id===optionValue.id?optionValue:item));setNotice("Hasil simulasi diterapkan dan disimpan.");}}/></>:<Empty title="Belum ada pilihan" text="Tambahkan pilihan untuk menjalankan simulasi."/>)}
     {tab==="preferences"&&<PreferencesForm mode="edit" initialProject={currentProject} onCancel={()=>setTab("overview")} onSave={async(value)=>{await repository.saveProject(value);setCurrentProject(value);setNotice("Preferensi disimpan dan semua skor dihitung ulang.");setTab("overview");}}/>}
     {tab==="data"&&<DataTools repository={repository} project={currentProject} options={options} onProjectDeleted={onProjectDeleted}/>}<p className="disclaimer"><Info size={17}/> Skor mencerminkan data dan prioritas Anda. Periksa kembali seluruh biaya dan ketersediaan kepada pemilik kos.</p></main></div>;
@@ -286,7 +284,7 @@ function ProjectWorkspace({ repository, projects, project, initialOptions, onPro
 function DataTools({repository,project,options,onProjectDeleted}:{repository:IndexedDbProjectRepository;project:ComparisonProject;options:AccommodationOption[];onProjectDeleted:()=>void}) {
   const [message,setMessage]=useState<string|null>(null);
   const download=async()=>{const json=await exportProjectAsJson(repository,project.id);const url=URL.createObjectURL(new Blob([json],{type:"application/json"}));const link=document.createElement("a");link.href=url;link.download=generateBackupFilename(project.name);link.click();URL.revokeObjectURL(url);setMessage("Backup JSON berhasil diunduh.");};
-  return <section><h2 className="section-title">Data dan pemulihan</h2><div className="tool-grid"><article className="panel"><Download size={24}/><h3>Backup proyek</h3><p className="muted">Ekspor proyek dan {options.length} pilihan sebagai JSON tervalidasi.</p><button className="btn btn-secondary" onClick={download}>Unduh backup</button></article><article className="panel"><Printer size={24}/><h3>Ringkasan cetak</h3><p className="muted">Buat PDF melalui dialog cetak browser tanpa URL dan catatan privat.</p><button className="btn btn-secondary" onClick={()=>window.print()}>Cetak ringkasan</button></article><article className="panel danger-zone"><Trash2 size={24}/><h3>Hapus proyek</h3><p className="muted">Menghapus proyek ini beserta semua pilihannya dari perangkat.</p><button className="btn btn-danger" onClick={async()=>{if(!confirm("Hapus seluruh proyek perbandingan? Semua pilihan dan catatan akan hilang."))return;await repository.deleteProject(project.id);onProjectDeleted();}}>Hapus seluruh proyek</button></article></div>{message&&<div className="inline-alert good" role="status">{message}</div>}<div className="print-block"><PrintSummaryView project={project} options={options} selectedOptionIds={options.map((option)=>option.id)}/></div></section>;
+  return <section><h2 className="section-title">Data dan pemulihan</h2><div className="tool-grid"><article className="panel"><Download size={24}/><h3>Backup proyek</h3><p className="muted">Ekspor proyek dan {options.length} pilihan sebagai JSON tervalidasi.</p><button className="btn btn-secondary" onClick={download}>Unduh backup</button></article><article className="panel"><Printer size={24}/><h3>Ringkasan cetak</h3><p className="muted">Buat PDF melalui dialog cetak browser tanpa URL dan catatan privat.</p><button className="btn btn-secondary" onClick={()=>window.print()}>Cetak ringkasan</button></article><article className="panel danger-zone"><Trash2 size={24}/><h3>Hapus proyek</h3><p className="muted">Menghapus proyek ini beserta semua pilihannya dari sistem.</p><button className="btn btn-danger" onClick={async()=>{if(!confirm("Hapus seluruh proyek perbandingan? Semua pilihan dan catatan akan hilang."))return;await repository.deleteProject(project.id);onProjectDeleted();}}>Hapus seluruh proyek</button></article></div>{message&&<div className="inline-alert good" role="status">{message}</div>}<div className="print-block"><PrintSummaryView project={project} options={options} selectedOptionIds={options.map((option)=>option.id)}/></div></section>;
 }
 
 export function KosMatchWorkspace() {
@@ -312,7 +310,7 @@ export function KosMatchWorkspace() {
       setRepository(nextRepository);
       setView("landing");
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Penyimpanan lokal tidak dapat dibuka.");
+      setError(cause instanceof Error ? cause.message : "Gagal memuat data sistem.");
       setView("error");
     }
   };
@@ -347,7 +345,7 @@ export function KosMatchWorkspace() {
       }
     }).catch((cause: unknown) => {
       if (active) {
-        setError(cause instanceof Error ? cause.message : "Penyimpanan lokal tidak dapat dibuka.");
+        setError(cause instanceof Error ? cause.message : "Gagal memuat data sistem.");
         setView("error");
       }
     });
@@ -372,34 +370,6 @@ export function KosMatchWorkspace() {
       window.removeEventListener("hashchange", handleHashChange);
     };
   }, [project]);
-
-  const loadDemo = async () => {
-    const activeRepository = repository ?? getBrowserRepository();
-    const projectId = newId();
-    const now = new Date().toISOString();
-    const clonedProject = {
-      ...demoProject,
-      id: projectId,
-      name: `${demoProject.name} (Demo)`,
-      createdAt: now,
-      updatedAt: now,
-    };
-    const clonedOptions = demoOptions.map((option) => ({
-      ...option,
-      id: newId(),
-      projectId,
-      verificationQuestions: option.verificationQuestions.map((q) => ({ ...q, id: newId() })),
-      createdAt: now,
-      updatedAt: now,
-    }));
-    await activeRepository.saveProjectBundle(clonedProject, clonedOptions);
-    await activeRepository.saveSetting("activeProjectId", projectId);
-    setRepository(activeRepository);
-    setProjects((all) => [clonedProject, ...all]);
-    setProject(clonedProject);
-    setOptions(clonedOptions);
-    setView("project");
-  };
 
   const importFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -468,14 +438,6 @@ export function KosMatchWorkspace() {
             } else {
               setView("setup");
             }
-          }}
-          onDemo={loadDemo}
-          hasSaved={project !== null}
-          onResume={() => {
-            if (typeof window !== "undefined") {
-              window.location.hash = "project";
-            }
-            setView("project");
           }}
         />
       </>
@@ -547,7 +509,6 @@ export function KosMatchWorkspace() {
           }
           setView("setup");
         }}
-        onLoadDemo={loadDemo}
         onSwitchProject={async (id) => {
           const activeRepo = repository ?? getBrowserRepository();
           const selected = await activeRepo.getProject(id);

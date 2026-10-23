@@ -6,17 +6,12 @@ import { LandingView } from "@/features/landing";
 afterEach(() => cleanup());
 
 describe("LandingView Component", () => {
-  it("renders hero title, lead text, and action buttons", () => {
+  it("renders hero title, lead text, and clean action buttons", () => {
     const onStart = vi.fn();
-    const onDemo = vi.fn();
-    const onResume = vi.fn();
 
     render(
       <LandingView
         onStart={onStart}
-        onDemo={onDemo}
-        hasSaved={false}
-        onResume={onResume}
       />
     );
 
@@ -26,37 +21,34 @@ describe("LandingView Component", () => {
     const leadText = screen.getByText(/Bandingkan biaya bulanan, perjalanan, fasilitas/);
     expect(leadText).not.toBeNull();
 
+    // Primary action: link to explore map
+    const mapLinks = screen.getAllByRole("link", { name: /Jelajahi Kos di Peta Kampus/i });
+    expect(mapLinks.length).toBeGreaterThan(0);
+    expect(mapLinks[0].getAttribute("href")).toBe("/explore");
+
+    // Secondary action: DSS calculator
     const startButtons = screen.getAllByRole("button", { name: /Kalkulator DSS/i });
     expect(startButtons.length).toBeGreaterThan(0);
     fireEvent.click(startButtons[0]);
     expect(onStart).toHaveBeenCalledTimes(1);
 
-    const demoButtons = screen.getAllByRole("button", { name: /Coba Data Contoh/i });
-    expect(demoButtons.length).toBeGreaterThan(0);
-    fireEvent.click(demoButtons[0]);
-    expect(onDemo).toHaveBeenCalledTimes(1);
-
+    // Verify deprecated buttons are removed
+    expect(screen.queryByRole("button", { name: /Coba Data Contoh/i })).toBeNull();
     expect(screen.queryByRole("button", { name: /Lanjutkan proyek/i })).toBeNull();
   });
 
-  it("renders 'Lanjutkan proyek' button when hasSaved is true and triggers onResume", () => {
-    const onStart = vi.fn();
-    const onDemo = vi.fn();
-    const onResume = vi.fn();
-
+  it("renders LandingFeatures section highlighting core decision features", () => {
     render(
       <LandingView
-        onStart={onStart}
-        onDemo={onDemo}
-        hasSaved={true}
-        onResume={onResume}
+        onStart={vi.fn()}
       />
     );
 
-    const resumeBtn = screen.getByRole("button", { name: /Lanjutkan proyek/i });
-    expect(resumeBtn).not.toBeNull();
-    fireEvent.click(resumeBtn);
-    expect(onResume).toHaveBeenCalledTimes(1);
+    expect(
+      screen.getByRole("heading", { name: /Fitur Utama untuk Keputusan Kos yang Cerdas/i })
+    ).not.toBeNull();
+    expect(screen.getByText("Hitung Biaya Hidup Nyata")).not.toBeNull();
+    expect(screen.getByText("Aman, Terproteksi & Bebas Iklan")).not.toBeNull();
   });
 
   it("renders architectural showcase cards and FAQ accordions", () => {
