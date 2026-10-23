@@ -210,12 +210,7 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
 .project-switcher .input { width: min(280px, 30vw); }
 .compact-note-form { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2); margin-top: var(--space-2); }
 .compact-note-form .btn { padding-inline: var(--space-3); }
-.methodology { padding-block: var(--space-6) var(--space-8); }
-.methodology-hero { max-width: 800px; padding: var(--space-8) 0 var(--space-6); }
-.method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-4); }
-.method-grid .panel { line-height: 1.7; }
-.formula { margin-bottom: var(--space-4); }
-.formula pre { padding: var(--space-4); overflow-x: auto; border-radius: var(--radius-control); background: var(--surface-subtle); font: 700 14px/1.6 ui-monospace, monospace; }
+
 
 @media (max-width: 900px) { .editor-layout { grid-template-columns: 1fr; } .live-total { position: static; order: -1; } .tool-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 767px) { .money-control, .tool-grid, .method-grid { grid-template-columns: 1fr; } .availability-row { align-items: flex-start; flex-direction: column; } .toolbar { display: grid; } .toolbar .field { min-width: 0; } .floating-import { position: static; margin: var(--space-4); flex-wrap: wrap; } .header-inner .badge { display: none; } .header-inner { align-items: flex-start; gap: var(--space-2); } .header-inner > .actions { justify-content: flex-end; } .project-switcher { align-items: flex-start; flex-direction: column; min-width: 0; } .project-switcher .input { width: min(50vw, 220px); } }

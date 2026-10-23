@@ -430,9 +430,6 @@ export function MapExplorer() {
             <Link href="/#calculator" className="hud-nav-link">
               Kalkulator DSS
             </Link>
-            <Link href="/methodology" className="hud-nav-link">
-              Metodologi
-            </Link>
           </nav>
 
           {/* Topbar Actions */}

@@ -56,9 +56,6 @@ export function LandingView({ onStart }: LandingViewProps) {
               <a className="editorial-nav-link highlight" href="/explore">
                 <Compass size={14} /> Peta Eksplorasi
               </a>
-              <a className="editorial-nav-link" href="/methodology">
-                Metodologi
-              </a>
               <a className="editorial-nav-link" href="#faq">
                 Tanya Jawab
               </a>
@@ -207,9 +204,6 @@ export function LandingView({ onStart }: LandingViewProps) {
         <div className="container">
           <p>KosMatch adalah sistem pendukung keputusan pemilihan kos multi-kriteria berbasis geospatial PostGIS.</p>
           <div className="actions compact">
-            <a className="btn btn-ghost" href="/methodology">
-              Metodologi &amp; Batasan
-            </a>
             <a className="btn btn-ghost" href="/admin" title="Masuk ke portal pengelolaan kos bagi pemilik dan admin">
               Portal Pemilik &amp; Admin
             </a>
