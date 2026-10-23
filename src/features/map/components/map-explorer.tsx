@@ -135,7 +135,7 @@ export function MapExplorer() {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   // New Pergamum & Apple Maps Interactive States
-  const [mapTheme, setMapTheme] = useState<"dark" | "light">("dark");
+  const [mapTheme, setMapTheme] = useState<"dark" | "light">("light");
   const [isHudCollapsed, setIsHudCollapsed] = useState<boolean>(false);
   const [selectedPoiCategories, setSelectedPoiCategories] = useState<string[]>(
     () => [...selectedCampus.priorityPoiCategories]
@@ -703,20 +703,20 @@ export function MapExplorer() {
           {/* Selected Campus Summary Card */}
           <article className="panel hud-campus-panel">
             <div className="hud-panel-head">
-              <h2>{selectedCampus.campusName}</h2>
-              <span className="badge good">{selectedCampus.city}</span>
+              <h2 style={{ fontSize: "13.5px", fontWeight: 750 }}>{selectedCampus.campusName}</h2>
+              <span className="badge good" style={{ fontSize: "11px", padding: "2px 8px" }}>{selectedCampus.city}</span>
             </div>
-            <p className="muted" style={{ fontSize: "13px", lineHeight: "1.5", margin: "0 0 10px" }}>
+            <p className="muted" style={{ fontSize: "11.5px", lineHeight: "1.45", margin: "0 0 8px" }}>
               {selectedCampus.targetAudience}
             </p>
-            <div className="summary-strip" style={{ gridTemplateColumns: "1fr 1fr", gap: "8px", margin: "0 0 10px" }}>
-              <div className="summary-item" style={{ padding: "8px 12px" }}>
-                <span className="muted" style={{ fontSize: "11px" }}>Radius Pilot</span>
-                <strong style={{ fontSize: "16px" }}>{selectedCampus.radiusKm} km</strong>
+            <div className="summary-strip" style={{ gridTemplateColumns: "1fr 1fr", gap: "6px", margin: "0 0 6px" }}>
+              <div className="summary-item" style={{ padding: "6px 10px" }}>
+                <span className="muted" style={{ fontSize: "10.5px" }}>Radius Pilot</span>
+                <strong style={{ fontSize: "14px" }}>{selectedCampus.radiusKm} km</strong>
               </div>
-              <div className="summary-item" style={{ padding: "8px 12px" }}>
-                <span className="muted" style={{ fontSize: "11px" }}>Kos Terverifikasi</span>
-                <strong style={{ fontSize: "16px" }}>{campusListings.length} listing</strong>
+              <div className="summary-item" style={{ padding: "6px 10px" }}>
+                <span className="muted" style={{ fontSize: "10.5px" }}>Kos Terverifikasi</span>
+                <strong style={{ fontSize: "14px" }}>{campusListings.length} listing</strong>
               </div>
             </div>
           </article>

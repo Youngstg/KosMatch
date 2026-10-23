@@ -43,7 +43,7 @@ export interface MapCanvasProps {
 const CARTO_API_KEY =
   process.env.NEXT_PUBLIC_CARTO_API_KEY || "cb1_4rm7_1_bb6324dd9bf6700ea86a2fc1";
 
-const getTileUrls = (theme: "dark" | "light" = "dark", key?: string): string[] => {
+const getTileUrls = (theme: "dark" | "light" = "light", key?: string): string[] => {
   const variant = theme === "light" ? "voyager" : "dark_all";
   if (key) {
     return [
@@ -61,7 +61,7 @@ const getTileUrls = (theme: "dark" | "light" = "dark", key?: string): string[] =
   ];
 };
 
-const getOsmRasterStyle = (theme: "dark" | "light" = "dark"): StyleSpecification => ({
+const getOsmRasterStyle = (theme: "dark" | "light" = "light"): StyleSpecification => ({
   version: 8,
   sources: {
     "osm-tiles": {
@@ -93,7 +93,7 @@ export function MapCanvas({
   pois = [],
   activePoiCategory = null,
   activePoiCategories,
-  theme = "dark",
+  theme = "light",
   onMapClick,
   onCampusSelect,
   onListingSelect,
