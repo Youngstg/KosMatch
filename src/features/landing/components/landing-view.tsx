@@ -148,53 +148,51 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
       ========================================================================== */}
       <section className="landing-editorial-highlights-section" aria-label="Keunggulan KosMatch">
         <div className="container">
-          <div className="hero-editorial-trio">
-            {/* Card 1: Warm Clay Brown Box with 3D Cutaway Diagram */}
-            <div className="editorial-trio-card clay-card">
-              <div className="clay-card-content">
-                <h3 className="clay-card-title">Kebutuhan Wajib Terpenuhi!</h3>
-                <p className="clay-card-sub">Material &amp; fasilitas kos terverifikasi tim survei.</p>
-                <div className="clay-card-badges">
-                  <span className="clay-pill">Insulasi Suara</span>
-                  <span className="clay-pill">Meja Belajar</span>
-                  <span className="clay-pill">KM Dalam</span>
-                </div>
+          <div className="clay-card layout-card-full">
+            <div className="clay-card-content" style={{ maxWidth: "580px" }}>
+              <span className="hero-editorial-super" style={{ color: "#E0A96D", fontSize: "12px", letterSpacing: "1px", marginBottom: "8px", display: "block" }}>
+                LAYOUT STANDAR KAMAR KOS MAHASISWA
+              </span>
+              <h2 className="clay-card-title" style={{ fontSize: "24px", lineHeight: "1.3", margin: "0 0 10px" }}>
+                Tata Letak Kamar Kos Mahasiswa: Kasur, Lemari &amp; Meja Belajar
+              </h2>
+              <p className="clay-card-sub" style={{ fontSize: "14px", lineHeight: "1.6", color: "rgba(255, 255, 255, 0.82)", margin: "0 0 16px" }}>
+                Standar tata letak kamar kos mahasiswa yang fungsional dan nyaman. Pastikan kasur, lemari pakaian, meja belajar yang cukup penerangan, serta kamar mandi dalam tersedia sebelum Anda membayar uang muka.
+              </p>
+              <div className="clay-card-badges" style={{ gap: "8px", marginBottom: "20px" }}>
+                <span className="clay-pill">Kasur &amp; Bantal</span>
+                <span className="clay-pill">Lemari Pakaian</span>
+                <span className="clay-pill">Meja Belajar &amp; Kursi</span>
+                <span className="clay-pill">Kamar Mandi Dalam</span>
+                <span className="clay-pill">Ventilasi Jendela</span>
               </div>
-              <div className="clay-card-visual">
-                <Image
-                  src="/images/landing-isometric-cutaway.webp"
-                  alt="Potongan 3D Kamar Kos"
-                  width={130}
-                  height={130}
-                  className="clay-cutaway-img"
-                />
-              </div>
-            </div>
-
-            {/* Card 2: Social Proof & Avatars */}
-            <div className="editorial-trio-card stat-card">
-              <div className="stat-card-avatars">
-                <Image
-                  src="/images/landing-student-avatars.webp"
-                  alt="Mahasiswa Pengguna KosMatch"
-                  width={96}
-                  height={54}
-                  className="stat-avatars-img"
-                />
-              </div>
-              <div className="stat-card-number">100%</div>
-              <div className="stat-card-caption">Objektif &amp; Terverifikasi PostGIS</div>
-              <div className="stat-card-sub">12k+ Simulasi Keputusan Kos</div>
-            </div>
-
-            {/* Card 3: Big Architectural Headline */}
-            <div className="editorial-trio-card statement-card">
-              <h3 className="statement-card-title">
-                KAMI MEMADUKAN HARGA SEWA, WAKTU TEMPUH &amp; KENYAMANAN HIDUP
-              </h3>
-              <a href="/methodology" className="statement-card-link">
-                PELAJARI METODOLOGI &rarr;
+              <a
+                href="/explore"
+                className="btn btn-editorial-start"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontSize: "13px",
+                  padding: "9px 20px",
+                  background: "#E0A96D",
+                  color: "#1C1B19",
+                  borderColor: "#E0A96D",
+                  fontWeight: 750,
+                  textDecoration: "none",
+                }}
+              >
+                <Compass size={15} /> Jelajahi Kos &amp; Fasilitas di Peta Kampus &rarr;
               </a>
+            </div>
+            <div className="layout-card-visual">
+              <Image
+                src="/images/landing-isometric-cutaway.jpg"
+                alt="3D Potongan Isometrik Kamar Kos Mahasiswa (Kasur, Lemari, Meja Belajar, KM Dalam)"
+                width={240}
+                height={240}
+                className="layout-card-img"
+              />
             </div>
           </div>
         </div>

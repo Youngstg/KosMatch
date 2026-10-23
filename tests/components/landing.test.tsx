@@ -69,9 +69,11 @@ describe("LandingView Component", () => {
       />
     );
 
-    expect(screen.getByText("Kebutuhan Wajib Terpenuhi!")).not.toBeNull();
-    expect(screen.getByText("100%")).not.toBeNull();
-    expect(screen.getByText(/KAMI MEMADUKAN HARGA SEWA/)).not.toBeNull();
+    expect(
+      screen.getByRole("heading", { name: /Tata Letak Kamar Kos Mahasiswa/i })
+    ).not.toBeNull();
+    expect(screen.getByText("Kasur & Bantal")).not.toBeNull();
+    expect(screen.getByText("Lemari Pakaian")).not.toBeNull();
     expect(
       screen.getByRole("heading", { name: "Pertanyaan yang Sering Diajukan" })
     ).not.toBeNull();

@@ -2400,6 +2400,53 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   flex-shrink: 0;
 }
 
+/* Full Width Room Layout Showcase Card */
+.layout-card-full {
+  background: #8D654C;
+  border-radius: 32px;
+  color: #FFFFFF;
+  padding: 36px 44px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 36px;
+  box-shadow: 0 20px 45px rgba(141, 101, 76, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.layout-card-visual {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.layout-card-img {
+  border-radius: 20px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+  display: block;
+  object-fit: cover;
+  transition: transform var(--duration-normal) var(--ease-spring);
+}
+
+.layout-card-img:hover {
+  transform: scale(1.02);
+}
+
+@media (max-width: 860px) {
+  .layout-card-full {
+    flex-direction: column;
+    padding: 24px;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .layout-card-visual {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 /* Card 2: Social Proof Stat */
 .stat-card {
   background: #FFFFFF;
