@@ -3,10 +3,8 @@
 import React, { useState } from "react";
 import {
   ArrowLeft,
-  ArrowRight,
   Brain,
   Check,
-  Compass,
   RotateCcw,
   Sparkles,
   X,

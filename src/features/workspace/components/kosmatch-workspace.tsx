@@ -1,11 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import { AlertTriangle, Check, Clock3, Compass, Download, FileUp, Info, MapPin, Pencil, Plus, Printer, RotateCcw, Scale, Sparkles, Star, Trash2 } from "lucide-react";
 import { demoOptions, demoProject } from "@/data/demo";
-import { deleteKosMatchDatabase, IndexedDbProjectRepository } from "@/data/indexeddb";
+import { IndexedDbProjectRepository } from "@/data/indexeddb";
 import { calculateCost } from "@/domain/costing";
 import type { AccommodationOption, ComparisonProject, CriterionKey } from "@/domain/entities";
 import { matchAndRank } from "@/domain/scoring";

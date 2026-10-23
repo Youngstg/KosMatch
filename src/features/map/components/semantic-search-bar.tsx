@@ -4,7 +4,6 @@ import React from "react";
 import {
   Building2,
   Check,
-  Search,
   Sparkles,
   Tag,
   X,

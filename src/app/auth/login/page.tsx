@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, CheckCircle2, Lock, LogIn, Mail, Sparkles, User, UserPlus, X } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Lock, LogIn, Mail, Sparkles, UserPlus, X } from "lucide-react";
 import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
 import { GoogleLogo } from "@/components/brand/google-logo";
 

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Building2, CheckCircle2, Compass, Lock, LogIn, MapPin, PlusCircle, Sparkles } from "lucide-react";
 import { PILOT_CONFIG } from "@/data/pilot-config";

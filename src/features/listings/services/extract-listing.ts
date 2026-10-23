@@ -25,7 +25,6 @@ export function extractListingFromText(rawText: string): ExtractedListingData {
 
   // 1. Ekstraksi Harga Sewa (rentMonthly)
   let rentMonthly: number | null = null;
-  const rentMatch = text.match(/(?:rp\.?|idr|sewa|harga|biaya)?\s*(\d{1,3}(?:[.,]\d{3})*|\d+)\s*(?:jt|juta|rb|ribu|k)?\s*(?:\/|\sper\s*|\s*tiap\s*)?(?:bln|bulan)?/i);
 
   // Cari angka harga yang masuk akal (misal: 1.200.000, 1.2jt, 1200k, 850rb)
   const explicitRentRegex = /(?:harga|sewa|biaya|rp\.?|idr)\s*[:=]?\s*(\d+(?:[.,]\d+)?)\s*(jt|juta|rb|ribu|k)?/i;

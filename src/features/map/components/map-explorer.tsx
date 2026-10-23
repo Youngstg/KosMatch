@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   Bike,
@@ -116,13 +116,12 @@ function Brand() {
   );
 }
 
-function navigateToCalculator() {
-  if (typeof window !== "undefined") {
-    window.location.href = "/#calculator";
-  }
-}
-
 export function MapExplorer() {
+  const router = useRouter();
+  const navigateToCalculator = () => {
+    router.push("/#calculator");
+  };
+
   const [selectedCampus, setSelectedCampus] = useState<PilotSpecification>(PILOT_CONFIG.primaryPilot);
   const [selectedGate, setSelectedGate] = useState<PilotGate | null>(PILOT_CONFIG.primaryPilot.gates[0] ?? null);
   const [selectedListing, setSelectedListing] = useState<PilotListing | null>(null);
@@ -138,7 +137,6 @@ export function MapExplorer() {
   // New Pergamum & Apple Maps Interactive States
   const [mapTheme, setMapTheme] = useState<"dark" | "light">("dark");
   const [isHudCollapsed, setIsHudCollapsed] = useState<boolean>(false);
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [selectedPoiCategories, setSelectedPoiCategories] = useState<string[]>(
     () => [...selectedCampus.priorityPoiCategories]
   );
@@ -216,18 +214,6 @@ export function MapExplorer() {
         if (genderFilter !== "all" && l.gender !== genderFilter && l.gender !== "all") {
           return false;
         }
-        if (activeCategory === "cheap" && l.rentMonthly > 1_500_000) {
-          return false;
-        }
-        if (activeCategory === "female" && l.gender !== "female") {
-          return false;
-        }
-        if (activeCategory === "km_dalam" && !l.facilityCodes.includes("bathroom_inside")) {
-          return false;
-        }
-        if (activeCategory === "wifi" && !l.facilityCodes.includes("wifi")) {
-          return false;
-        }
         return true;
       })
       .map((l) => ({
@@ -237,7 +223,7 @@ export function MapExplorer() {
         matchedCriteria: [] as readonly string[],
         unmetCriteria: [] as readonly string[],
       }));
-  }, [campusListings, semanticSearchResult, genderFilter, activeCategory]);
+  }, [campusListings, semanticSearchResult, genderFilter]);
 
   // Calculate quick commute for all filtered listings to current destination
   const listingsWithCommute = useMemo(() => {
@@ -620,7 +606,7 @@ export function MapExplorer() {
           candidatePoint={candidatePoint}
           destinationPoint={activeDestination}
           pois={campusPois}
-          activePoiCategory={activeCategory}
+          activePoiCategory={null}
           activePoiCategories={selectedPoiCategories}
           theme={mapTheme}
           onMapClick={handleMapClick}

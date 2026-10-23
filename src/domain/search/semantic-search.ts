@@ -106,6 +106,20 @@ export function parseSemanticQuery(rawQuery: string): SemanticQueryFilter {
     }
   }
 
+  // Regex mendeteksi batas minimal: "di atas 1jt", "diatas 800rb", "> 1 jt", "min 800rb", "minimal 1jt"
+  const minPriceRegex = /(?:di\s*atas|diatas|>\s*|min(?:imal)?)\s*[:=]?\s*(\d+(?:[.,]\d+)?)\s*(jt|juta|rb|ribu|k)?/i;
+  const matchMin = query.match(minPriceRegex);
+  if (matchMin) {
+    let val = parseFloat(matchMin[1].replace(/,/g, "."));
+    const unit = matchMin[2]?.toLowerCase();
+    if (unit === "jt" || unit === "juta") val *= 1000000;
+    else if (unit === "rb" || unit === "ribu" || unit === "k") val *= 1000;
+    else if (val < 1000) val *= 1000000;
+    if (val >= 200000 && val <= 15000000) {
+      minRentMonthly = Math.round(val);
+    }
+  }
+
   const preferCheap = query.includes("murah") || query.includes("hemat") || query.includes("terjangkau");
 
   // 5. Deteksi Fasilitas yang Diminta
@@ -214,13 +228,21 @@ export function scoreListingSemantics(
     }
   }
 
-  // Evaluasi 3: Anggaran Maksimal (Hard constraint)
+  // Evaluasi 3: Anggaran Maksimal & Minimal (Hard constraint)
   if (filter.maxRentMonthly !== null) {
     if (listing.rentMonthly > filter.maxRentMonthly) {
       isEligible = false;
       unmetCriteria.push(`Melebihi anggaran maks (${formatRupiah(filter.maxRentMonthly)})`);
     } else {
       matchedCriteria.push(`Harga dalam anggaran (≤ ${formatRupiah(filter.maxRentMonthly)})`);
+    }
+  }
+  if (filter.minRentMonthly !== null) {
+    if (listing.rentMonthly < filter.minRentMonthly) {
+      isEligible = false;
+      unmetCriteria.push(`Di bawah batas harga min (${formatRupiah(filter.minRentMonthly)})`);
+    } else {
+      matchedCriteria.push(`Harga memenuhi batas min (≥ ${formatRupiah(filter.minRentMonthly)})`);
     }
   }
 
