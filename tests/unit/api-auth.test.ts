@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { POST as registerHandler } from "@/app/api/auth/register/route";
 import { POST as loginHandler } from "@/app/api/auth/login/route";
 import { POST as logoutHandler } from "@/app/api/auth/logout/route";
+import { POST as googleAuthHandler, GET as googleGetHandler } from "@/app/api/auth/google/route";
 import { GET as listingsGetHandler, POST as listingsPostHandler, PATCH as listingsPatchHandler } from "@/app/api/listings/route";
 import { createSessionToken } from "@/lib/auth";
 
@@ -65,6 +66,42 @@ describe("API Auth & Listings Endpoints (Fase 2)", () => {
     const data = await res.json();
     expect(data.success).toBe(true);
     expect(res.headers.get("set-cookie")).toContain("kosmatch_session");
+  });
+
+  it("berhasil memproses login dengan akun Google dan menghasilkan cookie sesi", async () => {
+    const req = new Request("http://localhost:3000/api/auth/google", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: "mahasiswa.ui@gmail.com", name: "Mahasiswa UI" }),
+    });
+
+    const res = await googleAuthHandler(req);
+    expect(res.status).toBe(200);
+
+    const data = await res.json();
+    expect(data.success).toBe(true);
+    expect(data.provider).toBe("google");
+    expect(data.user.email).toBe("mahasiswa.ui@gmail.com");
+    expect(res.headers.get("set-cookie")).toContain("kosmatch_session");
+  });
+
+  it("menolak login Google jika email tidak valid", async () => {
+    const req = new Request("http://localhost:3000/api/auth/google", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: "bukan-email-google" }),
+    });
+
+    const res = await googleAuthHandler(req);
+    expect(res.status).toBe(400);
+  });
+
+  it("mengembalikan status konfigurasi Google OAuth pada metode GET", async () => {
+    const res = await googleGetHandler();
+    expect(res.status).toBe(200);
+
+    const data = await res.json();
+    expect(data.configured).toBeDefined();
   });
 
   it("menghapus cookie sesi saat logout", async () => {

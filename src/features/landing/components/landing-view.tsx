@@ -1,8 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Calculator, Compass, Save, Sparkles } from "lucide-react";
+import { ArrowRight, Calculator, Compass, LogIn, Save, Sparkles, User } from "lucide-react";
 import { LandingFaq } from "./landing-faq";
 import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
 
@@ -26,6 +27,19 @@ function Brand() {
 }
 
 export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingViewProps) {
+  const [currentUser, setCurrentUser] = useState<{ email: string; role: string } | null>(null);
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.user) {
+          setCurrentUser(data.user);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="shell landing-shell landing-editorial-theme">
       {/* =========================================================================
@@ -49,9 +63,26 @@ export function LandingView({ onStart, onDemo, hasSaved, onResume }: LandingView
               </a>
             </nav>
             <div className="actions compact editorial-topbar-actions">
-              <a className="btn btn-editorial-ghost" href="/auth/login">
-                Akun
-              </a>
+              {currentUser ? (
+                <a
+                  className="btn btn-editorial-ghost"
+                  href={currentUser.role === "admin" || currentUser.role === "owner" ? "/admin" : "/explore"}
+                  style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+                  title={`Login sebagai ${currentUser.email}`}
+                >
+                  <User size={14} />
+                  <span>{currentUser.email.split("@")[0]}</span>
+                </a>
+              ) : (
+                <a
+                  className="btn btn-editorial-ghost"
+                  href="/auth/login"
+                  style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+                >
+                  <LogIn size={14} />
+                  <span>Masuk / Akun</span>
+                </a>
+              )}
               <button className="btn btn-editorial-pill" onClick={onStart} style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
                 <Calculator size={14} /> Kalkulator DSS
               </button>
