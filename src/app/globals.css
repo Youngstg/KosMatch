@@ -17,6 +17,18 @@
   --danger: #B42318;
   --focus: #8D654C;
 
+  /* HUD Header Variables (Shared across Map & Calculator) */
+  --hud-bg: rgba(255, 255, 255, 0.95);
+  --hud-header-bg: rgba(255, 255, 255, 0.92);
+  --hud-surface: #FFFFFF;
+  --hud-surface-subtle: #F9F7F5;
+  --hud-border: rgba(0, 0, 0, 0.09);
+  --hud-border-hover: rgba(141, 101, 76, 0.35);
+  --hud-text: #1C1B19;
+  --hud-text-muted: #6B7280;
+  --hud-accent: #8D654C;
+  --hud-teal: #0D9488;
+
   /* Spacing scale (4px base) */
   --space-1: 4px;
   --space-2: 8px;
@@ -65,6 +77,24 @@ button { cursor: pointer; }
 
 .hero { padding: var(--space-8) 0; display: grid; grid-template-columns: 1.04fr .96fr; gap: var(--space-8); align-items: center; }
 .eyebrow { color: var(--primary); text-transform: uppercase; letter-spacing: .11em; font-size: 12px; font-weight: 800; }
+/* Universal Headings & Titles font style - matches Landing Page Playfair Display */
+h1, h2, h3, h4, h5, h6,
+.section-title,
+.hud-rail-title,
+.hud-panel-head h2,
+.hud-inspector-title,
+.hud-card-title,
+.hud-tray-title,
+.hud-sheet-title,
+.hud-sunflower-title,
+.workspace-head h1,
+.group-title,
+.clay-card-title,
+.statement-card-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  letter-spacing: -0.015em;
+}
+
 h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045em; margin: var(--space-3) 0 var(--space-4); }
 .lead { font-size: 18px; line-height: 1.7; color: var(--text-muted); max-width: 650px; }
 .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
@@ -551,19 +581,98 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
 /* Floating Topbar (Image 1 Style) */
 .hud-floating-topbar {
   position: absolute;
-  top: 14px;
-  left: 16px;
-  right: 16px;
+  top: 16px;
+  left: 20px;
+  right: 20px;
   z-index: 30;
   pointer-events: none;
+}
+.shell .hud-floating-topbar {
+  position: sticky;
+  top: 16px;
+  margin-bottom: 20px;
+  z-index: 30;
+  pointer-events: none;
+}
+.shell .hud-topbar-inner {
+  box-shadow: 0 10px 30px rgba(28, 27, 25, 0.08);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(0, 0, 0, 0.09);
+}
+.shell .hud-topbar-nav,
+.map-explorer-container.theme-light .hud-topbar-nav {
+  background: rgba(0, 0, 0, 0.04);
+  padding: 3px 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+.shell .hud-nav-link,
+.map-explorer-container.theme-light .hud-nav-link {
+  color: #6B7280;
+}
+.shell .hud-nav-link:hover,
+.map-explorer-container.theme-light .hud-nav-link:hover {
+  color: #1C1B19;
+  background: rgba(0, 0, 0, 0.04);
+}
+.shell .hud-nav-link.active,
+.map-explorer-container.theme-light .hud-nav-link.active {
+  color: #1C1B19;
+  background: #FFFFFF;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+.shell .hud-btn-icon,
+.map-explorer-container.theme-light .hud-btn-icon {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #1C1B19;
+}
+.shell .hud-btn-icon:hover,
+.map-explorer-container.theme-light .hud-btn-icon:hover {
+  background: rgba(0, 0, 0, 0.07);
+  border-color: rgba(141, 101, 76, 0.3);
+}
+.hud-project-select-wrapper {
+  display: flex;
+  align-items: center;
+}
+.hud-project-select {
+  height: 32px;
+  padding: 0 26px 0 12px;
+  border-radius: 999px;
+  background-color: rgba(141, 101, 76, 0.08);
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238D654C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+  background-size: 11px 11px;
+  appearance: none;
+  -webkit-appearance: none;
+  color: #8D654C;
+  border: 1px solid rgba(141, 101, 76, 0.25);
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+  outline: none;
+  transition: all var(--duration-fast);
+}
+.hud-project-select:hover {
+  background-color: rgba(141, 101, 76, 0.15);
+  border-color: #8D654C;
+}
+.hud-project-select option {
+  background-color: #FFFFFF;
+  color: #1C1B19;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
 }
 .hud-topbar-inner {
   pointer-events: auto;
   max-width: 1360px;
   margin: 0 auto;
-  height: 58px;
-  padding: 0 18px;
-  border-radius: 16px;
+  height: 60px;
+  padding: 0 24px;
+  border-radius: 18px;
   background: var(--hud-header-bg);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
@@ -578,7 +687,8 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
 .hud-topbar-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
+  padding-left: 6px;
 }
 .hud-brand {
   display: flex;
@@ -601,6 +711,7 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   flex-direction: column;
 }
 .hud-brand-title {
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: 17px;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -1862,11 +1973,264 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   transition: all var(--duration-fast, 0.15s) ease;
 }
 
-.hud-category-count-badge.active {
-  border-color: transparent;
+/* =========================================================================
+   SUNFLOWER RADIAL SELECTOR (Bunga Matahari Kampus & Titik Tujuan)
+========================================================================== */
+.hud-sunflower-widget {
+  position: absolute;
+  top: 92px;
+  right: 20px;
+  z-index: 25;
+  width: 324px;
+  background: var(--hud-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--hud-border);
+  border-radius: 24px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+  padding: 16px 16px 14px;
+  transition: all var(--duration-base) var(--easing-standard);
+  user-select: none;
 }
 
+.hud-sunflower-widget.collapsed {
+  width: auto;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  background: var(--hud-surface);
+  border: 1.5px solid rgba(245, 158, 11, 0.4);
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.2);
+}
 
+.hud-sunflower-collapsed-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 750;
+  color: var(--hud-text);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.hud-sunflower-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--hud-border);
+}
+
+.hud-sunflower-title-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.hud-sunflower-eyebrow {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #D97706;
+  text-transform: uppercase;
+}
+
+.hud-sunflower-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--hud-text);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hud-sunflower-toggle-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--hud-border);
+  color: var(--hud-text);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all var(--duration-fast);
+}
+
+.hud-sunflower-toggle-btn:hover {
+  background: rgba(245, 158, 11, 0.15);
+  color: #F59E0B;
+}
+
+/* Sunflower Radial Dial Canvas */
+.hud-sunflower-dial {
+  position: relative;
+  width: 290px;
+  height: 260px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* SVG Ray Lines connecting center to petals */
+.hud-sunflower-svg-rays {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Central Sunflower Core (Inti Bunga Matahari) */
+.hud-sunflower-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 82px;
+  height: 82px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 35%, #FBBF24 0%, #D97706 55%, #8D654C 100%);
+  color: #FFFFFF;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 24px rgba(245, 158, 11, 0.45), 0 4px 14px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all var(--duration-fast);
+  padding: 4px;
+}
+
+.hud-sunflower-center:hover {
+  transform: translate(-50%, -50%) scale(1.06);
+  box-shadow: 0 0 32px rgba(245, 158, 11, 0.65), 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.hud-sunflower-center-name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.15;
+  margin-top: 2px;
+  max-width: 68px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hud-sunflower-center-action {
+  font-size: 8.5px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.95;
+  background: rgba(0, 0, 0, 0.28);
+  padding: 1px 6px;
+  border-radius: 999px;
+  margin-top: 2px;
+}
+
+/* Petals (Kelopak Bunga Matahari) */
+.hud-sunflower-petal {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: var(--hud-surface, #FFFFFF);
+  border: 1.5px solid rgba(245, 158, 11, 0.35);
+  color: var(--hud-text, #1C1B19);
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
+  white-space: nowrap;
+  transition: all var(--duration-fast);
+  z-index: 5;
+  max-width: 140px;
+}
+
+.hud-sunflower-petal:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+  border-color: #F59E0B;
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+  background: var(--hud-surface-subtle, #FDF8F3);
+}
+
+.hud-sunflower-petal.active {
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+  color: #FFFFFF;
+  border-color: #FFFFFF;
+  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.5);
+  font-weight: 800;
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+.hud-sunflower-petal-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #F59E0B;
+  flex-shrink: 0;
+}
+
+.hud-sunflower-petal.active .hud-sunflower-petal-dot {
+  background: #FFFFFF;
+}
+
+.hud-sunflower-petal-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Mode Switcher Pill underneath the dial */
+.hud-sunflower-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--hud-border);
+}
+
+.hud-sunflower-mode-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid var(--hud-border);
+  background: transparent;
+  color: var(--hud-text-muted);
+  cursor: pointer;
+  transition: all var(--duration-fast);
+}
+
+.hud-sunflower-mode-pill:hover {
+  color: var(--hud-text);
+  border-color: #F59E0B;
+}
+
+.hud-sunflower-mode-pill.active {
+  background: rgba(245, 158, 11, 0.15);
+  color: #D97706;
+  border-color: rgba(245, 158, 11, 0.4);
+  font-weight: 800;
+}
 
 /* =========================================================================
    ARCHITECTURAL EDITORIAL LANDING PAGE (RANTY LUXURY SPECIFICATION)

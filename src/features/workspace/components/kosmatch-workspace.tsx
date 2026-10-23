@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
-import { AlertTriangle, Check, Clock3, Compass, Download, FileUp, Info, MapPin, Pencil, Plus, Printer, RotateCcw, Scale, Star, Trash2 } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Check, Clock3, Compass, Download, FileUp, Info, MapPin, Pencil, Plus, Printer, RotateCcw, Scale, Star, Trash2 } from "lucide-react";
 import { IndexedDbProjectRepository } from "@/data/indexeddb";
 import { calculateCost } from "@/domain/costing";
 import type { AccommodationOption, ComparisonProject, CriterionKey } from "@/domain/entities";
@@ -48,12 +48,15 @@ function getFacilityValue(option: AccommodationOption, code: string): boolean | 
   return option.facilityValues[code] ?? option.facilityCodes.includes(code);
 }
 
-function Brand() {
+function Brand({ subtitle = "Kalkulator DSS" }: { subtitle?: string }) {
   return (
-    <div className="brand" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-      <KosMatchLogo size={36} />
-      <span>KosMatch</span>
-    </div>
+    <Link href="/" className="hud-brand" style={{ textDecoration: "none", color: "inherit" }}>
+      <KosMatchLogo size={34} />
+      <div className="hud-brand-info">
+        <span className="hud-brand-title">KosMatch</span>
+        <span className="hud-brand-subtitle">{subtitle}</span>
+      </div>
+    </Link>
   );
 }
 
@@ -274,11 +277,113 @@ function ProjectWorkspace({ repository, projects, project, initialOptions, onPro
   const deleteOption=async(option:AccommodationOption)=>{if(!confirm("Hapus pilihan kos ini? Tindakan ini hanya memengaruhi opsi ini, bukan seluruh proyek."))return;await repository.deleteOption(option.id);if(currentProject.favoriteOptionId===option.id){const updatedProject={...currentProject,favoriteOptionId:null,updatedAt:new Date().toISOString()};await repository.saveProject(updatedProject);setCurrentProject(updatedProject);}setOptions((all)=>all.filter((item)=>item.id!==option.id));setNotice("Pilihan dihapus.");};
   if(showEditor)return <OptionEditor project={currentProject} initialOption={editing} onSaveAction={saveOption} onCancelAction={()=>{setShowEditor(false);setEditing(undefined);}}/>;
   const eligibleCount=matches.filter((m)=>m.eligible).length; const simulatedOption=options.find((o)=>o.id===(simulated??options[0]?.id));
-  return <div className="shell"><header className="topbar no-print"><div className="container header-inner"><div className="project-switcher"><Brand/><label className="sr-only" htmlFor="project-switcher">Pilih proyek</label><select id="project-switcher" className="input" value={currentProject.id} onChange={(event)=>void onSwitchProject(event.target.value)}>{projects.map((item)=><option value={item.id} key={item.id}>{item.name}</option>)}</select></div><div className="actions compact"><button className="btn btn-ghost" onClick={onBack}>Beranda</button><Link href="/explore" className="btn btn-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><Compass size={17}/> Peta Kampus</Link><button className="btn btn-secondary" onClick={onNewProject}><Plus size={18}/> Proyek baru</button><button className="btn btn-primary" onClick={()=>{setEditing(undefined);setShowEditor(true);}}><Plus size={18}/> Tambah Kos Manual</button></div></div></header><main className="container workspace"><div className="workspace-head"><div><div className="eyebrow">Ruang keputusan</div><h1>{currentProject.name}</h1><p className="muted"><MapPin size={15}/> Tujuan: {currentProject.destinationLabel}</p></div><div className="badges"><span className="badge good">Proyek Aktif</span></div></div>{notice&&<div className="inline-alert good" role="status"><Check size={18}/>{notice}<button className="btn btn-ghost" onClick={()=>setNotice(null)}>Tutup</button></div>}<nav className="nav-tabs no-print" aria-label="Navigasi proyek">{([['overview','Ringkasan'],['compare','Bandingkan'],['decision','Keputusan'],['simulator','Simulator'],['preferences','Preferensi'],['data','Data & backup']] as const).map(([key,label])=><button className={`nav-tab ${tab===key?"active":""}`} aria-current={tab===key?"page":undefined} onClick={()=>setTab(key)} key={key}>{label}</button>)}</nav><div className="summary-strip"><div className="summary-item"><span className="muted">Anggaran total</span><strong>{formatRupiah(currentProject.monthlyBudget)} / bulan</strong></div><div className="summary-item"><span className="muted">Batas perjalanan</span><strong>{currentProject.maxOneWayCommuteMinutes} menit</strong></div><div className="summary-item"><span className="muted">Memenuhi wajib</span><strong>{eligibleCount} dari {matches.length} pilihan</strong></div></div>
+  return (
+    <div className="shell">
+      {/* Floating HUD Topbar for Desktop (matches Map Explorer HUD) */}
+      <header className="hud-floating-topbar desktop-only no-print">
+        <div className="hud-topbar-inner">
+          <div className="hud-topbar-left">
+            <Brand subtitle="Kalkulator DSS" />
+            <div className="hud-project-select-wrapper">
+              <label className="sr-only" htmlFor="project-switcher">Pilih proyek</label>
+              <select
+                id="project-switcher"
+                className="hud-project-select"
+                value={currentProject.id}
+                onChange={(event) => void onSwitchProject(event.target.value)}
+              >
+                {projects.map((item) => (
+                  <option value={item.id} key={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Desktop Center Navigation Pills (Identical to Map Explorer) */}
+          <nav className="hud-topbar-nav" aria-label="Navigasi Utama">
+            <Link href="/explore" className="hud-nav-link">
+              Eksplorasi
+            </Link>
+            <Link href="/#calculator" className="hud-nav-link active">
+              <span className="hud-nav-indicator" /> Kalkulator DSS
+            </Link>
+          </nav>
+
+          {/* Topbar Actions */}
+          <div className="hud-topbar-right">
+            <button
+              type="button"
+              className="hud-btn-icon"
+              title="Kembali ke Beranda"
+              aria-label="Beranda"
+              onClick={onBack}
+            >
+              <ArrowLeft size={17} />
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={onNewProject}
+              style={{ padding: "6px 14px", height: "36px", fontSize: "13px", display: "inline-flex", alignItems: "center", gap: "6px" }}
+            >
+              <Plus size={16} /> Proyek baru
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => {
+                setEditing(undefined);
+                setShowEditor(true);
+              }}
+              style={{ padding: "6px 14px", height: "36px", fontSize: "13px", display: "inline-flex", alignItems: "center", gap: "6px" }}
+            >
+              <Plus size={16} /> Tambah Kos Manual
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Fallback Mobile Topbar for Narrow Screens */}
+      <header className="topbar mobile-only no-print">
+        <div className="container header-inner">
+          <div className="project-switcher">
+            <Brand subtitle="Kalkulator DSS" />
+            <label className="sr-only" htmlFor="project-switcher-mobile">Pilih proyek</label>
+            <select
+              id="project-switcher-mobile"
+              className="input"
+              value={currentProject.id}
+              onChange={(event) => void onSwitchProject(event.target.value)}
+            >
+              {projects.map((item) => (
+                <option value={item.id} key={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="actions compact">
+            <button className="btn btn-ghost" onClick={onBack}>Beranda</button>
+            <Link href="/explore" className="btn btn-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+              <Compass size={17} /> Peta
+            </Link>
+            <button className="btn btn-secondary" onClick={onNewProject}>
+              <Plus size={18} /> Baru
+            </button>
+            <button className="btn btn-primary" onClick={() => { setEditing(undefined); setShowEditor(true); }}>
+              <Plus size={18} /> Tambah
+            </button>
+          </div>
+        </div>
+      </header>
+      <main className="container workspace"><div className="workspace-head"><div><div className="eyebrow">Ruang keputusan</div><h1>{currentProject.name}</h1><p className="muted"><MapPin size={15}/> Tujuan: {currentProject.destinationLabel}</p></div><div className="badges"><span className="badge good">Proyek Aktif</span></div></div>{notice&&<div className="inline-alert good" role="status"><Check size={18}/>{notice}<button className="btn btn-ghost" onClick={()=>setNotice(null)}>Tutup</button></div>}<nav className="nav-tabs no-print" aria-label="Navigasi proyek">{([['overview','Ringkasan'],['compare','Bandingkan'],['decision','Keputusan'],['simulator','Simulator'],['preferences','Preferensi'],['data','Data & backup']] as const).map(([key,label])=><button className={`nav-tab ${tab===key?"active":""}`} aria-current={tab===key?"page":undefined} onClick={()=>setTab(key)} key={key}>{label}</button>)}</nav><div className="summary-strip"><div className="summary-item"><span className="muted">Anggaran total</span><strong>{formatRupiah(currentProject.monthlyBudget)} / bulan</strong></div><div className="summary-item"><span className="muted">Batas perjalanan</span><strong>{currentProject.maxOneWayCommuteMinutes} menit</strong></div><div className="summary-item"><span className="muted">Memenuhi wajib</span><strong>{eligibleCount} dari {matches.length} pilihan</strong></div></div>
     {tab==="overview"&&(options.length===0?<Empty title="Belum ada pilihan kos yang dianalisis." text="Pilih kos terverifikasi langsung dari peta kampus untuk analisis biaya nyata dan perbandingan DSS otomatis." action={<div className="actions compact" style={{ flexWrap: "wrap", justifyContent: "center" }}><Link href="/explore" className="btn btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}><Compass size={18}/> Pilih dari Peta Kampus</Link><button className="btn btn-secondary" aria-label="Tambah pilihan manual" onClick={()=>setShowEditor(true)}><Plus size={18}/> Tambah Kos Manual</button></div>}/>:<><div className="toolbar"><div className="field"><label htmlFor="sort">Urutkan</label><select id="sort" className="input" value={sort} onChange={(e)=>setSort(e.target.value as Sort)}><option value="match">Kecocokan</option><option value="cost">Biaya bulanan</option><option value="commute">Perjalanan</option><option value="distance">Jarak ke tujuan</option><option value="recent">Baru ditambahkan</option></select></div><div className="field"><label htmlFor="filter">Filter</label><select id="filter" className="input" value={filter} onChange={(e)=>setFilter(e.target.value as Filter)}><option value="all">Semua pilihan</option><option value="eligible">Memenuhi fasilitas wajib</option><option value="withinBudget">Dalam anggaran</option><option value="complete">Biaya lengkap</option><option value="unknown">Ada biaya belum diketahui</option><option value="needsVerification">Perlu verifikasi</option></select></div></div>{visible.length===0?<Empty title="Tidak ada hasil" text="Ubah filter untuk melihat pilihan lain."/>:<div>{([{eligible:true,title:"Memenuhi kebutuhan wajib"},{eligible:false,title:"Perlu dipertimbangkan ulang"}] as const).map((group)=>{const grouped=visible.filter((match)=>match.eligible===group.eligible);return grouped.length===0?null:<section aria-label={group.title} key={group.title}><h2 className="group-title">{group.eligible?<Check size={21} color="var(--accent)"/>:<AlertTriangle size={21} color="var(--danger)"/>}{group.title}</h2><div className="option-grid">{grouped.map((match)=>{const option=options.find((o)=>o.id===match.optionId)!;return <OptionCard project={currentProject} option={option} match={match} onEdit={()=>{setEditing(option);setShowEditor(true);}} onDelete={()=>deleteOption(option)} onShortlist={()=>toggleShortlist(option.id)} onCompare={()=>{setRequestedComparisonOptionId(option.id);setTab("compare");}} onSimulate={()=>{setSimulated(option.id);setTab("simulator");}} key={option.id}/>})}</div></section>;})}</div>}</>)}
     {tab==="compare"&&<Compare project={currentProject} options={options} matches={matches} requestedOptionId={requestedComparisonOptionId}/>} {tab==="decision"&&<><DecisionBoard state={{project:currentProject,options}} onChange={saveDecision}/><div className="print-block"><PrintSummaryView project={currentProject} options={options}/></div></>} {tab==="simulator"&&(simulatedOption?<><div className="field simulator-select"><label htmlFor="simulate-option">Pilihan yang disimulasikan</label><select id="simulate-option" className="input" value={simulatedOption.id} onChange={(e)=>setSimulated(e.target.value)}>{options.map((o)=><option value={o.id} key={o.id}>{o.name}</option>)}</select></div><CostSimulator project={currentProject} option={simulatedOption} onApply={async(projectValue,optionValue)=>{await repository.saveProject(projectValue);await repository.saveOption(optionValue);setCurrentProject(projectValue);setOptions((all)=>all.map((item)=>item.id===optionValue.id?optionValue:item));setNotice("Hasil simulasi diterapkan dan disimpan.");}}/></>:<Empty title="Belum ada pilihan" text="Tambahkan pilihan untuk menjalankan simulasi."/>)}
     {tab==="preferences"&&<PreferencesForm mode="edit" initialProject={currentProject} onCancel={()=>setTab("overview")} onSave={async(value)=>{await repository.saveProject(value);setCurrentProject(value);setNotice("Preferensi disimpan dan semua skor dihitung ulang.");setTab("overview");}}/>}
-    {tab==="data"&&<DataTools repository={repository} project={currentProject} options={options} onProjectDeleted={onProjectDeleted}/>}<p className="disclaimer"><Info size={17}/> Skor mencerminkan data dan prioritas Anda. Periksa kembali seluruh biaya dan ketersediaan kepada pemilik kos.</p></main></div>;
+    {tab==="data"&&<DataTools repository={repository} project={currentProject} options={options} onProjectDeleted={onProjectDeleted}/>}<p className="disclaimer"><Info size={17}/> Skor mencerminkan data dan prioritas Anda. Periksa kembali seluruh biaya dan ketersediaan kepada pemilik kos.</p></main></div>
+  );
 }
 
 function DataTools({repository,project,options,onProjectDeleted}:{repository:IndexedDbProjectRepository;project:ComparisonProject;options:AccommodationOption[];onProjectDeleted:()=>void}) {
@@ -515,9 +620,58 @@ export function KosMatchWorkspace() {
   if (view === "setup") {
     return (
       <div className="shell">
-        <header className="topbar">
+        {/* Floating HUD Topbar for Desktop (matches Map Explorer HUD) */}
+        <header className="hud-floating-topbar desktop-only no-print">
+          <div className="hud-topbar-inner">
+            <div className="hud-topbar-left">
+              <Brand subtitle="Setup Proyek" />
+              <span className="hud-project-select" style={{ display: "inline-flex", alignItems: "center", pointerEvents: "none" }}>
+                Proyek Baru
+              </span>
+            </div>
+            <nav className="hud-topbar-nav" aria-label="Navigasi Utama">
+              <Link href="/explore" className="hud-nav-link">
+                Eksplorasi
+              </Link>
+              <Link href="/#calculator" className="hud-nav-link active">
+                <span className="hud-nav-indicator" /> Kalkulator DSS
+              </Link>
+            </nav>
+            <div className="hud-topbar-right">
+              <button
+                type="button"
+                className="hud-btn-icon"
+                title="Kembali ke Beranda"
+                aria-label="Beranda"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    window.location.hash = "";
+                  }
+                  setView("landing");
+                }}
+              >
+                <ArrowLeft size={17} />
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    window.location.hash = "";
+                  }
+                  setView("landing");
+                }}
+              >
+                Keluar
+              </button>
+            </div>
+          </div>
+        </header>
+
+        {/* Fallback Mobile Topbar for Narrow Screens */}
+        <header className="topbar mobile-only no-print">
           <div className="container header-inner">
-            <Brand />
+            <Brand subtitle="Setup Proyek" />
             <button
               className="btn btn-ghost"
               onClick={() => {

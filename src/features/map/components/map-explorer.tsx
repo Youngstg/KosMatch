@@ -19,6 +19,7 @@ import {
   Compass,
   CreditCard,
   Footprints,
+  GraduationCap,
   Landmark,
   Layers,
   Loader2,
@@ -104,6 +105,13 @@ const MapCanvas = dynamic(
   }
 );
 
+function getSunflowerPetalPosition(index: number, total: number, radius = 94) {
+  const angle = -Math.PI / 2 + (index * 2 * Math.PI) / total;
+  const x = Math.round(145 + radius * Math.cos(angle));
+  const y = Math.round(130 + radius * Math.sin(angle));
+  return { x, y };
+}
+
 function Brand() {
   return (
     <Link href="/" className="hud-brand" style={{ textDecoration: "none", color: "inherit" }}>
@@ -137,6 +145,8 @@ export function MapExplorer() {
   // New Pergamum & Apple Maps Interactive States
   const [mapTheme, setMapTheme] = useState<"dark" | "light">("light");
   const [isHudCollapsed, setIsHudCollapsed] = useState<boolean>(false);
+  const [sunflowerMode, setSunflowerMode] = useState<"campus" | "gates">("gates");
+  const [isSunflowerCollapsed, setIsSunflowerCollapsed] = useState<boolean>(false);
   const [selectedPoiCategories, setSelectedPoiCategories] = useState<string[]>(
     () => [...selectedCampus.priorityPoiCategories]
   );
@@ -529,7 +539,7 @@ export function MapExplorer() {
                     onClick={() => handleCampusChange(pilot)}
                   >
                     <div>
-                      <strong>{pilot.campusName}</strong>
+                      <strong>{pilot.campusName.split(" (")[0]}</strong>
                       <small>{pilot.city} · Radius {pilot.radiusKm} km</small>
                     </div>
                     {pilot.id === selectedCampus.id && <span className="selected-dot" />}
@@ -651,7 +661,7 @@ export function MapExplorer() {
                     aria-pressed={active}
                     onClick={() => handleCampusChange(pilot)}
                   >
-                    <Building2 size={15} /> {pilot.campusName.split(" (")[0]} ({pilot.city})
+                    <Building2 size={15} /> {pilot.campusName.split(" (")[0]}
                   </button>
                 );
               })}
@@ -1129,6 +1139,201 @@ export function MapExplorer() {
 
         </div>
       </aside>
+
+      {/* =========================================================================
+          4B. SUNFLOWER RADIAL SELECTOR (Bunga Matahari Kampus & Titik Tujuan)
+      ========================================================================== */}
+      <div
+        className={`hud-sunflower-widget desktop-only ${isSunflowerCollapsed ? "collapsed" : ""}`}
+        aria-label="Radar Bunga Matahari Kampus dan Titik Tujuan"
+      >
+        {isSunflowerCollapsed ? (
+          <button
+            type="button"
+            className="hud-sunflower-collapsed-pill"
+            onClick={() => setIsSunflowerCollapsed(false)}
+            title="Buka Radar Bunga Matahari"
+            aria-label="Buka Radar Bunga Matahari"
+          >
+            <span role="img" aria-label="Sunflower">🌻</span>
+            <span>{selectedCampus.shortName} · {selectedGate?.shortLabel ?? "Titik Tujuan"}</span>
+            <ChevronDown size={14} />
+          </button>
+        ) : (
+          <>
+            <div className="hud-sunflower-header">
+              <div className="hud-sunflower-title-wrap">
+                <span className="hud-sunflower-eyebrow">
+                  {sunflowerMode === "campus" ? "Matahari Kampus" : "Matahari Titik Tujuan"}
+                </span>
+                <h3 className="hud-sunflower-title">
+                  <span role="img" aria-label="Sunflower">🌻</span>
+                  <span>{sunflowerMode === "campus" ? "Pilih Kelopak Kampus" : selectedCampus.shortName}</span>
+                </h3>
+              </div>
+              <button
+                type="button"
+                className="hud-sunflower-toggle-btn"
+                title="Sembunyikan Bunga Matahari"
+                aria-label="Sembunyikan Bunga Matahari"
+                onClick={() => setIsSunflowerCollapsed(true)}
+              >
+                <ChevronUp size={15} />
+              </button>
+            </div>
+
+            {/* Sunflower Radial Dial Canvas */}
+            <div className="hud-sunflower-dial">
+              {/* SVG Rays connecting center core to petals */}
+              <svg className="hud-sunflower-svg-rays" viewBox="0 0 290 260">
+                <defs>
+                  <radialGradient id="sunRayGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.8" />
+                    <stop offset="100%" stopColor="#D97706" stopOpacity="0.15" />
+                  </radialGradient>
+                </defs>
+                {sunflowerMode === "campus"
+                  ? PILOT_CONFIG.allPilots.map((_, idx) => {
+                      const pos = getSunflowerPetalPosition(idx, PILOT_CONFIG.allPilots.length);
+                      return (
+                        <line
+                          key={idx}
+                          x1={145}
+                          y1={130}
+                          x2={pos.x}
+                          y2={pos.y}
+                          stroke="url(#sunRayGrad)"
+                          strokeWidth={2}
+                          strokeDasharray="3 3"
+                        />
+                      );
+                    })
+                  : selectedCampus.gates.map((_, idx) => {
+                      const pos = getSunflowerPetalPosition(idx, selectedCampus.gates.length);
+                      return (
+                        <line
+                          key={idx}
+                          x1={145}
+                          y1={130}
+                          x2={pos.x}
+                          y2={pos.y}
+                          stroke="url(#sunRayGrad)"
+                          strokeWidth={2}
+                          strokeDasharray="3 3"
+                        />
+                      );
+                    })}
+              </svg>
+
+              {/* Central Sun Disk (Pusat Bunga Matahari) */}
+              <button
+                type="button"
+                className="hud-sunflower-center"
+                title={
+                  sunflowerMode === "campus"
+                    ? "Sedang memilih kampus"
+                    : "Pusat Kampus Aktif. Klik untuk ganti kampus"
+                }
+                onClick={() => {
+                  setSunflowerMode(sunflowerMode === "campus" ? "gates" : "campus");
+                }}
+              >
+                {sunflowerMode === "campus" ? (
+                  <>
+                    <GraduationCap size={22} color="#FFFFFF" />
+                    <span className="hud-sunflower-center-name">Kampus</span>
+                    <span className="hud-sunflower-center-action">Pusat</span>
+                  </>
+                ) : (
+                  <>
+                    <Building2 size={20} color="#FFFFFF" />
+                    <span className="hud-sunflower-center-name">{selectedCampus.shortName}</span>
+                    <span className="hud-sunflower-center-action">Ganti ↺</span>
+                  </>
+                )}
+              </button>
+
+              {/* Radiating Petals */}
+              {sunflowerMode === "campus"
+                ? PILOT_CONFIG.allPilots.map((pilot, idx) => {
+                    const pos = getSunflowerPetalPosition(idx, PILOT_CONFIG.allPilots.length);
+                    const isActive = pilot.id === selectedCampus.id;
+                    const cleanName = pilot.campusName.split(" (")[0];
+                    return (
+                      <div
+                        key={pilot.id}
+                        role="menuitem"
+                        tabIndex={0}
+                        className={`hud-sunflower-petal ${isActive ? "active" : ""}`}
+                        style={{ left: `${pos.x}px`, top: `${pos.y}px` }}
+                        title={`Pilih ${cleanName}`}
+                        onClick={() => {
+                          handleCampusChange(pilot);
+                          setSunflowerMode("gates");
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            handleCampusChange(pilot);
+                            setSunflowerMode("gates");
+                          }
+                        }}
+                      >
+                        <span className="hud-sunflower-petal-dot" />
+                        <span className="hud-sunflower-petal-label">{cleanName}</span>
+                      </div>
+                    );
+                  })
+                : selectedCampus.gates.map((gate, idx) => {
+                    const pos = getSunflowerPetalPosition(idx, selectedCampus.gates.length);
+                    const isSelected = selectedGate?.id === gate.id;
+                    return (
+                      <div
+                        key={gate.id}
+                        role="menuitem"
+                        tabIndex={0}
+                        className={`hud-sunflower-petal ${isSelected ? "active" : ""}`}
+                        style={{ left: `${pos.x}px`, top: `${pos.y}px` }}
+                        title={gate.description}
+                        onClick={() => {
+                          setSelectedGate(gate);
+                          if (activePoint) setLoadingCommute(true);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setSelectedGate(gate);
+                            if (activePoint) setLoadingCommute(true);
+                          }
+                        }}
+                      >
+                        <span className="hud-sunflower-petal-dot" />
+                        <span className="hud-sunflower-petal-label">{gate.shortLabel}</span>
+                      </div>
+                    );
+                  })}
+            </div>
+
+            {/* Mode Switcher Footer */}
+            <div className="hud-sunflower-footer">
+              <button
+                type="button"
+                className={`hud-sunflower-mode-pill ${sunflowerMode === "campus" ? "active" : ""}`}
+                onClick={() => setSunflowerMode("campus")}
+              >
+                🌻 Bunga Kampus
+              </button>
+              <button
+                type="button"
+                className={`hud-sunflower-mode-pill ${sunflowerMode === "gates" ? "active" : ""}`}
+                onClick={() => setSunflowerMode("gates")}
+              >
+                🎯 Bunga Titik Tujuan
+              </button>
+            </div>
+          </>
+        )}
+      </div>
 
       {/* =========================================================================
           5. DESKTOP BOTTOM FLOATING TRAY (Image 1 - "Saint's Dark Coffee" HUD Card)
