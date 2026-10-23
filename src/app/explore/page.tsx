@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { verifySessionToken } from "@/lib/auth";
 import { MapExplorer } from "@/features/map";
 
 export const metadata: Metadata = {
@@ -12,6 +15,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ExplorePage() {
+export default async function ExplorePage() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("kosmatch_session")?.value;
+  const user = token ? verifySessionToken(token) : null;
+
+  if (!user) {
+    redirect("/auth/login?redirect=/explore");
+  }
+
   return <MapExplorer />;
 }

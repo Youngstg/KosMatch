@@ -109,8 +109,8 @@ jobs:
 
             echo "Running smoke tests..."
             sleep 3
-            if curl --retry 5 --retry-delay 2 --retry-connrefused -fsS http://localhost:3001/ > /dev/null && \
-               curl --retry 5 --retry-delay 2 --retry-connrefused -fsS http://localhost:3001/explore > /dev/null; then
+            if curl --retry 5 --retry-delay 2 --retry-connrefused -fsSL http://localhost:3001/ > /dev/null && \
+               curl --retry 5 --retry-delay 2 --retry-connrefused -fsSL http://localhost:3001/explore > /dev/null; then
               echo "✅ Smoke tests passed!"
             else
               echo "❌ Smoke tests failed! Rolling back..."

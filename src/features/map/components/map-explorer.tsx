@@ -434,6 +434,16 @@ export function MapExplorer() {
 
           {/* Topbar Actions */}
           <div className="hud-topbar-right">
+            {/* Account / Home Link (Icon Only on Far Left) */}
+            <Link
+              href="/"
+              className="hud-btn-icon desktop-only"
+              title="Kembali ke Beranda"
+              aria-label="Kembali ke Beranda"
+            >
+              <ArrowLeft size={17} />
+            </Link>
+
             {/* Theme Toggle Button (Dark HUD vs Light City) */}
             <button
               type="button"
@@ -455,16 +465,6 @@ export function MapExplorer() {
             >
               <Layers size={17} />
             </button>
-
-            {/* Account / Home Link */}
-            <Link href="/" className="hud-btn-ghost desktop-only">
-              <ArrowLeft size={15} /> Beranda
-            </Link>
-
-            {/* Primary Action Button */}
-            <Link href="/#calculator" className="hud-btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-              <Calculator size={15} /> Buka Kalkulator DSS
-            </Link>
           </div>
         </div>
       </header>

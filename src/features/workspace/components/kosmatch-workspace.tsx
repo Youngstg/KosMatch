@@ -295,6 +295,22 @@ export function KosMatchWorkspace() {
   const [options, setOptions] = useState<AccommodationOption[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [importing, setImporting] = useState(false);
+  const [currentUser, setCurrentUser] = useState<{ userId: string; email: string; role: string } | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (active && data?.user) {
+          setCurrentUser(data.user);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const initialize = async () => {
     setView("loading");
@@ -334,12 +350,33 @@ export function KosMatchWorkspace() {
         // Langsung buka Kalkulator DSS / Project jika URL memiliki hash #setup atau #calculator
         if (typeof window !== "undefined") {
           const hash = window.location.hash.toLowerCase();
-          if (hash.includes("setup")) {
-            setView("setup");
-          } else if (hash.includes("calculator") || hash.includes("kalkulator")) {
-            setView(loaded !== null ? "project" : "setup");
-          } else if (hash.includes("project") || hash.includes("workspace") || hash.includes("compare")) {
-            setView(loaded !== null ? "project" : "setup");
+          const isCalculatorHash =
+            hash.includes("setup") ||
+            hash.includes("calculator") ||
+            hash.includes("kalkulator") ||
+            hash.includes("project") ||
+            hash.includes("workspace") ||
+            hash.includes("compare");
+
+          if (isCalculatorHash) {
+            void fetch("/api/auth/me")
+              .then((res) => res.json())
+              .then((data) => {
+                if (data?.user) {
+                  setCurrentUser(data.user);
+                  if (hash.includes("setup")) {
+                    setView("setup");
+                  } else {
+                    setView(loaded !== null ? "project" : "setup");
+                  }
+                } else {
+                  window.location.href = "/auth/login?redirect=/#calculator";
+                }
+              })
+              .catch(() => {
+                window.location.href = "/auth/login?redirect=/#calculator";
+              });
+            return;
           }
         }
       }
@@ -352,12 +389,32 @@ export function KosMatchWorkspace() {
 
     const handleHashChange = () => {
       const hash = window.location.hash.toLowerCase();
-      if (hash.includes("setup")) {
-        setView("setup");
-      } else if (hash.includes("calculator") || hash.includes("kalkulator")) {
-        setView(project !== null ? "project" : "setup");
-      } else if (hash.includes("project") || hash.includes("workspace") || hash.includes("compare")) {
-        setView(project !== null ? "project" : "setup");
+      const isCalculatorHash =
+        hash.includes("setup") ||
+        hash.includes("calculator") ||
+        hash.includes("kalkulator") ||
+        hash.includes("project") ||
+        hash.includes("workspace") ||
+        hash.includes("compare");
+
+      if (isCalculatorHash) {
+        void fetch("/api/auth/me")
+          .then((res) => res.json())
+          .then((data) => {
+            if (data?.user) {
+              setCurrentUser(data.user);
+              if (hash.includes("setup")) {
+                setView("setup");
+              } else {
+                setView(project !== null ? "project" : "setup");
+              }
+            } else {
+              window.location.href = "/auth/login?redirect=/#calculator";
+            }
+          })
+          .catch(() => {
+            window.location.href = "/auth/login?redirect=/#calculator";
+          });
       } else if (!hash || hash === "#" || hash.includes("landing")) {
         setView("landing");
       }
@@ -424,7 +481,19 @@ export function KosMatchWorkspace() {
     return (
       <>
         <LandingView
-          onStart={() => {
+          onStart={async () => {
+            let user = currentUser;
+            if (!user) {
+              try {
+                const res = await fetch("/api/auth/me");
+                const data = await res.json();
+                user = data?.user ?? null;
+              } catch {}
+            }
+            if (!user) {
+              window.location.href = "/auth/login?redirect=/#calculator";
+              return;
+            }
             if (typeof window !== "undefined") {
               window.location.hash = "setup";
             }

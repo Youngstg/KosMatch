@@ -81,9 +81,6 @@ export function LandingView({ onStart }: LandingViewProps) {
                   <span>Masuk / Akun</span>
                 </a>
               )}
-              <button className="btn btn-editorial-pill" onClick={onStart} style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                <Calculator size={14} /> Kalkulator DSS
-              </button>
             </div>
           </div>
         </header>
@@ -142,7 +139,7 @@ export function LandingView({ onStart }: LandingViewProps) {
                 Kamar Nyaman, Istirahat Tenang, Belajar Makin Fokus
               </h2>
               <p className="clay-card-sub" style={{ fontSize: "14px", lineHeight: "1.6", color: "rgba(255, 255, 255, 0.86)", margin: "0 0 16px" }}>
-                Kamar kos adalah ruang hidup utama selama masa studi Anda. KosMatch memverifikasi perabot esensial—mulai dari tempat tidur empuk, lemari pakaian lapang, meja belajar privat yang kondusif, hingga sirkulasi udara alami—sebelum Anda menentukan pilihan sewa.
+                Kamar kos adalah ruang hidup utama selama masa studi Anda. KosMatch memverifikasi perabot esensial mulai dari tempat tidur empuk, lemari pakaian lapang, meja belajar privat yang kondusif, hingga sirkulasi udara alami sebelum Anda menentukan pilihan sewa.
               </p>
               <div className="clay-card-badges" style={{ gap: "8px", marginBottom: "20px" }}>
                 <span className="clay-pill">Kasur &amp; Bantal Ergonomis</span>
@@ -199,9 +196,6 @@ export function LandingView({ onStart }: LandingViewProps) {
             <a className="btn btn-ghost" href="/admin" title="Masuk ke portal pengelolaan kos bagi pemilik dan admin">
               Portal Pemilik &amp; Admin
             </a>
-            <button className="btn btn-editorial-pill" onClick={onStart} style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-              <Calculator size={14} /> Buka Kalkulator DSS
-            </button>
           </div>
         </div>
       </footer>

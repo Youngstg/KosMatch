@@ -14,7 +14,6 @@ import {
   Lock,
   LogIn,
   Mail,
-  ShieldCheck,
   UserPlus,
   X,
 } from "lucide-react";
@@ -78,8 +77,10 @@ export default function LoginPage() {
           : "Akun berhasil dibuat! Mengalihkan ke aplikasi..."
       );
 
+      const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+      const redirectParam = searchParams?.get("redirect");
       const targetUrl =
-        data.user?.role === "admin" || data.user?.role === "owner" ? "/admin" : "/explore";
+        redirectParam || (data.user?.role === "admin" || data.user?.role === "owner" ? "/admin" : "/explore");
 
       setTimeout(() => {
         router.push(targetUrl);
@@ -155,8 +156,10 @@ export default function LoginPage() {
       setSuccessMsg(`Berhasil masuk sebagai ${data.user.email}! Mengalihkan...`);
       setShowGoogleModal(false);
 
+      const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+      const redirectParam = searchParams?.get("redirect");
       const targetUrl =
-        data.user?.role === "admin" || data.user?.role === "owner" ? "/admin" : "/explore";
+        redirectParam || (data.user?.role === "admin" || data.user?.role === "owner" ? "/admin" : "/explore");
 
       setTimeout(() => {
         router.push(targetUrl);
@@ -382,12 +385,6 @@ export default function LoginPage() {
               )}
             </button>
           </form>
-
-          {/* Privacy & Security Note */}
-          <div className="auth-security-badge">
-            <ShieldCheck size={14} color="#8D654C" />
-            <span>Data Anda terlindungi dengan enkripsi kata sandi berstandar industri.</span>
-          </div>
         </div>
       </main>
 
