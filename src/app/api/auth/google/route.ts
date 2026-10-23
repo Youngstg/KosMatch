@@ -151,9 +151,32 @@ export async function POST(req: Request) {
 }
 
 /**
- * Cek status konfigurasi Google OAuth
+ * Cek status konfigurasi Google OAuth atau inisialisasi pengalihan login ke Google
  */
-export async function GET() {
+export async function GET(req?: Request) {
+  if (req && req.url) {
+    try {
+      const url = new URL(req.url);
+      if (url.searchParams.get("action") === "login") {
+        const clientId = process.env.GOOGLE_CLIENT_ID;
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
+        if (!clientId) {
+          return NextResponse.redirect(`${appUrl}/auth/login?setup=google`);
+        }
+
+        const redirectUri = `${appUrl}/api/auth/google/callback`;
+        const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
+          redirectUri
+        )}&response_type=code&scope=openid%20email%20profile&access_type=offline&prompt=select_account`;
+
+        return NextResponse.redirect(googleAuthUrl);
+      }
+    } catch {
+      // Abaikan parsing error, lanjutkan ke pengecekan status biasa
+    }
+  }
+
   const isConfigured = Boolean(process.env.GOOGLE_CLIENT_ID);
   return NextResponse.json({
     configured: isConfigured,

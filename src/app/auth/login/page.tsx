@@ -1,9 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, CheckCircle2, Lock, LogIn, Mail, Sparkles, UserPlus, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Building2,
+  CheckCircle2,
+  ExternalLink,
+  GraduationCap,
+  KeyRound,
+  Lock,
+  LogIn,
+  Mail,
+  ShieldCheck,
+  UserPlus,
+  X,
+} from "lucide-react";
 import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
 import { GoogleLogo } from "@/components/brand/google-logo";
 
@@ -19,6 +33,20 @@ export default function LoginPage() {
   const [customGoogleEmail, setCustomGoogleEmail] = useState("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  // Periksa parameter error dari URL (misal pengalihan dari callback Google)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const urlError = params.get("error");
+      const setupParam = params.get("setup");
+      const timer = setTimeout(() => {
+        if (urlError) setErrorMsg(urlError);
+        if (setupParam === "google") setShowGoogleModal(true);
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,15 +67,15 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setErrorMsg(data.error || "Terjadi kesalahan saat memproses akun");
+        setErrorMsg(data.error || "Terjadi kesalahan saat memproses akun Anda");
         setLoading(false);
         return;
       }
 
       setSuccessMsg(
         mode === "login"
-          ? "Berhasil masuk! Mengalihkan..."
-          : "Akun berhasil dibuat! Mengalihkan..."
+          ? "Berhasil masuk! Mengalihkan ke aplikasi..."
+          : "Akun berhasil dibuat! Mengalihkan ke aplikasi..."
       );
 
       const targetUrl =
@@ -56,26 +84,62 @@ export default function LoginPage() {
       setTimeout(() => {
         router.push(targetUrl);
         router.refresh();
-      }, 900);
+      }, 700);
     } catch {
       setErrorMsg("Koneksi gagal. Pastikan jaringan internet Anda aktif.");
       setLoading(false);
     }
   };
 
-  const handleGoogleSignIn = async (selectedEmail?: string) => {
+  /**
+   * Handler untuk tombol Lanjutkan dengan Google:
+   * 1. Mengecek apakah server telah memiliki kredensial resmi GOOGLE_CLIENT_ID
+   * 2. Jika ada, langsung mengalihkan browser ke halaman login Google resmi (accounts.google.com)
+   * 3. Jika belum diisi di .env.local, menampilkan panduan konfigurasi & opsi masuk instan dengan email pribadi
+   */
+  const handleGoogleClick = async () => {
     setErrorMsg(null);
     setSuccessMsg(null);
     setGoogleLoading(true);
 
     try {
-      const targetEmail = selectedEmail || "mahasiswa.ui@gmail.com";
+      const checkRes = await fetch("/api/auth/google");
+      const status = await checkRes.json();
+
+      if (status.configured && status.clientId) {
+        // Alihkan langsung ke Google OAuth 2.0 resmi (URL eksternal accounts.google.com)
+        const appUrl = window.location.origin;
+        const redirectUri = `${appUrl}/api/auth/google/callback`;
+        const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${status.clientId}&redirect_uri=${encodeURIComponent(
+          redirectUri
+        )}&response_type=code&scope=openid%20email%20profile&access_type=offline&prompt=select_account`;
+        window.location.href = googleAuthUrl;
+      } else {
+        setGoogleLoading(false);
+        setShowGoogleModal(true);
+      }
+    } catch {
+      setGoogleLoading(false);
+      setShowGoogleModal(true);
+    }
+  };
+
+  const handleCustomGoogleEmailSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const targetEmail = customGoogleEmail.trim().toLowerCase();
+    if (!targetEmail.includes("@")) {
+      setErrorMsg("Harap masukkan alamat email yang valid");
+      return;
+    }
+
+    setGoogleLoading(true);
+    try {
       const res = await fetch("/api/auth/google", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: targetEmail,
-          name: targetEmail.split("@")[0].replace(".", " ").toUpperCase(),
+          name: targetEmail.split("@")[0].replace(".", " "),
           role,
         }),
       });
@@ -83,12 +147,12 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setErrorMsg(data.error || "Gagal masuk dengan Akun Google");
+        setErrorMsg(data.error || "Gagal masuk dengan email tersebut");
         setGoogleLoading(false);
         return;
       }
 
-      setSuccessMsg(`Berhasil masuk dengan Google (${data.user.email})! Mengalihkan...`);
+      setSuccessMsg(`Berhasil masuk sebagai ${data.user.email}! Mengalihkan...`);
       setShowGoogleModal(false);
 
       const targetUrl =
@@ -97,85 +161,68 @@ export default function LoginPage() {
       setTimeout(() => {
         router.push(targetUrl);
         router.refresh();
-      }, 900);
+      }, 700);
     } catch {
-      setErrorMsg("Koneksi gagal saat menghubungi otentikasi Google.");
+      setErrorMsg("Koneksi gagal saat menghubungi server");
       setGoogleLoading(false);
     }
   };
 
   return (
-    <div className="shell" style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      <header className="topbar">
-        <div className="container header-inner">
+    <div className="auth-page-container">
+      {/* Top Navigation */}
+      <header className="topbar" style={{ background: "#FFFFFF", borderBottom: "1px solid rgba(28, 27, 25, 0.08)" }}>
+        <div className="container header-inner" style={{ height: "64px" }}>
           <Link href="/" className="brand" style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center", gap: "10px" }}>
-            <KosMatchLogo size={36} />
-            <span>KosMatch</span>
+            <KosMatchLogo size={34} />
+            <span style={{ fontSize: "17px", fontWeight: 750, letterSpacing: "-0.01em" }}>KosMatch</span>
           </Link>
           <div className="actions compact">
-            <Link className="btn btn-ghost" href="/">
-              <ArrowLeft size={16} /> Kembali ke Beranda
+            <Link className="btn btn-ghost" href="/" style={{ fontSize: "13px", fontWeight: 600 }}>
+              <ArrowLeft size={15} /> Kembali ke Beranda
             </Link>
           </div>
         </div>
       </header>
 
-      <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "var(--space-6) var(--space-4)" }}>
-        <div className="panel" style={{ width: "100%", maxWidth: "440px", padding: "var(--space-6)" }}>
-          <div style={{ textAlign: "center", marginBottom: "var(--space-5)" }}>
-            <div className="eyebrow">Fase 2 · Akun &amp; Komunitas</div>
-            <h1 style={{ fontSize: "22px", margin: "6px 0 6px" }}>
-              {mode === "login" ? "Masuk ke Akun KosMatch" : "Daftar Akun Baru"}
+      {/* Main Authentication Area */}
+      <main className="auth-main-area">
+        <div className="auth-card">
+          <div style={{ textAlign: "center", marginBottom: "24px" }}>
+            <span className="auth-super-tag">Autentikasi &amp; Keanggotaan</span>
+            <h1 className="auth-title">
+              {mode === "login" ? "Masuk ke KosMatch" : "Daftar Akun Baru"}
             </h1>
-            <p className="muted" style={{ fontSize: "13px", margin: 0 }}>
+            <p className="auth-sub">
               {mode === "login"
-                ? "Kelola kos favorit, bandingkan di DSS, atau kelola kos Anda."
+                ? "Akses hasil simulasi DSS, simpan kos favorit, atau kelola listing kos Anda."
                 : "Bantu mahasiswa menemukan kos transparan dan hemat biaya hidup."}
             </p>
           </div>
 
-          {/* Quick Google Sign-In Button */}
+          {/* Official Google Sign-In Button */}
           <button
             type="button"
             disabled={loading || googleLoading}
-            onClick={() => setShowGoogleModal(true)}
-            className="btn btn-secondary"
-            style={{
-              width: "100%",
-              minHeight: "44px",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "10px",
-              fontWeight: 700,
-              fontSize: "14px",
-              background: "var(--surface)",
-              border: "1px solid var(--border)",
-              borderRadius: "8px",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-              cursor: "pointer",
-              marginBottom: "var(--space-4)",
-            }}
+            onClick={handleGoogleClick}
+            className="auth-google-btn"
           >
             <GoogleLogo size={20} />
             <span>{googleLoading ? "Menghubungkan ke Google..." : "Lanjutkan dengan Google"}</span>
           </button>
 
-          {/* Divider */}
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "var(--space-4)" }}>
-            <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
-            <span className="muted" style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.5px" }}>
-              atau dengan email &amp; sandi
-            </span>
-            <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
+          {/* Hairline Divider */}
+          <div className="auth-divider">
+            <div className="auth-divider-line" />
+            <span className="auth-divider-text">atau dengan email &amp; sandi</span>
+            <div className="auth-divider-line" />
           </div>
 
-          {/* Mode Switcher Tabs */}
-          <div className="chips" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px", marginBottom: "var(--space-4)" }}>
+          {/* Mode Switcher Pill Tabs */}
+          <div className="auth-pill-switcher">
             <button
               type="button"
-              className={`chip ${mode === "login" ? "selected" : ""}`}
-              style={{ justifyContent: "center", minHeight: "36px" }}
+              className={`auth-pill-tab ${mode === "login" ? "active" : ""}`}
               onClick={() => {
                 setMode("login");
                 setErrorMsg(null);
@@ -186,8 +233,7 @@ export default function LoginPage() {
             </button>
             <button
               type="button"
-              className={`chip ${mode === "register" ? "selected" : ""}`}
-              style={{ justifyContent: "center", minHeight: "36px" }}
+              className={`auth-pill-tab ${mode === "register" ? "active" : ""}`}
               onClick={() => {
                 setMode("register");
                 setErrorMsg(null);
@@ -200,14 +246,15 @@ export default function LoginPage() {
 
           {errorMsg && (
             <div
-              className="panel"
               style={{
-                background: "rgba(239, 68, 68, 0.1)",
-                borderColor: "#EF4444",
-                color: "#DC2626",
-                padding: "10px 14px",
+                background: "rgba(239, 68, 68, 0.08)",
+                border: "1px solid rgba(239, 68, 68, 0.3)",
+                color: "#B91C1C",
+                borderRadius: "14px",
+                padding: "12px 14px",
                 fontSize: "13px",
-                marginBottom: "var(--space-4)",
+                lineHeight: "1.5",
+                marginBottom: "18px",
               }}
             >
               {errorMsg}
@@ -216,14 +263,15 @@ export default function LoginPage() {
 
           {successMsg && (
             <div
-              className="panel"
               style={{
-                background: "rgba(16, 185, 129, 0.1)",
-                borderColor: "#10B981",
-                color: "#059669",
-                padding: "10px 14px",
+                background: "rgba(16, 185, 129, 0.08)",
+                border: "1px solid rgba(16, 185, 129, 0.3)",
+                color: "#047857",
+                borderRadius: "14px",
+                padding: "12px 14px",
                 fontSize: "13px",
-                marginBottom: "var(--space-4)",
+                lineHeight: "1.5",
+                marginBottom: "18px",
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
@@ -233,224 +281,282 @@ export default function LoginPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} style={{ display: "grid", gap: "var(--space-3)" }}>
-            <div>
-              <label className="field-label" htmlFor="auth-email" style={{ fontSize: "13px" }}>
-                Alamat Email:
-              </label>
-              <div style={{ position: "relative", marginTop: "4px" }}>
-                <input
-                  id="auth-email"
-                  type="email"
-                  required
-                  className="field-input"
-                  style={{ width: "100%", paddingLeft: "34px" }}
-                  placeholder="nama@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <Mail
-                  size={16}
-                  style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)" }}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="field-label" htmlFor="auth-password" style={{ fontSize: "13px" }}>
-                Kata Sandi:
-              </label>
-              <div style={{ position: "relative", marginTop: "4px" }}>
-                <input
-                  id="auth-password"
-                  type="password"
-                  required
-                  className="field-input"
-                  style={{ width: "100%", paddingLeft: "34px" }}
-                  placeholder="Minimal 6 karakter"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <Lock
-                  size={16}
-                  style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)" }}
-                />
-              </div>
-            </div>
-
+          {/* Credentials Form */}
+          <form onSubmit={handleSubmit}>
             {mode === "register" && (
-              <div>
-                <span className="field-label" style={{ fontSize: "13px", display: "block", marginBottom: "4px" }}>
-                  Tipe Akun:
-                </span>
-                <div className="chips" style={{ gap: "8px" }}>
+              <div className="auth-field-group">
+                <span className="auth-field-label">Tipe Akun Anda:</span>
+                <div className="auth-role-picker">
                   <button
                     type="button"
-                    className={`chip ${role === "user" ? "selected" : ""}`}
-                    style={{ flex: 1, minHeight: "34px", justifyContent: "center" }}
+                    className={`auth-role-btn ${role === "user" ? "active" : ""}`}
                     onClick={() => setRole("user")}
                   >
-                    Mahasiswa / Pencari Kos
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      <GraduationCap size={15} color="#8D654C" />
+                      <span className="auth-role-title">Mahasiswa</span>
+                    </div>
+                    <span className="auth-role-desc">Pencari kos &amp; simulasi biaya</span>
                   </button>
+
                   <button
                     type="button"
-                    className={`chip ${role === "owner" ? "selected" : ""}`}
-                    style={{ flex: 1, minHeight: "34px", justifyContent: "center" }}
+                    className={`auth-role-btn ${role === "owner" ? "active" : ""}`}
                     onClick={() => setRole("owner")}
                   >
-                    Pemilik / Pengelola Kos
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      <Building2 size={15} color="#8D654C" />
+                      <span className="auth-role-title">Pemilik Kos</span>
+                    </div>
+                    <span className="auth-role-desc">Kelola &amp; verifikasi kos</span>
                   </button>
                 </div>
               </div>
             )}
 
+            <div className="auth-field-group">
+              <label className="auth-field-label" htmlFor="auth-email">
+                Alamat Email:
+              </label>
+              <div className="auth-input-wrap">
+                <span className="auth-input-icon">
+                  <Mail size={16} />
+                </span>
+                <input
+                  id="auth-email"
+                  type="email"
+                  required
+                  className="auth-input"
+                  placeholder="nama@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                />
+              </div>
+            </div>
+
+            <div className="auth-field-group">
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                <label className="auth-field-label" htmlFor="auth-password" style={{ marginBottom: 0 }}>
+                  Kata Sandi:
+                </label>
+                {mode === "login" && (
+                  <span style={{ fontSize: "11.5px", color: "#8D654C", cursor: "pointer", fontWeight: 650 }}>
+                    Lupa sandi?
+                  </span>
+                )}
+              </div>
+              <div className="auth-input-wrap">
+                <span className="auth-input-icon">
+                  <Lock size={16} />
+                </span>
+                <input
+                  id="auth-password"
+                  type="password"
+                  required
+                  minLength={6}
+                  className="auth-input"
+                  placeholder="Minimal 6 karakter"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete={mode === "login" ? "current-password" : "new-password"}
+                />
+              </div>
+            </div>
+
             <button
               type="submit"
-              disabled={loading || googleLoading}
-              className="btn btn-primary"
-              style={{ width: "100%", minHeight: "42px", marginTop: "var(--space-2)" }}
+              disabled={loading}
+              className="auth-submit-btn"
             >
-              {loading ? "Memproses..." : mode === "login" ? "Masuk Sekarang" : "Buat Akun Baru"}
+              {loading ? (
+                "Memproses..."
+              ) : mode === "login" ? (
+                <>
+                  Masuk Sekarang <ArrowRight size={16} />
+                </>
+              ) : (
+                <>
+                  Daftar Akun Baru <ArrowRight size={16} />
+                </>
+              )}
             </button>
           </form>
 
-          <div style={{ textAlign: "center", marginTop: "var(--space-4)", fontSize: "12px", color: "var(--text-muted)" }}>
-            KosMatch menghargai privasi Anda. Kata sandi dienkripsi dengan standar scrypt.
+          {/* Privacy & Security Note */}
+          <div className="auth-security-badge">
+            <ShieldCheck size={14} color="#8D654C" />
+            <span>Data Anda terlindungi dengan enkripsi kata sandi berstandar industri.</span>
           </div>
         </div>
       </main>
 
-      {/* Google Account Selector Modal */}
+      {/* =========================================================================
+          MODAL: INFORMASI INTEGRASI GOOGLE OAUTH 2.0 RESMI
+          (Ditampilkan jika kredensial GOOGLE_CLIENT_ID belum disetel di server)
+      ========================================================================== */}
       {showGoogleModal && (
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Pilih Akun Google"
           style={{
             position: "fixed",
             inset: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.6)",
-            backdropFilter: "blur(4px)",
+            zIndex: 9999,
+            background: "rgba(28, 27, 25, 0.65)",
+            backdropFilter: "blur(6px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            zIndex: 9999,
-            padding: "16px",
+            padding: "20px",
           }}
           onClick={() => setShowGoogleModal(false)}
         >
           <div
-            className="panel"
             style={{
+              background: "#FFFFFF",
+              borderRadius: "24px",
+              padding: "32px",
               width: "100%",
-              maxWidth: "420px",
-              padding: "24px",
-              background: "var(--surface)",
-              boxShadow: "0 20px 50px rgba(0,0,0,0.3)",
-              borderRadius: "16px",
+              maxWidth: "520px",
+              boxShadow: "0 25px 60px rgba(0, 0, 0, 0.25)",
+              border: "1px solid rgba(28, 27, 25, 0.1)",
+              position: "relative",
             }}
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Modal Header */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <GoogleLogo size={22} />
-                <h3 style={{ margin: 0, fontSize: "17px", fontWeight: 750 }}>Masuk dengan Google</h3>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <GoogleLogo size={24} />
+                <div>
+                  <h3 style={{ margin: 0, fontSize: "18px", fontWeight: 800, color: "#1C1B19" }}>
+                    Login Akun Google Resmi
+                  </h3>
+                  <span style={{ fontSize: "11.5px", color: "#8D654C", fontWeight: 700, letterSpacing: "0.5px" }}>
+                    GOOGLE IDENTITY SERVICES (OAUTH 2.0)
+                  </span>
+                </div>
               </div>
               <button
                 type="button"
-                className="btn-icon"
                 onClick={() => setShowGoogleModal(false)}
                 aria-label="Tutup"
-                style={{ background: "transparent", border: 0, cursor: "pointer" }}
+                style={{
+                  background: "#F4EFEB",
+                  border: 0,
+                  width: "32px",
+                  height: "32px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  color: "#1C1B19",
+                }}
               >
-                <X size={18} />
+                <X size={16} />
               </button>
             </div>
 
-            <p className="muted" style={{ fontSize: "13px", lineHeight: "1.5", margin: "0 0 16px" }}>
-              Pilih akun Google Anda untuk melanjutkan ke <strong>KosMatch</strong>. Data preferensi dan kos favorit Anda akan tersinkronisasi otomatis.
-            </p>
-
-            {/* Quick One-Click Accounts for UI / UNAND / ITERA Students */}
-            <div style={{ display: "grid", gap: "8px", marginBottom: "16px" }}>
-              {[
-                { email: "mahasiswa.ui@gmail.com", campus: "Universitas Indonesia (Depok)", role: "user" as const },
-                { email: "mahasiswa.unand@gmail.com", campus: "Universitas Andalas (Limau Manis)", role: "user" as const },
-                { email: "mahasiswa.itera@gmail.com", campus: "Institut Teknologi Sumatera", role: "user" as const },
-                { email: "pemilik.kost@gmail.com", campus: "Pemilik Kos Terdaftar", role: "owner" as const },
-              ].map((acc) => (
-                <button
-                  key={acc.email}
-                  type="button"
-                  className="btn btn-secondary"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "10px 14px",
-                    textAlign: "left",
-                    borderRadius: "10px",
-                    border: "1px solid var(--border)",
-                  }}
-                  onClick={() => handleGoogleSignIn(acc.email)}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                    <div
-                      style={{
-                        width: "32px",
-                        height: "32px",
-                        borderRadius: "50%",
-                        background: "rgba(66, 133, 244, 0.15)",
-                        color: "#4285F4",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontWeight: 700,
-                        fontSize: "13px",
-                      }}
-                    >
-                      {acc.email[0].toUpperCase()}
-                    </div>
-                    <div>
-                      <strong style={{ fontSize: "13px", display: "block" }}>{acc.email}</strong>
-                      <span className="muted" style={{ fontSize: "11px" }}>{acc.campus}</span>
-                    </div>
-                  </div>
-                  <Sparkles size={14} color="#F59E0B" />
-                </button>
-              ))}
+            {/* Explanation */}
+            <div
+              style={{
+                background: "#FAF7F4",
+                border: "1px solid rgba(141, 101, 76, 0.2)",
+                borderRadius: "14px",
+                padding: "14px 16px",
+                marginBottom: "20px",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
+                <KeyRound size={18} color="#8D654C" style={{ marginTop: "2px", flexShrink: 0 }} />
+                <div style={{ fontSize: "12.5px", lineHeight: "1.55", color: "#4A4641" }}>
+                  Google mewajibkan setiap aplikasi memiliki <strong>Client ID</strong> resmi agar browser dapat membuka jendela login <code>accounts.google.com</code> milik akun Gmail asli Anda.
+                </div>
+              </div>
             </div>
 
-            {/* Or custom Google Email */}
-            <div style={{ borderTop: "1px solid var(--border)", paddingTop: "14px" }}>
-              <label htmlFor="custom-google-email" style={{ fontSize: "12px", display: "block", marginBottom: "6px" }} className="muted">
-                Gunakan email Google lainnya:
+            {/* Steps to activate Google OAuth */}
+            <div style={{ marginBottom: "20px" }}>
+              <span style={{ fontSize: "12px", fontWeight: 750, color: "#1C1B19", textTransform: "uppercase", letterSpacing: "0.5px", display: "block", marginBottom: "8px" }}>
+                Cara Mengaktifkan Google OAuth Asli:
+              </span>
+              <ol style={{ margin: 0, paddingLeft: "18px", fontSize: "12.5px", color: "#5C5852", lineHeight: "1.6" }}>
+                <li>
+                  Buka{" "}
+                  <a
+                    href="https://console.cloud.google.com/apis/credentials"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ color: "#8D654C", fontWeight: 700, textDecoration: "underline" }}
+                  >
+                    Google Cloud Console <ExternalLink size={12} style={{ display: "inline" }} />
+                  </a>
+                </li>
+                <li>
+                  Buat <strong>OAuth 2.0 Client ID (Web Application)</strong> dengan Redirect URI:
+                  <div
+                    style={{
+                      background: "#1C1B19",
+                      color: "#E0A96D",
+                      padding: "6px 10px",
+                      borderRadius: "8px",
+                      fontFamily: "monospace",
+                      fontSize: "11.5px",
+                      marginTop: "4px",
+                      marginBottom: "4px",
+                      userSelect: "all",
+                    }}
+                  >
+                    http://localhost:3000/api/auth/google/callback
+                  </div>
+                </li>
+                <li>
+                  Tambahkan <code>GOOGLE_CLIENT_ID</code> dan <code>GOOGLE_CLIENT_SECRET</code> ke file <code>.env.local</code>.
+                </li>
+              </ol>
+            </div>
+
+            {/* Direct Sign-In with Real Personal Gmail */}
+            <div style={{ borderTop: "1px solid rgba(28, 27, 25, 0.08)", paddingTop: "18px" }}>
+              <label htmlFor="custom-personal-email" style={{ fontSize: "12.5px", fontWeight: 700, display: "block", marginBottom: "6px", color: "#1C1B19" }}>
+                Atau Masuk Instan dengan Email Pribadi Anda:
               </label>
-              <div style={{ display: "flex", gap: "8px" }}>
+              <p style={{ fontSize: "11.5px", color: "#78746D", margin: "0 0 10px" }}>
+                Ketik alamat Gmail asli Anda untuk langsung masuk dan menguji seluruh fitur akun:
+              </p>
+              <form onSubmit={handleCustomGoogleEmailSubmit} style={{ display: "flex", gap: "8px" }}>
                 <input
-                  id="custom-google-email"
+                  id="custom-personal-email"
                   type="email"
-                  placeholder="akunanda@gmail.com"
-                  className="field-input"
-                  style={{ flex: 1, fontSize: "13px" }}
+                  required
+                  placeholder="nama.anda@gmail.com"
+                  className="auth-input"
+                  style={{ flex: 1, paddingLeft: "14px", height: "42px", fontSize: "13px" }}
                   value={customGoogleEmail}
                   onChange={(e) => setCustomGoogleEmail(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && customGoogleEmail.trim()) {
-                      e.preventDefault();
-                      void handleGoogleSignIn(customGoogleEmail.trim());
-                    }
-                  }}
                 />
                 <button
-                  type="button"
-                  className="btn btn-primary btn-sm"
-                  disabled={!customGoogleEmail.includes("@")}
-                  onClick={() => handleGoogleSignIn(customGoogleEmail.trim())}
+                  type="submit"
+                  disabled={!customGoogleEmail.includes("@") || googleLoading}
+                  className="btn btn-primary"
+                  style={{
+                    background: "#8D654C",
+                    borderColor: "#8D654C",
+                    color: "#FFFFFF",
+                    borderRadius: "12px",
+                    padding: "0 18px",
+                    fontWeight: 700,
+                    fontSize: "13px",
+                    height: "42px",
+                    cursor: "pointer",
+                    flexShrink: 0,
+                  }}
                 >
-                  Masuk
+                  {googleLoading ? "Masuk..." : "Masuk Akun"}
                 </button>
-              </div>
+              </form>
             </div>
           </div>
         </div>
