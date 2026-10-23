@@ -35,6 +35,10 @@ describe("MapExplorer Component", () => {
     const h1 = screen.getByRole("heading", { level: 1 });
     expect(h1.textContent).toBe("Eksplorasi Area Kampus");
 
+    // Open sunflower floating menu to access campus options
+    const sunflowerBtn = screen.getByRole("button", { name: /Menu Titik Kampus/i });
+    fireEvent.click(sunflowerBtn);
+
     // Campus selection buttons
     const uiBtn = screen.getByRole("button", { name: /Universitas Indonesia/i });
     const unandBtn = screen.getByRole("button", { name: /Universitas Andalas/i });
@@ -101,16 +105,24 @@ describe("MapExplorer Component", () => {
   it("switches destination gates and re-estimates commute", () => {
     render(<MapExplorer />);
 
+    // Open sunflower floating menu
+    const sunflowerBtn = screen.getByRole("button", { name: /Menu Titik Kampus/i });
+    fireEvent.click(sunflowerBtn);
+
+    // Click active campus to branch out destination gates
+    const uiBtn = screen.getByRole("button", { name: /Universitas Indonesia/i });
+    fireEvent.click(uiBtn);
+
     // Check default gate button
     const kutekBtn = screen.getByRole("button", { name: /Pintu Kutek/i });
     expect(kutekBtn).not.toBeNull();
     fireEvent.click(kutekBtn);
-    expect(kutekBtn.className).toContain("selected");
+    expect(kutekBtn.className).toContain("active");
 
     // Select motorcycle mode
     const motorBtn = screen.getByRole("button", { name: /Motor/i });
     fireEvent.click(motorBtn);
-    expect(motorBtn.className).toContain("selected");
+    expect(motorBtn.className).toMatch(/active|selected/);
   });
 
   it("sorts listings by price ascending", () => {

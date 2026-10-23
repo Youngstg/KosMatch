@@ -654,57 +654,6 @@ export function MapExplorer() {
             </p>
           </div>
 
-          {/* Campus Switcher Pills */}
-          <fieldset className="fieldset-reset hud-section">
-            <legend className="hud-section-label">Pilih Kampus Pilot</legend>
-            <div className="chips">
-              {PILOT_CONFIG.allPilots.map((pilot) => {
-                const active = pilot.id === selectedCampus.id;
-                return (
-                  <button
-                    key={pilot.id}
-                    type="button"
-                    className={`chip ${active ? "selected" : ""}`}
-                    aria-pressed={active}
-                    onClick={() => handleCampusChange(pilot)}
-                  >
-                    <Building2 size={15} /> {pilot.campusName.split(" (")[0]}
-                  </button>
-                );
-              })}
-            </div>
-          </fieldset>
-
-          {/* Destination Gates Switcher */}
-          {selectedCampus.gates.length > 0 && (
-            <fieldset className="fieldset-reset hud-section">
-              <legend className="hud-section-label">
-                <Navigation size={13} className="text-accent" /> Titik Tujuan / Gerbang Kampus:
-              </legend>
-              <div className="chips" style={{ gap: "6px" }}>
-                {selectedCampus.gates.map((gate) => {
-                  const isSelected = selectedGate?.id === gate.id;
-                  return (
-                    <button
-                      key={gate.id}
-                      type="button"
-                      className={`chip ${isSelected ? "selected" : ""}`}
-                      style={{ fontSize: "12px", padding: "3px 10px", minHeight: "30px" }}
-                      aria-pressed={isSelected}
-                      onClick={() => {
-                        setSelectedGate(gate);
-                        if (activePoint) setLoadingCommute(true);
-                      }}
-                      title={gate.description}
-                    >
-                      {gate.shortLabel}
-                    </button>
-                  );
-                })}
-              </div>
-            </fieldset>
-          )}
-
           {/* Selected Campus Summary Card */}
           <article className="panel hud-campus-panel">
             <div className="hud-panel-head">
@@ -911,9 +860,9 @@ export function MapExplorer() {
                         <span
                           className="badge"
                           style={{
-                            background: "rgba(16, 185, 129, 0.15)",
-                            color: "#10B981",
-                            border: "1px solid rgba(16, 185, 129, 0.3)",
+                            background: "rgba(74, 148, 62, 0.15)",
+                            color: "#4A943E",
+                            border: "1px solid rgba(74, 148, 62, 0.3)",
                             fontWeight: 750,
                             fontSize: "11px",
                             padding: "2px 7px",
@@ -1190,26 +1139,19 @@ export function MapExplorer() {
                   : "orbit-itera";
 
               return (
-                <div
+                <button
                   key={pilot.id}
-                  role="menuitem"
-                  tabIndex={0}
+                  type="button"
                   className={`hud-sunflower-campus-pill ${orbitClass} ${isSelected ? "selected" : ""} ${isExpanded ? "expanded" : ""}`}
                   title={`Pilih ${pilot.campusName}`}
+                  aria-label={pilot.campusName}
                   onClick={() => {
                     handleCampusChange(pilot);
                     setExpandedCampusId(pilot.id === expandedCampusId ? null : pilot.id);
                   }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      handleCampusChange(pilot);
-                      setExpandedCampusId(pilot.id === expandedCampusId ? null : pilot.id);
-                    }
-                  }}
                 >
                   <span>{acronym}</span>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -1225,29 +1167,22 @@ export function MapExplorer() {
               const curveOffset = Math.round((1 - idx / (totalGates - 1 || 1)) * 48);
 
               return (
-                <div
+                <button
                   key={gate.id}
-                  role="menuitem"
-                  tabIndex={0}
+                  type="button"
                   className={`hud-sunflower-petal ${isSelected ? "active" : ""}`}
                   style={{ marginRight: `${curveOffset}px` }}
                   title={gate.description}
+                  aria-label={gate.shortLabel}
                   onClick={() => {
                     setSelectedGate(gate);
                     if (activePoint) setLoadingCommute(true);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      setSelectedGate(gate);
-                      if (activePoint) setLoadingCommute(true);
-                    }
                   }}
                 >
                   <span className="hud-sunflower-petal-dot" />
                   <span className="hud-sunflower-petal-label">{gate.shortLabel}</span>
                   {isSelected && <span className="hud-sunflower-petal-check">✓</span>}
-                </div>
+                </button>
               );
             })}
           </div>
@@ -1509,9 +1444,9 @@ export function MapExplorer() {
                                     className="badge"
                                     style={{
                                       fontSize: "10px",
-                                      color: "#10B981",
-                                      background: "rgba(16, 185, 129, 0.15)",
-                                      border: "1px solid rgba(16, 185, 129, 0.3)",
+                                      color: "#4A943E",
+                                      background: "rgba(74, 148, 62, 0.15)",
+                                      border: "1px solid rgba(74, 148, 62, 0.3)",
                                       padding: "1px 5px",
                                       display: "inline-flex",
                                       alignItems: "center",

@@ -296,7 +296,7 @@ export default function LoginPage() {
                     onClick={() => setRole("user")}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                      <GraduationCap size={15} color="#8D654C" />
+                      <GraduationCap size={15} color="#186049" />
                       <span className="auth-role-title">Mahasiswa</span>
                     </div>
                     <span className="auth-role-desc">Pencari kos &amp; simulasi biaya</span>
@@ -308,7 +308,7 @@ export default function LoginPage() {
                     onClick={() => setRole("owner")}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                      <Building2 size={15} color="#8D654C" />
+                      <Building2 size={15} color="#186049" />
                       <span className="auth-role-title">Pemilik Kos</span>
                     </div>
                     <span className="auth-role-desc">Kelola &amp; verifikasi kos</span>
@@ -344,7 +344,7 @@ export default function LoginPage() {
                   Kata Sandi:
                 </label>
                 {mode === "login" && (
-                  <span style={{ fontSize: "11.5px", color: "#8D654C", cursor: "pointer", fontWeight: 650 }}>
+                  <span style={{ fontSize: "11.5px", color: "#186049", cursor: "pointer", fontWeight: 650 }}>
                     Lupa sandi?
                   </span>
                 )}
@@ -430,7 +430,7 @@ export default function LoginPage() {
                   <h3 style={{ margin: 0, fontSize: "18px", fontWeight: 800, color: "#1C1B19" }}>
                     Login Akun Google Resmi
                   </h3>
-                  <span style={{ fontSize: "11.5px", color: "#8D654C", fontWeight: 700, letterSpacing: "0.5px" }}>
+                  <span style={{ fontSize: "11.5px", color: "#186049", fontWeight: 700, letterSpacing: "0.5px" }}>
                     GOOGLE IDENTITY SERVICES (OAUTH 2.0)
                   </span>
                 </div>
@@ -459,15 +459,15 @@ export default function LoginPage() {
             {/* Explanation */}
             <div
               style={{
-                background: "#FAF7F4",
-                border: "1px solid rgba(141, 101, 76, 0.2)",
+                background: "#FAF8F2",
+                border: "1px solid rgba(24, 96, 73, 0.2)",
                 borderRadius: "14px",
                 padding: "14px 16px",
                 marginBottom: "20px",
               }}
             >
               <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                <KeyRound size={18} color="#8D654C" style={{ marginTop: "2px", flexShrink: 0 }} />
+                <KeyRound size={18} color="#186049" style={{ marginTop: "2px", flexShrink: 0 }} />
                 <div style={{ fontSize: "12.5px", lineHeight: "1.55", color: "#4A4641" }}>
                   Google mewajibkan setiap aplikasi memiliki <strong>Client ID</strong> resmi agar browser dapat membuka jendela login <code>accounts.google.com</code> milik akun Gmail asli Anda.
                 </div>
@@ -486,7 +486,7 @@ export default function LoginPage() {
                     href="https://console.cloud.google.com/apis/credentials"
                     target="_blank"
                     rel="noreferrer"
-                    style={{ color: "#8D654C", fontWeight: 700, textDecoration: "underline" }}
+                    style={{ color: "#186049", fontWeight: 700, textDecoration: "underline" }}
                   >
                     Google Cloud Console <ExternalLink size={12} style={{ display: "inline" }} />
                   </a>
@@ -539,8 +539,8 @@ export default function LoginPage() {
                   disabled={!customGoogleEmail.includes("@") || googleLoading}
                   className="btn btn-primary"
                   style={{
-                    background: "#8D654C",
-                    borderColor: "#8D654C",
+                    background: "#186049",
+                    borderColor: "#186049",
                     color: "#FFFFFF",
                     borderRadius: "12px",
                     padding: "0 18px",
