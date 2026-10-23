@@ -1778,153 +1778,9 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   color: var(--hud-text);
 }
 
-/* =========================================================================
-   CARTO/OSM BASEMAP & PILOT RADIUS (4 KM) DISCLAIMER HUD ELEMENTS
-========================================================================== */
-.hud-map-disclaimer-overlay {
-  position: absolute;
-  top: 86px;
-  left: 440px;
-  right: auto;
-  z-index: 20;
-  pointer-events: auto;
-  max-width: 480px;
-}
 
-.hud-map-disclaimer-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: var(--hud-header-bg, rgba(18, 20, 26, 0.88));
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid var(--hud-border, rgba(255, 255, 255, 0.12));
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  font-size: 12px;
-  color: var(--hud-text, #F3F4F6);
-  line-height: 1.4;
-}
 
-.hud-dashed-radius-badge {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border-radius: 999px;
-  border: 2.5px dashed #F59E0B;
-  background: rgba(245, 158, 11, 0.2);
-  flex-shrink: 0;
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
-  animation: pulse-ring 2.5s ease-in-out infinite;
-}
 
-@keyframes pulse-ring {
-  0%, 100% {
-    box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
-    transform: scale(1);
-  }
-  50% {
-    box-shadow: 0 0 14px rgba(245, 158, 11, 0.85);
-    transform: scale(1.08);
-  }
-}
-
-.hud-map-disclaimer-text {
-  font-size: 11.5px;
-  color: var(--hud-text, #F3F4F6);
-}
-
-.hud-map-disclaimer-text strong {
-  color: #F59E0B;
-}
-
-/* Sidebar & Mobile Prominent Disclaimer Card */
-.hud-disclaimer-card {
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: rgba(245, 158, 11, 0.08);
-  border: 1px solid rgba(245, 158, 11, 0.28);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 14px;
-}
-
-[data-theme="dark"] .hud-disclaimer-card {
-  background: rgba(245, 158, 11, 0.12);
-  border-color: rgba(245, 158, 11, 0.35);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-}
-
-.hud-disclaimer-card-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12.5px;
-  font-weight: 750;
-  color: var(--text, #1F2937);
-  letter-spacing: -0.01em;
-}
-
-[data-theme="dark"] .hud-disclaimer-card-header {
-  color: #F9FAFB;
-}
-
-.hud-disclaimer-card-content {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.hud-disclaimer-card-text {
-  font-size: 11.5px;
-  line-height: 1.5;
-  color: var(--text-muted, #4B5563);
-  margin: 0;
-  text-align: left;
-}
-
-[data-theme="dark"] .hud-disclaimer-card-text {
-  color: #D1D5DB;
-}
-
-.hud-disclaimer-card-text strong {
-  color: var(--text, #111827);
-}
-
-[data-theme="dark"] .hud-disclaimer-card-text strong {
-  color: #FFFFFF;
-}
-
-.campus-highlight-chip {
-  display: inline-block;
-  background: rgba(245, 158, 11, 0.18);
-  color: #B45309;
-  font-weight: 750;
-  font-size: 11px;
-  padding: 1px 6px;
-  border-radius: 4px;
-  border: 1px solid rgba(245, 158, 11, 0.3);
-}
-
-[data-theme="dark"] .campus-highlight-chip {
-  background: rgba(245, 158, 11, 0.25);
-  color: #FCD34D;
-  border-color: rgba(245, 158, 11, 0.45);
-}
-
-.hud-info-icon {
-  flex-shrink: 0;
-  margin-top: 2px;
-  color: #F59E0B;
-}
-
-.mobile-disclaimer-card {
-  margin-top: 16px;
-  margin-bottom: 8px;
-}
 
 /* =========================================================================
    HUD POI CATEGORY CHECKLIST & LEGEND RAIL
@@ -2015,21 +1871,7 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   border-color: transparent;
 }
 
-@media (max-width: 900px) {
-  .hud-map-disclaimer-overlay {
-    top: 76px;
-    right: 12px;
-    left: 12px;
-    max-width: none;
-  }
-  .hud-map-disclaimer-pill {
-    width: 100%;
-    justify-content: center;
-    text-align: center;
-    font-size: 11px;
-    padding: 6px 12px;
-  }
-}
+
 
 /* =========================================================================
    ARCHITECTURAL EDITORIAL LANDING PAGE (RANTY LUXURY SPECIFICATION)

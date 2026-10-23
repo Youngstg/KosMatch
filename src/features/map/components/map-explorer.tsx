@@ -19,7 +19,6 @@ import {
   Compass,
   CreditCard,
   Footprints,
-  Info,
   Landmark,
   Layers,
   Loader2,
@@ -614,15 +613,6 @@ export function MapExplorer() {
           onListingSelect={handleSelectListing}
         />
 
-        {/* Floating Map Disclaimer & Pilot Radius Claim Overlay */}
-        <div className="hud-map-disclaimer-overlay" role="note" aria-label="Informasi radius survei pilot dan peta dasar">
-          <div className="hud-map-disclaimer-pill">
-            <span className="hud-dashed-radius-badge" aria-hidden="true" />
-            <span className="hud-map-disclaimer-text">
-              Peta dasar CARTO/OSM · Radius survei <strong>{selectedCampus.radiusKm} km</strong> ({selectedCampus.shortName})
-            </span>
-          </div>
-        </div>
       </main>
 
       {/* =========================================================================
@@ -1142,19 +1132,6 @@ export function MapExplorer() {
             area={selectedListing?.area ?? ""}
           />
 
-          {/* Prominent Pilot Radius & Basemap Claim Card */}
-          <div className="hud-disclaimer-card" role="note" aria-label="Klaim peta dasar dan radius pilot">
-            <div className="hud-disclaimer-card-header">
-              <span className="hud-dashed-radius-badge" aria-hidden="true" />
-              <strong>Radius Survei Pilot {selectedCampus.radiusKm} km</strong>
-            </div>
-            <div className="hud-disclaimer-card-content">
-              <Info size={14} className="hud-info-icon" />
-              <p className="hud-disclaimer-card-text">
-                Peta dasar didukung <strong>OpenStreetMap/CARTO</strong>. Area putus-putus menandai radius survei <strong>{selectedCampus.radiusKm} km</strong> di sekitar kampus <span className="campus-highlight-chip">{selectedCampus.shortName}</span>.
-              </p>
-            </div>
-          </div>
         </div>
       </aside>
 
@@ -1562,16 +1539,6 @@ export function MapExplorer() {
                 </div>
               )}
 
-              {/* Mobile Pilot Radius & Basemap Claim Card */}
-              <div className="hud-disclaimer-card mobile-disclaimer-card" role="note" aria-label="Klaim peta dasar dan radius pilot">
-                <div className="hud-disclaimer-card-header">
-                  <span className="hud-dashed-radius-badge" aria-hidden="true" />
-                  <strong>Radius Survei Pilot {selectedCampus.radiusKm} km</strong>
-                </div>
-                <p className="hud-disclaimer-card-text">
-                  Peta dasar didukung <strong>OpenStreetMap/CARTO</strong>. Area putus-putus menandai zona survei pilot {selectedCampus.radiusKm} km sekitar kampus <span className="campus-highlight-chip">{selectedCampus.shortName}</span>.
-                </p>
-              </div>
             </div>
 
             {/* Mobile Sheet Fixed Footer CTA */}
