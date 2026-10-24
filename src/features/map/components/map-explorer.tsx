@@ -23,6 +23,7 @@ import {
   Landmark,
   Layers,
   Loader2,
+  LogOut,
   MapPin,
   Moon,
   Navigation,
@@ -160,6 +161,19 @@ export function MapExplorer() {
   const [mobileDrawerState, setMobileDrawerState] = useState<"peek" | "expanded">("peek");
   const [mobileActiveTab, setMobileActiveTab] = useState<"detail" | "route" | "amenities">("detail");
   const [mobileCampusPickerOpen, setMobileCampusPickerOpen] = useState<boolean>(false);
+
+  const [currentUser, setCurrentUser] = useState<{ email: string; role: string } | null>(null);
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.user) {
+          setCurrentUser(data.user);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const [neighborhoodProfile, setNeighborhoodProfile] = useState<NeighborhoodProfileResult | null>(null);
   const [loadingProfile, setLoadingProfile] = useState<boolean>(false);
@@ -471,6 +485,22 @@ export function MapExplorer() {
             >
               {mapTheme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
             </button>
+
+            {/* Logout Button if Logged In */}
+            {currentUser && (
+              <button
+                type="button"
+                className="hud-btn-icon desktop-only"
+                title={`Keluar (${currentUser.email})`}
+                aria-label="Keluar dari akun"
+                onClick={async () => {
+                  await fetch("/api/auth/logout", { method: "POST" });
+                  window.location.href = "/auth/login";
+                }}
+              >
+                <LogOut size={16} />
+              </button>
+            )}
 
             {/* Sidebar HUD Toggle for Desktop */}
             <button

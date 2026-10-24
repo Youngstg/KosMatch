@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Calculator, Compass, LogIn, User } from "lucide-react";
+import { ArrowRight, Calculator, Compass, LogIn, LogOut, User } from "lucide-react";
 import { LandingFeatures } from "./landing-features";
 import { LandingFaq } from "./landing-faq";
 import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
@@ -41,6 +41,21 @@ export function LandingView({ onStart }: LandingViewProps) {
       .catch(() => {});
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      setCurrentUser(null);
+      window.location.reload();
+    } catch {}
+  };
+
+  const handleExploreClick = (e: React.MouseEvent) => {
+    if (!currentUser) {
+      e.preventDefault();
+      window.location.href = "/auth/login?redirect=/explore";
+    }
+  };
+
   return (
     <div className="shell landing-shell landing-editorial-theme">
       {/* =========================================================================
@@ -53,7 +68,7 @@ export function LandingView({ onStart }: LandingViewProps) {
           <div className="container header-inner">
             <Brand />
             <nav className="editorial-topbar-nav" aria-label="Navigasi Halaman">
-              <a className="editorial-nav-link highlight" href="/explore">
+              <a className="editorial-nav-link highlight" href="/explore" onClick={handleExploreClick}>
                 <Compass size={14} /> Peta Eksplorasi
               </a>
               <a className="editorial-nav-link" href="#faq">
@@ -62,15 +77,38 @@ export function LandingView({ onStart }: LandingViewProps) {
             </nav>
             <div className="actions compact editorial-topbar-actions">
               {currentUser ? (
-                <a
-                  className="btn btn-editorial-ghost"
-                  href={currentUser.role === "admin" || currentUser.role === "owner" ? "/admin" : "/explore"}
-                  style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
-                  title={`Login sebagai ${currentUser.email}`}
-                >
-                  <User size={14} />
-                  <span>{currentUser.email.split("@")[0]}</span>
-                </a>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <a
+                    className="btn btn-editorial-ghost"
+                    href={currentUser.role === "admin" || currentUser.role === "owner" ? "/admin" : "/explore"}
+                    style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+                    title={`Login sebagai ${currentUser.email}`}
+                  >
+                    <User size={14} />
+                    <span>{currentUser.email.split("@")[0]}</span>
+                  </a>
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="btn btn-editorial-ghost"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      fontSize: "12px",
+                      color: "var(--danger, #B42318)",
+                      cursor: "pointer",
+                      padding: "6px 12px",
+                      borderRadius: "8px",
+                      border: "1px solid rgba(180, 35, 24, 0.2)",
+                      background: "rgba(180, 35, 24, 0.05)",
+                    }}
+                    title="Keluar dari akun KosMatch"
+                  >
+                    <LogOut size={13} />
+                    <span>Keluar</span>
+                  </button>
+                </div>
               ) : (
                 <a
                   className="btn btn-editorial-ghost"
@@ -104,6 +142,7 @@ export function LandingView({ onStart }: LandingViewProps) {
               <div className="actions editorial-actions" style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
                 <Link
                   href="/explore"
+                  onClick={handleExploreClick}
                   className="btn btn-editorial-start"
                   style={{ display: "inline-flex", alignItems: "center", gap: "8px", textDecoration: "none" }}
                 >
@@ -150,6 +189,7 @@ export function LandingView({ onStart }: LandingViewProps) {
               </div>
               <a
                 href="/explore"
+                onClick={handleExploreClick}
                 className="btn btn-editorial-start"
                 style={{
                   display: "inline-flex",

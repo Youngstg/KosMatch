@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
-import { AlertTriangle, ArrowLeft, Check, Clock3, Compass, Download, FileUp, Info, MapPin, Pencil, Plus, Printer, RotateCcw, Scale, Star, Trash2 } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Check, Clock3, Compass, Download, FileUp, Info, LogOut, MapPin, Pencil, Plus, Printer, RotateCcw, Scale, Star, Trash2 } from "lucide-react";
 import { IndexedDbProjectRepository } from "@/data/indexeddb";
 import { calculateCost } from "@/domain/costing";
 import type { AccommodationOption, ComparisonProject, CriterionKey } from "@/domain/entities";
@@ -369,6 +369,18 @@ function ProjectWorkspace({ repository, projects, project, initialOptions, onPro
             <Link href="/explore" className="btn btn-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
               <Compass size={17} /> Peta
             </Link>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              style={{ color: "var(--danger, #B42318)" }}
+              title="Keluar dari akun"
+              onClick={async () => {
+                await fetch("/api/auth/logout", { method: "POST" });
+                window.location.href = "/";
+              }}
+            >
+              <LogOut size={16} /> Keluar
+            </button>
             <button className="btn btn-secondary" onClick={onNewProject}>
               <Plus size={18} /> Baru
             </button>
@@ -655,14 +667,17 @@ export function KosMatchWorkspace() {
               <button
                 type="button"
                 className="btn btn-ghost"
-                onClick={() => {
+                title="Keluar dari akun KosMatch"
+                style={{ color: "var(--danger, #B42318)" }}
+                onClick={async () => {
+                  await fetch("/api/auth/logout", { method: "POST" });
                   if (typeof window !== "undefined") {
                     window.location.hash = "";
                   }
-                  setView("landing");
+                  window.location.href = "/";
                 }}
               >
-                Keluar
+                <LogOut size={15} /> Keluar
               </button>
             </div>
           </div>
