@@ -7,6 +7,7 @@ export function middleware(request: NextRequest) {
 
   const isProtectedRoute =
     pathname.startsWith("/explore") ||
+    pathname.startsWith("/calculator") ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/listings/new");
 
@@ -20,5 +21,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/explore/:path*", "/admin/:path*", "/listings/new/:path*"],
+  matcher: ["/explore/:path*", "/calculator/:path*", "/admin/:path*", "/listings/new/:path*"],
 };

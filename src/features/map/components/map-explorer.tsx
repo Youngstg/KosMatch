@@ -135,7 +135,7 @@ function Brand() {
 export function MapExplorer() {
   const router = useRouter();
   const navigateToCalculator = () => {
-    router.push("/#calculator");
+    router.push("/calculator");
   };
 
   const [selectedCampus, setSelectedCampus] = useState<PilotSpecification>(PILOT_CONFIG.primaryPilot);
@@ -458,7 +458,7 @@ export function MapExplorer() {
             <Link href="/explore" className="hud-nav-link active">
               <span className="hud-nav-indicator" /> Eksplorasi
             </Link>
-            <Link href="/#calculator" className="hud-nav-link">
+            <Link href="/calculator" className="hud-nav-link">
               Kalkulator DSS
             </Link>
           </nav>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import { AlertTriangle, ArrowLeft, Check, Clock3, Compass, Download, FileUp, Info, LogOut, MapPin, Pencil, Plus, Printer, RotateCcw, Scale, Star, Trash2 } from "lucide-react";
 import { IndexedDbProjectRepository } from "@/data/indexeddb";
@@ -306,7 +307,7 @@ function ProjectWorkspace({ repository, projects, project, initialOptions, onPro
             <Link href="/explore" className="hud-nav-link">
               Eksplorasi
             </Link>
-            <Link href="/#calculator" className="hud-nav-link active">
+            <Link href="/calculator" className="hud-nav-link active">
               <span className="hud-nav-indicator" /> Kalkulator DSS
             </Link>
           </nav>
@@ -404,17 +405,32 @@ function DataTools({repository,project,options,onProjectDeleted}:{repository:Ind
   return <section><h2 className="section-title">Data dan pemulihan</h2><div className="tool-grid"><article className="panel"><Download size={24}/><h3>Backup proyek</h3><p className="muted">Ekspor proyek dan {options.length} pilihan sebagai JSON tervalidasi.</p><button className="btn btn-secondary" onClick={download}>Unduh backup</button></article><article className="panel"><Printer size={24}/><h3>Ringkasan cetak</h3><p className="muted">Buat PDF melalui dialog cetak browser tanpa URL dan catatan privat.</p><button className="btn btn-secondary" onClick={()=>window.print()}>Cetak ringkasan</button></article><article className="panel danger-zone"><Trash2 size={24}/><h3>Hapus proyek</h3><p className="muted">Menghapus proyek ini beserta semua pilihannya dari sistem.</p><button className="btn btn-danger" onClick={async()=>{if(!confirm("Hapus seluruh proyek perbandingan? Semua pilihan dan catatan akan hilang."))return;await repository.deleteProject(project.id);onProjectDeleted();}}>Hapus seluruh proyek</button></article></div>{message&&<div className="inline-alert good" role="status">{message}</div>}<div className="print-block"><PrintSummaryView project={project} options={options} selectedOptionIds={options.map((option)=>option.id)}/></div></section>;
 }
 
-export function KosMatchWorkspace() {
+export type KosMatchWorkspaceProps = {
+  currentUser?: { userId: string; email: string; role: string } | null;
+  mode?: "landing" | "calculator";
+};
+
+export function KosMatchWorkspace({
+  currentUser: initialUser,
+  mode = "landing",
+}: KosMatchWorkspaceProps) {
+  const router = useRouter();
   const [repository, setRepository] = useState<IndexedDbProjectRepository | null>(null);
-  const [view, setView] = useState<View>("landing");
+  const [view, setView] = useState<View>(mode === "calculator" ? "loading" : "landing");
   const [project, setProject] = useState<ComparisonProject | null>(null);
   const [projects, setProjects] = useState<ComparisonProject[]>([]);
   const [options, setOptions] = useState<AccommodationOption[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [importing, setImporting] = useState(false);
-  const [currentUser, setCurrentUser] = useState<{ userId: string; email: string; role: string } | null>(null);
+  const [currentUser, setCurrentUser] = useState<{ userId: string; email: string; role: string } | null>(
+    initialUser ?? null
+  );
 
   useEffect(() => {
+    if (initialUser !== undefined) {
+      setCurrentUser(initialUser);
+      return;
+    }
     let active = true;
     fetch("/api/auth/me")
       .then((res) => res.json())
@@ -427,7 +443,7 @@ export function KosMatchWorkspace() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [initialUser]);
 
   const initialize = async () => {
     setView("loading");
@@ -441,7 +457,7 @@ export function KosMatchWorkspace() {
       setProject(loaded);
       setOptions(loaded === null ? [] : await nextRepository.listOptions(loaded.id));
       setRepository(nextRepository);
-      setView("landing");
+      setView(loaded !== null ? "project" : "setup");
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Gagal memuat data sistem.");
       setView("error");
@@ -453,49 +469,36 @@ export function KosMatchWorkspace() {
     if (typeof navigator !== "undefined" && navigator.storage?.persist) {
       void navigator.storage.persist().catch(() => {});
     }
+
+    // Forward any legacy #calculator hash from / to /calculator
+    if (mode === "landing" && typeof window !== "undefined") {
+      const hash = window.location.hash.toLowerCase();
+      if (
+        hash.includes("calculator") ||
+        hash.includes("kalkulator") ||
+        hash.includes("setup") ||
+        hash.includes("project")
+      ) {
+        window.location.hash = "";
+        router.replace("/calculator");
+        return;
+      }
+    }
+
     const nextRepository = getBrowserRepository();
     void nextRepository.listProjects().then(async (allProjects) => {
+      if (!active) return;
       const activeId = await nextRepository.getSetting<string>("activeProjectId");
       const loaded = allProjects.find((item) => item.id === activeId) ?? allProjects[0] ?? null;
       const loadedOptions = loaded === null ? [] : await nextRepository.listOptions(loaded.id);
-      if (active) {
-        setProjects(allProjects);
-        setProject(loaded);
-        setOptions(loadedOptions);
-        setRepository(nextRepository);
 
-        // Langsung buka Kalkulator DSS / Project jika URL memiliki hash #setup atau #calculator
-        if (typeof window !== "undefined") {
-          const hash = window.location.hash.toLowerCase();
-          const isCalculatorHash =
-            hash.includes("setup") ||
-            hash.includes("calculator") ||
-            hash.includes("kalkulator") ||
-            hash.includes("project") ||
-            hash.includes("workspace") ||
-            hash.includes("compare");
+      setProjects(allProjects);
+      setProject(loaded);
+      setOptions(loadedOptions);
+      setRepository(nextRepository);
 
-          if (isCalculatorHash) {
-            void fetch("/api/auth/me")
-              .then((res) => res.json())
-              .then((data) => {
-                if (data?.user) {
-                  setCurrentUser(data.user);
-                  if (hash.includes("setup")) {
-                    setView("setup");
-                  } else {
-                    setView(loaded !== null ? "project" : "setup");
-                  }
-                } else {
-                  window.location.href = "/auth/login?redirect=/#calculator";
-                }
-              })
-              .catch(() => {
-                window.location.href = "/auth/login?redirect=/#calculator";
-              });
-            return;
-          }
-        }
+      if (mode === "calculator") {
+        setView(loaded !== null ? "project" : "setup");
       }
     }).catch((cause: unknown) => {
       if (active) {
@@ -504,46 +507,10 @@ export function KosMatchWorkspace() {
       }
     });
 
-    const handleHashChange = () => {
-      const hash = window.location.hash.toLowerCase();
-      const isCalculatorHash =
-        hash.includes("setup") ||
-        hash.includes("calculator") ||
-        hash.includes("kalkulator") ||
-        hash.includes("project") ||
-        hash.includes("workspace") ||
-        hash.includes("compare");
-
-      if (isCalculatorHash) {
-        void fetch("/api/auth/me")
-          .then((res) => res.json())
-          .then((data) => {
-            if (data?.user) {
-              setCurrentUser(data.user);
-              if (hash.includes("setup")) {
-                setView("setup");
-              } else {
-                setView(project !== null ? "project" : "setup");
-              }
-            } else {
-              window.location.href = "/auth/login?redirect=/#calculator";
-            }
-          })
-          .catch(() => {
-            window.location.href = "/auth/login?redirect=/#calculator";
-          });
-      } else if (!hash || hash === "#" || hash.includes("landing")) {
-        setView("landing");
-      }
-    };
-
-    window.addEventListener("hashchange", handleHashChange);
-
     return () => {
       active = false;
-      window.removeEventListener("hashchange", handleHashChange);
     };
-  }, [project]);
+  }, [mode, router]);
 
   const importFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -598,32 +565,9 @@ export function KosMatchWorkspace() {
     return (
       <>
         <LandingView
-          onStart={async () => {
-            let user = currentUser;
-            if (!user) {
-              try {
-                const res = await fetch("/api/auth/me");
-                const data = await res.json();
-                user = data?.user ?? null;
-              } catch {}
-            }
-            if (!user) {
-              window.location.href = "/auth/login?redirect=/#calculator";
-              return;
-            }
-            if (typeof window !== "undefined") {
-              window.location.hash = "setup";
-            }
-            if (repository === null) {
-              setView("loading");
-              const nextRepo = getBrowserRepository();
-              void nextRepo.listProjects().then(() => {
-                setRepository(nextRepo);
-                setView("setup");
-              });
-            } else {
-              setView("setup");
-            }
+          initialUser={currentUser}
+          onStart={() => {
+            router.push("/calculator");
           }}
         />
       </>
@@ -645,7 +589,7 @@ export function KosMatchWorkspace() {
               <Link href="/explore" className="hud-nav-link">
                 Eksplorasi
               </Link>
-              <Link href="/#calculator" className="hud-nav-link active">
+              <Link href="/calculator" className="hud-nav-link active">
                 <span className="hud-nav-indicator" /> Kalkulator DSS
               </Link>
             </nav>
@@ -656,10 +600,7 @@ export function KosMatchWorkspace() {
                 title="Kembali ke Beranda"
                 aria-label="Beranda"
                 onClick={() => {
-                  if (typeof window !== "undefined") {
-                    window.location.hash = "";
-                  }
-                  setView("landing");
+                  router.push("/");
                 }}
               >
                 <ArrowLeft size={17} />
@@ -671,10 +612,7 @@ export function KosMatchWorkspace() {
                 style={{ color: "var(--danger, #B42318)" }}
                 onClick={async () => {
                   await fetch("/api/auth/logout", { method: "POST" });
-                  if (typeof window !== "undefined") {
-                    window.location.hash = "";
-                  }
-                  window.location.href = "/";
+                  window.location.href = "/auth/login";
                 }}
               >
                 <LogOut size={15} /> Keluar
@@ -690,13 +628,10 @@ export function KosMatchWorkspace() {
             <button
               className="btn btn-ghost"
               onClick={() => {
-                if (typeof window !== "undefined") {
-                  window.location.hash = "";
-                }
-                setView("landing");
+                router.push("/");
               }}
             >
-              Keluar
+              Beranda
             </button>
           </div>
         </header>
@@ -704,10 +639,11 @@ export function KosMatchWorkspace() {
           <PreferencesForm
             mode="create"
             onCancel={() => {
-              if (typeof window !== "undefined") {
-                window.location.hash = "";
+              if (projects.length > 0 && project) {
+                setView("project");
+              } else {
+                router.push("/");
               }
-              setView("landing");
             }}
             onSave={async (value) => {
               const activeRepo = repository ?? getBrowserRepository();
@@ -717,9 +653,6 @@ export function KosMatchWorkspace() {
               setProjects((all) => [value, ...all]);
               setProject(value);
               setOptions([]);
-              if (typeof window !== "undefined") {
-                window.location.hash = "project";
-              }
               setView("project");
             }}
           />
@@ -736,15 +669,9 @@ export function KosMatchWorkspace() {
         project={project}
         initialOptions={options}
         onBack={() => {
-          if (typeof window !== "undefined") {
-            window.location.hash = "";
-          }
-          setView("landing");
+          router.push("/");
         }}
         onNewProject={() => {
-          if (typeof window !== "undefined") {
-            window.location.hash = "setup";
-          }
           setView("setup");
         }}
         onSwitchProject={async (id) => {
@@ -766,7 +693,7 @@ export function KosMatchWorkspace() {
               await activeRepo.saveSetting("activeProjectId", next.id);
               setView("project");
             } else {
-              setView("landing");
+              setView("setup");
             }
           });
         }}

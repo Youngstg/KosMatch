@@ -13,6 +13,7 @@ export type LandingViewProps = {
   onDemo?: () => void;
   hasSaved?: boolean;
   onResume?: () => void;
+  initialUser?: { email: string; role: string } | null;
 };
 
 function Brand() {
@@ -27,10 +28,16 @@ function Brand() {
   );
 }
 
-export function LandingView({ onStart }: LandingViewProps) {
-  const [currentUser, setCurrentUser] = useState<{ email: string; role: string } | null>(null);
+export function LandingView({ onStart, initialUser }: LandingViewProps) {
+  const [currentUser, setCurrentUser] = useState<{ email: string; role: string } | null>(
+    initialUser ?? null
+  );
 
   useEffect(() => {
+    if (initialUser !== undefined) {
+      setCurrentUser(initialUser);
+      return;
+    }
     fetch("/api/auth/me")
       .then((res) => res.json())
       .then((data) => {
@@ -39,7 +46,7 @@ export function LandingView({ onStart }: LandingViewProps) {
         }
       })
       .catch(() => {});
-  }, []);
+  }, [initialUser]);
 
   const handleLogout = async () => {
     try {
