@@ -1,3 +1,5 @@
+import { HudHeader } from "@/components/navigation";
+
 export function WorkspaceSkeleton() {
   return (
     <div
@@ -7,13 +9,26 @@ export function WorkspaceSkeleton() {
       aria-label="Memuat ruang kerja KosMatch..."
     >
       <span className="sr-only">Memuat data dan ruang kerja KosMatch...</span>
-      <header className="topbar">
+      {/* Floating HUD Topbar for Desktop Skeleton (Matches Map & Workspace HUD) */}
+      <HudHeader
+        activeTab="calculator"
+        className="no-print"
+        isSkeleton={true}
+        leftSlot={<div className="skeleton" style={{ width: 140, height: 32, borderRadius: 999 }} />}
+      >
+        <div className="skeleton" style={{ width: 38, height: 38, borderRadius: 10 }} />
+        <div className="skeleton" style={{ width: 100, height: 38, borderRadius: 10 }} />
+        <div className="skeleton" style={{ width: 150, height: 38, borderRadius: 10 }} />
+      </HudHeader>
+
+      {/* Fallback Mobile Topbar for Narrow Screens */}
+      <header className="topbar mobile-only no-print" aria-hidden="true">
         <div className="container header-inner">
-          <div className="brand" aria-hidden="true">
+          <div className="brand">
             <span className="logo skeleton" style={{ width: 38, height: 38, borderRadius: "var(--radius-control)" }} />
             <div className="skeleton" style={{ width: 110, height: 22, borderRadius: "var(--radius-control)" }} />
           </div>
-          <div className="actions compact" aria-hidden="true">
+          <div className="actions compact">
             <div className="skeleton" style={{ width: 88, height: 42, borderRadius: "var(--radius-control)" }} />
             <div className="skeleton" style={{ width: 140, height: 42, borderRadius: "var(--radius-control)" }} />
           </div>

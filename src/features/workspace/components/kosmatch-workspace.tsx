@@ -38,6 +38,7 @@ const monthlyFieldLabels: Record<string, string> = { rent: "sewa", electricity: 
 type Match = ReturnType<typeof matchAndRank>[number];
 type ComparisonRow = Readonly<{ label: string; render: (match: Match) => string }>;
 import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
+import { HudHeader } from "@/components/navigation";
 
 type ComparisonGroup = Readonly<{ key: string; label: string; rows: readonly ComparisonRow[] }>;
 
@@ -281,71 +282,57 @@ function ProjectWorkspace({ repository, projects, project, initialOptions, onPro
   const eligibleCount=matches.filter((m)=>m.eligible).length; const simulatedOption=options.find((o)=>o.id===(simulated??options[0]?.id));
   return (
     <div className="shell">
-      {/* Floating HUD Topbar for Desktop (matches Map Explorer HUD) */}
-      <header className="hud-floating-topbar desktop-only no-print">
-        <div className="hud-topbar-inner">
-          <div className="hud-topbar-left">
-            <Brand subtitle="Kalkulator DSS" />
-            <div className="hud-project-select-wrapper">
-              <label className="sr-only" htmlFor="project-switcher">Pilih proyek</label>
-              <select
-                id="project-switcher"
-                className="hud-project-select"
-                value={currentProject.id}
-                onChange={(event) => void onSwitchProject(event.target.value)}
-              >
-                {projects.map((item) => (
-                  <option value={item.id} key={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+      {/* Floating HUD Topbar for Desktop (Unified Shared Component) */}
+      <HudHeader
+        activeTab="calculator"
+        className="no-print"
+        leftSlot={
+          <div className="hud-project-select-wrapper">
+            <label className="sr-only" htmlFor="project-switcher">Pilih proyek</label>
+            <select
+              id="project-switcher"
+              className="hud-project-select"
+              value={currentProject.id}
+              onChange={(event) => void onSwitchProject(event.target.value)}
+            >
+              {projects.map((item) => (
+                <option value={item.id} key={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
           </div>
-
-          {/* Desktop Center Navigation Pills (Identical to Map Explorer) */}
-          <nav className="hud-topbar-nav" aria-label="Navigasi Utama">
-            <Link href="/explore" className="hud-nav-link">
-              Eksplorasi
-            </Link>
-            <Link href="/calculator" className="hud-nav-link active">
-              <span className="hud-nav-indicator" /> Kalkulator DSS
-            </Link>
-          </nav>
-
-          {/* Topbar Actions */}
-          <div className="hud-topbar-right">
-            <button
-              type="button"
-              className="hud-btn-icon"
-              title="Kembali ke Beranda"
-              aria-label="Beranda"
-              onClick={onBack}
-            >
-              <ArrowLeft size={17} />
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={onNewProject}
-              style={{ padding: "6px 14px", height: "36px", fontSize: "13px", display: "inline-flex", alignItems: "center", gap: "6px" }}
-            >
-              <Plus size={16} /> Proyek baru
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() => {
-                setEditing(undefined);
-                setShowEditor(true);
-              }}
-              style={{ padding: "6px 14px", height: "36px", fontSize: "13px", display: "inline-flex", alignItems: "center", gap: "6px" }}
-            >
-              <Plus size={16} /> Tambah Kos Manual
-            </button>
-          </div>
-        </div>
-      </header>
+        }
+      >
+        <button
+          type="button"
+          className="hud-btn-icon"
+          title="Kembali ke Beranda"
+          aria-label="Beranda"
+          onClick={onBack}
+        >
+          <ArrowLeft size={17} />
+        </button>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={onNewProject}
+          style={{ padding: "6px 14px", height: "38px", minHeight: "38px", fontSize: "13px", display: "inline-flex", alignItems: "center", gap: "6px", borderRadius: "10px" }}
+        >
+          <Plus size={16} /> Proyek baru
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => {
+            setEditing(undefined);
+            setShowEditor(true);
+          }}
+          style={{ padding: "6px 14px", height: "38px", minHeight: "38px", fontSize: "13px", display: "inline-flex", alignItems: "center", gap: "6px", borderRadius: "10px" }}
+        >
+          <Plus size={16} /> Tambah Kos Manual
+        </button>
+      </HudHeader>
 
       {/* Fallback Mobile Topbar for Narrow Screens */}
       <header className="topbar mobile-only no-print">
@@ -574,51 +561,42 @@ export function KosMatchWorkspace({
   if (view === "setup") {
     return (
       <div className="shell">
-        {/* Floating HUD Topbar for Desktop (matches Map Explorer HUD) */}
-        <header className="hud-floating-topbar desktop-only no-print">
-          <div className="hud-topbar-inner">
-            <div className="hud-topbar-left">
-              <Brand subtitle="Setup Proyek" />
-              <span className="hud-project-select" style={{ display: "inline-flex", alignItems: "center", pointerEvents: "none" }}>
-                Proyek Baru
-              </span>
-            </div>
-            <nav className="hud-topbar-nav" aria-label="Navigasi Utama">
-              <Link href="/explore" className="hud-nav-link">
-                Eksplorasi
-              </Link>
-              <Link href="/calculator" className="hud-nav-link active">
-                <span className="hud-nav-indicator" /> Kalkulator DSS
-              </Link>
-            </nav>
-            <div className="hud-topbar-right">
-              <button
-                type="button"
-                className="hud-btn-icon"
-                title="Kembali ke Beranda"
-                aria-label="Beranda"
-                onClick={() => {
-                  router.push("/");
-                }}
-              >
-                <ArrowLeft size={17} />
-              </button>
-              <button
-                type="button"
-                className="btn btn-ghost"
-                title="Keluar dari akun KosMatch"
-                style={{ color: "var(--danger, #B42318)" }}
-                onClick={async () => {
-                  await fetch("/api/auth/logout", { method: "POST" });
-                  router.push("/auth/login");
-                  router.refresh();
-                }}
-              >
-                <LogOut size={15} /> Keluar
-              </button>
-            </div>
-          </div>
-        </header>
+        {/* Floating HUD Topbar for Desktop (Unified Shared Component) */}
+        <HudHeader
+          activeTab="calculator"
+          brandSubtitle="Setup Proyek"
+          className="no-print"
+          leftSlot={
+            <span className="hud-project-select" style={{ display: "inline-flex", alignItems: "center", pointerEvents: "none" }}>
+              Proyek Baru
+            </span>
+          }
+        >
+          <button
+            type="button"
+            className="hud-btn-icon"
+            title="Kembali ke Beranda"
+            aria-label="Beranda"
+            onClick={() => {
+              router.push("/");
+            }}
+          >
+            <ArrowLeft size={17} />
+          </button>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            title="Keluar dari akun KosMatch"
+            style={{ color: "var(--danger, #B42318)", height: "38px", minHeight: "38px", display: "inline-flex", alignItems: "center", gap: "6px", borderRadius: "10px", padding: "6px 12px" }}
+            onClick={async () => {
+              await fetch("/api/auth/logout", { method: "POST" });
+              router.push("/auth/login");
+              router.refresh();
+            }}
+          >
+            <LogOut size={15} /> Keluar
+          </button>
+        </HudHeader>
 
         {/* Fallback Mobile Topbar for Narrow Screens */}
         <header className="topbar mobile-only no-print">

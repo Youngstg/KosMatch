@@ -58,7 +58,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scrollbar-gutter: stable; }
 body { margin: 0; background: var(--background); color: var(--text); font-family: Inter, Geist, ui-sans-serif, system-ui, sans-serif; }
 button, input { font: inherit; }
 button { cursor: pointer; }
@@ -519,7 +519,7 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
 /* Map Explorer Shell */
 .map-explorer-container {
   position: relative;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
@@ -584,19 +584,28 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
 .hud-floating-topbar {
   position: absolute;
   top: 16px;
-  left: 20px;
-  right: 20px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
   z-index: 30;
   pointer-events: none;
 }
 .shell .hud-floating-topbar {
   position: sticky;
   top: 16px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
   margin-bottom: 20px;
   z-index: 30;
   pointer-events: none;
 }
-.shell .hud-topbar-inner {
+.shell .hud-topbar-inner,
+.map-explorer-container.theme-light .hud-topbar-inner {
   box-shadow: 0 10px 30px rgba(28, 27, 25, 0.08);
   background: rgba(255, 255, 255, 0.94);
   border: 1px solid rgba(0, 0, 0, 0.09);
@@ -640,6 +649,7 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
 }
 .hud-project-select {
   height: 32px;
+  max-width: 240px;
   padding: 0 26px 0 12px;
   border-radius: 999px;
   background-color: rgba(24, 96, 73, 0.08);
@@ -656,6 +666,9 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   cursor: pointer;
   outline: none;
   transition: all var(--duration-fast);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .hud-project-select:hover {
   background-color: rgba(24, 96, 73, 0.15);
@@ -669,8 +682,11 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   font-weight: 600;
 }
 .hud-topbar-inner {
+  position: relative;
   pointer-events: auto;
   max-width: 1360px;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   height: 60px;
   padding: 0 24px;
@@ -691,11 +707,14 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   align-items: center;
   gap: 16px;
   padding-left: 6px;
+  min-width: 0;
+  z-index: 1;
 }
 .hud-brand {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
 }
 .hud-logo {
   width: 34px;
@@ -739,9 +758,15 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
 
 /* Desktop Center Nav Pills */
 .hud-topbar-nav {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   gap: 6px;
+  z-index: 2;
+  white-space: nowrap;
 }
 .hud-nav-link {
   display: inline-flex;
@@ -776,6 +801,8 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-left: auto;
+  z-index: 1;
 }
 .hud-btn-icon {
   width: 38px;

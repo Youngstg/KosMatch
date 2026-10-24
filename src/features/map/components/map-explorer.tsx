@@ -62,10 +62,8 @@ import {
 import type { CommuteMode } from "@/lib/db/types";
 import { estimateRoadMeters, formatDistance, haversineMeters } from "@/lib/geo";
 import { formatRupiah } from "@/lib/currency";
-import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
+import { HudHeader } from "@/components/navigation";
 import { sendListingsToDssProject } from "../services/dss-bridge";
-
-
 
 function PoiCategoryIcon({
   category,
@@ -116,19 +114,6 @@ function getCampusAcronym(campus: PilotSpecification): string {
     return "ITERA";
   }
   return campus.shortName.split(" ")[0] ?? "UI";
-}
-
-
-function Brand() {
-  return (
-    <Link href="/" className="hud-brand" style={{ textDecoration: "none", color: "inherit" }}>
-      <KosMatchLogo size={34} />
-      <div className="hud-brand-info">
-        <span className="hud-brand-title">KosMatch</span>
-        <span className="hud-brand-subtitle">Eksplorasi Kampus</span>
-      </div>
-    </Link>
-  );
 }
 
 export function MapExplorer() {
@@ -443,78 +428,63 @@ export function MapExplorer() {
       {/* =========================================================================
           1. FLOATING TOPBAR (Desktop & Mobile - Pergamum University Style)
       ========================================================================== */}
-      <header className="hud-floating-topbar desktop-only">
-        <div className="hud-topbar-inner">
-          <div className="hud-topbar-left">
-            <Brand />
-            <span className="hud-pilot-pill">
-              {selectedCampus.city} · {selectedCampus.radiusKm} km
-            </span>
-          </div>
+      <HudHeader
+        activeTab="explore"
+        leftSlot={
+          <span className="hud-pilot-pill">
+            {selectedCampus.city} · {selectedCampus.radiusKm} km
+          </span>
+        }
+      >
+        {/* Account / Home Link */}
+        <Link
+          href="/"
+          className="hud-btn-icon desktop-only"
+          title="Kembali ke Beranda"
+          aria-label="Kembali ke Beranda"
+        >
+          <ArrowLeft size={17} />
+        </Link>
 
-          {/* Desktop Center Navigation Pills (Image 1 Style) */}
-          <nav className="hud-topbar-nav" aria-label="Navigasi Utama">
-            <Link href="/explore" className="hud-nav-link active">
-              <span className="hud-nav-indicator" /> Eksplorasi
-            </Link>
-            <Link href="/calculator" className="hud-nav-link">
-              Kalkulator DSS
-            </Link>
-          </nav>
+        {/* Theme Toggle Button (Dark HUD vs Light City) */}
+        <button
+          type="button"
+          className="hud-btn-icon"
+          title={mapTheme === "dark" ? "Ganti ke Mode Terang (Apple Maps)" : "Ganti ke Mode Gelap (Pergamum HUD)"}
+          aria-label="Ganti Tema Peta"
+          onClick={() => setMapTheme(mapTheme === "dark" ? "light" : "dark")}
+        >
+          {mapTheme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
+        </button>
 
-          {/* Topbar Actions */}
-          <div className="hud-topbar-right">
-            {/* Account / Home Link (Icon Only on Far Left) */}
-            <Link
-              href="/"
-              className="hud-btn-icon desktop-only"
-              title="Kembali ke Beranda"
-              aria-label="Kembali ke Beranda"
-            >
-              <ArrowLeft size={17} />
-            </Link>
+        {/* Logout Button if Logged In */}
+        {currentUser && (
+          <button
+            type="button"
+            className="hud-btn-icon desktop-only"
+            title={`Keluar (${currentUser.email})`}
+            aria-label="Keluar dari akun"
+            onClick={async () => {
+              await fetch("/api/auth/logout", { method: "POST" });
+              router.push("/auth/login");
+              router.refresh();
+            }}
+          >
+            <LogOut size={16} />
+          </button>
+        )}
 
-            {/* Theme Toggle Button (Dark HUD vs Light City) */}
-            <button
-              type="button"
-              className="hud-btn-icon"
-              title={mapTheme === "dark" ? "Ganti ke Mode Terang (Apple Maps)" : "Ganti ke Mode Gelap (Pergamum HUD)"}
-              aria-label="Ganti Tema Peta"
-              onClick={() => setMapTheme(mapTheme === "dark" ? "light" : "dark")}
-            >
-              {mapTheme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
-            </button>
-
-            {/* Logout Button if Logged In */}
-            {currentUser && (
-              <button
-                type="button"
-                className="hud-btn-icon desktop-only"
-                title={`Keluar (${currentUser.email})`}
-                aria-label="Keluar dari akun"
-                onClick={async () => {
-                  await fetch("/api/auth/logout", { method: "POST" });
-                  router.push("/auth/login");
-                  router.refresh();
-                }}
-              >
-                <LogOut size={16} />
-              </button>
-            )}
-
-            {/* Sidebar HUD Toggle for Desktop */}
-            <button
-              type="button"
-              className={`hud-btn-icon desktop-only ${!isHudCollapsed ? "active" : ""}`}
-              title={isHudCollapsed ? "Buka Panel Filter" : "Sembunyikan Panel (Layar Penuh)"}
-              aria-label="Toggle Panel Filter"
-              onClick={() => setIsHudCollapsed(!isHudCollapsed)}
-            >
-              <Layers size={17} />
-            </button>
-          </div>
-        </div>
-      </header>
+        {/* Sidebar HUD Toggle for Desktop */}
+        <button
+          type="button"
+          className={`hud-btn-icon desktop-only ${!isHudCollapsed ? "active" : ""}`}
+          title={isHudCollapsed ? "Buka Panel Filter" : "Sembunyikan Panel (Layar Penuh)"}
+          aria-label="Toggle Panel Filter"
+          onClick={() => setIsHudCollapsed(!isHudCollapsed)}
+        >
+          <Layers size={17} />
+        </button>
+      </HudHeader>
 
       {/* =========================================================================
           2. MOBILE FLOATING CONTROLS (Image 2 - Apple Maps City Explorer Style)
