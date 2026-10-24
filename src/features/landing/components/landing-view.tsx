@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowRight, Calculator, Compass, LogIn, LogOut, User } from "lucide-react";
 import { LandingFeatures } from "./landing-features";
 import { LandingFaq } from "./landing-faq";
@@ -29,37 +30,44 @@ function Brand() {
 }
 
 export function LandingView({ onStart, initialUser }: LandingViewProps) {
-  const [currentUser, setCurrentUser] = useState<{ email: string; role: string } | null>(
-    initialUser ?? null
-  );
+  const router = useRouter();
+  const [fetchedUser, setFetchedUser] = useState<{ email: string; role: string } | null>(null);
+  const [isLoggedOut, setIsLoggedOut] = useState(false);
+
+  const currentUser = isLoggedOut
+    ? null
+    : (initialUser !== undefined ? initialUser : fetchedUser);
 
   useEffect(() => {
-    if (initialUser !== undefined) {
-      setCurrentUser(initialUser);
-      return;
-    }
+    if (initialUser !== undefined) return;
+    let active = true;
     fetch("/api/auth/me")
       .then((res) => res.json())
       .then((data) => {
-        if (data?.user) {
-          setCurrentUser(data.user);
+        if (active && data?.user) {
+          setFetchedUser(data.user);
         }
       })
       .catch(() => {});
+    return () => {
+      active = false;
+    };
   }, [initialUser]);
 
   const handleLogout = async () => {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
-      setCurrentUser(null);
-      window.location.reload();
+      setIsLoggedOut(true);
+      setFetchedUser(null);
+      router.push("/auth/login");
+      router.refresh();
     } catch {}
   };
 
   const handleExploreClick = (e: React.MouseEvent) => {
     if (!currentUser) {
       e.preventDefault();
-      window.location.href = "/auth/login?redirect=/explore";
+      router.push("/auth/login?redirect=/explore");
     }
   };
 

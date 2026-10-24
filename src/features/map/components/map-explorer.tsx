@@ -19,7 +19,6 @@ import {
   Compass,
   CreditCard,
   Footprints,
-  GraduationCap,
   Landmark,
   Layers,
   Loader2,
@@ -495,7 +494,8 @@ export function MapExplorer() {
                 aria-label="Keluar dari akun"
                 onClick={async () => {
                   await fetch("/api/auth/logout", { method: "POST" });
-                  window.location.href = "/auth/login";
+                  router.push("/auth/login");
+                  router.refresh();
                 }}
               >
                 <LogOut size={16} />

@@ -269,6 +269,7 @@ function OptionCard({ project, option, match, onEdit, onDelete, onShortlist, onC
 }
 
 function ProjectWorkspace({ repository, projects, project, initialOptions, onProjectDeleted, onBack, onSwitchProject, onNewProject }: { repository:IndexedDbProjectRepository; projects:readonly ComparisonProject[]; project:ComparisonProject; initialOptions:AccommodationOption[]; onProjectDeleted:()=>void; onBack:()=>void; onSwitchProject:(id:string)=>Promise<void>; onNewProject:()=>void }) {
+  const router = useRouter();
   const [currentProject,setCurrentProject]=useState(project); const [options,setOptions]=useState<AccommodationOption[]>(initialOptions); const [tab,setTab]=useState<Tab>("overview"); const [editing,setEditing]=useState<AccommodationOption|undefined>(); const [showEditor,setShowEditor]=useState(false); const [sort,setSort]=useState<Sort>("match"); const [filter,setFilter]=useState<Filter>("all"); const [simulated,setSimulated]=useState<string|null>(null); const [notice,setNotice]=useState<string|null>(null); const [requestedComparisonOptionId,setRequestedComparisonOptionId]=useState<string|null>(null);
   const matches=useMemo(()=>matchAndRank(currentProject,options),[currentProject,options]);
   const visible=useMemo(()=>{const list=matches.filter((m)=>{const cost=calculateCost(currentProject,options.find((o)=>o.id===m.optionId)!);return filter==="all"||(filter==="eligible"&&m.eligible)||(filter==="withinBudget"&&!cost.hasUnknownMonthlyValues&&cost.knownMonthlyTotal<=currentProject.monthlyBudget)||(filter==="complete"&&!cost.hasUnknownMonthlyValues)||(filter==="unknown"&&cost.hasUnknownMonthlyValues)||(filter==="needsVerification"&&options.find((o)=>o.id===m.optionId)!.verificationQuestions.some((q)=>q.status!=="confirmed"));});if(sort==="cost")list.sort((a,b)=>calculateCost(currentProject,options.find(o=>o.id===a.optionId)!).knownMonthlyTotal-calculateCost(currentProject,options.find(o=>o.id===b.optionId)!).knownMonthlyTotal);if(sort==="commute")list.sort((a,b)=>(options.find(o=>o.id===a.optionId)!.oneWayCommuteMinutes??999)-(options.find(o=>o.id===b.optionId)!.oneWayCommuteMinutes??999));if(sort==="distance"){const dist=(id:string)=>calculateDestinationDistance(currentProject,options.find((x)=>x.id===id)!)?.straightMeters??Number.MAX_SAFE_INTEGER;list.sort((a,b)=>dist(a.optionId)-dist(b.optionId));}if(sort==="recent")list.sort((a,b)=>options.find(o=>o.id===b.optionId)!.createdAt.localeCompare(options.find(o=>o.id===a.optionId)!.createdAt));return list;},[matches,sort,filter,currentProject,options]);
@@ -377,7 +378,8 @@ function ProjectWorkspace({ repository, projects, project, initialOptions, onPro
               title="Keluar dari akun"
               onClick={async () => {
                 await fetch("/api/auth/logout", { method: "POST" });
-                window.location.href = "/";
+                router.push("/auth/login");
+                router.refresh();
               }}
             >
               <LogOut size={16} /> Keluar
@@ -422,21 +424,17 @@ export function KosMatchWorkspace({
   const [options, setOptions] = useState<AccommodationOption[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [importing, setImporting] = useState(false);
-  const [currentUser, setCurrentUser] = useState<{ userId: string; email: string; role: string } | null>(
-    initialUser ?? null
-  );
+  const [fetchedUser, setFetchedUser] = useState<{ userId: string; email: string; role: string } | null>(null);
+  const currentUser = initialUser !== undefined ? initialUser : fetchedUser;
 
   useEffect(() => {
-    if (initialUser !== undefined) {
-      setCurrentUser(initialUser);
-      return;
-    }
+    if (initialUser !== undefined) return;
     let active = true;
     fetch("/api/auth/me")
       .then((res) => res.json())
       .then((data) => {
         if (active && data?.user) {
-          setCurrentUser(data.user);
+          setFetchedUser(data.user);
         }
       })
       .catch(() => {});
@@ -612,7 +610,8 @@ export function KosMatchWorkspace({
                 style={{ color: "var(--danger, #B42318)" }}
                 onClick={async () => {
                   await fetch("/api/auth/logout", { method: "POST" });
-                  window.location.href = "/auth/login";
+                  router.push("/auth/login");
+                  router.refresh();
                 }}
               >
                 <LogOut size={15} /> Keluar
