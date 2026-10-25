@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://kosmatch.us.ci"),
   title: {
-    default: "KosMatch — Bandingkan Biaya Kos Sebenarnya & Sistem Pendukung Keputusan",
+    default: "KosMatch",
     template: "%s | KosMatch",
   },
   description:
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "id_ID",
     url: "https://kosmatch.us.ci",
-    title: "KosMatch — Bandingkan Biaya Kos Sebenarnya",
+    title: "KosMatch",
     description:
       "Kalkulator biaya hidup dan alat bantu perbandingan kos transparan berbasis kebutuhan nyata dan privasi 100%.",
     siteName: "KosMatch",
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "KosMatch — Bandingkan Biaya Kos Sebenarnya",
+    title: "KosMatch",
     description:
       "Kalkulator biaya hidup dan alat bantu perbandingan kos transparan berbasis kebutuhan nyata dan privasi 100%.",
     images: ["/screenshots/landing-desktop-chromium.png"],
