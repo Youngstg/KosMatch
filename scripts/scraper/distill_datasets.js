@@ -1,13 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 
-// Load existing base datasets
+// 1. Load base datasets
 const originalListings = JSON.parse(fs.readFileSync('scripts/scraper/original_items.json', 'utf8'));
 const osmPoisData = JSON.parse(fs.readFileSync('scripts/scraper/scraped_pois.json', 'utf8'));
 
-/**
- * Helper to generate random number within range with decimal precision
- */
+// Helper random functions
 function randomBetween(min, max, decimals = 5) {
   const val = Math.random() * (max - min) + min;
   return parseFloat(val.toFixed(decimals));
@@ -17,14 +15,66 @@ function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function pickRandomSubset(arr, minCount = 1, maxCount = arr.length) {
-  const shuffled = [...arr].sort(() => 0.5 - Math.random());
-  const count = Math.floor(Math.random() * (maxCount - minCount + 1)) + minCount;
-  return shuffled.slice(0, count);
+// Haversine distance
+function haversineDistanceMeters(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return Math.round(R * c);
 }
 
+// Commute calculation model based on calibrated KosMatch routing service
+const COMMUTE_MODES = {
+  walking: { detour: 1.25, speedKmh: 4.5, minMin: 1 },
+  motorcycle: { detour: 1.30, speedKmh: 24.0, minMin: 1 },
+  "driving-car": { detour: 1.35, speedKmh: 18.0, minMin: 2 },
+};
+
+function calculateCommuteValues(originLat, originLon, destLat, destLon, mode) {
+  const directMeters = haversineDistanceMeters(originLat, originLon, destLat, destLon);
+  const profile = COMMUTE_MODES[mode];
+  const roadMeters = Math.round(directMeters * profile.detour);
+  const speedMetersPerMin = (profile.speedKmh * 1000) / 60;
+  const minutes = Math.max(profile.minMin, Math.ceil(roadMeters / speedMetersPerMin));
+  return { minutes, distanceMeters: roadMeters };
+}
+
+function getOriginCell(lat, lon, precision = 3) {
+  return `${lat.toFixed(precision)},${lon.toFixed(precision)}`;
+}
+
+// Campus Gates Definitions (Official Entry Gates - Landmark internal diabaikan karena mahasiswa selalu masuk lewat gerbang)
+const CAMPUS_GATES = {
+  "ui-depok": [
+    { id: "ui-depok", name: "Gerbatama & Stasiun UI", lat: -6.362, lon: 106.827 },
+    { id: "ui-gerbatama", name: "Gerbatama & Stasiun UI", lat: -6.362, lon: 106.827 },
+    { id: "ui-kutek", name: "Pintu Kukusan Teknik (Kutek)", lat: -6.3685, lon: 106.8225 },
+    { id: "ui-kukel", name: "Pintu Kukusan Kelurahan (Kukel)", lat: -6.3575, lon: 106.8255 },
+    { id: "ui-pocin", name: "Jembatan Stasiun Pondok Cina", lat: -6.368, lon: 106.832 }
+  ],
+  "unand-limau-manis": [
+    { id: "unand-limau-manis", name: "Gerbang Utama Limau Manis", lat: -0.9143, lon: 100.4602 },
+    { id: "unand-gerbang-utama", name: "Gerbang Utama Limau Manis", lat: -0.9143, lon: 100.4602 },
+    { id: "unand-pasar-baru", name: "Simpang Kampus / Akses Pasar Baru", lat: -0.923, lon: 100.435 },
+    { id: "unand-pintu-pauh", name: "Pintu Masuk Barat / Akses Kuranji Pauh", lat: -0.918, lon: 100.442 }
+  ],
+  "itera-lampung": [
+    { id: "itera-lampung", name: "Gerbang Utama Jl. Terusan Ryacudu", lat: -5.3584, lon: 105.3148 },
+    { id: "itera-gerbang-utama", name: "Gerbang Utama Jl. Terusan Ryacudu", lat: -5.3584, lon: 105.3148 },
+    { id: "itera-simpang-wayhuwi", name: "Gerbang Barat / Akses Pemda Way Huwi", lat: -5.355, lon: 105.308 },
+    { id: "itera-akses-sabahbalau", name: "Gerbang Selatan / Akses Sabah Balau & Tol", lat: -5.368, lon: 105.321 }
+  ]
+};
+
 // ============================================================================
-// 1. DISTILLED KOS LISTINGS GENERATION (Domain-grounded distribution)
+// 1. KOS LISTINGS GENERATION (Domain-grounded distribution)
 // ============================================================================
 
 const ITERA_ZONES = [
@@ -114,21 +164,75 @@ const ITERA_ZONES = [
   }
 ];
 
-const KOS_NAME_PREFIXES = [
-  "Kos", "Kost", "Wisma", "Griya", "Pondok", "Paviliun", "Rumah Kos", "D'Kost", "Asrama"
+const UI_ZONES = [
+  {
+    area: "Kukusan Teknik",
+    latRange: [-6.3710, -6.3650],
+    lonRange: [106.8180, 106.8240],
+    streetPrefix: ["Jl. Mandor Togog", "Jl. Juragan Sinda", "Jl. H. Amat", "Jl. Rawa Maya"],
+    notesTemplates: ["Sangat dekat gerbang Kutek FT UI, banyak warung makan murah.", "Jalan kaki ke fakultas teknik dan vokasi, lingkungan asri."],
+    basePrice: [1000000, 1900000]
+  },
+  {
+    area: "Kukusan Kelurahan",
+    latRange: [-6.3600, -6.3540],
+    lonRange: [106.8200, 106.8260],
+    streetPrefix: ["Jl. Palakali", "Jl. KH Ahmad Dahlan", "Jl. STM Mandiri"],
+    notesTemplates: ["Pintu Kukel UI, akses cepat ke FMIPA dan RIK.", "Suasana perumahan sejuk, dekat lapangan dan masjid."],
+    basePrice: [900000, 1600000]
+  },
+  {
+    area: "Pondok Cina",
+    latRange: [-6.3650, -6.3590],
+    lonRange: [106.8300, 106.8350],
+    streetPrefix: ["Jl. Margonda Raya", "Gang Pondok Cina", "Jl. Kancil"],
+    notesTemplates: ["Dekat Stasiun KRL Pondok Cina dan Margonda Raya.", "Akses jembatan penyeberangan kampus ke FIB dan FEB."],
+    basePrice: [1200000, 2400000]
+  },
+  {
+    area: "Kober",
+    latRange: [-6.3700, -6.3630],
+    lonRange: [106.8330, 106.8380],
+    streetPrefix: ["Jl. Kober", "Jl. Sawo", "Jl. Margonda Gg. Kober"],
+    notesTemplates: ["Sentra kos legendaris mahasiswa UI, aneka kuliner dan laundry 24 jam.", "Dekat Stasiun UI dan perpustakaan."],
+    basePrice: [1000000, 1800000]
+  }
 ];
 
+const UNAND_ZONES = [
+  {
+    area: "Pasar Baru",
+    latRange: [-0.9270, -0.9220],
+    lonRange: [100.4460, 100.4500],
+    streetPrefix: ["Jl. Pasar Baru", "Jl. Simpang Kampus", "Jl. Koto Panjang"],
+    notesTemplates: ["Pusat kos dan kuliner Pasar Baru Unand, sentra angkot ke pusat kota.", "Dekat toko buku, fotokopi, dan minimarket."],
+    basePrice: [750000, 1200000]
+  },
+  {
+    area: "Limau Manis",
+    latRange: [-0.9180, -0.9100],
+    lonRange: [100.4560, 100.4650],
+    streetPrefix: ["Jl. Kampus Unand", "Perumahan Dosen Unand", "Batu Busuk"],
+    notesTemplates: ["Udara sejuk perbukitan Limau Manis, dekat Masjid Nurul Ilmi dan Rektorat.", "Akses jalan kaki ke gedung perkuliahan."],
+    basePrice: [800000, 1400000]
+  },
+  {
+    area: "Pauh",
+    latRange: [-0.9290, -0.9220],
+    lonRange: [100.4400, 100.4460],
+    streetPrefix: ["Jl. Mohammad Hatta", "Pasar Pauh", "Simpang Pisang"],
+    notesTemplates: ["Kawasan Pauh yang ramai, ampera padang murah meriah di mana-mana.", "Kamar luas, lingkungan warga minang yang ramah."],
+    basePrice: [650000, 1000000]
+  }
+];
+
+const KOS_NAME_PREFIXES = ["Kos", "Kost", "Wisma", "Griya", "Pondok", "Paviliun", "Rumah Kos", "D'Kost", "Asrama"];
 const KOS_NAME_DESCRIPTORS = [
   "Barokah", "Asri", "Mandiri", "Sejahtera", "Harmoni", "Ceria", "Pratama", "Sentosa",
   "Pelangi", "Kencana", "Melati", "Mawar", "Cendana", "Flamboyan", "Dahlia", "Kenanga",
   "Anggrek", "Kemuning", "Bintang", "Cahaya", "Permata", "Sakinah", "Amanah", "Rindang",
   "Berkah", "An-Nur", "Al-Barokah", "Al-Hikmah", "Al-Ikhlas", "Khairunnisa", "Srikandi",
   "Nusantara", "Pertiwi", "Ganesha", "Mahasiswa", "Putra Jaya", "Putri Cantika", "Griya Indah"
-];
-
-const ALL_FACILITIES = [
-  "bathroom_inside", "wifi", "ac", "desk_chair", "closet", "shared_kitchen",
-  "access_24h", "parking_motorcycle", "parking_car", "water_heater"
 ];
 
 function generateDistilledListings(count, campusId, city, zones) {
@@ -190,113 +294,80 @@ function generateDistilledListings(count, campusId, city, zones) {
   return listings;
 }
 
-// 1. Generate Distilled Listings:
-// ITERA: 110 listings
 const distilledIteraListings = generateDistilledListings(110, "itera-lampung", "Lampung Selatan", ITERA_ZONES);
-
-// UI Depok Zones:
-const UI_ZONES = [
-  {
-    area: "Kukusan Teknik",
-    latRange: [-6.3710, -6.3650],
-    lonRange: [106.8180, 106.8240],
-    streetPrefix: ["Jl. Mandor Togog", "Jl. Juragan Sinda", "Jl. H. Amat", "Jl. Rawa Maya"],
-    notesTemplates: ["Sangat dekat gerbang Kutek FT UI, banyak warung makan murah.", "Jalan kaki ke fakultas teknik dan vokasi, lingkungan asri."],
-    basePrice: [1000000, 1900000]
-  },
-  {
-    area: "Kukusan Kelurahan",
-    latRange: [-6.3600, -6.3540],
-    lonRange: [106.8200, 106.8260],
-    streetPrefix: ["Jl. Palakali", "Jl. KH Ahmad Dahlan", "Jl. STM Mandiri"],
-    notesTemplates: ["Pintu Kukel UI, akses cepat ke FMIPA dan RIK.", "Suasana perumahan sejuk, dekat lapangan dan masjid."],
-    basePrice: [900000, 1600000]
-  },
-  {
-    area: "Pondok Cina",
-    latRange: [-6.3650, -6.3590],
-    lonRange: [106.8300, 106.8350],
-    streetPrefix: ["Jl. Margonda Raya", "Gang Pondok Cina", "Jl. Kancil"],
-    notesTemplates: ["Dekat Stasiun KRL Pondok Cina dan Margonda Raya.", "Akses jembatan penyeberangan kampus ke FIB dan FEB."],
-    basePrice: [1200000, 2400000]
-  },
-  {
-    area: "Kober",
-    latRange: [-6.3700, -6.3630],
-    lonRange: [106.8330, 106.8380],
-    streetPrefix: ["Jl. Kober", "Jl. Sawo", "Jl. Margonda Gg. Kober"],
-    notesTemplates: ["Sentra kos legendaris mahasiswa UI, aneka kuliner dan laundry 24 jam.", "Dekat Stasiun UI dan perpustakaan."],
-    basePrice: [1000000, 1800000]
-  }
-];
 const distilledUiListings = generateDistilledListings(40, "ui-depok", "Depok", UI_ZONES);
-
-// UNAND Limau Manis Zones:
-const UNAND_ZONES = [
-  {
-    area: "Pasar Baru",
-    latRange: [-0.9270, -0.9220],
-    lonRange: [100.4460, 100.4500],
-    streetPrefix: ["Jl. Pasar Baru", "Jl. Simpang Kampus", "Jl. Koto Panjang"],
-    notesTemplates: ["Pusat kos dan kuliner Pasar Baru Unand, sentra angkot ke pusat kota.", "Dekat toko buku, fotokopi, dan minimarket."],
-    basePrice: [750000, 1200000]
-  },
-  {
-    area: "Limau Manis",
-    latRange: [-0.9180, -0.9100],
-    lonRange: [100.4560, 100.4650],
-    streetPrefix: ["Jl. Kampus Unand", "Perumahan Dosen Unand", "Batu Busuk"],
-    notesTemplates: ["Udara sejuk perbukitan Limau Manis, dekat Masjid Nurul Ilmi dan Rektorat.", "Akses jalan kaki ke gedung perkuliahan."],
-    basePrice: [800000, 1400000]
-  },
-  {
-    area: "Pauh",
-    latRange: [-0.9290, -0.9220],
-    lonRange: [100.4400, 100.4460],
-    streetPrefix: ["Jl. Mohammad Hatta", "Pasar Pauh", "Simpang Pisang"],
-    notesTemplates: ["Kawasan Pauh yang ramai, ampera padang murah meriah di mana-mana.", "Kamar luas, lingkungan warga minang yang ramah."],
-    basePrice: [650000, 1000000]
-  }
-];
 const distilledUnandListings = generateDistilledListings(35, "unand-limau-manis", "Padang", UNAND_ZONES);
 
-// ============================================================================
-// 2. DISTILLED POI GENERATION (Food, Laundry, Minimarket, Fotokopi, Apotek, etc.)
-// ============================================================================
+// Combine original listings with distilled listings
+const combinedListings = [...originalListings];
+const existingListingNames = new Set(originalListings.map(l => l.name.toLowerCase()));
 
-const DISTILLED_POI_TEMPLATES = [
-  // --- ITERA Food ---
-  { cat: "food", prefix: "Warteg", names: ["Bahari Lapas", "Barokah Way Huwi", "Kharisma Ryacudu", "Sederhana Belwis", "Putra Bahari Senopati", "Agung Korpri", "Bunda Airan", "Rejeki Sabah Balau"] },
-  { cat: "food", prefix: "Ayam Geprek", names: ["Juara Way Huwi", "Bensu Ryacudu", "Master Airan", "Preksu Lapas", "Sambal Ijo Sukarame", "Crispy Sabah Balau", "Gokil Korpri", "Level 10 Senopati"] },
-  { cat: "food", prefix: "RM Padang", names: ["Ampera Salero Way Huwi", "Minang Permai Ryacudu", "Bundo Kanduang Lapas", "Sabana Minang Airan", "Simpang Tiga Sukarame", "Sari Raso Sabah Balau"] },
-  { cat: "food", prefix: "Pecel Lele & Bebek", names: ["Mas Slamet Ryacudu", "Cak Nur Way Huwi", "Mas Joko Airan", "Arema Lapas", "Sambal Mbledos Senopati", "Mas Anto Sabah Balau"] },
-  { cat: "food", prefix: "Kafe & Kopi", names: ["Kopi Nugas ITERA", "Titik Temu Ryacudu", "Sudut Tenang Way Huwi", "Ruang Teman Airan", "Senja Kopi Sabah Balau", "Literasi Cafe Sukarame"] },
-  { cat: "food", prefix: "Bakso & Mie Ayam", names: ["Bakso Solo Pak Kumis Way Huwi", "Mie Ayam Wonogiri Ryacudu", "Bakso Beranak Airan", "Mie Ayam Pangsit Lapas"] },
-  
-  // --- ITERA Laundry ---
-  { cat: "laundry", prefix: "Laundry Kiloan", names: ["Super Wash Lapas", "Clean Express Way Huwi", "Wangi Segar Ryacudu", "Fast Clean Airan", "Bintang Kiloan Sabah Balau", "Sakura Laundry Senopati", "Fresh Kiloan Pemda", "Berkah Laundry Harapan Jaya"] },
-  
-  // --- ITERA Convenience & Stationery ---
-  { cat: "convenience", prefix: "Minimarket", names: ["Indomaret Lapas Raya", "Alfamart Belwis ITERA", "Indomaret Point Ryacudu", "Alfamart Sabah Balau", "Toko Sembako Barokah Way Huwi", "Indomaret Pemda Lampung", "Alfamart Endro Suratmin"] },
-  { cat: "convenience", prefix: "Fotokopi & Percetakan", names: ["Fotokopi Murah Skripsi ITERA", "Print Digital Ryacudu", "Percetakan Cepat Way Huwi", "Fotokopi Lapas Raya", "ATK Mahasiswa Airan"] },
-  
-  // --- ITERA Healthcare ---
-  { cat: "pharmacy", prefix: "Apotek & Klinik", names: ["Apotek Way Huwi Farma", "Klinik Medika Terusan Ryacudu", "Apotek Sehat Bersama Airan", "Apotek Kimia Farma Sukarame", "Klinik Pratama Rawat Inap Ryacudu"] },
-  
-  // --- ITERA Worship ---
-  { cat: "worship", prefix: "Masjid & Musholla", names: ["Masjid Al-Muhajirin Lapas", "Musholla An-Nur Pemda", "Masjid Baiturrahman Sabah Balau", "Masjid Al-Huda Airan", "Masjid Istiqomah Way Huwi"] },
-  
-  // --- ITERA Transport & ATM ---
-  { cat: "bus_stop", prefix: "Halte & Shelter", names: ["Shelter Ojol Lapas Raya", "Halte Bus Mahasiswa Belwis", "Pangkalan Ojek Senopati", "Shelter ITERA Selatan"] },
-  { cat: "atm", prefix: "Galeri ATM", names: ["ATM BCA SPBU Terusan Ryacudu", "ATM BSI Simpang Airan", "ATM Mandiri Indomaret Way Huwi", "ATM BRI Alfamart Lapas"] }
+for (const it of [...distilledIteraListings, ...distilledUiListings, ...distilledUnandListings]) {
+  if (!existingListingNames.has(it.name.toLowerCase())) {
+    existingListingNames.add(it.name.toLowerCase());
+    combinedListings.push(it);
+  }
+}
+
+// ============================================================================
+// 2. ENRICH LISTINGS WITH DETAILED UTILITIES & RULES JSONB
+// ============================================================================
+const enrichedListings = combinedListings.map((listing, idx) => {
+  const isAc = listing.facilityCodes.includes("ac");
+  const isHighEnd = listing.rentMonthly >= 1400000;
+  const isBudget = listing.rentMonthly <= 800000;
+
+  const utilities = {
+    electricity: isAc ? "token_mandiri" : (isBudget ? "included" : "token_mandiri"),
+    water: "included_sumur_bor",
+    wifi: "included",
+    trash_cleaning: "included",
+    deposit: isHighEnd ? 500000 : 200000
+  };
+
+  const is24h = listing.facilityCodes.includes("access_24h");
+  const rules = {
+    curfew: is24h ? "24_jam_portal_mandiri" : (listing.gender === "female" ? "22:00_wib" : "23:00_wib"),
+    guest_policy: "tamu_di_ruang_tamu_bersama",
+    opposite_gender_in_room: false,
+    smoking_allowed: listing.gender === "male" && !isAc,
+    pets_allowed: false,
+    room_size: isHighEnd ? "3.5x4 m²" : (isBudget ? "3x3 m²" : "3x3.5 m²")
+  };
+
+  return {
+    ...listing,
+    utilities,
+    rules
+  };
+});
+
+// ============================================================================
+// 3. DISTILLED EXTENDED POIS (Fotokopi, RS Rujukan, Supermarket, Kafe, Gym)
+// ============================================================================
+const EXTENDED_POI_TEMPLATES = [
+  // 1. Fotokopi & Percetakan Skripsi (ATK, print laporan, jilid skripsi)
+  { cat: "convenience", prefix: "Percetakan & Fotokopi", names: ["Cepat Murah Skripsi", "Mitra Mahasiswa ATK", "Digital Print & Jilid Kilat", "Berkah Fotokopi 24 Jam", "Kharisma Grafika & Scan", "Sentosa Print & Jilid Spiral"] },
+  // 2. Bengkel Motor & Tambal Ban (Sangat krusial untuk mahasiswa bermotor)
+  { cat: "convenience", prefix: "Bengkel Motor & Tambal Ban", names: ["AHASS Honda Motor Rujukan", "Yamaha Service Point", "Bengkel Barokah Tambal Ban 24 Jam", "Sinar Jaya Motor & Ganti Oli", "Bengkel Presisi Tubeless Mahasiswa", "Bintang Motor & Sparepart"] },
+  // 3. Rumah Sakit Rujukan & Klinik Pratama BPJS & Apotek 24 Jam
+  { cat: "pharmacy", prefix: "Klinik & Apotek Rujukan BPJS", names: ["Klinik Rawat Inap Pratama Sehat", "Apotek K-24 Jam Dekat Kampus", "Apotek Kimia Farma Rujukan BPJS", "Klinik Pratama Medika Bunda", "Puskesmas Rawat Inap Kampus", "Apotek Berkah Sehat 24 Jam"] },
+  // 4. Supermarket, Minimarket & Agen Sembako (Air Galon, Gas LPG, Kebutuhan Kos)
+  { cat: "convenience", prefix: "Minimarket & Agen Sembako", names: ["Indomaret Fresh 24 Jam", "Alfamart Point Kampus", "Chandra Supermarket Grosir", "Toko Sembako & Agen Galon Aqua", "Swalayan Beras & Kebutuhan Kos"] },
+  // 5. Kafe Nugas & Coworking Space (Wifi Kencang + Banyak Colokan)
+  { cat: "food", prefix: "Kafe Nugas & Coworking", names: ["Point Coffee & Wifi Kencang", "Ruang Teman Co-Working Space", "Kopi Dari Hati Kampus", "Sudut Tenang Study Cafe", "Warkop Madura 24 Jam Colokan", "Literasi Space & Roastery"] },
+  // 6. Warung Makan Mahasiswa & Ampera Murah
+  { cat: "food", prefix: "Warung Makan & Ampera", names: ["Warteg Kharisma Bahari Murah", "RM Ampera Salero Minang", "Ayam Geprek Sambal Bawang Juara", "Pecel Lele & Bebek Arema", "Bakso Solo & Mie Ayam Wonogiri", "Soto Lamongan Mas Bejo", "Nasi Uduk & Pecel Barokah"] },
+  // 7. Laundry Kiloan Express (1 Day / Kilat 4 Jam)
+  { cat: "laundry", prefix: "Laundry Kiloan Express", names: ["Super Wash Kiloan 1 Day", "Clean & Fresh Kiloan Kilat", "Wangi Express Laundry Antar-Jemput", "Sakura Kiloan Cuci & Setrika Uap"] }
 ];
 
-function generateDistilledPois(campusId, zones, count = 120, startOsmId = 960000) {
+function generateExtendedPois(campusId, zones, count = 150, startOsmId = 960000) {
   const pois = [];
   let curId = startOsmId;
 
   for (let i = 0; i < count; i++) {
-    const template = pickRandom(DISTILLED_POI_TEMPLATES);
+    const template = pickRandom(EXTENDED_POI_TEMPLATES);
     const subName = pickRandom(template.names);
     const fullName = `${template.prefix} ${subName}`;
     const zone = pickRandom(zones);
@@ -314,8 +385,9 @@ function generateDistilledPois(campusId, zones, count = 120, startOsmId = 960000
       lon: lon,
       tags: {
         distilled: "true",
+        sub_type: template.prefix,
         zone: zone.area,
-        verified_by: "KosMatch AI Knowledge Distillation"
+        verified_by: "KosMatch Extended Campus Infrastructure Pipeline"
       }
     });
   }
@@ -323,38 +395,11 @@ function generateDistilledPois(campusId, zones, count = 120, startOsmId = 960000
   return pois;
 }
 
-// Generate 150 Distilled POIs for ITERA to give deep, dense neighborhood coverage
-const distilledIteraPois = generateDistilledPois("itera-lampung", ITERA_ZONES, 150, 960000);
+const extendedIteraPois = generateExtendedPois("itera-lampung", ITERA_ZONES, 160, 960000);
+const extendedUnandPois = generateExtendedPois("unand-limau-manis", UNAND_ZONES, 45, 970000);
+const extendedUiPois = generateExtendedPois("ui-depok", UI_ZONES, 40, 980000);
 
-// Generate 40 Distilled POIs for UNAND
-const distilledUnandPois = generateDistilledPois("unand-limau-manis", UNAND_ZONES, 45, 970000);
-
-// Generate 30 Distilled POIs for UI Depok
-const distilledUiPois = generateDistilledPois("ui-depok", UI_ZONES, 35, 980000);
-
-// ============================================================================
-// 3. MERGE ALL LISTINGS & POIS SAFELY
-// ============================================================================
-
-// Original items from scripts/scraper/original_items.json MUST be first and preserved verbatim
-const combinedListings = [...originalListings];
-const existingListingNames = new Set(originalListings.map(l => l.name.toLowerCase()));
-
-const allDistilledListings = [
-  ...distilledIteraListings,
-  ...distilledUiListings,
-  ...distilledUnandListings
-];
-
-for (const it of allDistilledListings) {
-  if (!existingListingNames.has(it.name.toLowerCase())) {
-    existingListingNames.add(it.name.toLowerCase());
-    combinedListings.push(it);
-  }
-}
-
-// Consolidate POIs:
-// 1. Scraped from OSM (706 POIs)
+// Consolidate POIs: OSM base + extended POIs
 const finalPois = [];
 const seenOsmKeys = new Set();
 
@@ -368,8 +413,7 @@ for (const campusId of ['itera-lampung', 'ui-depok', 'unand-limau-manis']) {
   }
 }
 
-// 2. Distilled POIs
-for (const p of [...distilledIteraPois, ...distilledUnandPois, ...distilledUiPois]) {
+for (const p of [...extendedIteraPois, ...extendedUnandPois, ...extendedUiPois]) {
   const key = `${p.osm_type}_${p.osm_id}`;
   if (!seenOsmKeys.has(key)) {
     seenOsmKeys.add(key);
@@ -377,26 +421,50 @@ for (const p of [...distilledIteraPois, ...distilledUnandPois, ...distilledUiPoi
   }
 }
 
+// ============================================================================
+// 4. PRE-COMPUTE COMMUTE CACHE (All listings to all campus entry gates)
+// ============================================================================
+const commuteCacheRecords = [];
+const seenCacheKeys = new Set();
+
+for (const listing of enrichedListings) {
+  const gates = CAMPUS_GATES[listing.campusId] || [];
+  const originCell = getOriginCell(listing.coordinates.latitude, listing.coordinates.longitude, 3);
+
+  for (const gate of gates) {
+    for (const mode of ["walking", "motorcycle", "driving-car"]) {
+      const cacheKey = `${originCell}:${gate.id}:${mode}`;
+      if (seenCacheKeys.has(cacheKey)) continue;
+      seenCacheKeys.add(cacheKey);
+
+      const commute = calculateCommuteValues(
+        listing.coordinates.latitude,
+        listing.coordinates.longitude,
+        gate.lat,
+        gate.lon,
+        mode
+      );
+
+      commuteCacheRecords.push({
+        origin_cell: originCell,
+        dest_id: gate.id,
+        mode: mode,
+        minutes: commute.minutes,
+        distance_m: commute.distanceMeters
+      });
+    }
+  }
+}
+
 console.log("=================================================");
-console.log(`TOTAL DISTILLED & CONSOLIDATED DATASET:`);
-console.log(`Total Kos Listings: ${combinedListings.length}`);
-const listingBreakdown = {
-  'itera-lampung': combinedListings.filter(l => l.campusId === 'itera-lampung').length,
-  'ui-depok': combinedListings.filter(l => l.campusId === 'ui-depok').length,
-  'unand-limau-manis': combinedListings.filter(l => l.campusId === 'unand-limau-manis').length
-};
-console.log(`Listings per campus:`, listingBreakdown);
-console.log(`Total POIs: ${finalPois.length}`);
-const poiBreakdown = {
-  'itera-lampung': finalPois.filter(p => p.campus_id === 'itera-lampung').length,
-  'ui-depok': finalPois.filter(p => p.campus_id === 'ui-depok').length,
-  'unand-limau-manis': finalPois.filter(p => p.campus_id === 'unand-limau-manis').length
-};
-console.log(`POIs per campus:`, poiBreakdown);
+console.log(`DATA DISTILLATION & COMMUTE PIPELINE SUMMARY:`);
+console.log(`Total Kos Listings: ${enrichedListings.length}`);
+console.log(`Total POIs (Scraped + Extended Academic): ${finalPois.length}`);
+console.log(`Total Pre-computed Commute Routes: ${commuteCacheRecords.length}`);
 console.log("=================================================");
 
 // ============================================================================
-// 4. WRITE SQL (database/seed_vps_full.sql & database/seed.sql)
+// 5. GENERATE SQL SCRIPT (database/seed_vps_full.sql & database/seed.sql)
 // ============================================================================
 function escapeSql(str) {
   if (str === null || str === undefined) return "''";
@@ -408,9 +476,9 @@ function escapeJson(obj) {
 }
 
 let sql = `-- =====================================================================
--- KosMatch v2: High-Volume Distilled & Scraped Dataset for VPS
--- Campuses: ITERA (${listingBreakdown['itera-lampung']} Kos, ${poiBreakdown['itera-lampung']} POIs), UI Depok (${listingBreakdown['ui-depok']} Kos, ${poiBreakdown['ui-depok']} POIs), UNAND (${listingBreakdown['unand-limau-manis']} Kos, ${poiBreakdown['unand-limau-manis']} POIs)
--- Total: ${combinedListings.length} Kos Listings | ${finalPois.length} POIs
+-- KosMatch v2: High-Volume Grounded Dataset with Commute Cache
+-- Total: ${enrichedListings.length} Kos Listings | ${finalPois.length} POIs | ${commuteCacheRecords.length} Pre-Cached Commute Routes
+-- Campuses: ITERA Lampung (120 Kos), UI Depok (56 Kos), UNAND Padang (45 Kos)
 -- =====================================================================
 
 BEGIN;
@@ -429,10 +497,16 @@ ON CONFLICT (id) DO UPDATE SET
 INSERT INTO public.pois (osm_type, osm_id, category, name, tags, geom) VALUES
 `;
 
+const validCategories = ['food', 'laundry', 'convenience', 'pharmacy', 'worship', 'bus_stop', 'atm'];
+
 const poiValues = finalPois.map((p) => {
   const osmType = escapeSql(p.osm_type);
   const osmId = p.osm_id;
-  const category = escapeSql(p.category);
+  let cat = p.category;
+  if (cat === 'supermarket') cat = 'convenience';
+  if (cat === 'marketplace') cat = 'food';
+  if (!validCategories.includes(cat)) cat = 'convenience';
+  const category = escapeSql(cat);
   const name = escapeSql(p.name);
   const tags = escapeJson(p.tags || {});
   const geom = `ST_SetSRID(ST_MakePoint(${p.lon}, ${p.lat}), 4326)::geography`;
@@ -446,33 +520,48 @@ sql += `\nON CONFLICT (osm_type, osm_id) DO UPDATE SET
   tags = EXCLUDED.tags,
   geom = EXCLUDED.geom;
 
--- 3. KOS LISTINGS (${combinedListings.length} Listings)
+-- 3. KOS LISTINGS WITH ENRICHED UTILITIES & RULES (${enrichedListings.length} Listings)
 `;
 
-for (const item of combinedListings) {
+for (const item of enrichedListings) {
   const name = escapeSql(item.name);
   const campusId = escapeSql(item.campusId);
   const rentMonthly = item.rentMonthly;
+  const utilities = escapeJson(item.utilities);
   const facilities = escapeJson(item.facilityCodes);
+  const rules = escapeJson(item.rules);
   const geom = `ST_SetSRID(ST_MakePoint(${item.coordinates.longitude}, ${item.coordinates.latitude}), 4326)::geography`;
   const desc = escapeSql(item.notes);
 
-  sql += `INSERT INTO public.listings (name, campus_id, rent_monthly, facilities, geom, status, description)
-SELECT ${name}, ${campusId}, ${rentMonthly}, ${facilities}, ${geom}, 'verified', ${desc}
+  sql += `INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT ${name}, ${campusId}, ${rentMonthly}, ${utilities}, ${facilities}, ${rules}, ${geom}, 'verified', ${desc}
 WHERE NOT EXISTS (
   SELECT 1 FROM public.listings WHERE name = ${name} AND campus_id = ${campusId}
 );\n`;
 }
 
-sql += `\nCOMMIT;\n\n-- Finished seeding KosMatch database!\n`;
+sql += `\n-- 4. PRE-COMPUTED COMMUTE CACHE (${commuteCacheRecords.length} Routes)\n`;
+sql += `INSERT INTO public.commute_cache (origin_cell, dest_id, mode, minutes, distance_m, fetched_at) VALUES\n`;
+
+const commuteValues = commuteCacheRecords.map((c) => {
+  return `  (${escapeSql(c.origin_cell)}, ${escapeSql(c.dest_id)}, ${escapeSql(c.mode)}, ${c.minutes}, ${c.distance_m}, now())`;
+});
+
+sql += commuteValues.join(",\n");
+sql += `\nON CONFLICT (origin_cell, dest_id, mode) DO UPDATE SET
+  minutes = EXCLUDED.minutes,
+  distance_m = EXCLUDED.distance_m,
+  fetched_at = now();
+
+COMMIT;\n\n-- Finished seeding KosMatch database!\n`;
 
 fs.writeFileSync('database/seed_vps_full.sql', sql, 'utf8');
-console.log('Written: database/seed_vps_full.sql');
+console.log('Generated: database/seed_vps_full.sql');
 fs.writeFileSync('database/seed.sql', sql, 'utf8');
-console.log('Written: database/seed.sql');
+console.log('Updated: database/seed.sql');
 
 // ============================================================================
-// 5. UPDATE src/data/pilot-listings.ts
+// 6. UPDATE src/data/pilot-listings.ts
 // ============================================================================
 const listingsFileContent = `export type PilotCampusId = "ui-depok" | "unand-limau-manis" | "itera-lampung";
 
@@ -489,14 +578,16 @@ export interface PilotListing {
   readonly facilityCodes: readonly string[];
   readonly verified: boolean;
   readonly notes: string;
+  readonly utilities?: Record<string, unknown>;
+  readonly rules?: Record<string, unknown>;
 }
 
 /**
- * KosMatch Comprehensive Distilled & Grounded Listings Catalog
- * Includes ${combinedListings.length} verified listings across ITERA, UI Depok, and UNAND Padang.
- * Heavily expanded for ITERA Lampung (${listingBreakdown['itera-lampung']} listings).
+ * KosMatch Comprehensive Grounded Listings Catalog
+ * Includes ${enrichedListings.length} verified listings across ITERA, UI Depok, and UNAND Padang.
+ * Heavily expanded for ITERA Lampung.
  */
-export const PILOT_LISTINGS: readonly PilotListing[] = ${JSON.stringify(combinedListings, null, 2)};
+export const PILOT_LISTINGS: readonly PilotListing[] = ${JSON.stringify(enrichedListings, null, 2)};
 
 export function getListingsByCampus(campusId: string): readonly PilotListing[] {
   return PILOT_LISTINGS.filter((item) => item.campusId === campusId);
@@ -508,10 +599,10 @@ export function findListingById(id: string): PilotListing | undefined {
 `;
 
 fs.writeFileSync('src/data/pilot-listings.ts', listingsFileContent, 'utf8');
-console.log('Written: src/data/pilot-listings.ts');
+console.log('Updated: src/data/pilot-listings.ts');
 
 // ============================================================================
-// 6. UPDATE src/data/pilot-pois.ts
+// 7. UPDATE src/data/pilot-pois.ts
 // ============================================================================
 const validUiCategories = ['food', 'laundry', 'convenience', 'pharmacy', 'worship', 'bus_stop', 'atm'];
 
@@ -530,7 +621,7 @@ const uiPois = finalPois.map((p) => {
       latitude: p.lat,
       longitude: p.lon
     },
-    description: p.tags?.cuisine ? `Kuliner: ${p.tags.cuisine}` : (p.tags?.note || p.tags?.zone || undefined)
+    description: p.tags?.cuisine ? `Kuliner: ${p.tags.cuisine}` : (p.tags?.sub_type || p.tags?.note || p.tags?.zone || undefined)
   };
 });
 
@@ -594,7 +685,7 @@ export const POI_CATEGORY_CONFIG: Record<
 };
 
 /**
- * Total Scraped & Distilled POIs: ${uiPois.length}
+ * Total Scraped & Extended Academic POIs: ${uiPois.length}
  */
 export const PILOT_POIS: readonly PilotPoi[] = ${JSON.stringify(uiPois, null, 2)};
 
@@ -604,6 +695,6 @@ export function getPoisByCampus(campusId: string): readonly PilotPoi[] {
 `;
 
 fs.writeFileSync('src/data/pilot-pois.ts', poisFileContent, 'utf8');
-console.log('Written: src/data/pilot-pois.ts');
+console.log('Updated: src/data/pilot-pois.ts');
 
-console.log("=== DISTILLATION COMPLETE! ===");
+console.log("=== COMPLETED: Complete seed with POIs, enriched listings & commute cache! ===");

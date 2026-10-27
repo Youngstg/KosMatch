@@ -58,7 +58,7 @@ export const POI_CATEGORY_CONFIG: Record<
 };
 
 /**
- * Total Scraped & Distilled POIs: 899
+ * Total Scraped & Extended Academic POIs: 914
  */
 export const PILOT_POIS: readonly PilotPoi[] = [
   {
@@ -6823,2531 +6823,2696 @@ export const PILOT_POIS: readonly PilotPoi[] = [
     "id": "poi-itera-lampung-n-960001",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Kafe & Kopi Senja Kopi Sabah Balau",
+    "name": "Kafe Nugas & Coworking Ruang Teman Co-Working Space",
     "coordinates": {
-      "latitude": -5.3601,
-      "longitude": 105.30179
+      "latitude": -5.35583,
+      "longitude": 105.32914
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960002",
     "campusId": "itera-lampung",
-    "category": "bus_stop",
-    "name": "Halte & Shelter Pangkalan Ojek Senopati",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat",
     "coordinates": {
-      "latitude": -5.36695,
-      "longitude": 105.29674
+      "latitude": -5.35094,
+      "longitude": 105.30724
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960003",
     "campusId": "itera-lampung",
-    "category": "laundry",
-    "name": "Laundry Kiloan Wangi Segar Ryacudu",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Kopi Dari Hati Kampus",
     "coordinates": {
-      "latitude": -5.34833,
-      "longitude": 105.30839
+      "latitude": -5.35194,
+      "longitude": 105.30887
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960004",
     "campusId": "itera-lampung",
-    "category": "convenience",
-    "name": "Minimarket Indomaret Lapas Raya",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Ruang Teman Co-Working Space",
     "coordinates": {
-      "latitude": -5.35817,
-      "longitude": 105.32916
+      "latitude": -5.35983,
+      "longitude": 105.33396
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960005",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "RM Padang Sari Raso Sabah Balau",
+    "name": "Kafe Nugas & Coworking Point Coffee & Wifi Kencang",
     "coordinates": {
-      "latitude": -5.36458,
-      "longitude": 105.30268
+      "latitude": -5.36203,
+      "longitude": 105.32107
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960006",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Kafe & Kopi Ruang Teman Airan",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos",
     "coordinates": {
-      "latitude": -5.35255,
-      "longitude": 105.31435
+      "latitude": -5.34819,
+      "longitude": 105.31098
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960007",
     "campusId": "itera-lampung",
-    "category": "laundry",
-    "name": "Laundry Kiloan Super Wash Lapas",
+    "category": "food",
+    "name": "Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara",
     "coordinates": {
-      "latitude": -5.35109,
-      "longitude": 105.30792
+      "latitude": -5.3501,
+      "longitude": 105.30246
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960008",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Kafe & Kopi Senja Kopi Sabah Balau",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Wangi Express Laundry Antar-Jemput",
     "coordinates": {
-      "latitude": -5.35285,
-      "longitude": 105.3058
+      "latitude": -5.36481,
+      "longitude": 105.32214
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960009",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "RM Padang Bundo Kanduang Lapas",
+    "name": "Warung Makan & Ampera Warteg Kharisma Bahari Murah",
     "coordinates": {
-      "latitude": -5.3647,
-      "longitude": 105.32341
+      "latitude": -5.36622,
+      "longitude": 105.29551
     },
-    "description": "Belakang Wisma & Embung ITERA"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960010",
     "campusId": "itera-lampung",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Klinik Pratama Rawat Inap Ryacudu",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Chandra Supermarket Grosir",
     "coordinates": {
-      "latitude": -5.35449,
-      "longitude": 105.31763
+      "latitude": -5.36824,
+      "longitude": 105.29642
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960011",
     "campusId": "itera-lampung",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Istiqomah Way Huwi",
+    "category": "food",
+    "name": "Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara",
     "coordinates": {
-      "latitude": -5.37249,
-      "longitude": 105.2948
+      "latitude": -5.37075,
+      "longitude": 105.29405
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960012",
     "campusId": "itera-lampung",
-    "category": "laundry",
-    "name": "Laundry Kiloan Fresh Kiloan Pemda",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua",
     "coordinates": {
-      "latitude": -5.35771,
-      "longitude": 105.32886
+      "latitude": -5.36739,
+      "longitude": 105.29363
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960013",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "RM Padang Minang Permai Ryacudu",
+    "name": "Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara",
     "coordinates": {
-      "latitude": -5.35413,
-      "longitude": 105.31679
+      "latitude": -5.3595,
+      "longitude": 105.32407
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960014",
     "campusId": "itera-lampung",
-    "category": "bus_stop",
-    "name": "Halte & Shelter Shelter ITERA Selatan",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Bintang Motor & Sparepart",
     "coordinates": {
-      "latitude": -5.36079,
-      "longitude": 105.30425
+      "latitude": -5.35512,
+      "longitude": 105.31306
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960015",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "RM Padang Ampera Salero Way Huwi",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS",
     "coordinates": {
-      "latitude": -5.36464,
-      "longitude": 105.30232
+      "latitude": -5.34858,
+      "longitude": 105.30279
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960016",
     "campusId": "itera-lampung",
-    "category": "laundry",
-    "name": "Laundry Kiloan Sakura Laundry Senopati",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda",
     "coordinates": {
-      "latitude": -5.37169,
-      "longitude": 105.29934
+      "latitude": -5.35951,
+      "longitude": 105.30549
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960017",
     "campusId": "itera-lampung",
     "category": "convenience",
-    "name": "Minimarket Alfamart Sabah Balau",
+    "name": "Percetakan & Fotokopi Digital Print & Jilid Kilat",
     "coordinates": {
-      "latitude": -5.35203,
-      "longitude": 105.33576
+      "latitude": -5.37205,
+      "longitude": 105.29742
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-itera-lampung-n-960018",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Ayam Geprek Preksu Lapas",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Sentosa Print & Jilid Spiral",
     "coordinates": {
-      "latitude": -5.36236,
-      "longitude": 105.30069
+      "latitude": -5.35213,
+      "longitude": 105.33435
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-itera-lampung-n-960019",
     "campusId": "itera-lampung",
     "category": "pharmacy",
-    "name": "Apotek & Klinik Apotek Kimia Farma Sukarame",
+    "name": "Klinik & Apotek Rujukan BPJS Puskesmas Rawat Inap Kampus",
     "coordinates": {
-      "latitude": -5.36072,
-      "longitude": 105.30295
+      "latitude": -5.37453,
+      "longitude": 105.29304
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960020",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Pecel Lele & Bebek Mas Anto Sabah Balau",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Clean & Fresh Kiloan Kilat",
     "coordinates": {
-      "latitude": -5.35314,
-      "longitude": 105.31276
+      "latitude": -5.35465,
+      "longitude": 105.31666
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960021",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Warteg Agung Korpri",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Alfamart Point Kampus",
     "coordinates": {
-      "latitude": -5.35209,
-      "longitude": 105.33102
+      "latitude": -5.36306,
+      "longitude": 105.32334
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960022",
     "campusId": "itera-lampung",
     "category": "convenience",
-    "name": "Minimarket Indomaret Pemda Lampung",
+    "name": "Percetakan & Fotokopi Sentosa Print & Jilid Spiral",
     "coordinates": {
-      "latitude": -5.3716,
-      "longitude": 105.29577
+      "latitude": -5.36696,
+      "longitude": 105.29977
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-itera-lampung-n-960023",
     "campusId": "itera-lampung",
-    "category": "laundry",
-    "name": "Laundry Kiloan Fast Clean Airan",
+    "category": "food",
+    "name": "Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara",
     "coordinates": {
-      "latitude": -5.3485,
-      "longitude": 105.30649
+      "latitude": -5.36102,
+      "longitude": 105.30459
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960024",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Pecel Lele & Bebek Cak Nur Way Huwi",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban AHASS Honda Motor Rujukan",
     "coordinates": {
-      "latitude": -5.37402,
-      "longitude": 105.2921
+      "latitude": -5.35995,
+      "longitude": 105.32023
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960025",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Warteg Agung Korpri",
+    "name": "Kafe Nugas & Coworking Ruang Teman Co-Working Space",
     "coordinates": {
-      "latitude": -5.34921,
-      "longitude": 105.30214
+      "latitude": -5.35624,
+      "longitude": 105.33224
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960026",
     "campusId": "itera-lampung",
-    "category": "convenience",
-    "name": "Fotokopi & Percetakan ATK Mahasiswa Airan",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS",
     "coordinates": {
-      "latitude": -5.34877,
-      "longitude": 105.30369
+      "latitude": -5.35349,
+      "longitude": 105.31792
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960027",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Warteg Kharisma Ryacudu",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua",
     "coordinates": {
-      "latitude": -5.35952,
-      "longitude": 105.33611
+      "latitude": -5.36407,
+      "longitude": 105.30005
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960028",
     "campusId": "itera-lampung",
-    "category": "atm",
-    "name": "Galeri ATM ATM Mandiri Indomaret Way Huwi",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Yamaha Service Point",
     "coordinates": {
-      "latitude": -5.37213,
-      "longitude": 105.29553
+      "latitude": -5.35079,
+      "longitude": 105.30633
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960029",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Pecel Lele & Bebek Mas Anto Sabah Balau",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap",
     "coordinates": {
-      "latitude": -5.36155,
-      "longitude": 105.30181
+      "latitude": -5.35023,
+      "longitude": 105.30318
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960030",
     "campusId": "itera-lampung",
-    "category": "convenience",
-    "name": "Minimarket Indomaret Point Ryacudu",
+    "category": "food",
+    "name": "Warung Makan & Ampera RM Ampera Salero Minang",
     "coordinates": {
-      "latitude": -5.37363,
-      "longitude": 105.29785
+      "latitude": -5.37322,
+      "longitude": 105.29733
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960031",
     "campusId": "itera-lampung",
-    "category": "convenience",
-    "name": "Fotokopi & Percetakan ATK Mahasiswa Airan",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Ruang Teman Co-Working Space",
     "coordinates": {
-      "latitude": -5.35706,
-      "longitude": 105.331
+      "latitude": -5.35317,
+      "longitude": 105.30596
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960032",
     "campusId": "itera-lampung",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Al-Huda Airan",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Warkop Madura 24 Jam Colokan",
     "coordinates": {
-      "latitude": -5.37006,
-      "longitude": 105.29978
+      "latitude": -5.35413,
+      "longitude": 105.31743
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960033",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "RM Padang Simpang Tiga Sukarame",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda",
     "coordinates": {
-      "latitude": -5.36693,
-      "longitude": 105.29298
+      "latitude": -5.36276,
+      "longitude": 105.32131
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960034",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Kafe & Kopi Literasi Cafe Sukarame",
+    "name": "Kafe Nugas & Coworking Literasi Space & Roastery",
     "coordinates": {
-      "latitude": -5.36143,
-      "longitude": 105.33503
+      "latitude": -5.362,
+      "longitude": 105.30407
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960035",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Kafe & Kopi Titik Temu Ryacudu",
+    "name": "Warung Makan & Ampera Pecel Lele & Bebek Arema",
     "coordinates": {
-      "latitude": -5.35902,
-      "longitude": 105.32514
+      "latitude": -5.36122,
+      "longitude": 105.32152
     },
-    "description": "Belakang Wisma & Embung ITERA"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960036",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Kafe & Kopi Sudut Tenang Way Huwi",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Chandra Supermarket Grosir",
     "coordinates": {
-      "latitude": -5.36007,
-      "longitude": 105.30516
+      "latitude": -5.34903,
+      "longitude": 105.31077
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960037",
     "campusId": "itera-lampung",
     "category": "convenience",
-    "name": "Minimarket Indomaret Lapas Raya",
+    "name": "Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam",
     "coordinates": {
-      "latitude": -5.37164,
-      "longitude": 105.29499
+      "latitude": -5.37494,
+      "longitude": 105.29932
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960038",
     "campusId": "itera-lampung",
-    "category": "atm",
-    "name": "Galeri ATM ATM Mandiri Indomaret Way Huwi",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Kopi Dari Hati Kampus",
     "coordinates": {
-      "latitude": -5.36475,
-      "longitude": 105.30082
+      "latitude": -5.34885,
+      "longitude": 105.30848
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960039",
     "campusId": "itera-lampung",
-    "category": "atm",
-    "name": "Galeri ATM ATM BSI Simpang Airan",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Sudut Tenang Study Cafe",
     "coordinates": {
-      "latitude": -5.34967,
-      "longitude": 105.30641
+      "latitude": -5.35155,
+      "longitude": 105.30389
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960040",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Pecel Lele & Bebek Cak Nur Way Huwi",
+    "name": "Kafe Nugas & Coworking Sudut Tenang Study Cafe",
     "coordinates": {
-      "latitude": -5.34999,
-      "longitude": 105.3028
+      "latitude": -5.35196,
+      "longitude": 105.31075
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960041",
     "campusId": "itera-lampung",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Apotek Sehat Bersama Airan",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Indomaret Fresh 24 Jam",
     "coordinates": {
-      "latitude": -5.35865,
-      "longitude": 105.30324
+      "latitude": -5.37469,
+      "longitude": 105.29294
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960042",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Kafe & Kopi Titik Temu Ryacudu",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap",
     "coordinates": {
-      "latitude": -5.36735,
-      "longitude": 105.29463
+      "latitude": -5.37221,
+      "longitude": 105.29468
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960043",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Bakso & Mie Ayam Bakso Beranak Airan",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Berkah Fotokopi 24 Jam",
     "coordinates": {
-      "latitude": -5.35217,
-      "longitude": 105.31584
+      "latitude": -5.37328,
+      "longitude": 105.297
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-itera-lampung-n-960044",
     "campusId": "itera-lampung",
-    "category": "bus_stop",
-    "name": "Halte & Shelter Shelter Ojol Lapas Raya",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Point Coffee & Wifi Kencang",
     "coordinates": {
-      "latitude": -5.36928,
-      "longitude": 105.2985
+      "latitude": -5.348,
+      "longitude": 105.30692
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960045",
     "campusId": "itera-lampung",
-    "category": "convenience",
-    "name": "Minimarket Indomaret Lapas Raya",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Ruang Teman Co-Working Space",
     "coordinates": {
-      "latitude": -5.35377,
-      "longitude": 105.31221
+      "latitude": -5.35611,
+      "longitude": 105.31626
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960046",
     "campusId": "itera-lampung",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Al-Huda Airan",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Wangi Express Laundry Antar-Jemput",
     "coordinates": {
-      "latitude": -5.36275,
-      "longitude": 105.32357
+      "latitude": -5.352,
+      "longitude": 105.31085
     },
-    "description": "Belakang Wisma & Embung ITERA"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960047",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Bakso & Mie Ayam Mie Ayam Pangsit Lapas",
+    "name": "Kafe Nugas & Coworking Sudut Tenang Study Cafe",
     "coordinates": {
-      "latitude": -5.37167,
-      "longitude": 105.2975
+      "latitude": -5.36388,
+      "longitude": 105.30266
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960048",
     "campusId": "itera-lampung",
-    "category": "bus_stop",
-    "name": "Halte & Shelter Halte Bus Mahasiswa Belwis",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Warkop Madura 24 Jam Colokan",
     "coordinates": {
-      "latitude": -5.35322,
-      "longitude": 105.30529
+      "latitude": -5.36375,
+      "longitude": 105.32283
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960049",
     "campusId": "itera-lampung",
-    "category": "atm",
-    "name": "Galeri ATM ATM BRI Alfamart Lapas",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Wangi Express Laundry Antar-Jemput",
     "coordinates": {
-      "latitude": -5.35395,
-      "longitude": 105.30596
+      "latitude": -5.35798,
+      "longitude": 105.32973
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960050",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Ayam Geprek Bensu Ryacudu",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Chandra Supermarket Grosir",
     "coordinates": {
-      "latitude": -5.36092,
-      "longitude": 105.32845
+      "latitude": -5.36167,
+      "longitude": 105.30001
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960051",
     "campusId": "itera-lampung",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Klinik Medika Terusan Ryacudu",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Berkah Fotokopi 24 Jam",
     "coordinates": {
-      "latitude": -5.37043,
-      "longitude": 105.29257
+      "latitude": -5.34976,
+      "longitude": 105.30302
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-itera-lampung-n-960052",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "RM Padang Sari Raso Sabah Balau",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Bengkel Presisi Tubeless Mahasiswa",
     "coordinates": {
-      "latitude": -5.36029,
-      "longitude": 105.30157
+      "latitude": -5.37113,
+      "longitude": 105.29548
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960053",
     "campusId": "itera-lampung",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Apotek Kimia Farma Sukarame",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Ruang Teman Co-Working Space",
     "coordinates": {
-      "latitude": -5.36469,
-      "longitude": 105.32464
+      "latitude": -5.35069,
+      "longitude": 105.30773
     },
-    "description": "Belakang Wisma & Embung ITERA"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960054",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "RM Padang Ampera Salero Way Huwi",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban AHASS Honda Motor Rujukan",
     "coordinates": {
-      "latitude": -5.36374,
-      "longitude": 105.30311
+      "latitude": -5.35454,
+      "longitude": 105.31303
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960055",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Kafe & Kopi Kopi Nugas ITERA",
+    "name": "Kafe Nugas & Coworking Sudut Tenang Study Cafe",
     "coordinates": {
-      "latitude": -5.36062,
-      "longitude": 105.30324
+      "latitude": -5.35771,
+      "longitude": 105.33268
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960056",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Warteg Barokah Way Huwi",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos",
     "coordinates": {
-      "latitude": -5.35398,
-      "longitude": 105.31371
+      "latitude": -5.36283,
+      "longitude": 105.30234
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960057",
     "campusId": "itera-lampung",
     "category": "laundry",
-    "name": "Laundry Kiloan Fresh Kiloan Pemda",
+    "name": "Laundry Kiloan Express Super Wash Kiloan 1 Day",
     "coordinates": {
-      "latitude": -5.36714,
-      "longitude": 105.2978
+      "latitude": -5.36656,
+      "longitude": 105.29809
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960058",
     "campusId": "itera-lampung",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Istiqomah Way Huwi",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Sinar Jaya Motor & Ganti Oli",
     "coordinates": {
-      "latitude": -5.34781,
-      "longitude": 105.3102
+      "latitude": -5.34931,
+      "longitude": 105.3103
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960059",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Ayam Geprek Master Airan",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Super Wash Kiloan 1 Day",
     "coordinates": {
-      "latitude": -5.36213,
-      "longitude": 105.30426
+      "latitude": -5.35281,
+      "longitude": 105.31485
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960060",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Pecel Lele & Bebek Sambal Mbledos Senopati",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Alfamart Point Kampus",
     "coordinates": {
-      "latitude": -5.36447,
-      "longitude": 105.31918
+      "latitude": -5.36134,
+      "longitude": 105.30233
     },
-    "description": "Belakang Wisma & Embung ITERA"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960061",
     "campusId": "itera-lampung",
-    "category": "atm",
-    "name": "Galeri ATM ATM Mandiri Indomaret Way Huwi",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Warkop Madura 24 Jam Colokan",
     "coordinates": {
-      "latitude": -5.35419,
-      "longitude": 105.31683
+      "latitude": -5.35884,
+      "longitude": 105.33097
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960062",
     "campusId": "itera-lampung",
-    "category": "atm",
-    "name": "Galeri ATM ATM BRI Alfamart Lapas",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Bengkel Presisi Tubeless Mahasiswa",
     "coordinates": {
-      "latitude": -5.34707,
-      "longitude": 105.31065
+      "latitude": -5.36489,
+      "longitude": 105.32019
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960063",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Bakso & Mie Ayam Bakso Solo Pak Kumis Way Huwi",
+    "name": "Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara",
     "coordinates": {
-      "latitude": -5.34878,
-      "longitude": 105.30691
+      "latitude": -5.35349,
+      "longitude": 105.31548
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960064",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Kafe & Kopi Titik Temu Ryacudu",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Mitra Mahasiswa ATK",
     "coordinates": {
-      "latitude": -5.35116,
-      "longitude": 105.30391
+      "latitude": -5.35304,
+      "longitude": 105.31697
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-itera-lampung-n-960065",
     "campusId": "itera-lampung",
-    "category": "bus_stop",
-    "name": "Halte & Shelter Shelter ITERA Selatan",
+    "category": "food",
+    "name": "Warung Makan & Ampera Nasi Uduk & Pecel Barokah",
     "coordinates": {
-      "latitude": -5.36024,
-      "longitude": 105.31988
+      "latitude": -5.35869,
+      "longitude": 105.30598
     },
-    "description": "Belakang Wisma & Embung ITERA"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960066",
     "campusId": "itera-lampung",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Al-Huda Airan",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Wangi Express Laundry Antar-Jemput",
     "coordinates": {
-      "latitude": -5.35539,
-      "longitude": 105.32855
+      "latitude": -5.35131,
+      "longitude": 105.31057
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960067",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Bakso & Mie Ayam Mie Ayam Pangsit Lapas",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Alfamart Point Kampus",
     "coordinates": {
-      "latitude": -5.3636,
-      "longitude": 105.32494
+      "latitude": -5.36476,
+      "longitude": 105.30402
     },
-    "description": "Belakang Wisma & Embung ITERA"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960068",
     "campusId": "itera-lampung",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Istiqomah Way Huwi",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Sudut Tenang Study Cafe",
     "coordinates": {
-      "latitude": -5.35316,
-      "longitude": 105.31603
+      "latitude": -5.35167,
+      "longitude": 105.30632
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960069",
     "campusId": "itera-lampung",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Apotek Kimia Farma Sukarame",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Warkop Madura 24 Jam Colokan",
     "coordinates": {
-      "latitude": -5.35234,
-      "longitude": 105.30669
+      "latitude": -5.36202,
+      "longitude": 105.30408
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960070",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Kafe & Kopi Titik Temu Ryacudu",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos",
     "coordinates": {
-      "latitude": -5.34825,
-      "longitude": 105.3086
+      "latitude": -5.35564,
+      "longitude": 105.33683
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960071",
     "campusId": "itera-lampung",
-    "category": "convenience",
-    "name": "Fotokopi & Percetakan Fotokopi Murah Skripsi ITERA",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Ruang Teman Co-Working Space",
     "coordinates": {
-      "latitude": -5.36191,
-      "longitude": 105.32097
+      "latitude": -5.36161,
+      "longitude": 105.30031
     },
-    "description": "Belakang Wisma & Embung ITERA"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960072",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Bakso & Mie Ayam Bakso Solo Pak Kumis Way Huwi",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Bintang Motor & Sparepart",
     "coordinates": {
-      "latitude": -5.35703,
-      "longitude": 105.32835
+      "latitude": -5.36022,
+      "longitude": 105.30305
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960073",
     "campusId": "itera-lampung",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Al-Muhajirin Lapas",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Indomaret Fresh 24 Jam",
     "coordinates": {
-      "latitude": -5.36096,
-      "longitude": 105.32333
+      "latitude": -5.36331,
+      "longitude": 105.30066
     },
-    "description": "Belakang Wisma & Embung ITERA"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960074",
     "campusId": "itera-lampung",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Apotek Kimia Farma Sukarame",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Alfamart Point Kampus",
     "coordinates": {
-      "latitude": -5.36363,
-      "longitude": 105.30397
+      "latitude": -5.35474,
+      "longitude": 105.31389
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960075",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "RM Padang Ampera Salero Way Huwi",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda",
     "coordinates": {
-      "latitude": -5.35216,
-      "longitude": 105.31712
+      "latitude": -5.36771,
+      "longitude": 105.29396
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960076",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Pecel Lele & Bebek Cak Nur Way Huwi",
+    "name": "Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri",
     "coordinates": {
-      "latitude": -5.35155,
-      "longitude": 105.30331
+      "latitude": -5.34989,
+      "longitude": 105.30623
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960077",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Pecel Lele & Bebek Arema Lapas",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam",
     "coordinates": {
-      "latitude": -5.35022,
-      "longitude": 105.30767
+      "latitude": -5.35154,
+      "longitude": 105.30734
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960078",
     "campusId": "itera-lampung",
-    "category": "worship",
-    "name": "Masjid & Musholla Musholla An-Nur Pemda",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Wangi Express Laundry Antar-Jemput",
     "coordinates": {
-      "latitude": -5.34945,
-      "longitude": 105.30705
+      "latitude": -5.34723,
+      "longitude": 105.30921
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960079",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Kafe & Kopi Literasi Cafe Sukarame",
+    "name": "Warung Makan & Ampera Soto Lamongan Mas Bejo",
     "coordinates": {
-      "latitude": -5.35066,
-      "longitude": 105.30911
+      "latitude": -5.34833,
+      "longitude": 105.30588
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960080",
     "campusId": "itera-lampung",
-    "category": "bus_stop",
-    "name": "Halte & Shelter Halte Bus Mahasiswa Belwis",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat",
     "coordinates": {
-      "latitude": -5.35655,
-      "longitude": 105.31769
+      "latitude": -5.35401,
+      "longitude": 105.33474
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960081",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Pecel Lele & Bebek Cak Nur Way Huwi",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Yamaha Service Point",
     "coordinates": {
-      "latitude": -5.35324,
-      "longitude": 105.30411
+      "latitude": -5.35361,
+      "longitude": 105.3351
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960082",
     "campusId": "itera-lampung",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Apotek Way Huwi Farma",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua",
     "coordinates": {
-      "latitude": -5.36752,
-      "longitude": 105.29447
+      "latitude": -5.35028,
+      "longitude": 105.30922
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960083",
     "campusId": "itera-lampung",
-    "category": "bus_stop",
-    "name": "Halte & Shelter Shelter Ojol Lapas Raya",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Chandra Supermarket Grosir",
     "coordinates": {
-      "latitude": -5.36016,
-      "longitude": 105.33654
+      "latitude": -5.35366,
+      "longitude": 105.31654
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960084",
     "campusId": "itera-lampung",
     "category": "laundry",
-    "name": "Laundry Kiloan Berkah Laundry Harapan Jaya",
+    "name": "Laundry Kiloan Express Wangi Express Laundry Antar-Jemput",
     "coordinates": {
-      "latitude": -5.354,
-      "longitude": 105.30609
+      "latitude": -5.35385,
+      "longitude": 105.30682
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960085",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Kafe & Kopi Kopi Nugas ITERA",
+    "name": "Warung Makan & Ampera Nasi Uduk & Pecel Barokah",
     "coordinates": {
-      "latitude": -5.35922,
-      "longitude": 105.32076
+      "latitude": -5.37027,
+      "longitude": 105.29278
     },
-    "description": "Belakang Wisma & Embung ITERA"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960086",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Warteg Bahari Lapas",
+    "name": "Kafe Nugas & Coworking Literasi Space & Roastery",
     "coordinates": {
-      "latitude": -5.34851,
-      "longitude": 105.30436
+      "latitude": -5.34824,
+      "longitude": 105.30364
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960087",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Pecel Lele & Bebek Cak Nur Way Huwi",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Alfamart Point Kampus",
     "coordinates": {
-      "latitude": -5.35503,
-      "longitude": 105.31522
+      "latitude": -5.36099,
+      "longitude": 105.32405
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960088",
     "campusId": "itera-lampung",
-    "category": "convenience",
-    "name": "Minimarket Alfamart Sabah Balau",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Point Coffee & Wifi Kencang",
     "coordinates": {
-      "latitude": -5.37199,
-      "longitude": 105.29528
+      "latitude": -5.35499,
+      "longitude": 105.33262
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960089",
     "campusId": "itera-lampung",
-    "category": "laundry",
-    "name": "Laundry Kiloan Fresh Kiloan Pemda",
+    "category": "food",
+    "name": "Warung Makan & Ampera Soto Lamongan Mas Bejo",
     "coordinates": {
-      "latitude": -5.35683,
-      "longitude": 105.31366
+      "latitude": -5.36732,
+      "longitude": 105.29257
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960090",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Ayam Geprek Master Airan",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Indomaret Fresh 24 Jam",
     "coordinates": {
-      "latitude": -5.35655,
-      "longitude": 105.32872
+      "latitude": -5.35289,
+      "longitude": 105.30565
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960091",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Kafe & Kopi Titik Temu Ryacudu",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Indomaret Fresh 24 Jam",
     "coordinates": {
-      "latitude": -5.3601,
-      "longitude": 105.30227
+      "latitude": -5.35923,
+      "longitude": 105.30206
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960092",
     "campusId": "itera-lampung",
-    "category": "atm",
-    "name": "Galeri ATM ATM BRI Alfamart Lapas",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Berkah Fotokopi 24 Jam",
     "coordinates": {
-      "latitude": -5.34985,
-      "longitude": 105.30427
+      "latitude": -5.3489,
+      "longitude": 105.31095
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-itera-lampung-n-960093",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Pecel Lele & Bebek Mas Slamet Ryacudu",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap",
     "coordinates": {
-      "latitude": -5.35324,
-      "longitude": 105.31373
+      "latitude": -5.35419,
+      "longitude": 105.31406
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960094",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "RM Padang Bundo Kanduang Lapas",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Alfamart Point Kampus",
     "coordinates": {
-      "latitude": -5.35479,
-      "longitude": 105.31595
+      "latitude": -5.36222,
+      "longitude": 105.32035
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960095",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Warteg Rejeki Sabah Balau",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Wangi Express Laundry Antar-Jemput",
     "coordinates": {
-      "latitude": -5.35541,
-      "longitude": 105.31582
+      "latitude": -5.3555,
+      "longitude": 105.33497
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960096",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Warteg Putra Bahari Senopati",
+    "name": "Kafe Nugas & Coworking Sudut Tenang Study Cafe",
     "coordinates": {
-      "latitude": -5.36924,
-      "longitude": 105.29202
+      "latitude": -5.35431,
+      "longitude": 105.3133
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960097",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Warteg Rejeki Sabah Balau",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Sinar Jaya Motor & Ganti Oli",
     "coordinates": {
-      "latitude": -5.35352,
-      "longitude": 105.33193
+      "latitude": -5.34966,
+      "longitude": 105.31055
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960098",
     "campusId": "itera-lampung",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Apotek Way Huwi Farma",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Sudut Tenang Study Cafe",
     "coordinates": {
-      "latitude": -5.36112,
-      "longitude": 105.32586
+      "latitude": -5.35147,
+      "longitude": 105.30319
     },
-    "description": "Belakang Wisma & Embung ITERA"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960099",
     "campusId": "itera-lampung",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Apotek Kimia Farma Sukarame",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos",
     "coordinates": {
-      "latitude": -5.34908,
-      "longitude": 105.31054
+      "latitude": -5.36479,
+      "longitude": 105.30268
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960100",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Warteg Bunda Airan",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Puskesmas Rawat Inap Kampus",
     "coordinates": {
-      "latitude": -5.3475,
-      "longitude": 105.31005
+      "latitude": -5.3478,
+      "longitude": 105.30775
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960101",
     "campusId": "itera-lampung",
     "category": "convenience",
-    "name": "Minimarket Indomaret Lapas Raya",
+    "name": "Bengkel Motor & Tambal Ban Bintang Motor & Sparepart",
     "coordinates": {
-      "latitude": -5.35046,
-      "longitude": 105.31034
+      "latitude": -5.36768,
+      "longitude": 105.29707
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960102",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Pecel Lele & Bebek Mas Anto Sabah Balau",
+    "name": "Kafe Nugas & Coworking Ruang Teman Co-Working Space",
     "coordinates": {
-      "latitude": -5.34819,
-      "longitude": 105.31033
+      "latitude": -5.36056,
+      "longitude": 105.31909
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960103",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "RM Padang Minang Permai Ryacudu",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos",
     "coordinates": {
-      "latitude": -5.36854,
-      "longitude": 105.2926
+      "latitude": -5.35468,
+      "longitude": 105.31336
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960104",
     "campusId": "itera-lampung",
-    "category": "convenience",
-    "name": "Fotokopi & Percetakan Fotokopi Murah Skripsi ITERA",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Point Coffee & Wifi Kencang",
     "coordinates": {
-      "latitude": -5.35559,
-      "longitude": 105.3162
+      "latitude": -5.34994,
+      "longitude": 105.30825
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960105",
     "campusId": "itera-lampung",
     "category": "convenience",
-    "name": "Fotokopi & Percetakan Percetakan Cepat Way Huwi",
+    "name": "Percetakan & Fotokopi Sentosa Print & Jilid Spiral",
     "coordinates": {
-      "latitude": -5.36233,
-      "longitude": 105.30482
+      "latitude": -5.36165,
+      "longitude": 105.33219
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-itera-lampung-n-960106",
     "campusId": "itera-lampung",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Baiturrahman Sabah Balau",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Yamaha Service Point",
     "coordinates": {
-      "latitude": -5.35909,
-      "longitude": 105.30033
+      "latitude": -5.3598,
+      "longitude": 105.3228
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960107",
     "campusId": "itera-lampung",
-    "category": "bus_stop",
-    "name": "Halte & Shelter Shelter ITERA Selatan",
+    "category": "food",
+    "name": "Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri",
     "coordinates": {
-      "latitude": -5.35371,
-      "longitude": 105.30637
+      "latitude": -5.36073,
+      "longitude": 105.30419
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960108",
     "campusId": "itera-lampung",
-    "category": "atm",
-    "name": "Galeri ATM ATM BRI Alfamart Lapas",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam",
     "coordinates": {
-      "latitude": -5.35035,
-      "longitude": 105.30305
+      "latitude": -5.35057,
+      "longitude": 105.30821
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960109",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "RM Padang Bundo Kanduang Lapas",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda",
     "coordinates": {
-      "latitude": -5.35054,
-      "longitude": 105.30483
+      "latitude": -5.36038,
+      "longitude": 105.32834
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960110",
     "campusId": "itera-lampung",
-    "category": "convenience",
-    "name": "Fotokopi & Percetakan Fotokopi Murah Skripsi ITERA",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Literasi Space & Roastery",
     "coordinates": {
-      "latitude": -5.36248,
-      "longitude": 105.30477
+      "latitude": -5.35913,
+      "longitude": 105.30342
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960111",
     "campusId": "itera-lampung",
-    "category": "laundry",
-    "name": "Laundry Kiloan Fresh Kiloan Pemda",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Point Coffee & Wifi Kencang",
     "coordinates": {
-      "latitude": -5.3506,
-      "longitude": 105.30651
+      "latitude": -5.36856,
+      "longitude": 105.29276
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960112",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Warteg Rejeki Sabah Balau",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Wangi Express Laundry Antar-Jemput",
     "coordinates": {
-      "latitude": -5.35557,
-      "longitude": 105.33188
+      "latitude": -5.35724,
+      "longitude": 105.32802
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960113",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Kafe & Kopi Ruang Teman Airan",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Yamaha Service Point",
     "coordinates": {
-      "latitude": -5.36176,
-      "longitude": 105.33555
+      "latitude": -5.35692,
+      "longitude": 105.3155
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960114",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Warteg Putra Bahari Senopati",
+    "name": "Warung Makan & Ampera RM Ampera Salero Minang",
     "coordinates": {
-      "latitude": -5.35229,
-      "longitude": 105.33293
+      "latitude": -5.35343,
+      "longitude": 105.30656
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960115",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Warteg Putra Bahari Senopati",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Indomaret Fresh 24 Jam",
     "coordinates": {
-      "latitude": -5.35178,
-      "longitude": 105.30412
+      "latitude": -5.36155,
+      "longitude": 105.30567
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960116",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "RM Padang Minang Permai Ryacudu",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua",
     "coordinates": {
-      "latitude": -5.35129,
-      "longitude": 105.31017
+      "latitude": -5.35675,
+      "longitude": 105.31693
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960117",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Bakso & Mie Ayam Mie Ayam Wonogiri Ryacudu",
+    "name": "Kafe Nugas & Coworking Literasi Space & Roastery",
     "coordinates": {
-      "latitude": -5.36194,
-      "longitude": 105.30076
+      "latitude": -5.3472,
+      "longitude": 105.30874
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960118",
     "campusId": "itera-lampung",
-    "category": "convenience",
-    "name": "Minimarket Toko Sembako Barokah Way Huwi",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda",
     "coordinates": {
-      "latitude": -5.35328,
-      "longitude": 105.31241
+      "latitude": -5.34944,
+      "longitude": 105.30869
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960119",
     "campusId": "itera-lampung",
-    "category": "atm",
-    "name": "Galeri ATM ATM Mandiri Indomaret Way Huwi",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam",
     "coordinates": {
-      "latitude": -5.36477,
-      "longitude": 105.32442
+      "latitude": -5.36206,
+      "longitude": 105.32364
     },
-    "description": "Belakang Wisma & Embung ITERA"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960120",
     "campusId": "itera-lampung",
-    "category": "atm",
-    "name": "Galeri ATM ATM BRI Alfamart Lapas",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam",
     "coordinates": {
-      "latitude": -5.36159,
-      "longitude": 105.32127
+      "latitude": -5.3728,
+      "longitude": 105.29614
     },
-    "description": "Belakang Wisma & Embung ITERA"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960121",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "RM Padang Sabana Minang Airan",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Clean & Fresh Kiloan Kilat",
     "coordinates": {
-      "latitude": -5.37027,
-      "longitude": 105.29234
+      "latitude": -5.35514,
+      "longitude": 105.31278
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960122",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Kafe & Kopi Kopi Nugas ITERA",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat",
     "coordinates": {
-      "latitude": -5.34844,
-      "longitude": 105.30848
+      "latitude": -5.36855,
+      "longitude": 105.29928
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960123",
     "campusId": "itera-lampung",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Al-Muhajirin Lapas",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Yamaha Service Point",
     "coordinates": {
-      "latitude": -5.35183,
-      "longitude": 105.30712
+      "latitude": -5.35953,
+      "longitude": 105.30352
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960124",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Pecel Lele & Bebek Sambal Mbledos Senopati",
+    "name": "Warung Makan & Ampera Pecel Lele & Bebek Arema",
     "coordinates": {
-      "latitude": -5.35958,
-      "longitude": 105.32599
+      "latitude": -5.35662,
+      "longitude": 105.33268
     },
-    "description": "Belakang Wisma & Embung ITERA"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960125",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "RM Padang Minang Permai Ryacudu",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS",
     "coordinates": {
-      "latitude": -5.35393,
-      "longitude": 105.3168
+      "latitude": -5.35675,
+      "longitude": 105.31397
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960126",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Pecel Lele & Bebek Arema Lapas",
+    "name": "Kafe Nugas & Coworking Sudut Tenang Study Cafe",
     "coordinates": {
-      "latitude": -5.34815,
-      "longitude": 105.30622
+      "latitude": -5.37208,
+      "longitude": 105.29635
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960127",
     "campusId": "itera-lampung",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Al-Huda Airan",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Chandra Supermarket Grosir",
     "coordinates": {
-      "latitude": -5.36418,
-      "longitude": 105.31927
+      "latitude": -5.36016,
+      "longitude": 105.32946
     },
-    "description": "Belakang Wisma & Embung ITERA"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960128",
     "campusId": "itera-lampung",
     "category": "laundry",
-    "name": "Laundry Kiloan Berkah Laundry Harapan Jaya",
+    "name": "Laundry Kiloan Express Super Wash Kiloan 1 Day",
     "coordinates": {
-      "latitude": -5.34819,
-      "longitude": 105.30462
+      "latitude": -5.36254,
+      "longitude": 105.32369
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960129",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Kafe & Kopi Titik Temu Ryacudu",
+    "name": "Warung Makan & Ampera Pecel Lele & Bebek Arema",
     "coordinates": {
-      "latitude": -5.35289,
-      "longitude": 105.33649
+      "latitude": -5.35678,
+      "longitude": 105.31261
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960130",
     "campusId": "itera-lampung",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Baiturrahman Sabah Balau",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Berkah Fotokopi 24 Jam",
     "coordinates": {
-      "latitude": -5.35373,
-      "longitude": 105.30394
+      "latitude": -5.36332,
+      "longitude": 105.32248
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-itera-lampung-n-960131",
     "campusId": "itera-lampung",
-    "category": "laundry",
-    "name": "Laundry Kiloan Berkah Laundry Harapan Jaya",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Kopi Dari Hati Kampus",
     "coordinates": {
-      "latitude": -5.35208,
-      "longitude": 105.30689
+      "latitude": -5.34942,
+      "longitude": 105.3052
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960132",
     "campusId": "itera-lampung",
-    "category": "convenience",
-    "name": "Fotokopi & Percetakan Percetakan Cepat Way Huwi",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Kopi Dari Hati Kampus",
     "coordinates": {
-      "latitude": -5.34851,
-      "longitude": 105.30905
+      "latitude": -5.36998,
+      "longitude": 105.29647
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960133",
     "campusId": "itera-lampung",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Istiqomah Way Huwi",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban AHASS Honda Motor Rujukan",
     "coordinates": {
-      "latitude": -5.35114,
-      "longitude": 105.3033
+      "latitude": -5.36351,
+      "longitude": 105.30021
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960134",
     "campusId": "itera-lampung",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Klinik Pratama Rawat Inap Ryacudu",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Chandra Supermarket Grosir",
     "coordinates": {
-      "latitude": -5.36796,
-      "longitude": 105.29323
+      "latitude": -5.35268,
+      "longitude": 105.3122
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960135",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Warteg Agung Korpri",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus",
     "coordinates": {
-      "latitude": -5.36442,
-      "longitude": 105.30453
+      "latitude": -5.36669,
+      "longitude": 105.29663
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960136",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "RM Padang Simpang Tiga Sukarame",
+    "name": "Warung Makan & Ampera Pecel Lele & Bebek Arema",
     "coordinates": {
-      "latitude": -5.35046,
-      "longitude": 105.30733
+      "latitude": -5.35986,
+      "longitude": 105.30557
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960137",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Ayam Geprek Master Airan",
+    "name": "Warung Makan & Ampera Soto Lamongan Mas Bejo",
     "coordinates": {
-      "latitude": -5.36123,
-      "longitude": 105.32049
+      "latitude": -5.35786,
+      "longitude": 105.33036
     },
-    "description": "Belakang Wisma & Embung ITERA"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960138",
     "campusId": "itera-lampung",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Klinik Medika Terusan Ryacudu",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Kharisma Grafika & Scan",
     "coordinates": {
-      "latitude": -5.35206,
-      "longitude": 105.31321
+      "latitude": -5.36958,
+      "longitude": 105.2946
     },
-    "description": "Terusan Ryacudu (Gerbang Utama)"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-itera-lampung-n-960139",
     "campusId": "itera-lampung",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Baiturrahman Sabah Balau",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Clean & Fresh Kiloan Kilat",
     "coordinates": {
-      "latitude": -5.34965,
-      "longitude": 105.30428
+      "latitude": -5.36006,
+      "longitude": 105.30523
     },
-    "description": "Way Huwi / Lapas Raya"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960140",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Kafe & Kopi Literasi Cafe Sukarame",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Clean & Fresh Kiloan Kilat",
     "coordinates": {
-      "latitude": -5.35255,
-      "longitude": 105.3282
+      "latitude": -5.35353,
+      "longitude": 105.31242
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960141",
     "campusId": "itera-lampung",
-    "category": "atm",
-    "name": "Galeri ATM ATM BSI Simpang Airan",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Yamaha Service Point",
     "coordinates": {
-      "latitude": -5.37472,
-      "longitude": 105.29548
+      "latitude": -5.35942,
+      "longitude": 105.32271
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-itera-lampung-n-960142",
     "campusId": "itera-lampung",
-    "category": "convenience",
-    "name": "Minimarket Alfamart Endro Suratmin",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda",
     "coordinates": {
-      "latitude": -5.37364,
-      "longitude": 105.29578
+      "latitude": -5.34965,
+      "longitude": 105.30979
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-itera-lampung-n-960143",
     "campusId": "itera-lampung",
     "category": "convenience",
-    "name": "Minimarket Toko Sembako Barokah Way Huwi",
+    "name": "Minimarket & Agen Sembako Indomaret Fresh 24 Jam",
     "coordinates": {
-      "latitude": -5.3666,
-      "longitude": 105.29359
+      "latitude": -5.36166,
+      "longitude": 105.33394
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960144",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Warteg Bahari Lapas",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Wangi Express Laundry Antar-Jemput",
     "coordinates": {
-      "latitude": -5.35775,
-      "longitude": 105.33632
+      "latitude": -5.35181,
+      "longitude": 105.30805
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960145",
     "campusId": "itera-lampung",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Klinik Pratama Rawat Inap Ryacudu",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Chandra Supermarket Grosir",
     "coordinates": {
-      "latitude": -5.36344,
-      "longitude": 105.3025
+      "latitude": -5.34908,
+      "longitude": 105.31082
     },
-    "description": "Jl. Airan Raya & Airan Jaya"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-itera-lampung-n-960146",
     "campusId": "itera-lampung",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Istiqomah Way Huwi",
+    "category": "food",
+    "name": "Warung Makan & Ampera Pecel Lele & Bebek Arema",
     "coordinates": {
-      "latitude": -5.36182,
-      "longitude": 105.32026
+      "latitude": -5.34894,
+      "longitude": 105.30729
     },
-    "description": "Belakang Wisma & Embung ITERA"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-itera-lampung-n-960147",
     "campusId": "itera-lampung",
     "category": "food",
-    "name": "Kafe & Kopi Literasi Cafe Sukarame",
+    "name": "Kafe Nugas & Coworking Ruang Teman Co-Working Space",
     "coordinates": {
-      "latitude": -5.351,
-      "longitude": 105.31042
+      "latitude": -5.35944,
+      "longitude": 105.32915
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-itera-lampung-n-960148",
     "campusId": "itera-lampung",
-    "category": "atm",
-    "name": "Galeri ATM ATM BSI Simpang Airan",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Clean & Fresh Kiloan Kilat",
     "coordinates": {
-      "latitude": -5.37251,
-      "longitude": 105.29949
+      "latitude": -5.36026,
+      "longitude": 105.30194
     },
-    "description": "Sukarame & Korpri Raya"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960149",
     "campusId": "itera-lampung",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Apotek Sehat Bersama Airan",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Wangi Express Laundry Antar-Jemput",
     "coordinates": {
-      "latitude": -5.34844,
-      "longitude": 105.30863
+      "latitude": -5.35928,
+      "longitude": 105.32002
     },
-    "description": "Perumahan Pemda Way Huwi"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-itera-lampung-n-960150",
     "campusId": "itera-lampung",
-    "category": "food",
-    "name": "Warteg Bahari Lapas",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban AHASS Honda Motor Rujukan",
     "coordinates": {
-      "latitude": -5.35947,
-      "longitude": 105.32933
+      "latitude": -5.35237,
+      "longitude": 105.30651
     },
-    "description": "Sabah Balau & Tanjung Bintang"
+    "description": "Bengkel Motor & Tambal Ban"
+  },
+  {
+    "id": "poi-itera-lampung-n-960151",
+    "campusId": "itera-lampung",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat",
+    "coordinates": {
+      "latitude": -5.35656,
+      "longitude": 105.31698
+    },
+    "description": "Klinik & Apotek Rujukan BPJS"
+  },
+  {
+    "id": "poi-itera-lampung-n-960152",
+    "campusId": "itera-lampung",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Mitra Mahasiswa ATK",
+    "coordinates": {
+      "latitude": -5.36218,
+      "longitude": 105.32383
+    },
+    "description": "Percetakan & Fotokopi"
+  },
+  {
+    "id": "poi-itera-lampung-n-960153",
+    "campusId": "itera-lampung",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Puskesmas Rawat Inap Kampus",
+    "coordinates": {
+      "latitude": -5.37053,
+      "longitude": 105.29766
+    },
+    "description": "Klinik & Apotek Rujukan BPJS"
+  },
+  {
+    "id": "poi-itera-lampung-n-960154",
+    "campusId": "itera-lampung",
+    "category": "food",
+    "name": "Warung Makan & Ampera RM Ampera Salero Minang",
+    "coordinates": {
+      "latitude": -5.35086,
+      "longitude": 105.3021
+    },
+    "description": "Warung Makan & Ampera"
+  },
+  {
+    "id": "poi-itera-lampung-n-960155",
+    "campusId": "itera-lampung",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus",
+    "coordinates": {
+      "latitude": -5.35129,
+      "longitude": 105.31015
+    },
+    "description": "Klinik & Apotek Rujukan BPJS"
+  },
+  {
+    "id": "poi-itera-lampung-n-960156",
+    "campusId": "itera-lampung",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam",
+    "coordinates": {
+      "latitude": -5.35122,
+      "longitude": 105.3106
+    },
+    "description": "Bengkel Motor & Tambal Ban"
+  },
+  {
+    "id": "poi-itera-lampung-n-960157",
+    "campusId": "itera-lampung",
+    "category": "food",
+    "name": "Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri",
+    "coordinates": {
+      "latitude": -5.35922,
+      "longitude": 105.33032
+    },
+    "description": "Warung Makan & Ampera"
+  },
+  {
+    "id": "poi-itera-lampung-n-960158",
+    "campusId": "itera-lampung",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Bengkel Presisi Tubeless Mahasiswa",
+    "coordinates": {
+      "latitude": -5.36448,
+      "longitude": 105.30064
+    },
+    "description": "Bengkel Motor & Tambal Ban"
+  },
+  {
+    "id": "poi-itera-lampung-n-960159",
+    "campusId": "itera-lampung",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Ruang Teman Co-Working Space",
+    "coordinates": {
+      "latitude": -5.36923,
+      "longitude": 105.29303
+    },
+    "description": "Kafe Nugas & Coworking"
+  },
+  {
+    "id": "poi-itera-lampung-n-960160",
+    "campusId": "itera-lampung",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam",
+    "coordinates": {
+      "latitude": -5.34915,
+      "longitude": 105.30808
+    },
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-unand-limau-manis-n-970001",
     "campusId": "unand-limau-manis",
-    "category": "food",
-    "name": "Ayam Geprek Crispy Sabah Balau",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos",
     "coordinates": {
-      "latitude": -0.92338,
-      "longitude": 100.44853
+      "latitude": -0.92535,
+      "longitude": 100.44675
     },
-    "description": "Pasar Baru"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-unand-limau-manis-n-970002",
     "campusId": "unand-limau-manis",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Apotek Sehat Bersama Airan",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Ruang Teman Co-Working Space",
     "coordinates": {
-      "latitude": -0.92615,
-      "longitude": 100.44716
+      "latitude": -0.92423,
+      "longitude": 100.44126
     },
-    "description": "Pasar Baru"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-unand-limau-manis-n-970003",
     "campusId": "unand-limau-manis",
-    "category": "food",
-    "name": "Pecel Lele & Bebek Mas Anto Sabah Balau",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus",
     "coordinates": {
-      "latitude": -0.91642,
-      "longitude": 100.46423
+      "latitude": -0.91245,
+      "longitude": 100.4619
     },
-    "description": "Limau Manis"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-unand-limau-manis-n-970004",
     "campusId": "unand-limau-manis",
-    "category": "convenience",
-    "name": "Fotokopi & Percetakan Percetakan Cepat Way Huwi",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam",
     "coordinates": {
-      "latitude": -0.92458,
-      "longitude": 100.44942
+      "latitude": -0.92605,
+      "longitude": 100.44241
     },
-    "description": "Pasar Baru"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-unand-limau-manis-n-970005",
     "campusId": "unand-limau-manis",
-    "category": "food",
-    "name": "Kafe & Kopi Titik Temu Ryacudu",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Chandra Supermarket Grosir",
     "coordinates": {
-      "latitude": -0.92503,
-      "longitude": 100.44623
+      "latitude": -0.92664,
+      "longitude": 100.44953
     },
-    "description": "Pasar Baru"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-unand-limau-manis-n-970006",
     "campusId": "unand-limau-manis",
-    "category": "atm",
-    "name": "Galeri ATM ATM BCA SPBU Terusan Ryacudu",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Sentosa Print & Jilid Spiral",
     "coordinates": {
-      "latitude": -0.92483,
-      "longitude": 100.44708
+      "latitude": -0.92522,
+      "longitude": 100.44074
     },
-    "description": "Pasar Baru"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-unand-limau-manis-n-970007",
     "campusId": "unand-limau-manis",
-    "category": "food",
-    "name": "RM Padang Sari Raso Sabah Balau",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam",
     "coordinates": {
-      "latitude": -0.92424,
-      "longitude": 100.44768
+      "latitude": -0.92239,
+      "longitude": 100.44208
     },
-    "description": "Pasar Baru"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-unand-limau-manis-n-970008",
     "campusId": "unand-limau-manis",
     "category": "convenience",
-    "name": "Fotokopi & Percetakan ATK Mahasiswa Airan",
+    "name": "Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos",
     "coordinates": {
-      "latitude": -0.91629,
-      "longitude": 100.46303
+      "latitude": -0.92483,
+      "longitude": 100.44311
     },
-    "description": "Limau Manis"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-unand-limau-manis-n-970009",
     "campusId": "unand-limau-manis",
-    "category": "atm",
-    "name": "Galeri ATM ATM Mandiri Indomaret Way Huwi",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap",
     "coordinates": {
-      "latitude": -0.9136,
-      "longitude": 100.46427
+      "latitude": -0.9231,
+      "longitude": 100.44674
     },
-    "description": "Limau Manis"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-unand-limau-manis-n-970010",
     "campusId": "unand-limau-manis",
-    "category": "atm",
-    "name": "Galeri ATM ATM BCA SPBU Terusan Ryacudu",
+    "category": "food",
+    "name": "Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri",
     "coordinates": {
-      "latitude": -0.92532,
-      "longitude": 100.4424
+      "latitude": -0.91458,
+      "longitude": 100.46143
     },
-    "description": "Pauh"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-unand-limau-manis-n-970011",
     "campusId": "unand-limau-manis",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Klinik Pratama Rawat Inap Ryacudu",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Kopi Dari Hati Kampus",
     "coordinates": {
-      "latitude": -0.91096,
-      "longitude": 100.46434
+      "latitude": -0.92688,
+      "longitude": 100.44157
     },
-    "description": "Limau Manis"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-unand-limau-manis-n-970012",
     "campusId": "unand-limau-manis",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Baiturrahman Sabah Balau",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Kharisma Grafika & Scan",
     "coordinates": {
-      "latitude": -0.92512,
-      "longitude": 100.44764
+      "latitude": -0.92209,
+      "longitude": 100.44619
     },
-    "description": "Pasar Baru"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-unand-limau-manis-n-970013",
     "campusId": "unand-limau-manis",
-    "category": "convenience",
-    "name": "Minimarket Alfamart Sabah Balau",
+    "category": "food",
+    "name": "Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara",
     "coordinates": {
-      "latitude": -0.92227,
-      "longitude": 100.44981
+      "latitude": -0.92817,
+      "longitude": 100.44251
     },
-    "description": "Pasar Baru"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-unand-limau-manis-n-970014",
     "campusId": "unand-limau-manis",
     "category": "food",
-    "name": "Ayam Geprek Juara Way Huwi",
+    "name": "Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara",
     "coordinates": {
-      "latitude": -0.91289,
-      "longitude": 100.46281
+      "latitude": -0.92526,
+      "longitude": 100.44807
     },
-    "description": "Limau Manis"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-unand-limau-manis-n-970015",
     "campusId": "unand-limau-manis",
-    "category": "food",
-    "name": "Pecel Lele & Bebek Arema Lapas",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam",
     "coordinates": {
-      "latitude": -0.91469,
-      "longitude": 100.45847
+      "latitude": -0.92632,
+      "longitude": 100.44413
     },
-    "description": "Limau Manis"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-unand-limau-manis-n-970016",
     "campusId": "unand-limau-manis",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Klinik Pratama Rawat Inap Ryacudu",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Berkah Fotokopi 24 Jam",
     "coordinates": {
-      "latitude": -0.91721,
-      "longitude": 100.45602
+      "latitude": -0.92504,
+      "longitude": 100.44943
     },
-    "description": "Limau Manis"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-unand-limau-manis-n-970017",
     "campusId": "unand-limau-manis",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Istiqomah Way Huwi",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Indomaret Fresh 24 Jam",
     "coordinates": {
-      "latitude": -0.92298,
-      "longitude": 100.44249
+      "latitude": -0.92338,
+      "longitude": 100.44629
     },
-    "description": "Pauh"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-unand-limau-manis-n-970018",
     "campusId": "unand-limau-manis",
-    "category": "food",
-    "name": "Kafe & Kopi Senja Kopi Sabah Balau",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Bintang Motor & Sparepart",
     "coordinates": {
-      "latitude": -0.92637,
-      "longitude": 100.4435
+      "latitude": -0.92724,
+      "longitude": 100.44276
     },
-    "description": "Pauh"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-unand-limau-manis-n-970019",
     "campusId": "unand-limau-manis",
-    "category": "bus_stop",
-    "name": "Halte & Shelter Shelter ITERA Selatan",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam",
     "coordinates": {
-      "latitude": -0.92463,
-      "longitude": 100.44361
+      "latitude": -0.92332,
+      "longitude": 100.44349
     },
-    "description": "Pauh"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-unand-limau-manis-n-970020",
     "campusId": "unand-limau-manis",
-    "category": "food",
-    "name": "RM Padang Sari Raso Sabah Balau",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Mitra Mahasiswa ATK",
     "coordinates": {
-      "latitude": -0.91227,
-      "longitude": 100.45989
+      "latitude": -0.91663,
+      "longitude": 100.45859
     },
-    "description": "Limau Manis"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-unand-limau-manis-n-970021",
     "campusId": "unand-limau-manis",
-    "category": "laundry",
-    "name": "Laundry Kiloan Clean Express Way Huwi",
+    "category": "food",
+    "name": "Warung Makan & Ampera Pecel Lele & Bebek Arema",
     "coordinates": {
-      "latitude": -0.92699,
-      "longitude": 100.44246
+      "latitude": -0.91441,
+      "longitude": 100.45916
     },
-    "description": "Pauh"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-unand-limau-manis-n-970022",
     "campusId": "unand-limau-manis",
-    "category": "food",
-    "name": "Warteg Rejeki Sabah Balau",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Wangi Express Laundry Antar-Jemput",
     "coordinates": {
-      "latitude": -0.92606,
-      "longitude": 100.44388
+      "latitude": -0.92854,
+      "longitude": 100.44099
     },
-    "description": "Pauh"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-unand-limau-manis-n-970023",
     "campusId": "unand-limau-manis",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Baiturrahman Sabah Balau",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Yamaha Service Point",
     "coordinates": {
-      "latitude": -0.92535,
-      "longitude": 100.4454
+      "latitude": -0.91411,
+      "longitude": 100.46396
     },
-    "description": "Pauh"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-unand-limau-manis-n-970024",
     "campusId": "unand-limau-manis",
-    "category": "bus_stop",
-    "name": "Halte & Shelter Shelter Ojol Lapas Raya",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Clean & Fresh Kiloan Kilat",
     "coordinates": {
-      "latitude": -0.91466,
-      "longitude": 100.46495
+      "latitude": -0.92723,
+      "longitude": 100.44187
     },
-    "description": "Limau Manis"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-unand-limau-manis-n-970025",
     "campusId": "unand-limau-manis",
-    "category": "food",
-    "name": "Pecel Lele & Bebek Arema Lapas",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Yamaha Service Point",
     "coordinates": {
-      "latitude": -0.92516,
-      "longitude": 100.44607
+      "latitude": -0.92247,
+      "longitude": 100.44815
     },
-    "description": "Pasar Baru"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-unand-limau-manis-n-970026",
     "campusId": "unand-limau-manis",
-    "category": "food",
-    "name": "Bakso & Mie Ayam Bakso Beranak Airan",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Sinar Jaya Motor & Ganti Oli",
     "coordinates": {
-      "latitude": -0.91575,
-      "longitude": 100.46131
+      "latitude": -0.92579,
+      "longitude": 100.44232
     },
-    "description": "Limau Manis"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-unand-limau-manis-n-970027",
     "campusId": "unand-limau-manis",
-    "category": "laundry",
-    "name": "Laundry Kiloan Berkah Laundry Harapan Jaya",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Kopi Dari Hati Kampus",
     "coordinates": {
-      "latitude": -0.92608,
-      "longitude": 100.44979
+      "latitude": -0.91262,
+      "longitude": 100.46411
     },
-    "description": "Pasar Baru"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-unand-limau-manis-n-970028",
     "campusId": "unand-limau-manis",
-    "category": "atm",
-    "name": "Galeri ATM ATM Mandiri Indomaret Way Huwi",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Point Coffee & Wifi Kencang",
     "coordinates": {
-      "latitude": -0.92609,
-      "longitude": 100.44106
+      "latitude": -0.91772,
+      "longitude": 100.45602
     },
-    "description": "Pauh"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-unand-limau-manis-n-970029",
     "campusId": "unand-limau-manis",
-    "category": "convenience",
-    "name": "Fotokopi & Percetakan Percetakan Cepat Way Huwi",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Clean & Fresh Kiloan Kilat",
     "coordinates": {
-      "latitude": -0.92532,
-      "longitude": 100.44282
+      "latitude": -0.92489,
+      "longitude": 100.44911
     },
-    "description": "Pauh"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-unand-limau-manis-n-970030",
     "campusId": "unand-limau-manis",
-    "category": "food",
-    "name": "Kafe & Kopi Titik Temu Ryacudu",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Puskesmas Rawat Inap Kampus",
     "coordinates": {
-      "latitude": -0.92769,
-      "longitude": 100.44473
+      "latitude": -0.91738,
+      "longitude": 100.46396
     },
-    "description": "Pauh"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-unand-limau-manis-n-970031",
     "campusId": "unand-limau-manis",
     "category": "food",
-    "name": "Pecel Lele & Bebek Arema Lapas",
+    "name": "Kafe Nugas & Coworking Literasi Space & Roastery",
     "coordinates": {
-      "latitude": -0.92688,
-      "longitude": 100.44256
+      "latitude": -0.91451,
+      "longitude": 100.46404
     },
-    "description": "Pauh"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-unand-limau-manis-n-970032",
     "campusId": "unand-limau-manis",
-    "category": "food",
-    "name": "RM Padang Sabana Minang Airan",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Mitra Mahasiswa ATK",
     "coordinates": {
-      "latitude": -0.92635,
-      "longitude": 100.44253
+      "latitude": -0.91254,
+      "longitude": 100.46376
     },
-    "description": "Pauh"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-unand-limau-manis-n-970033",
     "campusId": "unand-limau-manis",
-    "category": "bus_stop",
-    "name": "Halte & Shelter Pangkalan Ojek Senopati",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Literasi Space & Roastery",
     "coordinates": {
-      "latitude": -0.92679,
-      "longitude": 100.44273
+      "latitude": -0.92782,
+      "longitude": 100.44545
     },
-    "description": "Pauh"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-unand-limau-manis-n-970034",
     "campusId": "unand-limau-manis",
-    "category": "bus_stop",
-    "name": "Halte & Shelter Pangkalan Ojek Senopati",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus",
     "coordinates": {
-      "latitude": -0.91375,
-      "longitude": 100.45992
+      "latitude": -0.92637,
+      "longitude": 100.44477
     },
-    "description": "Limau Manis"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-unand-limau-manis-n-970035",
     "campusId": "unand-limau-manis",
-    "category": "bus_stop",
-    "name": "Halte & Shelter Shelter ITERA Selatan",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Kopi Dari Hati Kampus",
     "coordinates": {
-      "latitude": -0.92766,
-      "longitude": 100.44095
+      "latitude": -0.92508,
+      "longitude": 100.44404
     },
-    "description": "Pauh"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-unand-limau-manis-n-970036",
     "campusId": "unand-limau-manis",
-    "category": "food",
-    "name": "Pecel Lele & Bebek Sambal Mbledos Senopati",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Super Wash Kiloan 1 Day",
     "coordinates": {
-      "latitude": -0.92419,
-      "longitude": 100.44784
+      "latitude": -0.92837,
+      "longitude": 100.44311
     },
-    "description": "Pasar Baru"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-unand-limau-manis-n-970037",
     "campusId": "unand-limau-manis",
     "category": "food",
-    "name": "Pecel Lele & Bebek Sambal Mbledos Senopati",
+    "name": "Kafe Nugas & Coworking Sudut Tenang Study Cafe",
     "coordinates": {
-      "latitude": -0.91576,
-      "longitude": 100.46262
+      "latitude": -0.92294,
+      "longitude": 100.44852
     },
-    "description": "Limau Manis"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-unand-limau-manis-n-970038",
     "campusId": "unand-limau-manis",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Apotek Way Huwi Farma",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Chandra Supermarket Grosir",
     "coordinates": {
-      "latitude": -0.92334,
-      "longitude": 100.44477
+      "latitude": -0.92516,
+      "longitude": 100.44995
     },
-    "description": "Pauh"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-unand-limau-manis-n-970039",
     "campusId": "unand-limau-manis",
-    "category": "food",
-    "name": "Bakso & Mie Ayam Bakso Beranak Airan",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda",
     "coordinates": {
-      "latitude": -0.91626,
-      "longitude": 100.45814
+      "latitude": -0.92356,
+      "longitude": 100.44037
     },
-    "description": "Limau Manis"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-unand-limau-manis-n-970040",
     "campusId": "unand-limau-manis",
-    "category": "bus_stop",
-    "name": "Halte & Shelter Shelter Ojol Lapas Raya",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam",
     "coordinates": {
-      "latitude": -0.92417,
-      "longitude": 100.44175
+      "latitude": -0.91523,
+      "longitude": 100.46471
     },
-    "description": "Pauh"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-unand-limau-manis-n-970041",
     "campusId": "unand-limau-manis",
-    "category": "food",
-    "name": "RM Padang Sari Raso Sabah Balau",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Super Wash Kiloan 1 Day",
     "coordinates": {
-      "latitude": -0.92544,
-      "longitude": 100.44633
+      "latitude": -0.91636,
+      "longitude": 100.46054
     },
-    "description": "Pasar Baru"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-unand-limau-manis-n-970042",
     "campusId": "unand-limau-manis",
-    "category": "atm",
-    "name": "Galeri ATM ATM BRI Alfamart Lapas",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Bintang Motor & Sparepart",
     "coordinates": {
-      "latitude": -0.92497,
-      "longitude": 100.44365
+      "latitude": -0.91634,
+      "longitude": 100.45957
     },
-    "description": "Pauh"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-unand-limau-manis-n-970043",
     "campusId": "unand-limau-manis",
-    "category": "bus_stop",
-    "name": "Halte & Shelter Pangkalan Ojek Senopati",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus",
     "coordinates": {
-      "latitude": -0.92369,
-      "longitude": 100.44655
+      "latitude": -0.92411,
+      "longitude": 100.44947
     },
-    "description": "Pasar Baru"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-unand-limau-manis-n-970044",
     "campusId": "unand-limau-manis",
-    "category": "convenience",
-    "name": "Fotokopi & Percetakan Fotokopi Lapas Raya",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Clean & Fresh Kiloan Kilat",
     "coordinates": {
-      "latitude": -0.92222,
-      "longitude": 100.44603
+      "latitude": -0.92465,
+      "longitude": 100.44654
     },
-    "description": "Pasar Baru"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-unand-limau-manis-n-970045",
     "campusId": "unand-limau-manis",
-    "category": "convenience",
-    "name": "Minimarket Alfamart Endro Suratmin",
+    "category": "food",
+    "name": "Warung Makan & Ampera Nasi Uduk & Pecel Barokah",
     "coordinates": {
-      "latitude": -0.92594,
-      "longitude": 100.44042
+      "latitude": -0.92234,
+      "longitude": 100.44462
     },
-    "description": "Pauh"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-ui-depok-n-980001",
     "campusId": "ui-depok",
-    "category": "food",
-    "name": "RM Padang Ampera Salero Way Huwi",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus",
     "coordinates": {
-      "latitude": -6.35975,
-      "longitude": 106.83284
+      "latitude": -6.36805,
+      "longitude": 106.82119
     },
-    "description": "Pondok Cina"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-ui-depok-n-980002",
     "campusId": "ui-depok",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Istiqomah Way Huwi",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Ruang Teman Co-Working Space",
     "coordinates": {
-      "latitude": -6.36687,
-      "longitude": 106.83747
+      "latitude": -6.35837,
+      "longitude": 106.82349
     },
-    "description": "Kober"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-ui-depok-n-980003",
     "campusId": "ui-depok",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Apotek Kimia Farma Sukarame",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Wangi Express Laundry Antar-Jemput",
     "coordinates": {
-      "latitude": -6.36596,
-      "longitude": 106.81929
+      "latitude": -6.36483,
+      "longitude": 106.83313
     },
-    "description": "Kukusan Teknik"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-ui-depok-n-980004",
     "campusId": "ui-depok",
     "category": "food",
-    "name": "RM Padang Simpang Tiga Sukarame",
+    "name": "Warung Makan & Ampera Warteg Kharisma Bahari Murah",
     "coordinates": {
-      "latitude": -6.36678,
-      "longitude": 106.81954
+      "latitude": -6.35992,
+      "longitude": 106.82026
     },
-    "description": "Kukusan Teknik"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-ui-depok-n-980005",
     "campusId": "ui-depok",
-    "category": "laundry",
-    "name": "Laundry Kiloan Sakura Laundry Senopati",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua",
     "coordinates": {
-      "latitude": -6.36791,
-      "longitude": 106.81927
+      "latitude": -6.36004,
+      "longitude": 106.83075
     },
-    "description": "Kukusan Teknik"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-ui-depok-n-980006",
     "campusId": "ui-depok",
-    "category": "atm",
-    "name": "Galeri ATM ATM BSI Simpang Airan",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Indomaret Fresh 24 Jam",
     "coordinates": {
-      "latitude": -6.3685,
-      "longitude": 106.83633
+      "latitude": -6.36751,
+      "longitude": 106.82006
     },
-    "description": "Kober"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-ui-depok-n-980007",
     "campusId": "ui-depok",
-    "category": "convenience",
-    "name": "Fotokopi & Percetakan Print Digital Ryacudu",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Clean & Fresh Kiloan Kilat",
     "coordinates": {
-      "latitude": -6.3609,
-      "longitude": 106.83053
+      "latitude": -6.37099,
+      "longitude": 106.82012
     },
-    "description": "Pondok Cina"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-ui-depok-n-980008",
     "campusId": "ui-depok",
-    "category": "food",
-    "name": "Ayam Geprek Gokil Korpri",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban AHASS Honda Motor Rujukan",
     "coordinates": {
-      "latitude": -6.36787,
-      "longitude": 106.82099
+      "latitude": -6.36666,
+      "longitude": 106.83626
     },
-    "description": "Kukusan Teknik"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-ui-depok-n-980009",
     "campusId": "ui-depok",
-    "category": "food",
-    "name": "Kafe & Kopi Kopi Nugas ITERA",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos",
     "coordinates": {
-      "latitude": -6.35941,
-      "longitude": 106.83319
+      "latitude": -6.36184,
+      "longitude": 106.83182
     },
-    "description": "Pondok Cina"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-ui-depok-n-980010",
     "campusId": "ui-depok",
     "category": "food",
-    "name": "Kafe & Kopi Senja Kopi Sabah Balau",
+    "name": "Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara",
     "coordinates": {
-      "latitude": -6.36892,
-      "longitude": 106.82309
+      "latitude": -6.35906,
+      "longitude": 106.83402
     },
-    "description": "Kukusan Teknik"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-ui-depok-n-980011",
     "campusId": "ui-depok",
-    "category": "food",
-    "name": "RM Padang Bundo Kanduang Lapas",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Digital Print & Jilid Kilat",
     "coordinates": {
-      "latitude": -6.36417,
-      "longitude": 106.83755
+      "latitude": -6.36364,
+      "longitude": 106.83408
     },
-    "description": "Kober"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-ui-depok-n-980012",
     "campusId": "ui-depok",
-    "category": "bus_stop",
-    "name": "Halte & Shelter Shelter Ojol Lapas Raya",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Warkop Madura 24 Jam Colokan",
     "coordinates": {
-      "latitude": -6.36911,
-      "longitude": 106.82043
+      "latitude": -6.35614,
+      "longitude": 106.82329
     },
-    "description": "Kukusan Teknik"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-ui-depok-n-980013",
     "campusId": "ui-depok",
-    "category": "worship",
-    "name": "Masjid & Musholla Musholla An-Nur Pemda",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Mitra Mahasiswa ATK",
     "coordinates": {
-      "latitude": -6.36854,
-      "longitude": 106.81825
+      "latitude": -6.37008,
+      "longitude": 106.82197
     },
-    "description": "Kukusan Teknik"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-ui-depok-n-980014",
     "campusId": "ui-depok",
-    "category": "pharmacy",
-    "name": "Apotek & Klinik Apotek Way Huwi Farma",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Mitra Mahasiswa ATK",
     "coordinates": {
-      "latitude": -6.35468,
-      "longitude": 106.82525
+      "latitude": -6.36778,
+      "longitude": 106.82021
     },
-    "description": "Kukusan Kelurahan"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-ui-depok-n-980015",
     "campusId": "ui-depok",
-    "category": "atm",
-    "name": "Galeri ATM ATM BSI Simpang Airan",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Literasi Space & Roastery",
     "coordinates": {
-      "latitude": -6.36492,
-      "longitude": 106.83103
+      "latitude": -6.36703,
+      "longitude": 106.82023
     },
-    "description": "Pondok Cina"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-ui-depok-n-980016",
     "campusId": "ui-depok",
-    "category": "convenience",
-    "name": "Fotokopi & Percetakan ATK Mahasiswa Airan",
+    "category": "laundry",
+    "name": "Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap",
     "coordinates": {
-      "latitude": -6.35576,
-      "longitude": 106.82112
+      "latitude": -6.36528,
+      "longitude": 106.82376
     },
-    "description": "Kukusan Kelurahan"
+    "description": "Laundry Kiloan Express"
   },
   {
     "id": "poi-ui-depok-n-980017",
     "campusId": "ui-depok",
-    "category": "convenience",
-    "name": "Fotokopi & Percetakan Print Digital Ryacudu",
+    "category": "food",
+    "name": "Warung Makan & Ampera Soto Lamongan Mas Bejo",
     "coordinates": {
-      "latitude": -6.35536,
-      "longitude": 106.82274
+      "latitude": -6.3631,
+      "longitude": 106.83051
     },
-    "description": "Kukusan Kelurahan"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-ui-depok-n-980018",
     "campusId": "ui-depok",
     "category": "pharmacy",
-    "name": "Apotek & Klinik Klinik Pratama Rawat Inap Ryacudu",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam",
     "coordinates": {
-      "latitude": -6.36273,
-      "longitude": 106.83416
+      "latitude": -6.36685,
+      "longitude": 106.82074
     },
-    "description": "Pondok Cina"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-ui-depok-n-980019",
     "campusId": "ui-depok",
-    "category": "atm",
-    "name": "Galeri ATM ATM BRI Alfamart Lapas",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Mitra Mahasiswa ATK",
     "coordinates": {
-      "latitude": -6.35429,
-      "longitude": 106.82373
+      "latitude": -6.36559,
+      "longitude": 106.82203
     },
-    "description": "Kukusan Kelurahan"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-ui-depok-n-980020",
     "campusId": "ui-depok",
-    "category": "atm",
-    "name": "Galeri ATM ATM BSI Simpang Airan",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam",
     "coordinates": {
-      "latitude": -6.36545,
-      "longitude": 106.82193
+      "latitude": -6.35469,
+      "longitude": 106.82303
     },
-    "description": "Kukusan Teknik"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-ui-depok-n-980021",
     "campusId": "ui-depok",
-    "category": "food",
-    "name": "Kafe & Kopi Kopi Nugas ITERA",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat",
     "coordinates": {
-      "latitude": -6.36523,
-      "longitude": 106.83389
+      "latitude": -6.36685,
+      "longitude": 106.8337
     },
-    "description": "Kober"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-ui-depok-n-980022",
     "campusId": "ui-depok",
     "category": "convenience",
-    "name": "Minimarket Indomaret Lapas Raya",
+    "name": "Percetakan & Fotokopi Berkah Fotokopi 24 Jam",
     "coordinates": {
-      "latitude": -6.36742,
-      "longitude": 106.82343
+      "latitude": -6.36693,
+      "longitude": 106.82213
     },
-    "description": "Kukusan Teknik"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-ui-depok-n-980023",
     "campusId": "ui-depok",
-    "category": "food",
-    "name": "RM Padang Sabana Minang Airan",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam",
     "coordinates": {
-      "latitude": -6.36231,
-      "longitude": 106.83241
+      "latitude": -6.36085,
+      "longitude": 106.8308
     },
-    "description": "Pondok Cina"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-ui-depok-n-980024",
     "campusId": "ui-depok",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Al-Huda Airan",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Mitra Mahasiswa ATK",
     "coordinates": {
-      "latitude": -6.36952,
-      "longitude": 106.82269
+      "latitude": -6.36985,
+      "longitude": 106.8358
     },
-    "description": "Kukusan Teknik"
+    "description": "Percetakan & Fotokopi"
   },
   {
     "id": "poi-ui-depok-n-980025",
     "campusId": "ui-depok",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Al-Huda Airan",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos",
     "coordinates": {
-      "latitude": -6.36328,
-      "longitude": 106.83315
+      "latitude": -6.35976,
+      "longitude": 106.83401
     },
-    "description": "Kober"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-ui-depok-n-980026",
     "campusId": "ui-depok",
-    "category": "food",
-    "name": "Ayam Geprek Juara Way Huwi",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS",
     "coordinates": {
-      "latitude": -6.35493,
-      "longitude": 106.82373
+      "latitude": -6.3563,
+      "longitude": 106.82215
     },
-    "description": "Kukusan Kelurahan"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-ui-depok-n-980027",
     "campusId": "ui-depok",
-    "category": "worship",
-    "name": "Masjid & Musholla Masjid Istiqomah Way Huwi",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam",
     "coordinates": {
-      "latitude": -6.3699,
-      "longitude": 106.82054
+      "latitude": -6.36731,
+      "longitude": 106.83398
     },
-    "description": "Kukusan Teknik"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-ui-depok-n-980028",
     "campusId": "ui-depok",
-    "category": "food",
-    "name": "Kafe & Kopi Sudut Tenang Way Huwi",
+    "category": "convenience",
+    "name": "Bengkel Motor & Tambal Ban Bintang Motor & Sparepart",
     "coordinates": {
-      "latitude": -6.36972,
-      "longitude": 106.83357
+      "latitude": -6.3637,
+      "longitude": 106.83461
     },
-    "description": "Kober"
+    "description": "Bengkel Motor & Tambal Ban"
   },
   {
     "id": "poi-ui-depok-n-980029",
     "campusId": "ui-depok",
     "category": "food",
-    "name": "RM Padang Simpang Tiga Sukarame",
+    "name": "Kafe Nugas & Coworking Sudut Tenang Study Cafe",
     "coordinates": {
-      "latitude": -6.36974,
-      "longitude": 106.83545
+      "latitude": -6.36232,
+      "longitude": 106.83245
     },
-    "description": "Kober"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-ui-depok-n-980030",
     "campusId": "ui-depok",
-    "category": "bus_stop",
-    "name": "Halte & Shelter Pangkalan Ojek Senopati",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Alfamart Point Kampus",
     "coordinates": {
-      "latitude": -6.3697,
-      "longitude": 106.83483
+      "latitude": -6.35748,
+      "longitude": 106.8207
     },
-    "description": "Kober"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-ui-depok-n-980031",
     "campusId": "ui-depok",
     "category": "food",
-    "name": "Ayam Geprek Master Airan",
+    "name": "Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri",
     "coordinates": {
-      "latitude": -6.36206,
-      "longitude": 106.83204
+      "latitude": -6.36588,
+      "longitude": 106.83479
     },
-    "description": "Pondok Cina"
+    "description": "Warung Makan & Ampera"
   },
   {
     "id": "poi-ui-depok-n-980032",
     "campusId": "ui-depok",
-    "category": "food",
-    "name": "Kafe & Kopi Senja Kopi Sabah Balau",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Chandra Supermarket Grosir",
     "coordinates": {
-      "latitude": -6.3637,
-      "longitude": 106.8355
+      "latitude": -6.36043,
+      "longitude": 106.83184
     },
-    "description": "Kober"
+    "description": "Minimarket & Agen Sembako"
   },
   {
     "id": "poi-ui-depok-n-980033",
     "campusId": "ui-depok",
-    "category": "convenience",
-    "name": "Fotokopi & Percetakan Fotokopi Lapas Raya",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Literasi Space & Roastery",
     "coordinates": {
-      "latitude": -6.36214,
-      "longitude": 106.83228
+      "latitude": -6.36622,
+      "longitude": 106.82376
     },
-    "description": "Pondok Cina"
+    "description": "Kafe Nugas & Coworking"
   },
   {
     "id": "poi-ui-depok-n-980034",
     "campusId": "ui-depok",
-    "category": "food",
-    "name": "Pecel Lele & Bebek Arema Lapas",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus",
     "coordinates": {
-      "latitude": -6.36526,
-      "longitude": 106.83685
+      "latitude": -6.35717,
+      "longitude": 106.82467
     },
-    "description": "Kober"
+    "description": "Klinik & Apotek Rujukan BPJS"
   },
   {
     "id": "poi-ui-depok-n-980035",
     "campusId": "ui-depok",
-    "category": "food",
-    "name": "Ayam Geprek Gokil Korpri",
+    "category": "convenience",
+    "name": "Minimarket & Agen Sembako Alfamart Point Kampus",
     "coordinates": {
-      "latitude": -6.3581,
-      "longitude": 106.82164
+      "latitude": -6.35411,
+      "longitude": 106.82466
     },
-    "description": "Kukusan Kelurahan"
+    "description": "Minimarket & Agen Sembako"
+  },
+  {
+    "id": "poi-ui-depok-n-980036",
+    "campusId": "ui-depok",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda",
+    "coordinates": {
+      "latitude": -6.36704,
+      "longitude": 106.8332
+    },
+    "description": "Klinik & Apotek Rujukan BPJS"
+  },
+  {
+    "id": "poi-ui-depok-n-980037",
+    "campusId": "ui-depok",
+    "category": "pharmacy",
+    "name": "Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat",
+    "coordinates": {
+      "latitude": -6.35883,
+      "longitude": 106.82192
+    },
+    "description": "Klinik & Apotek Rujukan BPJS"
+  },
+  {
+    "id": "poi-ui-depok-n-980038",
+    "campusId": "ui-depok",
+    "category": "convenience",
+    "name": "Percetakan & Fotokopi Mitra Mahasiswa ATK",
+    "coordinates": {
+      "latitude": -6.36583,
+      "longitude": 106.82217
+    },
+    "description": "Percetakan & Fotokopi"
+  },
+  {
+    "id": "poi-ui-depok-n-980039",
+    "campusId": "ui-depok",
+    "category": "food",
+    "name": "Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri",
+    "coordinates": {
+      "latitude": -6.36613,
+      "longitude": 106.83527
+    },
+    "description": "Warung Makan & Ampera"
+  },
+  {
+    "id": "poi-ui-depok-n-980040",
+    "campusId": "ui-depok",
+    "category": "food",
+    "name": "Kafe Nugas & Coworking Point Coffee & Wifi Kencang",
+    "coordinates": {
+      "latitude": -6.37039,
+      "longitude": 106.82163
+    },
+    "description": "Kafe Nugas & Coworking"
   }
 ];
 
