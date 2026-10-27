@@ -1,0 +1,790 @@
+{
+  "itera-lampung": [
+    {
+      "osm_id": 10706472359,
+      "osm_type": "node",
+      "name": "KOSTAL",
+      "lat": -5.3440703,
+      "lon": 105.2946985,
+      "tags": {
+        "name": "KOSTAL",
+        "tourism": "motel"
+      }
+    },
+    {
+      "osm_id": 12987621483,
+      "osm_type": "node",
+      "name": "Queen Kost",
+      "lat": -5.3468845,
+      "lon": 105.3291337,
+      "tags": {
+        "addr:city": "lampung selatan",
+        "addr:district": "jatiagung",
+        "addr:housename": "queen kost",
+        "addr:neighbourhood": "rt 45 b",
+        "addr:province": "lampung",
+        "addr:street": "gang kopi VI",
+        "addr:subdistrict": "Jatimulyo",
+        "email": "queennaisha77@gmail.com",
+        "guest_house": "hostel",
+        "internet_access": "no",
+        "name": "Queen Kost",
+        "phone": "+6285269885561",
+        "rooms": "5",
+        "tourism": "hostel",
+        "website": "http://queenkost.com"
+      }
+    },
+    {
+      "osm_id": 1151101818,
+      "osm_type": "way",
+      "name": "KOST MAR E",
+      "lat": -5.3470989,
+      "lon": 105.3161185,
+      "tags": {
+        "addr:city": "Bandar Lampung",
+        "addr:housenumber": "35",
+        "addr:street": "Jl. Durian 11 Pemda",
+        "building": "apartments",
+        "building:flats": "1",
+        "building:levels": "1",
+        "height": "10",
+        "name": "KOST MAR E",
+        "name:id": "KOS MAR E",
+        "name:su": "KOSAN MAR E"
+      }
+    },
+    {
+      "osm_id": 1417956764,
+      "osm_type": "way",
+      "name": "Kosmero Kost",
+      "lat": -5.3568166,
+      "lon": 105.2991358,
+      "tags": {
+        "building": "apartments",
+        "name": "Kosmero Kost"
+      }
+    }
+  ],
+  "ui-depok": [
+    {
+      "osm_id": 318841247,
+      "osm_type": "node",
+      "name": "Bumi Wiyata Hotel",
+      "lat": -6.3790259,
+      "lon": 106.8301283,
+      "tags": {
+        "addr:city": "Kemirimuka, Beji, Depok, West Java",
+        "addr:postcode": "16421",
+        "addr:street": "Jalan Margonda Raya",
+        "name": "Bumi Wiyata Hotel",
+        "tourism": "hotel"
+      }
+    },
+    {
+      "osm_id": 4149532290,
+      "osm_type": "node",
+      "name": "Apartemen Margonda Residence",
+      "lat": -6.3639891,
+      "lon": 106.8342575,
+      "tags": {
+        "addr:city": "Beji, Pondok Cina,Depok",
+        "addr:postcode": "16235",
+        "addr:street": "Jl. Margonda Raya Kav. 462 - 465",
+        "building": "apartments",
+        "name": "Apartemen Margonda Residence"
+      }
+    },
+    {
+      "osm_id": 4594515093,
+      "osm_type": "node",
+      "name": "my house",
+      "lat": -6.3435357,
+      "lon": 106.8477907,
+      "tags": {
+        "addr:postcode": "16951",
+        "addr:street": "jalan pondok pesantren nurul huda",
+        "name": "my house",
+        "name:ar": "baiti jannati",
+        "tourism": "guest_house"
+      }
+    },
+    {
+      "osm_id": 4974276121,
+      "osm_type": "node",
+      "name": "Makara Regency",
+      "lat": -6.358368,
+      "lon": 106.816758,
+      "tags": {
+        "name": "Makara Regency",
+        "tourism": "guest_house"
+      }
+    },
+    {
+      "osm_id": 9037081022,
+      "osm_type": "node",
+      "name": "Kartika One by Prasanthi",
+      "lat": -6.344386,
+      "lon": 106.8338057,
+      "tags": {
+        "name": "Kartika One by Prasanthi",
+        "tourism": "hotel"
+      }
+    },
+    {
+      "osm_id": 13147869724,
+      "osm_type": "node",
+      "name": "Vasa Jagakarsa",
+      "lat": -6.3483605,
+      "lon": 106.8040599,
+      "tags": {
+        "addr:city": "Jakarta Selatan",
+        "addr:district": "Jagakarsa",
+        "addr:housename": "Vasa Jagakarsa",
+        "addr:housenumber": "6",
+        "addr:postcode": "12630",
+        "addr:province": "DKI Jakarta",
+        "addr:street": "Jl. Panjang",
+        "addr:subdistrict": "Cipedak",
+        "building": "residential",
+        "name": "Vasa Jagakarsa"
+      }
+    },
+    {
+      "osm_id": 14296740673,
+      "osm_type": "node",
+      "name": "Kost WISMA PUTRA ANUGERAH",
+      "lat": -6.3614876,
+      "lon": 106.8214279,
+      "tags": {
+        "addr:city": "Depok",
+        "addr:district": "Beji",
+        "addr:housenumber": "No. 12",
+        "addr:neighbourhood": "RT 04/03",
+        "addr:postcode": "16425",
+        "addr:province": "Jawa Barat",
+        "addr:street": "Jalan Bacang",
+        "addr:subdistrict": "Kukusan",
+        "air_conditioning": "yes",
+        "description": "Merupakan tempat kost bagi mahasiswa UI yang direkomendasikan",
+        "internet_access": "yes",
+        "internet_access:fee": "no",
+        "mobile": "+6285101274693",
+        "name": "Kost WISMA PUTRA ANUGERAH",
+        "operator": "Ibu Tuti",
+        "payment:cash": "yes",
+        "payment:transfer": "yes",
+        "phone": "+6285101274693",
+        "rooms": "26",
+        "tourism": "hostel",
+        "website": "http://bit.ly/kostUI"
+      }
+    },
+    {
+      "osm_id": 120002193,
+      "osm_type": "way",
+      "name": "Hotel Mutiara",
+      "lat": -6.3547015,
+      "lon": 106.8470933,
+      "tags": {
+        "building": "yes",
+        "building:levels": "3",
+        "building:roof": "concrete",
+        "building:structure": "reinforced_masonry",
+        "building:use": "accommodation",
+        "building:walls": "brick",
+        "name": "Hotel Mutiara",
+        "stars": "2",
+        "tourism": "hotel"
+      }
+    },
+    {
+      "osm_id": 120629580,
+      "osm_type": "way",
+      "name": "Margonda Residence",
+      "lat": -6.3638683,
+      "lon": 106.8345423,
+      "tags": {
+        "building": "apartments",
+        "building:levels": "10",
+        "building:roof": "concrete",
+        "building:structure": "confined_masonry",
+        "building:use": "residential",
+        "building:walls": "brick",
+        "name": "Margonda Residence",
+        "start_date": "2007"
+      }
+    },
+    {
+      "osm_id": 151290535,
+      "osm_type": "way",
+      "name": "Blok G",
+      "lat": -6.3465322,
+      "lon": 106.8303815,
+      "tags": {
+        "access:roof": "no",
+        "addr:city": "DKI Jakarta",
+        "addr:full": "Jalan Universitas Indonesia",
+        "backup_generator": "no",
+        "building": "dormitory",
+        "building:condition": "good",
+        "building:floor": "ceramics",
+        "building:levels": "1",
+        "building:roof": "tile",
+        "building:structure": "reinforced_masonry",
+        "building:use": "accommodation",
+        "building:walls": "brick",
+        "capacity:persons": "250-500",
+        "evacuation_center": "no",
+        "name": "Blok G",
+        "operator:type": "government",
+        "source": "HOT_InAWARESurvey_2017"
+      }
+    },
+    {
+      "osm_id": 151290537,
+      "osm_type": "way",
+      "name": "Blok E",
+      "lat": -6.3470559,
+      "lon": 106.8292723,
+      "tags": {
+        "access:roof": "no",
+        "addr:city": "DKI Jakarta",
+        "addr:full": "Jalan Universitas Indonesia",
+        "backup_generator": "no",
+        "building": "dormitory",
+        "building:condition": "good",
+        "building:floor": "ceramics",
+        "building:roof": "tile",
+        "building:structure": "reinforced_masonry",
+        "building:use": "accommodation",
+        "building:walls": "brick",
+        "capacity:persons": "250-500",
+        "evacuation_center": "no",
+        "name": "Blok E",
+        "operator:type": "government",
+        "source": "HOT_InAWARESurvey_2017"
+      }
+    },
+    {
+      "osm_id": 173954090,
+      "osm_type": "way",
+      "name": "Griya Nafanz",
+      "lat": -6.3683918,
+      "lon": 106.836487,
+      "tags": {
+        "name": "Griya Nafanz",
+        "tourism": "hostel"
+      }
+    },
+    {
+      "osm_id": 173954101,
+      "osm_type": "way",
+      "name": "Wisma Vionita",
+      "lat": -6.367893,
+      "lon": 106.8348563,
+      "tags": {
+        "name": "Wisma Vionita",
+        "tourism": "hostel"
+      }
+    },
+    {
+      "osm_id": 173954102,
+      "osm_type": "way",
+      "name": "Kos-Kosan",
+      "lat": -6.3674983,
+      "lon": 106.835236,
+      "tags": {
+        "name": "Kos-Kosan",
+        "tourism": "hostel"
+      }
+    },
+    {
+      "osm_id": 195854505,
+      "osm_type": "way",
+      "name": "Blok D",
+      "lat": -6.3469889,
+      "lon": 106.830294,
+      "tags": {
+        "access:roof": "no",
+        "addr:city": "DKI Jakarta",
+        "addr:full": "Jalan Universitas Indonesia",
+        "backup_generator": "no",
+        "building": "dormitory",
+        "building:condition": "good",
+        "building:floor": "ceramics",
+        "building:levels": "1",
+        "building:roof": "tile",
+        "building:structure": "reinforced_masonry",
+        "building:use": "accommodation",
+        "building:walls": "brick",
+        "capacity:persons": "250-500",
+        "evacuation_center": "no",
+        "name": "Blok D",
+        "operator:type": "government",
+        "source": "HOT_InAWARESurvey_2017"
+      }
+    },
+    {
+      "osm_id": 195977216,
+      "osm_type": "way",
+      "name": "Gedung A, Perkantoran PVUI",
+      "lat": -6.3693983,
+      "lon": 106.8207957,
+      "tags": {
+        "addr:city": "Depok",
+        "addr:postcode": "16424",
+        "addr:street": "Kampus UI Depok",
+        "building": "apartments",
+        "building:levels": "7",
+        "name": "Gedung A, Perkantoran PVUI",
+        "phone": "+622129027481",
+        "website": "https://vokasi.ui.ac.id/",
+        "wheelchair": "yes"
+      }
+    },
+    {
+      "osm_id": 195977217,
+      "osm_type": "way",
+      "name": "Gedung B, Perkuliahan PVUI",
+      "lat": -6.3687828,
+      "lon": 106.8213999,
+      "tags": {
+        "addr:city": "Depok",
+        "addr:postcode": "16424",
+        "addr:street": "Kampus UI Depok",
+        "building": "apartments",
+        "building:levels": "7",
+        "name": "Gedung B, Perkuliahan PVUI",
+        "phone": "+622129027481",
+        "website": "https://vokasi.ui.ac.id/",
+        "wheelchair": "yes"
+      }
+    },
+    {
+      "osm_id": 263916023,
+      "osm_type": "way",
+      "name": "Griya Enha 2",
+      "lat": -6.3611454,
+      "lon": 106.8213921,
+      "tags": {
+        "addr:city": "Depok",
+        "addr:postcode": "16425",
+        "addr:street": "Jalan H. Amat RT.04 RW.03 Kelurahan Kukusan",
+        "building": "residential",
+        "building:levels": "0",
+        "name": "Griya Enha 2"
+      }
+    },
+    {
+      "osm_id": 263916181,
+      "osm_type": "way",
+      "name": "Pondok Kartini",
+      "lat": -6.3618519,
+      "lon": 106.8219819,
+      "tags": {
+        "building": "residential",
+        "name": "Pondok Kartini",
+        "name:etymology:wikidata": "Q1373764",
+        "name:etymology:wikipedia": "id:Kartini"
+      }
+    },
+    {
+      "osm_id": 284785727,
+      "osm_type": "way",
+      "name": "Apartemen Grand Taman Melati Margonda 2 Depok",
+      "lat": -6.3605059,
+      "lon": 106.8324766,
+      "tags": {
+        "building": "apartments",
+        "building:levels": "26",
+        "layer": "1",
+        "name": "Apartemen Grand Taman Melati Margonda 2 Depok",
+        "start_date": "2015"
+      }
+    },
+    {
+      "osm_id": 291853933,
+      "osm_type": "way",
+      "name": "Dien Kost",
+      "lat": -6.374496,
+      "lon": 106.8315955,
+      "tags": {
+        "addr:city": "Depok",
+        "addr:postcode": "16235",
+        "addr:street": "H. Atan",
+        "building": "apartments",
+        "name": "Dien Kost"
+      }
+    },
+    {
+      "osm_id": 291854931,
+      "osm_type": "way",
+      "name": "Hotel Bumi Wiyata Margonda Depok",
+      "lat": -6.3792727,
+      "lon": 106.8307956,
+      "tags": {
+        "building": "yes",
+        "name": "Hotel Bumi Wiyata Margonda Depok",
+        "tourism": "hotel"
+      }
+    },
+    {
+      "osm_id": 300674629,
+      "osm_type": "way",
+      "name": "Apartemen Margonda Residence",
+      "lat": -6.3632658,
+      "lon": 106.8355058,
+      "tags": {
+        "building": "apartments",
+        "building:levels": "16",
+        "layer": "-1",
+        "location": "surface",
+        "name": "Apartemen Margonda Residence",
+        "start_date": "2011"
+      }
+    },
+    {
+      "osm_id": 300674723,
+      "osm_type": "way",
+      "name": "Wisma Agung",
+      "lat": -6.3642982,
+      "lon": 106.8359789,
+      "tags": {
+        "building": "residential",
+        "name": "Wisma Agung"
+      }
+    },
+    {
+      "osm_id": 304494437,
+      "osm_type": "way",
+      "name": "Puri Agung Kosan",
+      "lat": -6.3695206,
+      "lon": 106.8359366,
+      "tags": {
+        "building": "residential",
+        "name": "Puri Agung Kosan"
+      }
+    },
+    {
+      "osm_id": 304494439,
+      "osm_type": "way",
+      "name": "Kos dan Laundry Java",
+      "lat": -6.3688846,
+      "lon": 106.8367148,
+      "tags": {
+        "building": "residential",
+        "name": "Kos dan Laundry Java"
+      }
+    },
+    {
+      "osm_id": 308192103,
+      "osm_type": "way",
+      "name": "Pondok Ubud",
+      "lat": -6.3587056,
+      "lon": 106.8228153,
+      "tags": {
+        "building": "yes",
+        "name": "Pondok Ubud",
+        "tourism": "hostel"
+      }
+    },
+    {
+      "osm_id": 308192333,
+      "osm_type": "way",
+      "name": "Pondok Aries",
+      "lat": -6.3576733,
+      "lon": 106.8228207,
+      "tags": {
+        "addr:city": "Depok",
+        "addr:housenumber": "32",
+        "addr:street": "Jalan Masjid Al - Farouq",
+        "building": "house",
+        "name": "Pondok Aries",
+        "tourism": "hostel"
+      }
+    },
+    {
+      "osm_id": 308192390,
+      "osm_type": "way",
+      "name": "Kost Omah Kukusan",
+      "lat": -6.3588144,
+      "lon": 106.8228058,
+      "tags": {
+        "building": "yes",
+        "name": "Kost Omah Kukusan",
+        "tourism": "hostel"
+      }
+    },
+    {
+      "osm_id": 308192536,
+      "osm_type": "way",
+      "name": "Pondok Ananda",
+      "lat": -6.3579739,
+      "lon": 106.8227215,
+      "tags": {
+        "building": "yes",
+        "name": "Pondok Ananda",
+        "tourism": "hostel"
+      }
+    },
+    {
+      "osm_id": 447140925,
+      "osm_type": "way",
+      "name": "The Margo Hotel",
+      "lat": -6.3719192,
+      "lon": 106.833657,
+      "tags": {
+        "building": "hotel",
+        "building:levels": "16",
+        "name": "The Margo Hotel",
+        "start_date": "2015",
+        "tourism": "hotel"
+      }
+    },
+    {
+      "osm_id": 504681511,
+      "osm_type": "way",
+      "name": "Wisma Shafana",
+      "lat": -6.3534102,
+      "lon": 106.8196449,
+      "tags": {
+        "addr:city": "DKI Jakarta",
+        "addr:housenumber": "127",
+        "addr:postcode": "12640",
+        "addr:street": "Jalan Arsip 1",
+        "building": "yes",
+        "guest_house": "guest_house",
+        "internet_access": "no",
+        "name": "Wisma Shafana",
+        "rooms": "13",
+        "tourism": "guest_house"
+      }
+    },
+    {
+      "osm_id": 641585959,
+      "osm_type": "way",
+      "name": "Dave Apartment",
+      "lat": -6.3687133,
+      "lon": 106.8169236,
+      "tags": {
+        "addr:city": "Depok",
+        "addr:postcode": "16425",
+        "addr:street": "Palakali",
+        "building": "apartments",
+        "building:levels": "21",
+        "name": "Dave Apartment"
+      }
+    },
+    {
+      "osm_id": 1015240567,
+      "osm_type": "way",
+      "name": "Evenciio Apartement Margonda",
+      "lat": -6.3601885,
+      "lon": 106.83369,
+      "tags": {
+        "building": "apartments",
+        "building:levels": "37",
+        "name": "Evenciio Apartement Margonda",
+        "start_date": "2020"
+      }
+    },
+    {
+      "osm_id": 1282484041,
+      "osm_type": "way",
+      "name": "Blok F",
+      "lat": -6.3472123,
+      "lon": 106.828867,
+      "tags": {
+        "access:roof": "no",
+        "addr:city": "DKI Jakarta",
+        "addr:full": "Jalan Universitas Indonesia",
+        "backup_generator": "no",
+        "building": "dormitory",
+        "building:condition": "good",
+        "building:floor": "ceramics",
+        "building:levels": "1",
+        "building:roof": "tile",
+        "building:structure": "reinforced_masonry",
+        "building:use": "accommodation",
+        "building:walls": "brick",
+        "capacity:persons": "250-500",
+        "evacuation_center": "no",
+        "name": "Blok F",
+        "operator:type": "government",
+        "source": "HOT_InAWARESurvey_2017"
+      }
+    },
+    {
+      "osm_id": 1327457869,
+      "osm_type": "way",
+      "name": "YKM FEB UI",
+      "lat": -6.3687727,
+      "lon": 106.8372771,
+      "tags": {
+        "addr:full": "Jl H.M. Tohir no.7",
+        "name": "YKM FEB UI",
+        "tourism": "guest_house"
+      }
+    },
+    {
+      "osm_id": 1350848829,
+      "osm_type": "way",
+      "name": "Kos Kaca",
+      "lat": -6.35771,
+      "lon": 106.8230811,
+      "tags": {
+        "building": "yes",
+        "name": "Kos Kaca",
+        "tourism": "hostel"
+      }
+    },
+    {
+      "osm_id": 1350848830,
+      "osm_type": "way",
+      "name": "Wisma Asri",
+      "lat": -6.3579206,
+      "lon": 106.8230264,
+      "tags": {
+        "building": "yes",
+        "name": "Wisma Asri",
+        "tourism": "hostel"
+      }
+    },
+    {
+      "osm_id": 1350848831,
+      "osm_type": "way",
+      "name": "Griya Indah 1",
+      "lat": -6.3581801,
+      "lon": 106.8229567,
+      "tags": {
+        "building": "yes",
+        "name": "Griya Indah 1",
+        "tourism": "hostel"
+      }
+    },
+    {
+      "osm_id": 1350848832,
+      "osm_type": "way",
+      "name": "Griya Indah 2",
+      "lat": -6.3584391,
+      "lon": 106.8228782,
+      "tags": {
+        "building": "yes",
+        "name": "Griya Indah 2",
+        "tourism": "hostel"
+      }
+    },
+    {
+      "osm_id": 1350848833,
+      "osm_type": "way",
+      "name": "Pondok Kerria",
+      "lat": -6.3585833,
+      "lon": 106.8228298,
+      "tags": {
+        "building": "yes",
+        "name": "Pondok Kerria",
+        "tourism": "hostel"
+      }
+    },
+    {
+      "osm_id": 1350848834,
+      "osm_type": "way",
+      "name": "Pondok Aria",
+      "lat": -6.3573966,
+      "lon": 106.8231085,
+      "tags": {
+        "building": "yes",
+        "name": "Pondok Aria",
+        "tourism": "hostel"
+      }
+    },
+    {
+      "osm_id": 1350848836,
+      "osm_type": "way",
+      "name": "Wisma Anjasmara 2",
+      "lat": -6.3572156,
+      "lon": 106.8231586,
+      "tags": {
+        "building": "yes",
+        "name": "Wisma Anjasmara 2",
+        "tourism": "hostel"
+      }
+    },
+    {
+      "osm_id": 1350848837,
+      "osm_type": "way",
+      "name": "Griya Abyaz",
+      "lat": -6.3569044,
+      "lon": 106.8228184,
+      "tags": {
+        "building": "yes",
+        "name": "Griya Abyaz",
+        "tourism": "hostel"
+      }
+    }
+  ],
+  "unand-limau-manis": [
+    {
+      "osm_id": 4572583593,
+      "osm_type": "node",
+      "name": "Imelda hotel",
+      "lat": -0.9397815,
+      "lon": 100.4651554,
+      "tags": {
+        "name": "Imelda hotel",
+        "tourism": "hotel"
+      }
+    },
+    {
+      "osm_id": 11971639395,
+      "osm_type": "node",
+      "name": "Kos-Kosan Patriot Unand",
+      "lat": -0.9177306,
+      "lon": 100.4651126,
+      "tags": {
+        "name": "Kos-Kosan Patriot Unand",
+        "tourism": "motel"
+      }
+    },
+    {
+      "osm_id": 452212599,
+      "osm_type": "way",
+      "name": "Hotel Imelda",
+      "lat": -0.9426438,
+      "lon": 100.4626594,
+      "tags": {
+        "addr:full": "Jl. Raya Ulu Gadut",
+        "building": "yes",
+        "name": "Hotel Imelda",
+        "tourism": "hotel"
+      }
+    },
+    {
+      "osm_id": 452212605,
+      "osm_type": "way",
+      "name": "Hotel Imelda",
+      "lat": -0.9424895,
+      "lon": 100.4627135,
+      "tags": {
+        "addr:full": "Jl. Raya Ulu Gadut",
+        "building": "yes",
+        "name": "Hotel Imelda",
+        "tourism": "hotel"
+      }
+    },
+    {
+      "osm_id": 452212634,
+      "osm_type": "way",
+      "name": "Hotel Imelda",
+      "lat": -0.942217,
+      "lon": 100.4625347,
+      "tags": {
+        "addr:full": "Jl. Raya Ulu Gadut",
+        "building": "yes",
+        "name": "Hotel Imelda",
+        "tourism": "hotel"
+      }
+    }
+  ]
+}

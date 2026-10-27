@@ -1,0 +1,943 @@
+[
+  {
+    "id": "ui-depok-01",
+    "name": "Kos Graha Kukusan Mandiri",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Kukusan Teknik",
+    "coordinates": {
+      "latitude": -6.3685,
+      "longitude": 106.8212
+    },
+    "rentMonthly": 1650000,
+    "roomType": "single",
+    "gender": "male",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "desk_chair",
+      "closet"
+    ],
+    "verified": true,
+    "notes": "Dekat Pintu Tol Kukusan dan Gerbang FT UI. Lingkungan tenang, banyak warung makan mahasiswa."
+  },
+  {
+    "id": "ui-depok-02",
+    "name": "Wisma Pondok Cina Asri",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Pondok Cina",
+    "coordinates": {
+      "latitude": -6.3612,
+      "longitude": 106.8324
+    },
+    "rentMonthly": 1850000,
+    "roomType": "single",
+    "gender": "female",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "water_heater",
+      "access_24h"
+    ],
+    "verified": true,
+    "notes": "3 menit jalan kaki ke Stasiun Pondok Cina dan Margonda Raya. Akses keamanan 24 jam."
+  },
+  {
+    "id": "ui-depok-03",
+    "name": "Kos Green Kober Melati",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Kober",
+    "coordinates": {
+      "latitude": -6.3648,
+      "longitude": 106.8341
+    },
+    "rentMonthly": 1250000,
+    "roomType": "single",
+    "gender": "all",
+    "facilityCodes": [
+      "wifi",
+      "desk_chair",
+      "closet",
+      "shared_kitchen"
+    ],
+    "verified": true,
+    "notes": "Kamar mandi luar bersih. Banyak tempat laundry kiloan dan minimarket di sepanjang jalan Kober."
+  },
+  {
+    "id": "ui-depok-04",
+    "name": "Paviliun Margonda Residence Studio",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Margonda",
+    "coordinates": {
+      "latitude": -6.3715,
+      "longitude": 106.831
+    },
+    "rentMonthly": 2400000,
+    "roomType": "single",
+    "gender": "all",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "water_heater",
+      "access_24h",
+      "parking_car"
+    ],
+    "verified": true,
+    "notes": "Kamar tipe studio lengkap. Lokasi premium di jalan arteri Margonda, dekat halte bis kuning UI."
+  },
+  {
+    "id": "ui-depok-05",
+    "name": "Kos Rindang Kukusan Kelurahan",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Kukusan Kelurahan",
+    "coordinates": {
+      "latitude": -6.3742,
+      "longitude": 106.8195
+    },
+    "rentMonthly": 950000,
+    "roomType": "single",
+    "gender": "female",
+    "facilityCodes": [
+      "wifi",
+      "desk_chair",
+      "closet"
+    ],
+    "verified": true,
+    "notes": "Hemat biaya, suasana kekeluargaan. Akses motor lancar ke arah Vokasi dan FISIP UI."
+  },
+  {
+    "id": "ui-depok-06",
+    "name": "Wisma Kutek Ceria",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Kukusan Teknik",
+    "coordinates": {
+      "latitude": -6.3698,
+      "longitude": 106.8205
+    },
+    "rentMonthly": 1350000,
+    "roomType": "single",
+    "gender": "male",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "desk_chair",
+      "closet"
+    ],
+    "verified": true,
+    "notes": "Hanya 4 menit jalan kaki ke Pintu Kutek UI. Dikelilingi fotokopi, warteg, dan minimarket."
+  },
+  {
+    "id": "ui-depok-07",
+    "name": "Kos Putri Barel Indah",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Margonda Barel",
+    "coordinates": {
+      "latitude": -6.3655,
+      "longitude": 106.832
+    },
+    "rentMonthly": 1500000,
+    "roomType": "single",
+    "gender": "female",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "access_24h"
+    ],
+    "verified": true,
+    "notes": "Area gang Barel dekat Stasiun UI dan jembatan penyeberangan kampus. Gerbang kunci kartu akses."
+  },
+  {
+    "id": "ui-depok-08",
+    "name": "Kos Mahasiswa Palem Kuning",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Kukusan Teknik",
+    "coordinates": {
+      "latitude": -6.3672,
+      "longitude": 106.8218
+    },
+    "rentMonthly": 1100000,
+    "roomType": "single",
+    "gender": "male",
+    "facilityCodes": [
+      "wifi",
+      "desk_chair",
+      "closet",
+      "shared_kitchen"
+    ],
+    "verified": true,
+    "notes": "Fasilitas dapur bersama lengkap dengan kulkas dan dispenser galon gratis."
+  },
+  {
+    "id": "ui-depok-09",
+    "name": "Kos Syariah Al-Falah Pocin",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Pondok Cina",
+    "coordinates": {
+      "latitude": -6.363,
+      "longitude": 106.8335
+    },
+    "rentMonthly": 1700000,
+    "roomType": "single",
+    "gender": "female",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "desk_chair",
+      "access_24h"
+    ],
+    "verified": true,
+    "notes": "Lingkungan syariah tenang, pengawasan CCTV 24 jam, 200 meter ke Masjid Al-Falah dan Stasiun Pocin."
+  },
+  {
+    "id": "ui-depok-10",
+    "name": "Wisma Jurang Kutek Ekonomis",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Kukusan Teknik",
+    "coordinates": {
+      "latitude": -6.371,
+      "longitude": 106.822
+    },
+    "rentMonthly": 850000,
+    "roomType": "single",
+    "gender": "male",
+    "facilityCodes": [
+      "wifi",
+      "desk_chair",
+      "closet"
+    ],
+    "verified": true,
+    "notes": "Pilihan terjangkau bagi mahasiswa teknik. Sirkulasi udara bagus dan parkiran motor berpagar tinggi."
+  },
+  {
+    "id": "ui-depok-11",
+    "name": "Griya Margonda Harmoni",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Margonda",
+    "coordinates": {
+      "latitude": -6.367,
+      "longitude": 106.833
+    },
+    "rentMonthly": 2100000,
+    "roomType": "single",
+    "gender": "all",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "water_heater",
+      "access_24h",
+      "parking_car"
+    ],
+    "verified": true,
+    "notes": "Kamar luas 4x4 meter, kamar mandi dalam dengan water heater. Dekat Margo City dan akses angkot 112."
+  },
+  {
+    "id": "ui-depok-12",
+    "name": "Kos Pondok Hasanah Kukel",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Kukusan Kelurahan",
+    "coordinates": {
+      "latitude": -6.3605,
+      "longitude": 106.8235
+    },
+    "rentMonthly": 1200000,
+    "roomType": "single",
+    "gender": "female",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "desk_chair",
+      "closet"
+    ],
+    "verified": true,
+    "notes": "Dekat Pintu Kukel UI arah FMIPA/FIK. Suasana perumahan sejuk dan tidak bising kendaraan raya."
+  },
+  {
+    "id": "ui-depok-13",
+    "name": "Kos Mahasiswa Kober Tengah",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Kober",
+    "coordinates": {
+      "latitude": -6.366,
+      "longitude": 106.835
+    },
+    "rentMonthly": 1050000,
+    "roomType": "single",
+    "gender": "male",
+    "facilityCodes": [
+      "wifi",
+      "desk_chair",
+      "closet",
+      "shared_kitchen"
+    ],
+    "verified": true,
+    "notes": "Kamar bersih, dekat aneka kuliner malam Kober dan minimarket 24 jam."
+  },
+  {
+    "id": "ui-depok-14",
+    "name": "Wisma Flamboyan Pocin",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Pondok Cina",
+    "coordinates": {
+      "latitude": -6.3622,
+      "longitude": 106.8318
+    },
+    "rentMonthly": 1600000,
+    "roomType": "single",
+    "gender": "all",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "desk_chair"
+    ],
+    "verified": true,
+    "notes": "5 menit jalan kaki ke FIB/FEB UI melalui jembatan penyeberangan Stasiun Pondok Cina."
+  },
+  {
+    "id": "ui-depok-15",
+    "name": "Kos Madani Kukusan Vokasi",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Kukusan Teknik",
+    "coordinates": {
+      "latitude": -6.369,
+      "longitude": 106.823
+    },
+    "rentMonthly": 1400000,
+    "roomType": "single",
+    "gender": "female",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "closet"
+    ],
+    "verified": true,
+    "notes": "Sangat strategis untuk mahasiswa Program Vokasi dan FT. Akses jalan aspal lebar untuk motor."
+  },
+  {
+    "id": "ui-depok-16",
+    "name": "Paviliun Cendrawasih Kukel",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Kukusan Kelurahan",
+    "coordinates": {
+      "latitude": -6.359,
+      "longitude": 106.824
+    },
+    "rentMonthly": 1750000,
+    "roomType": "single",
+    "gender": "all",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "water_heater",
+      "access_24h"
+    ],
+    "verified": true,
+    "notes": "Fasilitas lengkap gaya modern minimalis dengan balkon pribadi di lantai dua."
+  },
+  {
+    "id": "ui-depok-17",
+    "name": "Kos Sawo Raya Pocin",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Pondok Cina",
+    "coordinates": {
+      "latitude": -6.3638,
+      "longitude": 106.834
+    },
+    "rentMonthly": 1300000,
+    "roomType": "single",
+    "gender": "male",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "desk_chair",
+      "closet"
+    ],
+    "verified": true,
+    "notes": "Akses jalan kaki mudah ke Margonda dan kampus UI. Disediakan mesin cuci bersama gratis."
+  },
+  {
+    "id": "ui-depok-18",
+    "name": "Kos Bougenville Margonda",
+    "campusId": "ui-depok",
+    "city": "Depok",
+    "area": "Margonda",
+    "coordinates": {
+      "latitude": -6.373,
+      "longitude": 106.8315
+    },
+    "rentMonthly": 1950000,
+    "roomType": "single",
+    "gender": "female",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "water_heater",
+      "access_24h"
+    ],
+    "verified": true,
+    "notes": "Dekat Rumah Sakit Bunda Margonda dan Universitas Gunadarma, penjagaan satpam malam."
+  },
+  {
+    "id": "unand-padang-01",
+    "name": "Kos Kampus Limau Manis Sejahtera",
+    "campusId": "unand-limau-manis",
+    "city": "Padang",
+    "area": "Limau Manis",
+    "coordinates": {
+      "latitude": -0.9168,
+      "longitude": 100.4578
+    },
+    "rentMonthly": 850000,
+    "roomType": "single",
+    "gender": "male",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "desk_chair",
+      "closet"
+    ],
+    "verified": true,
+    "notes": "Dekat Gerbang Utama Unand. Udara sejuk kaki bukit, hanya 5 menit ke Rektorat dan Perpustakaan Pusat."
+  },
+  {
+    "id": "unand-padang-02",
+    "name": "Wisma Pasar Baru Anggrek",
+    "campusId": "unand-limau-manis",
+    "city": "Padang",
+    "area": "Pasar Baru Pauh",
+    "coordinates": {
+      "latitude": -0.9245,
+      "longitude": 100.4492
+    },
+    "rentMonthly": 750000,
+    "roomType": "single",
+    "gender": "female",
+    "facilityCodes": [
+      "wifi",
+      "desk_chair",
+      "closet",
+      "shared_kitchen"
+    ],
+    "verified": true,
+    "notes": "Dekat pusat kuliner Pasar Baru Unand, apotek, dan jalur angkutan kota kampus."
+  },
+  {
+    "id": "unand-padang-03",
+    "name": "Kos Syariah Melati Limau Manis",
+    "campusId": "unand-limau-manis",
+    "city": "Padang",
+    "area": "Limau Manis",
+    "coordinates": {
+      "latitude": -0.9115,
+      "longitude": 100.4632
+    },
+    "rentMonthly": 1100000,
+    "roomType": "single",
+    "gender": "female",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "desk_chair",
+      "access_24h"
+    ],
+    "verified": true,
+    "notes": "Kamar modern ber-AC, lingkungan tenang dan aman di area perumahan dosen."
+  },
+  {
+    "id": "unand-padang-04",
+    "name": "Kos Pondok Kapalo Koto",
+    "campusId": "unand-limau-manis",
+    "city": "Padang",
+    "area": "Kapalo Koto",
+    "coordinates": {
+      "latitude": -0.9298,
+      "longitude": 100.4435
+    },
+    "rentMonthly": 600000,
+    "roomType": "single",
+    "gender": "male",
+    "facilityCodes": [
+      "desk_chair",
+      "closet",
+      "shared_kitchen"
+    ],
+    "verified": true,
+    "notes": "Harga sangat terjangkau bagi mahasiswa baru. Akses motor 7 menit ke kampus."
+  },
+  {
+    "id": "unand-padang-05",
+    "name": "Kos Paviliun Pauh Boulevard",
+    "campusId": "unand-limau-manis",
+    "city": "Padang",
+    "area": "Pauh",
+    "coordinates": {
+      "latitude": -0.9205,
+      "longitude": 100.4468
+    },
+    "rentMonthly": 1250000,
+    "roomType": "single",
+    "gender": "all",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "desk_chair",
+      "parking_car"
+    ],
+    "verified": true,
+    "notes": "Dilengkapi parkir mobil dan akses jalan raya utama. Cocok untuk mahasiswa kedokteran & pascasarjana."
+  },
+  {
+    "id": "unand-padang-06",
+    "name": "Wisma Harapan Limau Manis",
+    "campusId": "unand-limau-manis",
+    "city": "Padang",
+    "area": "Limau Manis",
+    "coordinates": {
+      "latitude": -0.915,
+      "longitude": 100.459
+    },
+    "rentMonthly": 900000,
+    "roomType": "single",
+    "gender": "male",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "desk_chair",
+      "closet"
+    ],
+    "verified": true,
+    "notes": "3 menit jalan kaki ke halte bus kampus Limau Manis. Air pegunungan jernih dan lancar."
+  },
+  {
+    "id": "unand-padang-07",
+    "name": "Kos Putri Kenanga Pasar Baru",
+    "campusId": "unand-limau-manis",
+    "city": "Padang",
+    "area": "Pasar Baru",
+    "coordinates": {
+      "latitude": -0.9255,
+      "longitude": 100.448
+    },
+    "rentMonthly": 800000,
+    "roomType": "single",
+    "gender": "female",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "desk_chair",
+      "shared_kitchen"
+    ],
+    "verified": true,
+    "notes": "Sangat dekat dengan pangkalan angkot kampus dan toserba mahasiswa."
+  },
+  {
+    "id": "unand-padang-08",
+    "name": "Pondok Asri Gadang",
+    "campusId": "unand-limau-manis",
+    "city": "Padang",
+    "area": "Limau Manis",
+    "coordinates": {
+      "latitude": -0.9135,
+      "longitude": 100.461
+    },
+    "rentMonthly": 700000,
+    "roomType": "single",
+    "gender": "male",
+    "facilityCodes": [
+      "wifi",
+      "desk_chair",
+      "closet"
+    ],
+    "verified": true,
+    "notes": "Suasana pedesaan Minang asri, ramah dan santai. Cocok untuk belajar mandiri."
+  },
+  {
+    "id": "unand-padang-09",
+    "name": "Wisma Sakato Simpang Kampus",
+    "campusId": "unand-limau-manis",
+    "city": "Padang",
+    "area": "Pasar Baru",
+    "coordinates": {
+      "latitude": -0.922,
+      "longitude": 100.4475
+    },
+    "rentMonthly": 1150000,
+    "roomType": "single",
+    "gender": "all",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "desk_chair",
+      "access_24h"
+    ],
+    "verified": true,
+    "notes": "Lokasi persimpangan strategis jalan kampus Unand. Dilengkapi genset cadangan."
+  },
+  {
+    "id": "unand-padang-10",
+    "name": "Kos Putri Bunga Tanjung Pauh",
+    "campusId": "unand-limau-manis",
+    "city": "Padang",
+    "area": "Pauh",
+    "coordinates": {
+      "latitude": -0.9215,
+      "longitude": 100.445
+    },
+    "rentMonthly": 650000,
+    "roomType": "single",
+    "gender": "female",
+    "facilityCodes": [
+      "wifi",
+      "desk_chair",
+      "closet",
+      "shared_kitchen"
+    ],
+    "verified": true,
+    "notes": "Ibu kos ramah, dapur bersama bersih, dan tersedia jemuran tertutup."
+  },
+  {
+    "id": "unand-padang-11",
+    "name": "Graha Limau Manis Permai",
+    "campusId": "unand-limau-manis",
+    "city": "Padang",
+    "area": "Limau Manis",
+    "coordinates": {
+      "latitude": -0.9175,
+      "longitude": 100.456
+    },
+    "rentMonthly": 1000000,
+    "roomType": "single",
+    "gender": "female",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "closet"
+    ],
+    "verified": true,
+    "notes": "Dekat Fakultas Kedokteran dan Rumah Sakit Unand. Keamanan portal komplek."
+  },
+  {
+    "id": "unand-padang-12",
+    "name": "Kos Jabal Rahmah Limau Manis",
+    "campusId": "unand-limau-manis",
+    "city": "Padang",
+    "area": "Limau Manis",
+    "coordinates": {
+      "latitude": -0.9128,
+      "longitude": 100.4625
+    },
+    "rentMonthly": 850000,
+    "roomType": "single",
+    "gender": "male",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "desk_chair",
+      "closet"
+    ],
+    "verified": true,
+    "notes": "Dekat Masjid Nurul Ilmi Unand. Lingkungan kondusif bagi mahasiswa agamis."
+  },
+  {
+    "id": "unand-padang-13",
+    "name": "Wisma Pauh Jaya Mandiri",
+    "campusId": "unand-limau-manis",
+    "city": "Padang",
+    "area": "Pauh",
+    "coordinates": {
+      "latitude": -0.928,
+      "longitude": 100.442
+    },
+    "rentMonthly": 550000,
+    "roomType": "single",
+    "gender": "male",
+    "facilityCodes": [
+      "desk_chair",
+      "closet"
+    ],
+    "verified": true,
+    "notes": "Paling ekonomis, dekat warung Padang murah dan bengkel motor."
+  },
+  {
+    "id": "unand-padang-14",
+    "name": "Paviliun Bukit Barisan Asri",
+    "campusId": "unand-limau-manis",
+    "city": "Padang",
+    "area": "Limau Manis",
+    "coordinates": {
+      "latitude": -0.9102,
+      "longitude": 100.465
+    },
+    "rentMonthly": 1400000,
+    "roomType": "single",
+    "gender": "all",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "water_heater",
+      "access_24h",
+      "parking_car"
+    ],
+    "verified": true,
+    "notes": "Pemandangan bukit Limau Manis yang menakjubkan. Kamar mandi dalam dengan air hangat."
+  },
+  {
+    "id": "itera-lampung-01",
+    "name": "Kos Pondok Ryacudu Asri",
+    "campusId": "itera-lampung",
+    "city": "Lampung Selatan",
+    "area": "Terusan Ryacudu",
+    "coordinates": {
+      "latitude": -5.3562,
+      "longitude": 105.3115
+    },
+    "rentMonthly": 1200000,
+    "roomType": "single",
+    "gender": "male",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "desk_chair",
+      "closet"
+    ],
+    "verified": true,
+    "notes": "5 menit ke Gerbang Utama ITERA. Dilengkapi WiFi cepat untuk tugas kuliah teknik dan genset cadangan."
+  },
+  {
+    "id": "itera-lampung-02",
+    "name": "Wisma Putri Way Huwi Cantika",
+    "campusId": "itera-lampung",
+    "city": "Lampung Selatan",
+    "area": "Way Huwi",
+    "coordinates": {
+      "latitude": -5.3538,
+      "longitude": 105.3065
+    },
+    "rentMonthly": 850000,
+    "roomType": "single",
+    "gender": "female",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "desk_chair",
+      "closet",
+      "shared_kitchen"
+    ],
+    "verified": true,
+    "notes": "Khusus mahasiswi ITERA, penjagaan portal malam 24 jam. Dekat minimarket dan laundry kiloan."
+  },
+  {
+    "id": "itera-lampung-03",
+    "name": "Kos Griya ITERA Mandiri",
+    "campusId": "itera-lampung",
+    "city": "Lampung Selatan",
+    "area": "Way Huwi",
+    "coordinates": {
+      "latitude": -5.3525,
+      "longitude": 105.3092
+    },
+    "rentMonthly": 600000,
+    "roomType": "single",
+    "gender": "all",
+    "facilityCodes": [
+      "wifi",
+      "desk_chair",
+      "closet",
+      "shared_kitchen"
+    ],
+    "verified": true,
+    "notes": "Pilihan paling hemat mahasiswa baru, kamar mandi luar bersih, parkir motor luas berkanopi."
+  },
+  {
+    "id": "itera-lampung-04",
+    "name": "Paviliun Grand Sabah Balau Studio",
+    "campusId": "itera-lampung",
+    "city": "Lampung Selatan",
+    "area": "Sabah Balau",
+    "coordinates": {
+      "latitude": -5.3672,
+      "longitude": 105.3195
+    },
+    "rentMonthly": 1650000,
+    "roomType": "single",
+    "gender": "all",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "water_heater",
+      "access_24h",
+      "parking_car"
+    ],
+    "verified": true,
+    "notes": "Tipe paviliun studio modern ber-AC dan air panas, parkir mobil luas, lingkungan sejuk dan bebas bising."
+  },
+  {
+    "id": "itera-lampung-05",
+    "name": "Kos Putri An-Nur Way Huwi",
+    "campusId": "itera-lampung",
+    "city": "Lampung Selatan",
+    "area": "Way Huwi",
+    "coordinates": {
+      "latitude": -5.357,
+      "longitude": 105.305
+    },
+    "rentMonthly": 750000,
+    "roomType": "single",
+    "gender": "female",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "desk_chair",
+      "closet"
+    ],
+    "verified": true,
+    "notes": "Suasana tenang islami, dekat musholla dan jalan tembus gang mahasiswa ke ITERA."
+  },
+  {
+    "id": "itera-lampung-06",
+    "name": "Kos Putra Jati Agung Sejahtera",
+    "campusId": "itera-lampung",
+    "city": "Lampung Selatan",
+    "area": "Jati Agung",
+    "coordinates": {
+      "latitude": -5.3495,
+      "longitude": 105.313
+    },
+    "rentMonthly": 900000,
+    "roomType": "single",
+    "gender": "male",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "desk_chair",
+      "closet",
+      "access_24h"
+    ],
+    "verified": true,
+    "notes": "Akses 24 jam bebas jam malam, cocok bagi mahasiswa arsitektur & informatika yang sering tugas malam."
+  },
+  {
+    "id": "itera-lampung-07",
+    "name": "Kos Residence Embung Ceria",
+    "campusId": "itera-lampung",
+    "city": "Lampung Selatan",
+    "area": "Terusan Ryacudu",
+    "coordinates": {
+      "latitude": -5.3615,
+      "longitude": 105.3245
+    },
+    "rentMonthly": 1100000,
+    "roomType": "single",
+    "gender": "all",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "desk_chair",
+      "closet"
+    ],
+    "verified": true,
+    "notes": "Pemandangan embung dan asrama ITERA, udara segar alami, jarak jalan kaki hanya 6 menit ke GKU."
+  },
+  {
+    "id": "itera-lampung-08",
+    "name": "Wisma Cendekia Airan Raya",
+    "campusId": "itera-lampung",
+    "city": "Lampung Selatan",
+    "area": "Airan Raya",
+    "coordinates": {
+      "latitude": -5.3705,
+      "longitude": 105.3085
+    },
+    "rentMonthly": 1450000,
+    "roomType": "single",
+    "gender": "female",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "water_heater",
+      "access_24h"
+    ],
+    "verified": true,
+    "notes": "Akses mudah ke jalur Trans Lampung dan pusat kuliner Airan. Kamar mandi dalam dengan shower."
+  },
+  {
+    "id": "itera-lampung-09",
+    "name": "Kos Syariah Ryacudu Barokah",
+    "campusId": "itera-lampung",
+    "city": "Lampung Selatan",
+    "area": "Terusan Ryacudu",
+    "coordinates": {
+      "latitude": -5.3545,
+      "longitude": 105.316
+    },
+    "rentMonthly": 700000,
+    "roomType": "single",
+    "gender": "male",
+    "facilityCodes": [
+      "wifi",
+      "desk_chair",
+      "closet",
+      "shared_kitchen"
+    ],
+    "verified": true,
+    "notes": "Tepat di seberang gerbang ITERA, hemat ongkos transportasi, dekat warteg dan pangkas rambut."
+  },
+  {
+    "id": "itera-lampung-10",
+    "name": "Paviliun Sakura Way Huwi",
+    "campusId": "itera-lampung",
+    "city": "Lampung Selatan",
+    "area": "Way Huwi",
+    "coordinates": {
+      "latitude": -5.351,
+      "longitude": 105.3072
+    },
+    "rentMonthly": 1800000,
+    "roomType": "single",
+    "gender": "all",
+    "facilityCodes": [
+      "bathroom_inside",
+      "wifi",
+      "ac",
+      "water_heater",
+      "parking_car",
+      "access_24h"
+    ],
+    "verified": true,
+    "notes": "Fasilitas lengkap sekelas apartemen studio, kasur springbed queen, parkir mobil aman dengan CCTV."
+  }
+]
