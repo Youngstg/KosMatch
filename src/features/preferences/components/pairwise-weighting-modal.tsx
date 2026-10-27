@@ -130,14 +130,13 @@ export function PairwiseWeightingModal({
                 fontWeight: 750,
               }}
             >
-              <Brain size={13} /> Tahap F: ML Bradley-Terry Preference Elicitation
+              <Brain size={13} /> Penyesuaian Prioritas Pribadi
             </span>
             <h2 id="pairwise-modal-title" style={{ fontSize: "18px", margin: "4px 0 0" }}>
               Kuis Pembobotan Preferensi Personal
             </h2>
             <p className="muted" style={{ fontSize: "13px", margin: "4px 0 0" }}>
-              Pilih skenario yang lebih mencerminkan prioritas Anda. Model akan menghitung bobot
-              DSS secara otomatis.
+              Pilih skenario yang lebih mencerminkan prioritas Anda. Sistem akan menyesuaikan rekomendasi secara otomatis.
             </p>
           </div>
           <button

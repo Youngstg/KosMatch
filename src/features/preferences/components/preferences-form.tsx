@@ -583,7 +583,7 @@ export function PreferencesForm(props: PreferencesFormProps) {
                 }}
               >
                 <Brain size={16} color="#F59E0B" />
-                <span>{persona ? "Ubah Bobot via Kuis A/B" : "Temukan Bobot Personal via Kuis A/B (Bradley-Terry)"}</span>
+                <span>{persona ? "Ubah Prioritas via Kuis Pilihan" : "Tentukan Prioritas Otomatis via Kuis Cepat"}</span>
               </button>
               {persona && (
                 <div

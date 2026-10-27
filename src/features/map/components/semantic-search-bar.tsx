@@ -37,7 +37,7 @@ export function SemanticSearchBar({
   searchResult,
   detectedCampus,
   onSwitchCampus,
-  placeholder = "Cari bahasa alami: 'putri ac < 1.2jt tenang'...",
+  placeholder = "Cari bebas: 'putri ac < 1.2jt tenang'...",
   compact = false,
 }: SemanticSearchBarProps) {
   const filter = searchResult?.parsedFilter;
@@ -67,7 +67,7 @@ export function SemanticSearchBar({
           aria-label="Pencarian semantik kos bahasa alami"
           onChange={(e) => onQueryChange(e.target.value)}
         />
-        {query ? (
+        {query && (
           <button
             type="button"
             className="semantic-clear-btn"
@@ -76,10 +76,6 @@ export function SemanticSearchBar({
           >
             <X size={15} />
           </button>
-        ) : (
-          <span className="semantic-badge-nlp" title="Natural Language Processing Aktif">
-            NLP
-          </span>
         )}
       </div>
 
@@ -102,12 +98,12 @@ export function SemanticSearchBar({
         })}
       </div>
 
-      {/* Transparent NLP Entity Extraction Feedback */}
+      {/* Kriteria Terdeteksi Feedback */}
       {hasExtractedEntities && filter && (
         <div className="semantic-entities-panel" aria-live="polite">
           <div className="entities-title-row">
             <Tag size={12} className="text-accent" />
-            <span className="entities-title">Entitas & Kriteria Terdeteksi:</span>
+            <span className="entities-title">Kriteria Pilihan Terdeteksi:</span>
           </div>
           <div className="entities-badges">
             {filter.gender && (
@@ -149,7 +145,7 @@ export function SemanticSearchBar({
           <div className="banner-text">
             <Building2 size={15} className="text-accent" />
             <span>
-              Kueri menyebutkan kampus <strong>{detectedCampus.shortName}</strong> ({detectedCampus.city}).
+              Pencarian Anda untuk kampus <strong>{detectedCampus.shortName}</strong> ({detectedCampus.city}).
             </span>
           </div>
           <button

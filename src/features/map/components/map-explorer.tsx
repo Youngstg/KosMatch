@@ -820,7 +820,7 @@ export function MapExplorer() {
                 onChange={(val) => setSortBy(val as "relevance" | "commute" | "price_asc" | "price_desc")}
                 options={[
                   ...(searchQuery.trim()
-                    ? [{ value: "relevance" as const, label: "Relevansi Semantik", icon: <Sparkles size={13} /> }]
+                    ? [{ value: "relevance" as const, label: "Paling Cocok", icon: <Sparkles size={13} /> }]
                     : []),
                   { value: "commute" as const, label: "Waktu Tempuh (Tercepat)", icon: <Navigation size={13} /> },
                   { value: "price_asc" as const, label: "Harga (Termurah)", icon: <CreditCard size={13} /> },
@@ -901,8 +901,8 @@ export function MapExplorer() {
                             justifyContent: "center",
                             flexShrink: 0,
                           }}
-                          title={compareIds.includes(listing.id) ? "Hapus dari perbandingan DSS" : "Tambah ke perbandingan DSS (maks 3)"}
-                          aria-label={compareIds.includes(listing.id) ? `Hapus ${listing.name} dari perbandingan DSS` : `Bandingkan ${listing.name} di DSS`}
+                          title={compareIds.includes(listing.id) ? "Hapus dari perbandingan" : "Tambah ke perbandingan (maks 3)"}
+                          aria-label={compareIds.includes(listing.id) ? `Hapus ${listing.name} dari perbandingan` : `Bandingkan ${listing.name}`}
                           onClick={(e) => toggleCompare(listing.id, e)}
                         >
                           {compareIds.includes(listing.id) ? <Check size={13} /> : <Plus size={13} />}
@@ -1071,7 +1071,7 @@ export function MapExplorer() {
                     }}
                   >
                     {exportingDss ? <Loader2 size={13} className="animate-spin" /> : <Calculator size={13} />}
-                    Analisis di DSS
+                    Hitung Biaya Lengkap
                   </button>
                 </div>
               </div>
@@ -1157,21 +1157,17 @@ export function MapExplorer() {
           </div>
         )}
 
-        {/* Setelah salah satu kampus ditekan: Keluar opsi selanjutnya menjalar (kiri, tenggara, bawah) */}
+        {/* Setelah salah satu kampus ditekan: Keluar opsi gerbang rata kanan rapi */}
         {isSunflowerOpen && expandedCampusId && (
           <div className="hud-sunflower-gates-branch" role="menu" aria-label="Titik Tujuan Kampus">
-            {selectedCampus.gates.map((gate, idx) => {
+            {selectedCampus.gates.map((gate) => {
               const isSelected = selectedGate?.id === gate.id;
-              const totalGates = selectedCampus.gates.length;
-              // Menjalar ke kiri, tenggara, dan bawah
-              const curveOffset = Math.round((1 - idx / (totalGates - 1 || 1)) * 48);
 
               return (
                 <button
                   key={gate.id}
                   type="button"
                   className={`hud-sunflower-petal ${isSelected ? "active" : ""}`}
-                  style={{ marginRight: `${curveOffset}px` }}
                   title={gate.description}
                   aria-label={gate.shortLabel}
                   onClick={() => {
@@ -1234,7 +1230,7 @@ export function MapExplorer() {
                 disabled={exportingDss}
                 onClick={() => void handleOpenInDss([selectedListing])}
               >
-                {exportingDss ? <Loader2 size={14} className="animate-spin" /> : <Calculator size={14} />} Buka di Kalkulator DSS
+                {exportingDss ? <Loader2 size={14} className="animate-spin" /> : <Calculator size={14} />} Buka Kalkulator Biaya
               </button>
             </div>
           </div>
@@ -1379,7 +1375,7 @@ export function MapExplorer() {
                           disabled={exportingDss}
                           onClick={() => void handleOpenInDss([selectedListing])}
                         >
-                          {exportingDss ? <Loader2 size={16} className="animate-spin" /> : <Calculator size={16} />} Kalkulator DSS
+                          {exportingDss ? <Loader2 size={16} className="animate-spin" /> : <Calculator size={16} />} Kalkulator Biaya
                         </button>
                         <button
                           type="button"
@@ -1611,7 +1607,7 @@ export function MapExplorer() {
                 }}
               >
                 {exportingDss ? <Loader2 size={16} className="animate-spin" /> : <Calculator size={16} />}
-                Buka Kalkulator DSS &amp; Simulasi Biaya
+                Buka Kalkulator &amp; Simulasi Biaya
               </button>
             </div>
           </div>
@@ -1619,10 +1615,10 @@ export function MapExplorer() {
       </div>
 
       {/* =========================================================================
-          7. FLOATING COMPARE & DSS MULTI-SELECTION TRAY
+          7. FLOATING COMPARE & MULTI-SELECTION TRAY
       ========================================================================== */}
       {compareIds.length > 0 && (
-        <aside className="hud-compare-floating-bar" aria-label="Bilah Perbandingan DSS">
+        <aside className="hud-compare-floating-bar" aria-label="Bilah Perbandingan Kos">
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <Scale size={16} color="var(--primary)" />
             <span style={{ fontSize: "13px", fontWeight: 700 }}>
@@ -1667,7 +1663,7 @@ export function MapExplorer() {
               }}
             >
               {exportingDss ? <Loader2 size={13} className="animate-spin" /> : <Calculator size={13} />}
-              Bandingkan di DSS
+              Bandingkan Kos
             </button>
           </div>
         </aside>
