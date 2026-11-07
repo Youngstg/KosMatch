@@ -8,15 +8,15 @@ Pipeline scraping data POI (warung makan, cafe, laundry, minimarket, apotek, tem
 ---
 
 ## 📊 Ringkasan Data yang Dihasilkan
-- **Total POI Real & Distilasi Terverifikasi:** 899 POI (OSM tags lengkap + PostGIS point coordinates).
+- **Total POI Real & Distilasi Terverifikasi:** 930 POI (OSM tags lengkap + koordinat PostGIS point).
   - ITERA Lampung: 324 POI
   - UI Depok: 472 POI
-  - UNAND Limau Manis: 103 POI
-- **Total Kos Terverifikasi:** 221 Listing.
-  - ITERA Lampung: 120 Listing (Porsi terbesar & dominan)
-  - UI Depok: 56 Listing
-  - UNAND Limau Manis: 45 Listing
-- **SQL Seed VPS:** `database/seed_vps_full.sql` (±364 KB) dan `database/seed.sql`.
+  - UNAND Limau Manis: 134 POI
+- **Total Kos Terverifikasi di Database VPS:** 395 Listing (221 listing kurasi dasar + variasi tipe kamar).
+  - ITERA Lampung: 120+ Listing (Porsi terbesar & dominan)
+  - UI Depok: 56+ Listing
+  - UNAND Limau Manis: 45+ Listing
+- **SQL Seed VPS:** `database/seed_vps_full.sql` (±618 KB) dan `database/seed.sql`.
 - **In-Memory & SSR Next.js:** Terintegrasi langsung di `src/data/pilot-listings.ts` dan `src/data/pilot-pois.ts`.
 
 ---

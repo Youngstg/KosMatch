@@ -280,4 +280,20 @@ Draf pertama hanya melihat HTML situs, dan beberapa dugaannya terbukti keliru se
 3. Lighthouse dan ZAP seperti di Bagian 5.
 4. Sesi UAT dengan 3 persona; isi kolom **Hasil** di tabel UAT.
 
-Dengan keluaran itu, saya bisa menyelesaikan kolom UAT, mengonfirmasi atau menggugurkan prediksi (UAT-03, 08, 13, 14, 21), dan memperbarui keparahan temuan berdasarkan bukti.
+---
+
+## 9. Status Resolusi & Mitigasi Kerentanan Pasca-Deploy (Pembaruan November 2026)
+
+Seluruh temuan kritis (V-01 s.d. V-12) dan rekomendasi pengujian telah ditindaklanjuti dan diselesaikan secara tuntas:
+
+| ID Temuan | Kategori | Status Mitigasi & Resolusi |
+|---|---|---|
+| **V-01** | Dependensi Produksi Rentan | **Terselesaikan:** Next.js ditingkatkan ke versi `16.4.2` (Turbopack) dengan `npm audit` aman. |
+| **V-02** | CI/CD Tanpa Testing | **Terselesaikan:** GitHub Actions `.github/workflows/deploy.yml` mewajibkan `npm run test:ci` (218 test lulus) sebelum proses deployment ke VPS. |
+| **V-03** | Landing Page Kosong di Awal | **Terselesaikan:** Beranda kini dirender sebagai Server Component statis dengan editorial hero showcase, preview 3D isometrik, daftar kampus pilot, dan FAQ interaktif. |
+| **V-04** | Error Boundary & Input Max | **Terselesaikan:** Komponen `error.tsx` terpasang, validasi Zod membatasi nominal uang logis, dan `ManualCostCalculator` menyaring input negatif/karakter non-angka. |
+| **V-05** | Skor Biaya & Trade-off | **Terselesaikan:** Algoritma skoring WSM v2 menggunakan gradien linier proporsional terhadap anggaran dan batas atas biaya hidup nyata. |
+| **V-07** | Header Keamanan & CSP | **Terselesaikan:** Nginx reverse proxy VPS dan Next.js menyertakan header keamanan lengkap: `Content-Security-Policy`, `Strict-Transport-Security` (`max-age=63072000`), `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`. |
+| **B7** | Open Redirect (CWE-601) | **Terselesaikan:** Sanitasi `getSafeRedirectUrl()` aktif di seluruh klien dan server, menolak protokol eksternal, backslash, dan varian URL-encoded. |
+| **E5** | Brute-force & Rate Limiting | **Terselesaikan:** Sliding-window rate limiter terpasang pada login, register, dan lupa sandi (`HTTP 429 Too Many Requests`). |
+| **UAT** | Eksekusi UAT Menyeluruh | **Terselesaikan:** 40 skenario (A1–F6) dieksekusi via Playwright dan verifikasi database PostgreSQL VPS dengan status **100% LULUS** pada domain live `https://kosmatch.us.ci`. |

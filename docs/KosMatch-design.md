@@ -55,39 +55,38 @@ Do not shrink a desktop comparison table until it becomes unreadable. Use criter
 
 Use a simple combination of a location/room outline and two aligned comparison bars. Avoid a generic house-with-heart symbol and avoid copying marketplace visual identities.
 
-### Color palette
+### Color palette (Editorial Architectural Warm Canvas)
 
-| Token | Suggested value | Usage |
+| Token | Production Value | Usage |
 | --- | --- | --- |
-| `--background` | `#F7F8FC` | Main background |
-| `--surface` | `#FFFFFF` | Cards and panels |
-| `--surface-subtle` | `#F0F2F8` | Grouped comparison rows |
-| `--primary` | `#4F46E5` | Primary actions and active state |
-| `--primary-hover` | `#3730A3` | Primary pressed/hover state |
-| `--secondary` | `#E9E7FF` | Selected chips and soft emphasis |
-| `--accent` | `#0F766E` | Positive fit and verified data |
-| `--text` | `#182033` | Primary text |
-| `--text-muted` | `#667085` | Supporting text |
-| `--border` | `#DDE1EA` | Borders and dividers |
-| `--warning` | `#A15C07` | Unknown or needs verification |
-| `--danger` | `#B42318` | Missing requirement and destructive actions |
-| `--focus` | `#2563EB` | Keyboard focus ring |
+| `--background` | `#F8F5F0` | Warm architectural canvas background |
+| `--surface` | `#FFFFFF` | Cards, panels, and modal containers |
+| `--surface-subtle` | `#F4F0EA` | Grouped comparison rows and secondary containers |
+| `--primary` | `#8D654C` | Terracotta clay for primary actions and active state |
+| `--primary-hover` | `#6E4D38` | Darkened clay for hover and pressed states |
+| `--accent` | `#E0A96D` | Warm golden ochre for highlights and badges |
+| `--text` | `#1C1B19` | Dark obsidian for high-contrast legible text |
+| `--text-muted` | `#667085` | Supporting text, captions, and secondary details |
+| `--border` | `#E2DDD5` | Warm neutral borders and dividers |
+| `--warning` | `#A15C07` | Unknown or estimated costs |
+| `--danger` | `#B42318` | Missing requirements and destructive actions |
+| `--focus` | `#8D654C` | Keyboard accessibility focus ring |
 
 Do not rely on green/red alone for suitability. Always add a label and icon.
 
 ### Typography
 
-Use `Inter`, `Geist Sans`, or another highly readable sans-serif. Use one type family.
+The typography system pairs **Playfair Display** (editorial serif) for heroic headlines and titles with **Plus Jakarta Sans / Inter** for crisp, highly readable UI functional text.
 
-| Style | Desktop | Mobile | Weight |
-| --- | --- | --- | --- |
-| Display | 44/52 px | 34/42 px | 700 |
-| Page title | 30/38 px | 26/34 px | 700 |
-| Section title | 20/28 px | 18/26 px | 650 |
-| Numeric highlight | 28/34 px | 24/30 px | 700 |
-| Body | 16/24 px | 16/24 px | 400 |
-| Small | 14/20 px | 14/20 px | 400–500 |
-| Caption | 12/16 px | 12/16 px | 500 |
+| Style | Desktop | Mobile | Weight | Family |
+| --- | --- | --- | --- | --- |
+| Display / Hero | 48/56 px | 34/42 px | 800 | Playfair Display |
+| Page title | 30/38 px | 26/34 px | 750 | Playfair Display |
+| Section title | 20/28 px | 18/26 px | 700 | Plus Jakarta Sans |
+| Numeric highlight | 28/34 px | 24/30 px | 750 | Plus Jakarta Sans (Tabular) |
+| Body | 16/24 px | 15/22 px | 400 | Plus Jakarta Sans |
+| Small / Label | 13/18 px | 12/16 px | 500–600 | Plus Jakarta Sans |
+| Caption | 11/15 px | 11/15 px | 600 | Plus Jakarta Sans |
 
 Use tabular numerals for aligned currency and cost comparisons.
 

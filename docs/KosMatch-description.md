@@ -80,13 +80,13 @@ KosMatch turns accommodation choices into a clear, personalized, and explainable
 
 ## 8. Core User Journey
 
-1. The user creates a comparison project, such as `Kos untuk Magang Jakarta`.
-2. The user defines their monthly budget, destination, commute routine, required facilities, and priority weights.
-3. The user adds 2–5 accommodation options found from any source.
-4. KosMatch calculates each option's recurring monthly estimate and initial move-in cost.
-5. The system evaluates eligible options and creates an explainable Match Score.
-6. The user compares up to three options side by side.
-7. The user saves a preferred option, adds verification questions, and exports or shares a summary.
+1. The user logs in or registers securely at `/auth/login` (via email/password or Google OAuth 2.0) to safeguard their personalized decision data on the VPS PostgreSQL database.
+2. The user explores options on the interactive PostGIS campus map (`/explore`) across pilot campuses (ITERA Lampung, UI Depok, UNAND Padang) or enters cost figures directly using the Manual Cost Calculator at `/calculator`.
+3. The user defines their monthly budget, destination campus gate, commute routine, mandatory facilities, and priority weights (optionally calibrated via the Bradley-Terry pairwise preference modal).
+4. KosMatch calculates each option's recurring monthly estimate (rent, utilities, laundry, and daily commute cost) and initial move-in deposit.
+5. The system evaluates eligible options using the Weighted Sum Model and produces an explainable Match Score (0–100) with trade-off explanations.
+6. The user compares up to three options side by side on the decision board.
+7. The user saves a preferred option, adds private notes, and exports a print-ready PDF summary or validated JSON project backup.
 
 ## 9. Product Hypotheses
 

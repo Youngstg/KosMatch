@@ -1,7 +1,7 @@
 # LAPORAN FITUR TERIMPLEMENTASI — SISTEM KOSMATCH v2.0
 **Sistem Pendukung Keputusan Pemilihan Kos Multi-Kriteria Berbasis Geospasial PostGIS & Analisis Preferensi Mahasiswa**
 
-*Dokumen Dokumentasi Resmi Fitur Sistem — Pembaruan Terakhir: Oktober 2026*
+*Dokumen Dokumentasi Resmi Fitur Sistem — Pembaruan Terakhir: 7 November 2026*
 
 ---
 
@@ -10,10 +10,10 @@
 **KosMatch** adalah platform pendukung keputusan (*Decision Support System* / DSS) multi-kriteria berbasis spasial yang dirancang untuk membantu mahasiswa dan civitas akademika menemukan, menganalisis, serta memperbandingkan tempat tinggal (kos) di sekitar kampus secara objektif, transparan, dan terukur. 
 
 Berbeda dengan platform listing komersial konvensional yang menitikberatkan pada promosi sewa bulanan semata, KosMatch memadukan:
-1. **Total Real Cost of Living**: Mengintegrasikan harga sewa dasar, biaya utilitas listrik/air, estimasi makan harian berbasis kepadatan warung lokal, dan biaya komuter perjalanan.
-2. **Geospatial Real-Routing**: Mengukur jarak tempuh dan waktu perjalanan nyata (*walking, motorcycle, driving*) menuju gerbang kampus spesifik menggunakan data spasial PostGIS dan OpenStreetMap.
+1. **Total Real Cost of Living & Manual Expense Calculator**: Mengintegrasikan harga sewa dasar, biaya utilitas listrik/air, estimasi makan harian berbasis kepadatan warung lokal, laundry kiloan, dan biaya komuter perjalanan harian bolak-balik via form kalkulator interaktif.
+2. **Geospatial Real-Routing**: Mengukur jarak tempuh dan waktu perjalanan nyata (*walking, motorcycle, driving*) menuju gerbang kampus spesifik menggunakan data spasial PostGIS dan OpenStreetMap pada 3 kampus pilot (ITERA Lampung, UI Depok, UNAND Padang) dengan total 395 listing dan 930 titik POI.
 3. **Multi-Criteria Decision Analysis (MCDA)**: Menerapkan algoritma pembobotan preferensi pribadi (*Bradley-Terry Model* dan *Weighted Sum Model*) yang transparan dan dapat dijelaskan (*explainable*).
-4. **Data Privacy & Modern Security**: Arsitektur perlindungan privasi data pengguna, validasi skema Zod, serta autentikasi berbasis PostgreSQL dan Google OAuth 2.0 resmi.
+4. **Data Privacy, Mandatory Login & Modern Security**: Arsitektur perlindungan data terpusat di server PostgreSQL VPS, wajib login untuk fitur utama DSS, penolakan open redirect (CWE-601), sliding-window rate limiting (HTTP 429), alur pemulihan sandi token SHA-256 15 menit, dan validasi skema Zod.
 
 ---
 
@@ -58,7 +58,8 @@ Modul inti sistem yang menghitung kelayakan hunian secara matematis dan objektif
      - Batas anggaran maksimal (*budget ceiling*).
      - Fasilitas wajib yang tidak dapat ditawar (misal: KM Dalam atau Akses 24 Jam).
 
-3. **Simulasi Biaya Hidup Nyata (Cost Simulator Engine)**:
+3. **Simulasi Biaya Hidup Nyata (Cost Simulator Engine & Manual Entry)**:
+   - **Kalkulator Biaya Manual Langsung (`ManualCostCalculator`)**: Pengguna masuk akun dapat langsung menginput rincian pengeluaran di `/calculator` tanpa harus memilih dari peta terlebih dahulu: sewa kamar, estimasi listrik, iuran air, paket internet, estimasi laundry (kg/bulan atau cuci sendiri), hari mobilitas ke kampus (misal 22 hari), dan tarif transportasi harian bolak-balik.
    - Menghitung biaya komparasi berdasarkan horizon kontrak sewa: **1 Bulan, 3 Bulan, 6 Bulan, dan 12 Bulan (Tahunan)**.
    - Menghitung diskon sewa tahunan vs pembayaran bulanan.
    - Menghitung estimasi token listrik bulanan (kamar AC vs non-AC).
@@ -164,27 +165,47 @@ Modul inti sistem yang menghitung kelayakan hunian secara matematis dan objektif
 
 ---
 
-### Modul 6: Autentikasi Pengguna & Keamanan (PostgreSQL + Google OAuth 2.0)
+### Modul 6: Autentikasi Pengguna, Pemulihan Sandi & Keamanan Berlapis
 
 1. **Google OAuth 2.0 Resmi (Google Identity Services)**:
    - Terintegrasi dengan endpoint Google OAuth 2.0 resmi (`https://accounts.google.com/o/oauth2/v2/auth`).
    - Endpoint callback terverifikasi: [`src/app/api/auth/google/callback/route.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/app/api/auth/google/callback/route.ts) yang menukar *authorization code* dengan token resmi Google dan mengambil profil akun Gmail pengguna (`email`, `name`, `sub`).
-   - Menghapus seluruh akun tiruan/dummy; dilengkapi dialog panduan setup kredensial resmi Google Cloud Console dan opsi masuk email instan.
 2. **Autentikasi Email & Kata Sandi**:
-   - Pendaftaran akun dengan validasi email dan kata sandi minimal 6 karakter.
+   - Pendaftaran akun dengan validasi format email, kata sandi minimal 6 karakter, dan checkbox persetujuan syarat & privasi.
    - Enkripsi kata sandi menggunakan algoritma turunan kunci **`scrypt`** yang tahan serangan brute-force.
    - Verifikasi kata sandi secara aman dengan proteksi terhadap *timing attacks* (`timingSafeEqual`).
-3. **Manajemen Sesi Stateless & Aman**:
-   - Token sesi HMAC-SHA256 yang ditandatangani secara kriptografis (*Signed Session Token*).
-   - Disimpan di browser pengguna menggunakan cookie aman `kosmatch_session` dengan atribut `HttpOnly`, `SameSite: Lax`, dan masa aktif 7 hari.
-4. **Peran Pengguna (*Role-Based Access Control*)**:
+   - Respon registrasi duplikat bersifat netral (*anti-user enumeration*) dengan status `HTTP 409 Conflict`.
+3. **Alur Pemulihan & Lupa Sandi Sungguhan**:
+   - Permintaan reset sandi via [`/api/auth/forgot-password`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/app/api/auth/forgot-password/route.ts) menghasilkan token SHA-256 berkode aman yang disimpan di tabel `public.password_reset_tokens` dengan masa kedaluwarsa 15 menit.
+   - Pengiriman tautan reset ke email pengguna menggunakan Resend API (`src/lib/email/mailer.ts`).
+   - Eksekusi pergantian kata sandi pada formulir [`/auth/reset-password`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/app/auth/reset-password/page.tsx) dengan validasi token sekali pakai (*one-time use*).
+4. **Proteksi Brute-Force (Sliding-Window Rate Limiting)**:
+   - Modul [`src/lib/security/rate-limiter.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/lib/security/rate-limiter.ts) membatasi frekuensi request per IP proxy (`cf-connecting-ip` -> `x-real-ip` -> `x-forwarded-for`) dan per akun email.
+   - Mengembalikan respon `HTTP 429 Too Many Requests` disertai header `Retry-After` untuk mencegah serangan enumerasi dan tebak sandi.
+5. **Pencegahan Open Redirect (CWE-601)**:
+   - Utilitas [`src/lib/auth/redirect.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/lib/auth/redirect.ts) menyaring seluruh parameter `redirect`, menolak protokol luar, backslash, dan karakter URL-encoded berbahaya sebelum mengalihkan pengguna.
+6. **Penegakan Login Wajib (Mandatory Login Enforcement)**:
+   - Middleware server memproteksi rute `/explore`, `/calculator`, `/admin`, dan `/listings/new`. Tamu unauthenticated otomatis dialihkan via `HTTP 307` ke `/auth/login?redirect=...`.
+   - Seluruh data perbandingan dan kalkulasi terikat pada akun pengguna (`user_id`) di database PostgreSQL VPS.
+7. **Peran Pengguna (*Role-Based Access Control*)**:
    - `user`: Mahasiswa / pencari kos untuk menyimpan simulasi dan preferensi.
    - `owner`: Pemilik kos untuk mendaftarkan dan memverifikasi hunian kos.
    - `admin`: Pengelola platform untuk memvalidasi listing komunitas.
 
 ---
 
-### Modul 7: Portal Pemilik Kos & Admin Komunitas
+### Modul 7: Halaman Legal & Dokumen Transparansi
+
+1. **Kebijakan Privasi ([`/privacy`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/app/privacy/page.tsx))**:
+   - Memaparkan secara transparan arsitektur data server VPS, jenis data yang dikumpulkan (kredensial, bobot DSS, simulasi biaya), enkripsi data, dan jaminan ketiadaan pelacak iklan komersial.
+2. **Syarat & Ketentuan ([`/terms`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/app/terms/page.tsx))**:
+   - Menjelaskan batasan sistem pendukung keputusan (DSS objektif non-marketplace), akurasi estimasi, dan etika penggunaan platform.
+3. **Pusat Kontak ([`/contact`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/app/contact/page.tsx))**:
+   - Informasi narahubung resmi dan saluran umpan balik bagi mahasiswa serta pemilik kos.
+
+---
+
+### Modul 8: Portal Pemilik Kos & Admin Komunitas
 
 1. **Dashboard Pengelolaan Kos ([`/admin`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/app/admin)):**:
    - Menampilkan ringkasan listing kos aktif per area kampus pilot.
@@ -196,7 +217,7 @@ Modul inti sistem yang menghitung kelayakan hunian secara matematis dan objektif
 
 ---
 
-### Modul 8: Desain Antarmuka & Sistem Visual Editorial Arsitektural
+### Modul 9: Desain Antarmuka, Aksesibilitas & SEO
 
 1. **Design System Editorial Ranty/Architectural**:
    - Palet warna kurasi bertema hangat dan profesional:
@@ -205,13 +226,13 @@ Modul inti sistem yang menghitung kelayakan hunian secara matematis dan objektif
      - Canvas Background: `#F8F5F0` & `#F4F0EA`
      - Dark Obsidian Text/Buttons: `#1C1B19`
    - Tipografi modern memadukan *Playfair Display* (serif elegan) untuk judul utama dan *Plus Jakarta Sans* / *Inter* untuk teks fungsional.
-2. **Showcase 3D Isometrik Kamar Kos Mahasiswa**:
+2. **Showcase 3D Isometrik & Daftar Kampus**:
    - Menampilkan visual 3D potongan isometrik tata letak kamar kos mahasiswa lengkap dengan kasur empuk, bantal, lemari pakaian kayu, meja & kursi belajar, ventilasi jendela, dan kamar mandi dalam.
-   - Dilengkapi *copywriting* persuasif berstandar hunian berkualitas tinggi dan daftar fasilitas penting.
-3. **Antarmuka Responsif & Aksesibilitas**:
-   - Desain adaptif untuk layar desktop, tablet, dan smartphone (*Mobile Bottom Drawer & Floating HUD Bar*).
-   - Bebas emotikon tidak resmi; menggunakan ikon vektor standar industri dari pustaka `lucide-react`.
-   - Mengimplementasikan standar SEO dan metadata terstruktur JSON-LD (`schema.org/SoftwareApplication`).
+   - Seksi showcase kampus terakreditasi pilot (ITERA, UI, UNAND).
+3. **Aksesibilitas & Standar SEO**:
+   - Seluruh filter chip dilengkapi atribut aksesibilitas `aria-pressed="true/false"` dan teruji ramah navigasi keyboard.
+   - Tag `<title>`, meta deskripsi, OpenGraph, dan canonical URL unik per halaman.
+   - Header `robots: noindex, nofollow` pada seluruh rute privat/autentikasi.
 
 ---
 
@@ -221,6 +242,7 @@ Modul inti sistem yang menghitung kelayakan hunian secara matematis dan objektif
 | :--- | :--- | :---: | :--- |
 | **DSS Engine** | Weighted Sum Model (WSM) | **Aktif (100%)** | [`src/domain/scoring/scoring.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/domain/scoring/scoring.ts) |
 | **DSS Engine** | Hard-Constraint Filter | **Aktif (100%)** | [`src/domain/scoring/boundaries.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/domain/scoring/boundaries.ts) |
+| **DSS Engine** | Manual Cost Calculator | **Aktif (100%)** | [`src/features/comparison/components/manual-cost-calculator.tsx`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/features/comparison/components/manual-cost-calculator.tsx) |
 | **DSS Engine** | Cost Simulator 1/3/6/12 Bulan | **Aktif (100%)** | [`src/domain/costing/costing.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/domain/costing/costing.ts) |
 | **DSS Engine** | Food Cost Estimator | **Aktif (100%)** | [`src/domain/costing/food-cost-estimator.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/domain/costing/food-cost-estimator.ts) |
 | **DSS Engine** | Explainable Trade-off Engine | **Aktif (100%)** | [`src/features/decisions/components/decision-board.tsx`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/features/decisions/components/decision-board.tsx) |
@@ -233,10 +255,12 @@ Modul inti sistem yang menghitung kelayakan hunian secara matematis dan objektif
 | **Geospatial** | One-Click DSS Bridge | **Aktif (100%)** | [`src/features/map/services/dss-bridge.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/features/map/services/dss-bridge.ts) |
 | **AI / NLP** | Semantic Search Natural Language | **Aktif (100%)** | [`src/domain/search/semantic-search.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/domain/search/semantic-search.ts) |
 | **AI / NLP** | Smart Ad Listing Extractor | **Aktif (100%)** | [`src/features/listings/services/extract-listing.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/features/listings/services/extract-listing.ts) |
-| **Data & Backup** | Zod Schema Validation | **Aktif (100%)** | [`src/domain/validation/project-schema.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/domain/validation/project-schema.ts) |
-| **Data & Backup** | Backup & Restore JSON Project | **Aktif (100%)** | [`src/features/projects/services/project-backup.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/features/projects/services/project-backup.ts) |
+| **Security** | Safe Redirect Sanitizer (B7) | **Aktif (100%)** | [`src/lib/auth/redirect.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/lib/auth/redirect.ts) |
+| **Security** | Sliding-Window Rate Limiter (E5) | **Aktif (100%)** | [`src/lib/security/rate-limiter.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/lib/security/rate-limiter.ts) |
+| **Security** | Password Reset Flow (B5) | **Aktif (100%)** | [`src/app/api/auth/reset-password/route.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/app/api/auth/reset-password/route.ts) |
+| **Security** | Mandatory Login Middleware | **Aktif (100%)** | [`src/middleware.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/middleware.ts) |
+| **Legal** | Kebijakan Privasi & Ketentuan | **Aktif (100%)** | [`src/app/privacy/page.tsx`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/app/privacy/page.tsx) |
 | **Auth** | Google OAuth 2.0 Flow | **Aktif (100%)** | [`src/app/api/auth/google/route.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/app/api/auth/google/route.ts) |
-| **Auth** | Google Callback Token Exchange | **Aktif (100%)** | [`src/app/api/auth/google/callback/route.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/app/api/auth/google/callback/route.ts) |
 | **Auth** | Scrypt Password & HMAC Session | **Aktif (100%)** | [`src/lib/auth/password.ts`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/lib/auth/password.ts) |
 | **UI/UX** | Halaman Login Editorial | **Aktif (100%)** | [`src/app/auth/login/page.tsx`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/app/auth/login/page.tsx) |
 | **UI/UX** | Landing Page & 3D Room Showcase | **Aktif (100%)** | [`src/features/landing/components/landing-view.tsx`](file:///d:/2026%20-%20Tugas%20Akhir%20dan%20Proyek%20Aktif/KostMatch/src/features/landing/components/landing-view.tsx) |
@@ -249,18 +273,23 @@ Modul inti sistem yang menghitung kelayakan hunian secara matematis dan objektif
 Sistem KosMatch telah diverifikasi melalui rangkaian pengujian otomatis (*automated testing suite*) yang ketat:
 
 - **Pengujian Unit & Integrasi (*Vitest*)**:
-  - Total Berkas Pengujian: **33 file**
-  - Total Kasus Pengujian: **193 pengujian**
-  - Status Kelulusan: **193 lulus (100% PASS)**
+  - Total Berkas Pengujian: **36 file**
+  - Total Kasus Pengujian: **218 pengujian**
+  - Status Kelulusan: **218 lulus (100% PASS)**
 - **Pemeriksaan Tipe TypeScript**:
   - `tsc --noEmit`: **0 error** (Strict Mode diaktifkan).
 - **Audit Kualitas Kode (*ESLint 9*)**:
   - `eslint .`: **0 error, 0 warning** (Vendor minified code diabaikan secara aman).
 - **Kompilasi Rute Produksi Next.js**:
-  - `next build`: **19 rute statis dan dinamis berhasil dikompilasi sempurna** tanpa pemutusan dependensi.
+  - `next build`: **25 rute statis dan dinamis berhasil dikompilasi sempurna** tanpa pemutusan dependensi.
+- **Hasil Pengujian UAT Live (Playwright)**:
+  - Total Skenario: **40 skenario (A1–F6)**
+  - Status Kelulusan: **40 lulus (100% PASS)** pada server live `https://kosmatch.us.ci`.
 
 ---
 
 ## 5. Kesimpulan
+
+Seluruh pilar fungsional yang dirancang untuk platform KosMatch—mulai dari DSS multi-kriteria berbasis bobot preferensi, mesin geospasial rute nyata, kalkulator pengeluaran manual, mitigasi keamanan open redirect dan brute force, alur pemulihan sandi, infrastruktur basis data server terproteksi, hingga autentikasi modern berbasis Google OAuth 2.0—telah **sepenuhnya terimplementasi, terhubung antarmuka, dan terverifikasi secara fungsional**.
 
 Seluruh pilar fungsional yang dirancang untuk platform KosMatch—mulai dari DSS multi-kriteria berbasis bobot preferensi, mesin geospasial rute nyata, pencarian semantik bahasa alami, infrastruktur basis data server terproteksi, hingga autentikasi modern berbasis Google OAuth 2.0—telah **sepenuhnya terimplementasi, terhubung antarmuka, dan terverifikasi secara fungsional**.

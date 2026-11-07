@@ -15,6 +15,19 @@ CREATE TABLE IF NOT EXISTS public.users (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- 2.1 PASSWORD RESET TOKENS (One-time, 15-minute expiration)
+CREATE TABLE IF NOT EXISTS public.password_reset_tokens (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email TEXT NOT NULL,
+  token_hash TEXT NOT NULL,
+  expires_at TIMESTAMPTZ NOT NULL,
+  used_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_token_hash ON public.password_reset_tokens (token_hash);
+CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_email ON public.password_reset_tokens (email);
+
 -- 3. CAMPUSES (Pilot & Reference Destinations)
 CREATE TABLE IF NOT EXISTS public.campuses (
   id TEXT PRIMARY KEY,
