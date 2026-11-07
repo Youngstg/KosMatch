@@ -263,4 +263,4 @@ Sistem KosMatch telah diverifikasi melalui rangkaian pengujian otomatis (*automa
 
 ## 5. Kesimpulan
 
-Seluruh pilar fungsional yang dirancang untuk platform KosMatch—mulai dari DSS multi-kriteria berbasis bobot preferensi, mesin geospasial rute nyata, pencarian semantik bahasa alami, sistem penyimpanan privat IndexedDB, hingga autentikasi modern berbasis Google OAuth 2.0—telah **sepenuhnya terimplementasi, terhubung antarmuka, dan terverifikasi secara fungsional**.
+Seluruh pilar fungsional yang dirancang untuk platform KosMatch—mulai dari DSS multi-kriteria berbasis bobot preferensi, mesin geospasial rute nyata, pencarian semantik bahasa alami, infrastruktur basis data server terproteksi, hingga autentikasi modern berbasis Google OAuth 2.0—telah **sepenuhnya terimplementasi, terhubung antarmuka, dan terverifikasi secara fungsional**.

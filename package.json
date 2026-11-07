@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:ci": "vitest run --pool=threads",
     "test:watch": "vitest",
     "test:e2e": "playwright test"
   },

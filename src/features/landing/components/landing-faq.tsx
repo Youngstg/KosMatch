@@ -12,7 +12,7 @@ const faqs = [
   {
     question: "Apakah data dan catatan pribadi saya aman?",
     answer:
-      "Sangat aman. KosMatch memproses seluruh komputasi dan analisis perbandingan Anda secara terproteksi. Data preferensi, anggaran, dan simulasi Anda dijaga kerahasiaannya dengan standar privasi modern tanpa manipulasi atau penjualan data ke pihak ketiga.",
+      "Ya. Seluruh data perbandingan, simulasi biaya, dan preferensi kos Anda tersimpan dan diproses secara aman di server terproteksi kami. Data terikat langsung ke akun Anda sehingga tersinkronisasi dengan aman. Kami tidak memasang pelacak iklan komersial, tidak menjual data preferensi Anda ke calo atau pihak ketiga, dan Anda memegang kendali penuh atas akun Anda.",
   },
   {
     question: "Mengapa kos yang lebih murah tidak selalu berada di urutan teratas?",
@@ -22,7 +22,7 @@ const faqs = [
   {
     question: "Apakah KosMatch memungut biaya atau komisi?",
     answer:
-      "Tidak. KosMatch 100% gratis digunakan sebagai alat bantu analisis mandiri bagi mahasiswa, pekerja perantau, maupun orang tua yang ingin mengambil keputusan tempat tinggal terbaik.",
+      "Tidak. KosMatch dapat digunakan gratis tanpa biaya sewa aplikasi bagi mahasiswa, pekerja perantau, maupun orang tua yang ingin mengambil keputusan tempat tinggal terbaik secara mandiri.",
   },
 ] as const;
 

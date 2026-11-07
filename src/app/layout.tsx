@@ -37,9 +37,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "id_ID",
     url: "https://kosmatch.us.ci",
-    title: "KosMatch",
+    title: "KosMatch - Rekomendasi Kos & Keputusan Hunian Cerdas Kampus",
     description:
-      "Kalkulator biaya hidup dan alat bantu perbandingan kos transparan berbasis kebutuhan nyata dan privasi 100%.",
+      "Kalkulator biaya hidup dan alat bantu perbandingan kos transparan berbasis kebutuhan nyata, rute riil kampus, dan data terproteksi.",
     siteName: "KosMatch",
     images: [
       {
@@ -52,9 +52,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "KosMatch",
+    title: "KosMatch - Rekomendasi Kos & Keputusan Hunian Cerdas Kampus",
     description:
-      "Kalkulator biaya hidup dan alat bantu perbandingan kos transparan berbasis kebutuhan nyata dan privasi 100%.",
+      "Kalkulator biaya hidup dan alat bantu perbandingan kos transparan berbasis kebutuhan nyata, rute riil kampus, dan data terproteksi.",
     images: ["/screenshots/landing-desktop-chromium.png"],
   },
   alternates: {

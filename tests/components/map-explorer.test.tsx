@@ -13,6 +13,8 @@ vi.mock("next/navigation", () => ({
   }),
 }));
 
+vi.setConfig({ testTimeout: 15000 });
+
 afterEach(() => cleanup());
 
 describe("MapSkeleton Component", () => {

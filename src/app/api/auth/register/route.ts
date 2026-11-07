@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDatabasePool, isDatabaseConfigured } from "@/lib/db";
 import { createSessionToken, hashPassword } from "@/lib/auth";
+import {
+  rateLimiter,
+  getClientIp,
+  createRateLimitResponse,
+} from "@/lib/security/rate-limiter";
 
 const registerSchema = z.object({
   email: z.string().trim().email("Format email tidak valid").toLowerCase(),
@@ -22,6 +27,19 @@ export async function POST(req: Request) {
     }
 
     const { email, password, role } = result.data;
+    const clientIp = getClientIp(req);
+
+    // Rate limiting: batasi registrasi per IP dan per email (3 percobaan per 10 menit)
+    const ipCheck = rateLimiter.check(`register:ip:${clientIp}`, 3, 600);
+    if (!ipCheck.allowed) {
+      return createRateLimitResponse(ipCheck.resetAfterSec);
+    }
+
+    const emailCheck = rateLimiter.check(`register:account:${email}`, 3, 600);
+    if (!emailCheck.allowed) {
+      return createRateLimitResponse(emailCheck.resetAfterSec);
+    }
+
     const passwordHash = hashPassword(password);
 
     if (!isDatabaseConfigured()) {
@@ -59,7 +77,7 @@ export async function POST(req: Request) {
 
     if (existing.rows.length > 0) {
       return NextResponse.json(
-        { error: "Email sudah terdaftar. Silakan gunakan email lain atau masuk." },
+        { error: "Pendaftaran tidak dapat diproses dengan informasi tersebut. Silakan masuk jika Anda telah memiliki akun atau hubungi bantuan." },
         { status: 409 }
       );
     }

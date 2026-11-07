@@ -5,13 +5,17 @@ import { verifySessionToken } from "@/lib/auth";
 import { KosMatchWorkspace } from "@/features/workspace/components/kosmatch-workspace";
 
 export const metadata: Metadata = {
-  title: "Kalkulator DSS & Sistem Pendukung Keputusan Kos | KosMatch",
+  title: "Kalkulator DSS & Sistem Pendukung Keputusan Kos",
   description:
     "Bandingkan kos dengan kalkulator keputusan multi-kriteria berbasis AHP / TOPSIS, jarak riil ke kampus, dan simulasi biaya hidup total.",
+  alternates: {
+    canonical: "https://kosmatch.us.ci/calculator",
+  },
   openGraph: {
     title: "Kalkulator DSS & Sistem Pendukung Keputusan Kos | KosMatch",
     description:
       "Bandingkan kos pilihan Anda dengan bobot kriteria personal dan estimasi biaya riil bulanan.",
+    url: "https://kosmatch.us.ci/calculator",
   },
 };
 

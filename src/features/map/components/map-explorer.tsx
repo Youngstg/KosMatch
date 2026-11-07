@@ -22,6 +22,7 @@ import {
   Landmark,
   Layers,
   Loader2,
+  LogIn,
   LogOut,
   MapPin,
   Moon,
@@ -116,7 +117,11 @@ function getCampusAcronym(campus: PilotSpecification): string {
   return campus.shortName.split(" ")[0] ?? "UI";
 }
 
-export function MapExplorer() {
+export interface MapExplorerProps {
+  currentUser?: { email: string; role: string } | null;
+}
+
+export function MapExplorer({ currentUser: initialUser }: MapExplorerProps = {}) {
   const router = useRouter();
   const navigateToCalculator = () => {
     router.push("/calculator");
@@ -146,18 +151,23 @@ export function MapExplorer() {
   const [mobileActiveTab, setMobileActiveTab] = useState<"detail" | "route" | "amenities">("detail");
   const [mobileCampusPickerOpen, setMobileCampusPickerOpen] = useState<boolean>(false);
 
-  const [currentUser, setCurrentUser] = useState<{ email: string; role: string } | null>(null);
+  const [currentUser, setCurrentUser] = useState<{ email: string; role: string } | null>(initialUser ?? null);
 
   useEffect(() => {
+    if (initialUser) return;
+    let active = true;
     fetch("/api/auth/me")
       .then((res) => res.json())
       .then((data) => {
-        if (data?.user) {
+        if (active && data?.user) {
           setCurrentUser(data.user);
         }
       })
       .catch(() => {});
-  }, []);
+    return () => {
+      active = false;
+    };
+  }, [initialUser]);
 
   const [neighborhoodProfile, setNeighborhoodProfile] = useState<NeighborhoodProfileResult | null>(null);
   const [loadingProfile, setLoadingProfile] = useState<boolean>(false);
@@ -457,8 +467,8 @@ export function MapExplorer() {
           {mapTheme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
         </button>
 
-        {/* Logout Button if Logged In */}
-        {currentUser && (
+        {/* Auth Button: Logout if Logged In / Login Link if Guest */}
+        {currentUser ? (
           <button
             type="button"
             className="hud-btn-icon desktop-only"
@@ -466,12 +476,23 @@ export function MapExplorer() {
             aria-label="Keluar dari akun"
             onClick={async () => {
               await fetch("/api/auth/logout", { method: "POST" });
+              setCurrentUser(null);
               router.push("/auth/login");
               router.refresh();
             }}
           >
             <LogOut size={16} />
           </button>
+        ) : (
+          <Link
+            href="/auth/login?redirect=/explore"
+            className="hud-btn-icon desktop-only"
+            style={{ textDecoration: "none" }}
+            title="Masuk ke Akun"
+            aria-label="Masuk ke Akun"
+          >
+            <LogIn size={16} />
+          </Link>
         )}
 
         {/* Sidebar HUD Toggle for Desktop */}
@@ -561,6 +582,7 @@ export function MapExplorer() {
         <div className="mobile-category-scroll">
           <button
             type="button"
+            aria-pressed={selectedPoiCategories.length === selectedCampus.priorityPoiCategories.length}
             className={`mobile-chip ${selectedPoiCategories.length === selectedCampus.priorityPoiCategories.length ? "active" : ""}`}
             onClick={
               selectedPoiCategories.length === selectedCampus.priorityPoiCategories.length
@@ -578,6 +600,7 @@ export function MapExplorer() {
               <button
                 key={catKey}
                 type="button"
+                aria-pressed={isChecked}
                 className={`mobile-chip ${isChecked ? "active" : ""}`}
                 style={
                   isChecked
@@ -797,6 +820,7 @@ export function MapExplorer() {
                   <button
                     key={m}
                     type="button"
+                    aria-pressed={commuteMode === m}
                     className={`chip ${commuteMode === m ? "selected" : ""}`}
                     style={{ minHeight: "28px", padding: "2px 8px", fontSize: "11px", display: "inline-flex", alignItems: "center", gap: "5px" }}
                     onClick={() => setCommuteMode(m)}
@@ -836,6 +860,7 @@ export function MapExplorer() {
                 <button
                   key={g}
                   type="button"
+                  aria-pressed={genderFilter === g}
                   className={`chip ${genderFilter === g ? "selected" : ""}`}
                   style={{ minHeight: "28px", padding: "2px 10px", fontSize: "12px" }}
                   onClick={() => setGenderFilter(g)}

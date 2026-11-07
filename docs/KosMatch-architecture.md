@@ -22,7 +22,7 @@ Use a modular monolith. Do not introduce web scraping, machine-learning services
 | Styling | Tailwind CSS | Responsive, token-driven styling |
 | Accessible primitives | shadcn/ui or Radix-based primitives | Dialog, select, tooltip, sheet, and menu behavior |
 | Forms | React Hook Form + Zod | Structured multi-step input and safe validation |
-| Local persistence | IndexedDB through a small repository adapter | Works without account and handles structured projects better than raw localStorage |
+| Persistence | Server PostgreSQL / VPS Database Repository | Production database with secure user account isolation |
 | State | React state plus a thin project store | Avoid unnecessary global-state complexity |
 | Icons | Lucide | Consistent icon family |
 | Date and currency | Native `Intl` APIs | Indonesian formatting without heavy dependencies |
@@ -41,9 +41,8 @@ flowchart TD
     A[Next.js UI] --> B[Application Services]
     B --> C[Matching Engine]
     B --> D[Cost Calculator]
-    B --> E[Project Repository]
-    E --> F[(IndexedDB)]
-    E -. Optional sync .-> G[(Postgres)]
+    B --> E[Project Repository / API]
+    E --> F[(PostgreSQL / PostGIS on VPS)]
 ```
 
 Key separation:

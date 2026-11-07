@@ -6,6 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
+        disallow: ["/auth/", "/admin/", "/listings/new/"],
       },
     ],
     sitemap: "https://kosmatch.us.ci/sitemap.xml",

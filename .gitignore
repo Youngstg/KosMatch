@@ -15,6 +15,9 @@ INSTALLATION_GUIDE.md
 INSTALLATION.md
 DEPLOYMENT.md
 
+# User Acceptance Testing (UAT) artifacts and reports
+uat/
+
 # AI & Agent artifacts
 .agents/
 .gemini/

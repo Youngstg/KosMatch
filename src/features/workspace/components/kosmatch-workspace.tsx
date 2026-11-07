@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
-import { AlertTriangle, ArrowLeft, Check, Clock3, Compass, Download, FileUp, Info, LogOut, MapPin, Pencil, Plus, Printer, RotateCcw, Scale, Star, Trash2 } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Check, Clock3, Compass, Download, FileUp, Info, LogIn, LogOut, MapPin, Pencil, Plus, Printer, RotateCcw, Scale, Star, Trash2 } from "lucide-react";
 import { IndexedDbProjectRepository } from "@/data/indexeddb";
 import { calculateCost } from "@/domain/costing";
 import type { AccommodationOption, ComparisonProject, CriterionKey } from "@/domain/entities";
@@ -23,8 +23,10 @@ import { formatRupiah } from "@/lib/currency";
 import { calculateDestinationDistance } from "@/domain/distance";
 import { formatDistance } from "@/lib/geo";
 import { OptionEditor } from "@/features/workspace/components/option-editor";
+import { ManualCostCalculator } from "@/features/comparison/components/manual-cost-calculator";
+import { createEmptyOption } from "@/features/workspace/option-factory";
 
-type View = "loading" | "landing" | "setup" | "project" | "editor" | "error";
+type View = "loading" | "landing" | "setup" | "project" | "editor" | "error" | "manual";
 type Tab = "overview" | "compare" | "decision" | "simulator" | "preferences" | "data";
 type Sort = "match" | "cost" | "commute" | "distance" | "recent";
 type Filter = "all" | "eligible" | "withinBudget" | "complete" | "unknown" | "needsVerification";
@@ -176,7 +178,7 @@ function Compare({ project, options, matches, requestedOptionId }: { project: Co
   const mobileGroup = visibleGroups.find((group) => group.key === mobileGroupKey) ?? visibleGroups[0];
 
   const selector = <fieldset className="fieldset-reset compare-selector"><legend className="field-label">Pilihan yang dibandingkan ({selectedIds.length}/3)</legend><div className="chips">{matches.map((match) => { const active = selectedIds.includes(match.optionId); return <button type="button" className={`chip ${active ? "selected" : ""}`} aria-pressed={active} disabled={!active && selectedIds.length >= 3} onClick={() => toggleSelection(match.optionId)} key={match.optionId}>{active && <Check size={15} />} {match.optionName}</button>; })}</div></fieldset>;
-  if (selected.length < 2) return <section aria-labelledby="compare-title"><h2 id="compare-title" className="section-title">Perbandingan berdampingan</h2><p className="muted">Pilih dua atau tiga opsi untuk dibandingkan.</p>{selector}<Empty title="Belum cukup pilihan" text="Pilih minimal dua pilihan kos untuk membandingkan." /></section>;
+  if (selected.length < 2) return <section aria-labelledby="compare-title"><h2 id="compare-title" className="section-title">Perbandingan berdampingan</h2><p className="muted">Pilih dua atau tiga opsi untuk dibandingkan.</p>{selector}<Empty title="Belum cukup pilihan" text="Pilih minimal dua pilihan kos untuk membandingkan. Anda dapat mengisi data kos di tab Ringkasan (Kalkulator Manual) atau memilih kos dari Peta Kampus." /></section>;
 
   return (
     <section aria-labelledby="compare-title">
@@ -269,7 +271,7 @@ function OptionCard({ project, option, match, onEdit, onDelete, onShortlist, onC
   );
 }
 
-function ProjectWorkspace({ repository, projects, project, initialOptions, onProjectDeleted, onBack, onSwitchProject, onNewProject }: { repository:IndexedDbProjectRepository; projects:readonly ComparisonProject[]; project:ComparisonProject; initialOptions:AccommodationOption[]; onProjectDeleted:()=>void; onBack:()=>void; onSwitchProject:(id:string)=>Promise<void>; onNewProject:()=>void }) {
+function ProjectWorkspace({ repository, projects, project, initialOptions, onProjectDeleted, onBack, onSwitchProject, onNewProject, currentUser }: { repository:IndexedDbProjectRepository; projects:readonly ComparisonProject[]; project:ComparisonProject; initialOptions:AccommodationOption[]; onProjectDeleted:()=>void; onBack:()=>void; onSwitchProject:(id:string)=>Promise<void>; onNewProject:()=>void; currentUser?: { email: string; role: string } | null }) {
   const router = useRouter();
   const [currentProject,setCurrentProject]=useState(project); const [options,setOptions]=useState<AccommodationOption[]>(initialOptions); const [tab,setTab]=useState<Tab>("overview"); const [editing,setEditing]=useState<AccommodationOption|undefined>(); const [showEditor,setShowEditor]=useState(false); const [sort,setSort]=useState<Sort>("match"); const [filter,setFilter]=useState<Filter>("all"); const [simulated,setSimulated]=useState<string|null>(null); const [notice,setNotice]=useState<string|null>(null); const [requestedComparisonOptionId,setRequestedComparisonOptionId]=useState<string|null>(null);
   const matches=useMemo(()=>matchAndRank(currentProject,options),[currentProject,options]);
@@ -358,19 +360,30 @@ function ProjectWorkspace({ repository, projects, project, initialOptions, onPro
             <Link href="/explore" className="btn btn-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
               <Compass size={17} /> Peta
             </Link>
-            <button
-              type="button"
-              className="btn btn-ghost"
-              style={{ color: "var(--danger, #B42318)" }}
-              title="Keluar dari akun"
-              onClick={async () => {
-                await fetch("/api/auth/logout", { method: "POST" });
-                router.push("/auth/login");
-                router.refresh();
-              }}
-            >
-              <LogOut size={16} /> Keluar
-            </button>
+            {currentUser ? (
+              <button
+                type="button"
+                className="btn btn-ghost"
+                style={{ color: "var(--danger, #B42318)" }}
+                title="Keluar dari akun"
+                onClick={async () => {
+                  await fetch("/api/auth/logout", { method: "POST" });
+                  router.push("/auth/login");
+                  router.refresh();
+                }}
+              >
+                <LogOut size={16} /> Keluar
+              </button>
+            ) : (
+              <Link
+                href="/auth/login"
+                className="btn btn-ghost"
+                style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+                title="Masuk ke akun"
+              >
+                <LogIn size={16} /> Masuk
+              </Link>
+            )}
             <button className="btn btn-secondary" onClick={onNewProject}>
               <Plus size={18} /> Baru
             </button>
@@ -381,7 +394,43 @@ function ProjectWorkspace({ repository, projects, project, initialOptions, onPro
         </div>
       </header>
       <main className="container workspace"><div className="workspace-head"><div><div className="eyebrow">Ruang keputusan</div><h1>{currentProject.name}</h1><p className="muted"><MapPin size={15}/> Tujuan: {currentProject.destinationLabel}</p></div><div className="badges"><span className="badge good">Proyek Aktif</span></div></div>{notice&&<div className="inline-alert good" role="status"><Check size={18}/>{notice}<button className="btn btn-ghost" onClick={()=>setNotice(null)}>Tutup</button></div>}<nav className="nav-tabs no-print" aria-label="Navigasi proyek">{([['overview','Ringkasan'],['compare','Bandingkan'],['decision','Keputusan'],['simulator','Simulator'],['preferences','Preferensi'],['data','Data & backup']] as const).map(([key,label])=><button className={`nav-tab ${tab===key?"active":""}`} aria-current={tab===key?"page":undefined} onClick={()=>setTab(key)} key={key}>{label}</button>)}</nav><div className="summary-strip"><div className="summary-item"><span className="muted">Anggaran total</span><strong>{formatRupiah(currentProject.monthlyBudget)} / bulan</strong></div><div className="summary-item"><span className="muted">Batas perjalanan</span><strong>{currentProject.maxOneWayCommuteMinutes} menit</strong></div><div className="summary-item"><span className="muted">Memenuhi wajib</span><strong>{eligibleCount} dari {matches.length} pilihan</strong></div></div>
-    {tab==="overview"&&(options.length===0?<Empty title="Belum ada pilihan kos yang dianalisis." text="Pilih kos terverifikasi langsung dari peta kampus untuk analisis biaya nyata dan perbandingan DSS otomatis." action={<div className="actions compact" style={{ flexWrap: "wrap", justifyContent: "center" }}><Link href="/explore" className="btn btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}><Compass size={18}/> Pilih dari Peta Kampus</Link><button className="btn btn-secondary" aria-label="Tambah pilihan manual" onClick={()=>setShowEditor(true)}><Plus size={18}/> Tambah Kos Manual</button></div>}/>:<><div className="toolbar"><div className="field"><label htmlFor="sort">Urutkan</label><select id="sort" className="input" value={sort} onChange={(e)=>setSort(e.target.value as Sort)}><option value="match">Kecocokan</option><option value="cost">Biaya bulanan</option><option value="commute">Perjalanan</option><option value="distance">Jarak ke tujuan</option><option value="recent">Baru ditambahkan</option></select></div><div className="field"><label htmlFor="filter">Filter</label><select id="filter" className="input" value={filter} onChange={(e)=>setFilter(e.target.value as Filter)}><option value="all">Semua pilihan</option><option value="eligible">Memenuhi fasilitas wajib</option><option value="withinBudget">Dalam anggaran</option><option value="complete">Biaya lengkap</option><option value="unknown">Ada biaya belum diketahui</option><option value="needsVerification">Perlu verifikasi</option></select></div></div>{visible.length===0?<Empty title="Tidak ada hasil" text="Ubah filter untuk melihat pilihan lain."/>:<div>{([{eligible:true,title:"Memenuhi kebutuhan wajib"},{eligible:false,title:"Perlu dipertimbangkan ulang"}] as const).map((group)=>{const grouped=visible.filter((match)=>match.eligible===group.eligible);return grouped.length===0?null:<section aria-label={group.title} key={group.title}><h2 className="group-title">{group.eligible?<Check size={21} color="var(--accent)"/>:<AlertTriangle size={21} color="var(--danger)"/>}{group.title}</h2><div className="option-grid">{grouped.map((match)=>{const option=options.find((o)=>o.id===match.optionId)!;return <OptionCard project={currentProject} option={option} match={match} onEdit={()=>{setEditing(option);setShowEditor(true);}} onDelete={()=>deleteOption(option)} onShortlist={()=>toggleShortlist(option.id)} onCompare={()=>{setRequestedComparisonOptionId(option.id);setTab("compare");}} onSimulate={()=>{setSimulated(option.id);setTab("simulator");}} key={option.id}/>})}</div></section>;})}</div>}</>)}
+    {tab==="overview"&&(options.length===0?(
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+        <div style={{ background: "#F8F9FA", border: "1px dashed #D0D5DD", borderRadius: "12px", padding: "1rem 1.25rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
+          <div>
+            <strong style={{ display: "block", color: "#101828", fontSize: "0.95rem" }}>Mode Kalkulator Langsung (Isian Manual)</strong>
+            <span style={{ fontSize: "0.85rem", color: "#667085" }}>
+              Masukkan estimasi biaya sewa, utilitas, dan ongkos mobilitas di bawah ini untuk melihat total biaya nyata secara instan.
+            </span>
+          </div>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <Link href="/explore" className="btn btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "0.85rem" }}>
+              <Compass size={16} /> Pilih dari Peta Kampus
+            </Link>
+            <button type="button" className="btn btn-secondary" onClick={() => setShowEditor(true)} style={{ fontSize: "0.85rem" }}>
+              <Plus size={16} /> Form Lengkap
+            </button>
+          </div>
+        </div>
+        <ManualCostCalculator
+          isGuest={!currentUser}
+          onSaveToProject={async (optData) => {
+            const baseOpt = createEmptyOption(currentProject.id);
+            const newOpt: AccommodationOption = {
+              ...baseOpt,
+              name: optData.name,
+              rent: { amount: optData.rent, origin: "confirmed" },
+              electricity: { amount: optData.electricity, origin: "confirmed" },
+              water: { amount: optData.water, origin: "confirmed" },
+              internet: { amount: optData.internet, origin: "confirmed" },
+              laundry: { amount: optData.laundry, origin: "confirmed" },
+              roundTripTransportCost: { amount: optData.dailyTransportCost, origin: "confirmed" },
+            };
+            await saveOption(newOpt);
+          }}
+        />
+      </div>
+    ):<><div className="toolbar"><div className="field"><label htmlFor="sort">Urutkan</label><select id="sort" className="input" value={sort} onChange={(e)=>setSort(e.target.value as Sort)}><option value="match">Kecocokan</option><option value="cost">Biaya bulanan</option><option value="commute">Perjalanan</option><option value="distance">Jarak ke tujuan</option><option value="recent">Baru ditambahkan</option></select></div><div className="field"><label htmlFor="filter">Filter</label><select id="filter" className="input" value={filter} onChange={(e)=>setFilter(e.target.value as Filter)}><option value="all">Semua pilihan</option><option value="eligible">Memenuhi fasilitas wajib</option><option value="withinBudget">Dalam anggaran</option><option value="complete">Biaya lengkap</option><option value="unknown">Ada biaya belum diketahui</option><option value="needsVerification">Perlu verifikasi</option></select></div></div>{visible.length===0?<Empty title="Tidak ada hasil" text="Ubah filter untuk melihat pilihan lain."/>:<div>{([{eligible:true,title:"Memenuhi kebutuhan wajib"},{eligible:false,title:"Perlu dipertimbangkan ulang"}] as const).map((group)=>{const grouped=visible.filter((match)=>match.eligible===group.eligible);return grouped.length===0?null:<section aria-label={group.title} key={group.title}><h2 className="group-title">{group.eligible?<Check size={21} color="var(--accent)"/>:<AlertTriangle size={21} color="var(--danger)"/>}{group.title}</h2><div className="option-grid">{grouped.map((match)=>{const option=options.find((o)=>o.id===match.optionId)!;return <OptionCard project={currentProject} option={option} match={match} onEdit={()=>{setEditing(option);setShowEditor(true);}} onDelete={()=>deleteOption(option)} onShortlist={()=>toggleShortlist(option.id)} onCompare={()=>{setRequestedComparisonOptionId(option.id);setTab("compare");}} onSimulate={()=>{setSimulated(option.id);setTab("simulator");}} key={option.id}/>})}</div></section>;})}</div>}</>)}
     {tab==="compare"&&<Compare project={currentProject} options={options} matches={matches} requestedOptionId={requestedComparisonOptionId}/>} {tab==="decision"&&<><DecisionBoard state={{project:currentProject,options}} onChange={saveDecision}/><div className="print-block"><PrintSummaryView project={currentProject} options={options}/></div></>} {tab==="simulator"&&(simulatedOption?<><div className="field simulator-select"><label htmlFor="simulate-option">Pilihan yang disimulasikan</label><select id="simulate-option" className="input" value={simulatedOption.id} onChange={(e)=>setSimulated(e.target.value)}>{options.map((o)=><option value={o.id} key={o.id}>{o.name}</option>)}</select></div><CostSimulator project={currentProject} option={simulatedOption} onApply={async(projectValue,optionValue)=>{await repository.saveProject(projectValue);await repository.saveOption(optionValue);setCurrentProject(projectValue);setOptions((all)=>all.map((item)=>item.id===optionValue.id?optionValue:item));setNotice("Hasil simulasi diterapkan dan disimpan.");}}/></>:<Empty title="Belum ada pilihan" text="Tambahkan pilihan untuk menjalankan simulasi."/>)}
     {tab==="preferences"&&<PreferencesForm mode="edit" initialProject={currentProject} onCancel={()=>setTab("overview")} onSave={async(value)=>{await repository.saveProject(value);setCurrentProject(value);setNotice("Preferensi disimpan dan semua skor dihitung ulang.");setTab("overview");}}/>}
     {tab==="data"&&<DataTools repository={repository} project={currentProject} options={options} onProjectDeleted={onProjectDeleted}/>}<p className="disclaimer"><Info size={17}/> Skor mencerminkan data dan prioritas Anda. Periksa kembali seluruh biaya dan ketersediaan kepada pemilik kos.</p></main></div>
@@ -442,7 +491,7 @@ export function KosMatchWorkspace({
       setProject(loaded);
       setOptions(loaded === null ? [] : await nextRepository.listOptions(loaded.id));
       setRepository(nextRepository);
-      setView(loaded !== null ? "project" : "setup");
+      setView(loaded !== null ? "project" : mode === "calculator" ? "manual" : "setup");
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Gagal memuat data sistem.");
       setView("error");
@@ -483,7 +532,7 @@ export function KosMatchWorkspace({
       setRepository(nextRepository);
 
       if (mode === "calculator") {
-        setView(loaded !== null ? "project" : "setup");
+        setView(loaded !== null ? "project" : mode === "calculator" ? "manual" : "setup");
       }
     }).catch((cause: unknown) => {
       if (active) {
@@ -558,6 +607,139 @@ export function KosMatchWorkspace({
       </>
     );
   }
+  if (view === "manual") {
+    return (
+      <div className="shell">
+        <HudHeader
+          activeTab="calculator"
+          brandSubtitle="Kalkulator Biaya Nyata"
+          className="no-print"
+          leftSlot={
+            <span className="hud-project-select" style={{ display: "inline-flex", alignItems: "center", pointerEvents: "none" }}>
+              Mode Manual
+            </span>
+          }
+        >
+          <button
+            type="button"
+            className="hud-btn-icon"
+            title="Kembali ke Beranda"
+            aria-label="Beranda"
+            onClick={() => {
+              router.push("/");
+            }}
+          >
+            <ArrowLeft size={17} />
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => setView("setup")}
+            style={{ height: "38px", minHeight: "38px", display: "inline-flex", alignItems: "center", gap: "6px", borderRadius: "10px", padding: "6px 14px", fontSize: "13px" }}
+          >
+            <Plus size={15} /> Buat Proyek DSS
+          </button>
+          <Link
+            href="/explore"
+            className="btn btn-secondary"
+            style={{ height: "38px", minHeight: "38px", display: "inline-flex", alignItems: "center", gap: "6px", borderRadius: "10px", padding: "6px 14px", fontSize: "13px" }}
+          >
+            <Compass size={15} /> Peta Kampus
+          </Link>
+          {currentUser ? (
+            <button
+              type="button"
+              className="btn btn-ghost"
+              title="Keluar dari akun KosMatch"
+              style={{ color: "var(--danger, #B42318)", height: "38px", minHeight: "38px", display: "inline-flex", alignItems: "center", gap: "6px", borderRadius: "10px", padding: "6px 12px" }}
+              onClick={async () => {
+                await fetch("/api/auth/logout", { method: "POST" });
+                setFetchedUser(null);
+                router.push("/auth/login");
+                router.refresh();
+              }}
+            >
+              <LogOut size={15} /> Keluar
+            </button>
+          ) : (
+            <Link
+              href="/auth/login"
+              className="btn btn-ghost"
+              title="Masuk ke akun KosMatch"
+              style={{ height: "38px", minHeight: "38px", display: "inline-flex", alignItems: "center", gap: "6px", borderRadius: "10px", padding: "6px 12px" }}
+            >
+              <LogIn size={15} /> Masuk
+            </Link>
+          )}
+        </HudHeader>
+
+        <header className="topbar mobile-only no-print">
+          <div className="container header-inner">
+            <Brand subtitle="Kalkulator Biaya Nyata" />
+            <button
+              className="btn btn-ghost"
+              onClick={() => {
+                router.push("/");
+              }}
+            >
+              Beranda
+            </button>
+          </div>
+        </header>
+
+        <main className="container workspace" style={{ paddingTop: "1rem" }}>
+          <ManualCostCalculator
+            isGuest={!currentUser}
+            onSaveToProject={async (optData) => {
+              const activeRepo = repository ?? getBrowserRepository();
+              const newProj: ComparisonProject = {
+                id: crypto.randomUUID(),
+                name: optData.name ? `Proyek ${optData.name}` : "Proyek Kos Pertama Saya",
+                monthlyBudget: Math.max(2500000, optData.rent + 1000000),
+                maxOneWayCommuteMinutes: 45,
+                commuteDaysPerMonth: optData.commuteDays || 22,
+                destinationLabel: "Kampus Utama",
+                destinationPoint: { latitude: -6.3644, longitude: 106.8286 },
+                weights: {
+                  cost: 5,
+                  commute: 4,
+                  facilities: 3,
+                  environment: 2,
+                  ruleFit: 2,
+                },
+                facilityPreferences: [],
+                rulePreferences: [],
+                favoriteOptionId: null,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              };
+              const baseOpt = createEmptyOption(newProj.id);
+              const newOpt: AccommodationOption = {
+                ...baseOpt,
+                name: optData.name,
+                rent: { amount: optData.rent, origin: "confirmed" },
+                electricity: { amount: optData.electricity, origin: "confirmed" },
+                water: { amount: optData.water, origin: "confirmed" },
+                internet: { amount: optData.internet, origin: "confirmed" },
+                laundry: { amount: optData.laundry, origin: "confirmed" },
+                roundTripTransportCost: { amount: optData.dailyTransportCost, origin: "confirmed" },
+              };
+
+              await activeRepo.saveProject(newProj);
+              await activeRepo.saveOption(newOpt);
+              await activeRepo.saveSetting("activeProjectId", newProj.id);
+
+              setRepository(activeRepo);
+              setProjects([newProj]);
+              setProject(newProj);
+              setOptions([newOpt]);
+              setView("project");
+            }}
+          />
+        </main>
+      </div>
+    );
+  }
   if (view === "setup") {
     return (
       <div className="shell">
@@ -583,19 +765,30 @@ export function KosMatchWorkspace({
           >
             <ArrowLeft size={17} />
           </button>
-          <button
-            type="button"
-            className="btn btn-ghost"
-            title="Keluar dari akun KosMatch"
-            style={{ color: "var(--danger, #B42318)", height: "38px", minHeight: "38px", display: "inline-flex", alignItems: "center", gap: "6px", borderRadius: "10px", padding: "6px 12px" }}
-            onClick={async () => {
-              await fetch("/api/auth/logout", { method: "POST" });
-              router.push("/auth/login");
-              router.refresh();
-            }}
-          >
-            <LogOut size={15} /> Keluar
-          </button>
+          {currentUser ? (
+            <button
+              type="button"
+              className="btn btn-ghost"
+              title="Keluar dari akun KosMatch"
+              style={{ color: "var(--danger, #B42318)", height: "38px", minHeight: "38px", display: "inline-flex", alignItems: "center", gap: "6px", borderRadius: "10px", padding: "6px 12px" }}
+              onClick={async () => {
+                await fetch("/api/auth/logout", { method: "POST" });
+                router.push("/auth/login");
+                router.refresh();
+              }}
+            >
+              <LogOut size={15} /> Keluar
+            </button>
+          ) : (
+            <Link
+              href="/auth/login"
+              className="btn btn-ghost"
+              title="Masuk ke akun KosMatch"
+              style={{ height: "38px", minHeight: "38px", display: "inline-flex", alignItems: "center", gap: "6px", borderRadius: "10px", padding: "6px 12px" }}
+            >
+              <LogIn size={15} /> Masuk
+            </Link>
+          )}
         </HudHeader>
 
         {/* Fallback Mobile Topbar for Narrow Screens */}
@@ -641,6 +834,7 @@ export function KosMatchWorkspace({
     return (
       <ProjectWorkspace
         key={project.id}
+        currentUser={currentUser}
         repository={repository ?? getBrowserRepository()}
         projects={projects}
         project={project}

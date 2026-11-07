@@ -29,7 +29,7 @@ describe("LandingView Component", () => {
     const h1 = screen.getByRole("heading", { level: 1 });
     expect(h1.textContent).toBe("Kos murah belum tentu paling hemat.");
 
-    const leadText = screen.getByText(/Bandingkan biaya bulanan, perjalanan, fasilitas/);
+    const leadText = screen.getByText(/Bandingkan biaya bulanan/);
     expect(leadText).not.toBeNull();
 
     // Primary action: link to explore map
@@ -37,10 +37,11 @@ describe("LandingView Component", () => {
     expect(mapLinks.length).toBeGreaterThan(0);
     expect(mapLinks[0].getAttribute("href")).toBe("/explore");
 
-    // Secondary action: DSS calculator
-    const startButtons = screen.getAllByRole("button", { name: /Kalkulator DSS/i });
-    expect(startButtons.length).toBeGreaterThan(0);
-    fireEvent.click(startButtons[0]);
+    // Secondary action: DSS calculator (now a semantic link with destination URL)
+    const startLinks = screen.getAllByRole("link", { name: /Buka Kalkulator DSS/i });
+    expect(startLinks.length).toBeGreaterThan(0);
+    expect(startLinks[0].getAttribute("href")).toBe("/calculator");
+    fireEvent.click(startLinks[0]);
     expect(onStart).toHaveBeenCalledTimes(1);
 
     // Verify deprecated buttons are removed

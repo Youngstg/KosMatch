@@ -5,13 +5,17 @@ import { verifySessionToken } from "@/lib/auth";
 import { MapExplorer } from "@/features/map";
 
 export const metadata: Metadata = {
-  title: "Peta Interaktif & Eksplorasi Lingkungan Kos",
+  title: "Peta Kampus & Eksplorasi Lingkungan Kos",
   description:
-    "Eksplorasi peta interaktif pilot Depok (Universitas Indonesia) dan Padang (Universitas Andalas). Cek radius kampus dan uji lokasi kos kandidat.",
+    "Eksplorasi peta interaktif kos di sekitar kampus (UI Depok, Unand Padang, dll). Cek radius kampus, profil warung makan, laundry, dan rute perjalanan nyata.",
+  alternates: {
+    canonical: "https://kosmatch.us.ci/explore",
+  },
   openGraph: {
-    title: "Peta Interaktif & Eksplorasi Lingkungan Kos | KosMatch",
+    title: "Peta Kampus & Eksplorasi Lingkungan Kos | KosMatch",
     description:
-      "Eksplorasi radius kampus pilot UI Depok dan Unand Limau Manis pada peta OpenStreetMap interaktif.",
+      "Eksplorasi kos di sekitar radius kampus pada peta interaktif lengkap dengan rute dan fasilitas esensial.",
+    url: "https://kosmatch.us.ci/explore",
   },
 };
 
@@ -24,5 +28,5 @@ export default async function ExplorePage() {
     redirect("/auth/login?redirect=/explore");
   }
 
-  return <MapExplorer />;
+  return <MapExplorer currentUser={user} />;
 }

@@ -244,7 +244,7 @@ export default function NewListingPage() {
               <CheckCircle2 size={48} color="var(--primary)" style={{ margin: "0 auto 12px" }} />
               <h2 style={{ fontSize: "20px", margin: "0 0 8px" }}>Terima Kasih atas Kontribusi Anda!</h2>
               <p className="muted" style={{ fontSize: "14px", maxWidth: "540px", margin: "0 auto 20px" }}>
-                {successResult.message} Data titik lokasi telah tersimpan di basis data geospasial PostgreSQL VPS.
+                {successResult.message} Data titik lokasi telah tersimpan aman di sistem KosMatch.
               </p>
               <div style={{ display: "flex", gap: "10px", justifyContent: "center", flexWrap: "wrap" }}>
                 <Link className="btn btn-primary" href="/admin">
@@ -370,7 +370,7 @@ export default function NewListingPage() {
                 {/* Koordinat Geospasial */}
                 <div>
                   <span className="field-label" style={{ fontSize: "13px", display: "block", marginBottom: "4px" }}>
-                    Titik Koordinat (PostGIS WGS 84):
+                    Titik Koordinat Lokasi Kos (Lintang &amp; Bujur):
                   </span>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
                     <div>
@@ -424,7 +424,7 @@ export default function NewListingPage() {
                   className="btn btn-primary"
                   style={{ minHeight: "44px", marginTop: "var(--space-2)" }}
                 >
-                  <PlusCircle size={17} /> {submitting ? "Menyimpan ke VPS..." : "Kirim Listing Kos Komunitas"}
+                  <PlusCircle size={17} /> {submitting ? "Menyimpan data..." : "Kirim Listing Kos Komunitas"}
                 </button>
               </form>
 
@@ -441,7 +441,7 @@ export default function NewListingPage() {
                   onRadiusChange={setRadiusMeters}
                 />
                 <p className="disclaimer" style={{ fontSize: "12px", marginTop: "8px" }}>
-                  <MapPin size={14} style={{ display: "inline" }} /> Saat koordinat dimasukkan, PostGIS di VPS secara otomatis memprofilkan warung makan, laundry, dan minimarket terdekat dalam radius {radiusMeters} meter.
+                  <MapPin size={14} style={{ display: "inline" }} /> Saat koordinat dimasukkan, sistem secara otomatis memprofilkan warung makan, laundry, dan minimarket terdekat berdasarkan jarak dan rute sebenarnya dalam radius {radiusMeters} meter.
                 </p>
               </div>
             </div>

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDatabasePool, isDatabaseConfigured } from "@/lib/db";
 import { createSessionToken } from "@/lib/auth";
+import { getSafeRedirectUrl } from "@/lib/auth/redirect";
 
 const googleAuthSchema = z.object({
   idToken: z.string().optional(),
@@ -165,10 +166,14 @@ export async function GET(req?: Request) {
           return NextResponse.redirect(`${appUrl}/auth/login?setup=google`);
         }
 
+        const redirectParam = url.searchParams.get("redirect");
+        const safeRedirect = getSafeRedirectUrl(redirectParam, "/explore");
         const redirectUri = `${appUrl}/api/auth/google/callback`;
         const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
           redirectUri
-        )}&response_type=code&scope=openid%20email%20profile&access_type=offline&prompt=select_account`;
+        )}&response_type=code&scope=openid%20email%20profile&access_type=offline&prompt=select_account&state=${encodeURIComponent(
+          safeRedirect
+        )}`;
 
         return NextResponse.redirect(googleAuthUrl);
       }

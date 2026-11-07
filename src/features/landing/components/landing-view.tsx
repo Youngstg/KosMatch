@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Calculator, Compass, LogIn, LogOut, User } from "lucide-react";
+import { ArrowRight, Calculator, Compass, Lock, LogIn, LogOut, User } from "lucide-react";
 import { LandingFeatures } from "./landing-features";
+import { LandingCampuses } from "./landing-campuses";
 import { LandingFaq } from "./landing-faq";
 import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
 
@@ -64,13 +65,6 @@ export function LandingView({ onStart, initialUser }: LandingViewProps) {
     } catch {}
   };
 
-  const handleExploreClick = (e: React.MouseEvent) => {
-    if (!currentUser) {
-      e.preventDefault();
-      router.push("/auth/login?redirect=/explore");
-    }
-  };
-
   return (
     <div className="shell landing-shell landing-editorial-theme">
       {/* =========================================================================
@@ -83,8 +77,14 @@ export function LandingView({ onStart, initialUser }: LandingViewProps) {
           <div className="container header-inner">
             <Brand />
             <nav className="editorial-topbar-nav" aria-label="Navigasi Halaman">
-              <a className="editorial-nav-link highlight" href="/explore" onClick={handleExploreClick}>
+              <Link className="editorial-nav-link highlight" href="/explore">
                 <Compass size={14} /> Peta Eksplorasi
+              </Link>
+              <Link className="editorial-nav-link" href="/calculator">
+                <Calculator size={14} /> Kalkulator DSS
+              </Link>
+              <a className="editorial-nav-link" href="#campuses">
+                Daftar Kampus
               </a>
               <a className="editorial-nav-link" href="#faq">
                 Tanya Jawab
@@ -151,25 +151,45 @@ export function LandingView({ onStart, initialUser }: LandingViewProps) {
               </div>
 
               <p className="lead editorial-lead">
-                Bandingkan biaya bulanan, perjalanan, fasilitas, dan kebutuhan pribadi dalam satu keputusan yang transparan dan terukur berbasis PostGIS.
+                Bandingkan biaya bulanan, estimasi waktu tempuh, fasilitas, dan kebutuhan pribadi dalam satu keputusan objektif berdasarkan jarak dan rute sebenarnya ke kampus.
               </p>
 
-              <div className="actions editorial-actions" style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
-                <Link
-                  href="/explore"
-                  onClick={handleExploreClick}
-                  className="btn btn-editorial-start"
-                  style={{ display: "inline-flex", alignItems: "center", gap: "8px", textDecoration: "none" }}
-                >
-                  <Compass size={18} /> Jelajahi Kos di Peta Kampus <ArrowRight size={18} />
-                </Link>
-                <button
-                  className="btn btn-editorial-outline"
-                  onClick={onStart}
-                  style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}
-                >
-                  <Calculator size={18} /> Buka Kalkulator DSS
-                </button>
+              <div className="actions editorial-actions" style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "12px" }}>
+                <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
+                  <Link
+                    href="/explore"
+                    className="btn btn-editorial-start"
+                    style={{ display: "inline-flex", alignItems: "center", gap: "8px", textDecoration: "none" }}
+                  >
+                    <Compass size={18} /> {currentUser ? "Jelajahi Kos di Peta Kampus" : "Masuk & Jelajahi Kos di Peta Kampus"} <ArrowRight size={18} />
+                  </Link>
+                  <Link
+                    href="/calculator"
+                    onClick={() => onStart?.()}
+                    className="btn btn-editorial-outline"
+                    style={{ display: "inline-flex", alignItems: "center", gap: "8px", textDecoration: "none" }}
+                  >
+                    <Calculator size={18} /> Buka Kalkulator DSS
+                  </Link>
+                </div>
+                {!currentUser && (
+                  <div
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      fontSize: "12px",
+                      color: "rgba(255, 255, 255, 0.7)",
+                      background: "rgba(224, 169, 109, 0.1)",
+                      border: "1px solid rgba(224, 169, 109, 0.25)",
+                      padding: "4px 10px",
+                      borderRadius: "6px",
+                    }}
+                  >
+                    <Lock size={12} style={{ color: "#E0A96D" }} />
+                    <span>Fitur peta interaktif dan kalkulator DSS memerlukan masuk akun (gratis).</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -193,7 +213,7 @@ export function LandingView({ onStart, initialUser }: LandingViewProps) {
                 Kamar Nyaman, Istirahat Tenang, Belajar Makin Fokus
               </h2>
               <p className="clay-card-sub" style={{ fontSize: "14px", lineHeight: "1.6", color: "rgba(255, 255, 255, 0.86)", margin: "0 0 16px" }}>
-                Kamar kos adalah ruang hidup utama selama masa studi Anda. KosMatch memverifikasi perabot esensial mulai dari tempat tidur empuk, lemari pakaian lapang, meja belajar privat yang kondusif, hingga sirkulasi udara alami sebelum Anda menentukan pilihan sewa.
+                Kamar kos adalah ruang hidup utama selama masa studi Anda. KosMatch mencatat ketersediaan perabot esensial (tempat tidur, lemari, meja belajar, tipe kamar mandi) berdasarkan data listing terkonfirmasi sebelum Anda menentukan pilihan sewa.
               </p>
               <div className="clay-card-badges" style={{ gap: "8px", marginBottom: "20px" }}>
                 <span className="clay-pill">Kasur &amp; Bantal Ergonomis</span>
@@ -202,9 +222,8 @@ export function LandingView({ onStart, initialUser }: LandingViewProps) {
                 <span className="clay-pill">Kamar Mandi Dalam</span>
                 <span className="clay-pill">Sirkulasi &amp; Jendela Alami</span>
               </div>
-              <a
+              <Link
                 href="/explore"
-                onClick={handleExploreClick}
                 className="btn btn-editorial-start"
                 style={{
                   display: "inline-flex",
@@ -219,8 +238,8 @@ export function LandingView({ onStart, initialUser }: LandingViewProps) {
                   textDecoration: "none",
                 }}
               >
-                <Compass size={15} /> Eksplorasi Kos Siap Huni di Peta Kampus &rarr;
-              </a>
+                <Compass size={15} /> {currentUser ? "Eksplorasi Kos Siap Huni di Peta Kampus \u2192" : "Masuk & Eksplorasi Kos di Peta Kampus \u2192"}
+              </Link>
             </div>
             <div className="layout-card-visual">
               <Image
@@ -235,23 +254,75 @@ export function LandingView({ onStart, initialUser }: LandingViewProps) {
         </div>
       </section>
 
-      {/* Main Content: Features & FAQ */}
+      {/* Main Content: Features, Supported Campuses & FAQ */}
       <main>
         <LandingFeatures />
+        <LandingCampuses />
         <div id="faq">
           <LandingFaq />
         </div>
       </main>
 
-      {/* Refined Minimalist Editorial Footer */}
-      <footer className="footer-note editorial-footer">
-        <div className="container">
-          <p>KosMatch adalah sistem pendukung keputusan pemilihan kos multi-kriteria berbasis geospatial PostGIS.</p>
-          <div className="actions compact">
-            <a className="btn btn-ghost" href="/admin" title="Masuk ke portal pengelolaan kos bagi pemilik dan admin">
-              Portal Pemilik &amp; Admin
-            </a>
+      {/* Comprehensive Editorial Footer */}
+      <footer className="footer-note editorial-footer" style={{ borderTop: "1px solid rgba(255, 255, 255, 0.08)", padding: "40px 0 24px" }}>
+        <div className="container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "32px", marginBottom: "32px" }}>
+          {/* Kolom 1: Profil KosMatch */}
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
+              <KosMatchLogo size={28} />
+              <strong style={{ fontSize: "16px", letterSpacing: "1px", color: "var(--foreground, #FFF)" }}>KOSMATCH</strong>
+            </div>
+            <p style={{ fontSize: "13px", color: "rgba(255, 255, 255, 0.65)", lineHeight: 1.6, margin: 0 }}>
+              Sistem pendukung keputusan (DSS) pemilihan kos mahasiswa multi-kriteria berdasarkan jarak dan rute sebenarnya ke kampus, fasilitas esensial, dan kalkulator biaya hidup nyata.
+            </p>
           </div>
+
+          {/* Kolom 2: Navigasi Cepat */}
+          <div>
+            <h4 style={{ fontSize: "14px", fontWeight: 700, color: "var(--foreground, #FFF)", margin: "0 0 12px", textTransform: "uppercase", letterSpacing: "0.8px" }}>
+              Navigasi
+            </h4>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontSize: "13px" }}>
+              <Link href="/explore" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
+                Peta Eksplorasi Kampus
+              </Link>
+              <Link href="/calculator" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
+                Kalkulator DSS Kos
+              </Link>
+              <a href="#campuses" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
+                Daftar Kampus yang Didukung
+              </a>
+              <a href="#faq" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
+                Tanya Jawab (FAQ)
+              </a>
+            </div>
+          </div>
+
+          {/* Kolom 3: Privasi & Bantuan */}
+          <div>
+            <h4 style={{ fontSize: "14px", fontWeight: 700, color: "var(--foreground, #FFF)", margin: "0 0 12px", textTransform: "uppercase", letterSpacing: "0.8px" }}>
+              Privasi &amp; Legal
+            </h4>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontSize: "13px" }}>
+              <Link href="/privacy" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
+                Kebijakan Privasi
+              </Link>
+              <Link href="/terms" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
+                Syarat &amp; Ketentuan
+              </Link>
+              <Link href="/contact" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
+                Kontak &amp; Bantuan
+              </Link>
+              <Link href="/admin" style={{ color: "#E0A96D", textDecoration: "none" }}>
+                Portal Pemilik &amp; Admin &rarr;
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="container" style={{ borderTop: "1px solid rgba(255, 255, 255, 0.06)", paddingTop: "16px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px", fontSize: "12px", color: "rgba(255, 255, 255, 0.5)" }}>
+          <p style={{ margin: 0 }}>&copy; 2026 KosMatch. Dibuat mandiri tanpa sponsor atau manipulasi rekomendasi.</p>
+          <p style={{ margin: 0 }}>Algoritma AHP &amp; TOPSIS &bull; OpenStreetMap Data &bull; Hak Cipta Terlindungi</p>
         </div>
       </footer>
     </div>

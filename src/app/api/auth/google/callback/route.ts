@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getDatabasePool, isDatabaseConfigured } from "@/lib/db";
 import { createSessionToken } from "@/lib/auth";
+import { getSafeRedirectUrl } from "@/lib/auth/redirect";
 
 /**
  * Handler Callback Resmi Google OAuth 2.0 (Google Identity)
@@ -128,7 +129,9 @@ export async function GET(request: Request) {
       role: finalUser.role,
     });
 
-    const targetRedirect = finalUser.role === "admin" || finalUser.role === "owner" ? "/admin" : "/explore";
+    const stateParam = url.searchParams.get("state");
+    const defaultRedirect = finalUser.role === "admin" || finalUser.role === "owner" ? "/admin" : "/explore";
+    const targetRedirect = getSafeRedirectUrl(stateParam, defaultRedirect);
     const res = NextResponse.redirect(`${appUrl}${targetRedirect}`);
 
     res.cookies.set("kosmatch_session", sessionToken, {

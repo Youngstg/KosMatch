@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDatabasePool, isDatabaseConfigured } from "@/lib/db";
 import { createSessionToken, verifyPassword } from "@/lib/auth";
+import {
+  rateLimiter,
+  getClientIp,
+  createRateLimitResponse,
+} from "@/lib/security/rate-limiter";
 
 const loginSchema = z.object({
   email: z.string().trim().email("Format email tidak valid").toLowerCase(),
@@ -21,6 +26,18 @@ export async function POST(req: Request) {
     }
 
     const { email, password } = result.data;
+    const clientIp = getClientIp(req);
+
+    // Rate limiting: batasi percobaan per IP dan per akun (5 percobaan per 5 menit)
+    const ipCheck = rateLimiter.check(`login:ip:${clientIp}`, 5, 300);
+    if (!ipCheck.allowed) {
+      return createRateLimitResponse(ipCheck.resetAfterSec);
+    }
+
+    const accountCheck = rateLimiter.check(`login:account:${email}`, 5, 300);
+    if (!accountCheck.allowed) {
+      return createRateLimitResponse(accountCheck.resetAfterSec);
+    }
 
     if (!isDatabaseConfigured()) {
       // Mock login for offline / local preview mode
@@ -78,6 +95,10 @@ export async function POST(req: Request) {
       email: user.email,
       role: user.role,
     });
+
+    // Reset rate limiter setelah login berhasil
+    rateLimiter.reset(`login:account:${email}`);
+    rateLimiter.reset(`login:ip:${clientIp}`);
 
     const res = NextResponse.json({
       success: true,

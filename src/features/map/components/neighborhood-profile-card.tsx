@@ -72,7 +72,7 @@ export function NeighborhoodProfileCard({
         </div>
         {profile && (
           <span className={`badge ${profile.source === "vps-postgres" ? "good" : ""}`} style={{ fontSize: "11px" }}>
-            {profile.source === "vps-postgres" ? "PostGIS VPS Live" : "Estimasi Pilot OSM"}
+            {profile.source === "vps-postgres" ? "Data Spasial Riil" : "Estimasi Peta Kampus"}
           </span>
         )}
       </div>

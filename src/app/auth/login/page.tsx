@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { KosMatchLogo } from "@/components/brand/kosmatch-logo";
 import { GoogleLogo } from "@/components/brand/google-logo";
+import { getSafeRedirectUrl } from "@/lib/auth/redirect";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,12 +27,21 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<"user" | "owner">("user");
+  const [termsAgreed, setTermsAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [showGoogleModal, setShowGoogleModal] = useState(false);
   const [customGoogleEmail, setCustomGoogleEmail] = useState("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [redirectNotice, setRedirectNotice] = useState<string | null>(null);
+
+  // State untuk alur Lupa Sandi
+  const [showForgotModal, setShowForgotModal] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotMsg, setForgotMsg] = useState<string | null>(null);
+  const [forgotError, setForgotError] = useState<string | null>(null);
 
   // Periksa parameter error dari URL (misal pengalihan dari callback Google)
   useEffect(() => {
@@ -39,9 +49,23 @@ export default function LoginPage() {
       const params = new URLSearchParams(window.location.search);
       const urlError = params.get("error");
       const setupParam = params.get("setup");
+      const redirectParam = params.get("redirect");
+
       const timer = setTimeout(() => {
         if (urlError) setErrorMsg(urlError);
         if (setupParam === "google") setShowGoogleModal(true);
+        if (redirectParam) {
+          const safeRedirect = getSafeRedirectUrl(redirectParam, "");
+          if (safeRedirect.startsWith("/explore")) {
+            setRedirectNotice("Masuk atau daftar akun gratis untuk mengakses Peta Eksplorasi Kampus.");
+          } else if (safeRedirect.startsWith("/calculator")) {
+            setRedirectNotice("Masuk atau daftar akun gratis untuk menggunakan Kalkulator Keputusan DSS.");
+          } else if (safeRedirect.startsWith("/listings/new")) {
+            setRedirectNotice("Masuk untuk mendaftarkan listing kos baru Anda.");
+          } else if (safeRedirect.startsWith("/admin")) {
+            setRedirectNotice("Masuk dengan akun terdaftar untuk mengakses Dasbor KosMatch.");
+          }
+        }
       }, 0);
       return () => clearTimeout(timer);
     }
@@ -52,6 +76,11 @@ export default function LoginPage() {
     setErrorMsg(null);
     setSuccessMsg(null);
     setLoading(true);
+
+    if (mode === "register" && !termsAgreed) {
+      setErrorMsg("Anda harus menyetujui Syarat & Ketentuan serta Kebijakan Privasi untuk mendaftar.");
+      return;
+    }
 
     try {
       const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/register";
@@ -79,8 +108,8 @@ export default function LoginPage() {
 
       const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
       const redirectParam = searchParams?.get("redirect");
-      const targetUrl =
-        redirectParam || (data.user?.role === "admin" || data.user?.role === "owner" ? "/admin" : "/explore");
+      const fallbackUrl = data.user?.role === "admin" || data.user?.role === "owner" ? "/admin" : "/explore";
+      const targetUrl = getSafeRedirectUrl(redirectParam, fallbackUrl);
 
       setTimeout(() => {
         router.push(targetUrl);
@@ -134,6 +163,7 @@ export default function LoginPage() {
     }
 
     setGoogleLoading(true);
+
     try {
       const res = await fetch("/api/auth/google", {
         method: "POST",
@@ -158,8 +188,8 @@ export default function LoginPage() {
 
       const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
       const redirectParam = searchParams?.get("redirect");
-      const targetUrl =
-        redirectParam || (data.user?.role === "admin" || data.user?.role === "owner" ? "/admin" : "/explore");
+      const fallbackUrl = data.user?.role === "admin" || data.user?.role === "owner" ? "/admin" : "/explore";
+      const targetUrl = getSafeRedirectUrl(redirectParam, fallbackUrl);
 
       setTimeout(() => {
         router.push(targetUrl);
@@ -168,6 +198,33 @@ export default function LoginPage() {
     } catch {
       setErrorMsg("Koneksi gagal saat menghubungi server");
       setGoogleLoading(false);
+    }
+  };
+
+  const handleForgotSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setForgotLoading(true);
+    setForgotError(null);
+    setForgotMsg(null);
+
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: forgotEmail }),
+      });
+      const data = await res.json();
+      if (!res.ok && res.status !== 429) {
+        setForgotError(data.error || "Gagal memproses permintaan reset kata sandi.");
+      } else if (res.status === 429) {
+        setForgotError(data.error || "Terlalu banyak percobaan. Silakan coba beberapa saat lagi.");
+      } else {
+        setForgotMsg(data.message || "Instruksi reset kata sandi telah dikirim jika email terdaftar.");
+      }
+    } catch {
+      setForgotError("Koneksi gagal. Pastikan jaringan internet Anda aktif.");
+    } finally {
+      setForgotLoading(false);
     }
   };
 
@@ -202,6 +259,27 @@ export default function LoginPage() {
                 : "Bantu mahasiswa menemukan kos transparan dan hemat biaya hidup."}
             </p>
           </div>
+
+          {redirectNotice && !errorMsg && (
+            <div
+              style={{
+                background: "rgba(224, 169, 109, 0.12)",
+                border: "1px solid rgba(224, 169, 109, 0.35)",
+                color: "#D97706",
+                borderRadius: "12px",
+                padding: "10px 14px",
+                fontSize: "13px",
+                lineHeight: "1.5",
+                marginBottom: "20px",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <Lock size={16} style={{ flexShrink: 0 }} />
+              <span>{redirectNotice}</span>
+            </div>
+          )}
 
           {/* Official Google Sign-In Button */}
           <button
@@ -344,9 +422,27 @@ export default function LoginPage() {
                   Kata Sandi:
                 </label>
                 {mode === "login" && (
-                  <span style={{ fontSize: "11.5px", color: "#186049", cursor: "pointer", fontWeight: 650 }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setForgotEmail(email);
+                      setForgotError(null);
+                      setForgotMsg(null);
+                      setShowForgotModal(true);
+                    }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      padding: 0,
+                      fontSize: "11.5px",
+                      color: "#186049",
+                      cursor: "pointer",
+                      fontWeight: 650,
+                      textDecoration: "underline",
+                    }}
+                  >
                     Lupa sandi?
-                  </span>
+                  </button>
                 )}
               </div>
               <div className="auth-input-wrap">
@@ -367,6 +463,30 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {mode === "register" && (
+              <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", margin: "4px 0 16px" }}>
+                <input
+                  id="register-terms-agree"
+                  type="checkbox"
+                  required
+                  checked={termsAgreed}
+                  onChange={(e) => setTermsAgreed(e.target.checked)}
+                  style={{ marginTop: "3px", cursor: "pointer", width: "16px", height: "16px" }}
+                />
+                <label htmlFor="register-terms-agree" style={{ fontSize: "12px", color: "#344054", lineHeight: 1.5, cursor: "pointer" }}>
+                  Saya menyetujui{" "}
+                  <Link href="/terms" target="_blank" style={{ color: "#186049", fontWeight: 650, textDecoration: "underline" }}>
+                    Syarat &amp; Ketentuan
+                  </Link>{" "}
+                  dan{" "}
+                  <Link href="/privacy" target="_blank" style={{ color: "#186049", fontWeight: 650, textDecoration: "underline" }}>
+                    Kebijakan Privasi
+                  </Link>{" "}
+                  KosMatch.
+                </label>
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={loading}
@@ -385,6 +505,35 @@ export default function LoginPage() {
               )}
             </button>
           </form>
+
+          {/* Legal, Privacy & Contact Links */}
+          <div
+            style={{
+              marginTop: "24px",
+              paddingTop: "16px",
+              borderTop: "1px solid rgba(28, 27, 25, 0.08)",
+              textAlign: "center",
+              fontSize: "12px",
+              color: "rgba(28, 27, 25, 0.65)",
+              lineHeight: 1.6,
+            }}
+          >
+            Dengan melanjutkan, Anda menyetujui{" "}
+            <Link href="/terms" style={{ color: "#186049", fontWeight: 650, textDecoration: "underline" }}>
+              Syarat &amp; Ketentuan
+            </Link>{" "}
+            dan{" "}
+            <Link href="/privacy" style={{ color: "#186049", fontWeight: 650, textDecoration: "underline" }}>
+              Kebijakan Privasi
+            </Link>{" "}
+            KosMatch.
+            <div style={{ marginTop: "6px" }}>
+              Butuh bantuan?{" "}
+              <Link href="/contact" style={{ color: "#186049", fontWeight: 600, textDecoration: "none" }}>
+                Hubungi Kami
+              </Link>
+            </div>
+          </div>
         </div>
       </main>
 
@@ -555,6 +704,175 @@ export default function LoginPage() {
                 </button>
               </form>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Lupa Sandi */}
+      {showForgotModal && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(28, 27, 25, 0.65)",
+            backdropFilter: "blur(4px)",
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "16px",
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowForgotModal(false);
+          }}
+        >
+          <div
+            style={{
+              background: "#FFFFFF",
+              borderRadius: "20px",
+              maxWidth: "460px",
+              width: "100%",
+              padding: "28px",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
+              position: "relative",
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setShowForgotModal(false)}
+              aria-label="Tutup dialog"
+              style={{
+                position: "absolute",
+                top: "18px",
+                right: "18px",
+                background: "none",
+                border: "none",
+                color: "#78746D",
+                cursor: "pointer",
+                padding: "6px",
+                borderRadius: "8px",
+              }}
+            >
+              <X size={20} />
+            </button>
+
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
+              <div
+                style={{
+                  width: "42px",
+                  height: "42px",
+                  borderRadius: "10px",
+                  background: "#EFF8FF",
+                  color: "#184E77",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <KeyRound size={22} />
+              </div>
+              <div>
+                <h3 style={{ margin: 0, fontSize: "17px", fontWeight: 750, color: "#1C1B19" }}>
+                  Lupa Kata Sandi?
+                </h3>
+                <p style={{ margin: 0, fontSize: "12px", color: "#78746D" }}>
+                  Pemulihan akses akun KosMatch Anda
+                </p>
+              </div>
+            </div>
+
+            <p style={{ fontSize: "13px", color: "#5C5852", lineHeight: 1.5, margin: "0 0 16px" }}>
+              Masukkan alamat email akun Anda. Kami akan mengirimkan tautan sekali pakai untuk mengatur ulang kata sandi (berlaku 15 menit).
+            </p>
+
+            {forgotError && (
+              <div
+                style={{
+                  background: "#FEF3F2",
+                  border: "1px solid #FECDCA",
+                  color: "#B42318",
+                  padding: "10px 14px",
+                  borderRadius: "10px",
+                  fontSize: "12.5px",
+                  marginBottom: "16px",
+                }}
+              >
+                {forgotError}
+              </div>
+            )}
+
+            {forgotMsg ? (
+              <div
+                style={{
+                  background: "#ECFDF3",
+                  border: "1px solid #A6F4C5",
+                  color: "#027A48",
+                  padding: "14px",
+                  borderRadius: "10px",
+                  fontSize: "13px",
+                  lineHeight: 1.5,
+                  textAlign: "center",
+                }}
+              >
+                <CheckCircle2 size={28} style={{ margin: "0 auto 8px", display: "block" }} />
+                <strong>Permintaan Berhasil Dikirim</strong>
+                <p style={{ margin: "6px 0 12px", fontSize: "12px", color: "#344054" }}>
+                  {forgotMsg}
+                </p>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => setShowForgotModal(false)}
+                  style={{ width: "100%", fontSize: "13px" }}
+                >
+                  Tutup
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleForgotSubmit} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                <div>
+                  <label htmlFor="forgot-email" style={{ display: "block", fontSize: "12.5px", fontWeight: 650, color: "#344054", marginBottom: "6px" }}>
+                    Alamat Email Terdaftar
+                  </label>
+                  <div className="auth-input-wrap">
+                    <span className="auth-input-icon">
+                      <Mail size={16} />
+                    </span>
+                    <input
+                      id="forgot-email"
+                      type="email"
+                      required
+                      placeholder="nama@email.com"
+                      className="auth-input"
+                      value={forgotEmail}
+                      onChange={(e) => setForgotEmail(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", gap: "8px", marginTop: "4px" }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowForgotModal(false)}
+                    className="btn btn-ghost"
+                    style={{ flex: 1, fontSize: "13px" }}
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={forgotLoading}
+                    className="btn btn-primary"
+                    style={{ flex: 2, fontSize: "13px" }}
+                  >
+                    {forgotLoading ? "Mengirim..." : "Kirim Tautan Reset"}
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}
