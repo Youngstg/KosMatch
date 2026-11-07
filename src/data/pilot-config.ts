@@ -144,8 +144,80 @@ export const PILOT_CONFIG = {
     targetAudience: "Mahasiswa baru & sarjana ITERA di kawasan Terusan Ryacudu, Way Huwi, Sabah Balau, dan Jati Agung",
     priorityPoiCategories: ["food", "laundry", "convenience", "pharmacy", "worship", "bus_stop", "atm"] as const,
   },
+  unilaPilot: {
+    id: "pilot-lampung-unila",
+    campusId: "unila-bandarlampung",
+    campusName: "Universitas Lampung",
+    shortName: "Unila",
+    city: "Bandar Lampung",
+    centerCoordinates: { latitude: -5.3644, longitude: 105.2435 },
+    gates: [
+      {
+        id: "unila-gerbang-utama",
+        name: "Gerbang Utama Jl. Sumantri Brojonegoro",
+        shortLabel: "Gerbang Utama (Sumantri)",
+        coordinates: { latitude: -5.3644, longitude: 105.2435 },
+        description: "Akses utama dari Jl. ZA Pagar Alam, halte BRT, dan Bundaran Unila",
+      },
+      {
+        id: "unila-gerbang-kpbaru",
+        name: "Gerbang Belakang Kampung Baru",
+        shortLabel: "Pintu Kampung Baru",
+        coordinates: { latitude: -5.3582, longitude: 105.2485 },
+        description: "Sentra kos mahasiswa Kampung Baru dan jalur pejalan kaki favorit mahasiswa",
+      },
+      {
+        id: "unila-gerbang-gedongmeneng",
+        name: "Pintu Barat Gedong Meneng / Bypass",
+        shortLabel: "Pintu Gedong Meneng",
+        coordinates: { latitude: -5.3695, longitude: 105.239 },
+        description: "Akses barat dari arah Rajabasa dan Jl. Soekarno Hatta Bypass",
+      },
+    ],
+    radiusKm: 4.0,
+    boundingBox: { minLon: 105.21, minLat: -5.4, maxLon: 105.28, maxLat: -5.33 },
+    initialTargetVerifiedListings: 35,
+    targetAudience: "Mahasiswa Unila di kawasan Kampung Baru, Gedong Meneng, Rajabasa, dan Jl. ZA Pagar Alam",
+    priorityPoiCategories: ["food", "laundry", "convenience", "pharmacy", "worship", "bus_stop", "atm"] as const,
+  },
+  unpPilot: {
+    id: "pilot-padang-unp",
+    campusId: "unp-padang",
+    campusName: "Universitas Negeri Padang",
+    shortName: "UNP",
+    city: "Padang",
+    centerCoordinates: { latitude: -0.8975, longitude: 100.3524 },
+    gates: [
+      {
+        id: "unp-gerbang-utama",
+        name: "Gerbang Utama Jl. Prof. Dr. Hamka",
+        shortLabel: "Gerbang Utama (Hamka)",
+        coordinates: { latitude: -0.8975, longitude: 100.3524 },
+        description: "Gerbang utama kampus dari Jalan Prof. Dr. Hamka Air Tawar",
+      },
+      {
+        id: "unp-stasiun-airtawar",
+        name: "Pintu Barat Stasiun Air Tawar",
+        shortLabel: "Akses Stasiun Air Tawar",
+        coordinates: { latitude: -0.895, longitude: 100.3485 },
+        description: "Akses langsung halte KRL Bandara Minangkabau Ekspres Stasiun Air Tawar",
+      },
+      {
+        id: "unp-gerbang-cendrawasih",
+        name: "Gerbang Selatan Jl. Cendrawasih",
+        shortLabel: "Pintu Cendrawasih",
+        coordinates: { latitude: -0.903, longitude: 100.355 },
+        description: "Akses sentra kos Jl. Cendrawasih, FIK, dan Gelanggang Olahraga UNP",
+      },
+    ],
+    radiusKm: 4.0,
+    boundingBox: { minLon: 100.32, minLat: -0.93, maxLon: 100.39, maxLat: -0.86 },
+    initialTargetVerifiedListings: 35,
+    targetAudience: "Mahasiswa UNP di kawasan Air Tawar Barat, Air Tawar Timur, Cendrawasih, dan Hamka",
+    priorityPoiCategories: ["food", "laundry", "convenience", "pharmacy", "worship", "bus_stop", "atm"] as const,
+  },
   get allPilots(): readonly PilotSpecification[] {
-    return [this.primaryPilot, this.secondaryPilot, this.iteraPilot];
+    return [this.primaryPilot, this.secondaryPilot, this.iteraPilot, this.unilaPilot, this.unpPilot];
   },
 };
 

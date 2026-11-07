@@ -15,6 +15,9 @@ export interface Campus extends GeoPoint {
 export const CAMPUSES: readonly Campus[] = [
   { id: "ui-depok", name: "Universitas Indonesia (Depok)", shortName: "UI", city: "Depok", latitude: -6.362, longitude: 106.827 },
   { id: "itera-lampung", name: "Institut Teknologi Sumatera (ITERA)", shortName: "ITERA", city: "Lampung Selatan", latitude: -5.3584, longitude: 105.3148 },
+  { id: "unila-bandarlampung", name: "Universitas Lampung", shortName: "Unila", city: "Bandar Lampung", latitude: -5.3644, longitude: 105.2435 },
+  { id: "unand-limau-manis", name: "Universitas Andalas (Limau Manis)", shortName: "Unand", city: "Padang", latitude: -0.9143, longitude: 100.4602 },
+  { id: "unp-padang", name: "Universitas Negeri Padang", shortName: "UNP", city: "Padang", latitude: -0.8975, longitude: 100.3524 },
   { id: "itb-ganesha", name: "Institut Teknologi Bandung (Ganesha)", shortName: "ITB", city: "Bandung", latitude: -6.8915, longitude: 107.6107 },
   { id: "unpad-jatinangor", name: "Universitas Padjadjaran (Jatinangor)", shortName: "Unpad", city: "Sumedang", latitude: -6.927, longitude: 107.7716 },
   { id: "ipb-dramaga", name: "IPB University (Dramaga)", shortName: "IPB", city: "Bogor", latitude: -6.558, longitude: 106.725 },
@@ -24,7 +27,6 @@ export const CAMPUSES: readonly Campus[] = [
   { id: "its-sukolilo", name: "Institut Teknologi Sepuluh Nopember", shortName: "ITS", city: "Surabaya", latitude: -7.2819, longitude: 112.7949 },
   { id: "ub-malang", name: "Universitas Brawijaya", shortName: "UB", city: "Malang", latitude: -7.9522, longitude: 112.614 },
   { id: "usu-medan", name: "Universitas Sumatera Utara", shortName: "USU", city: "Medan", latitude: -3.5597, longitude: 98.6563 },
-  { id: "unand-limau-manis", name: "Universitas Andalas (Limau Manis)", shortName: "Unand", city: "Padang", latitude: -0.9143, longitude: 100.4602 },
   { id: "unhas-tamalanrea", name: "Universitas Hasanuddin (Tamalanrea)", shortName: "Unhas", city: "Makassar", latitude: -5.13, longitude: 119.489 },
 ];
 

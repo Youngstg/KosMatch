@@ -1,6 +1,6 @@
 -- =====================================================================
 -- KosMatch v2: High-Volume Grounded Dataset with Commute Cache
--- Total: 222 Kos Listings | 914 POIs | 2235 Pre-Cached Commute Routes
+-- Total: 285 Kos Listings | 1004 POIs | 3096 Pre-Cached Commute Routes
 -- Campuses: ITERA Lampung (120 Kos), UI Depok (56 Kos), UNAND Padang (45 Kos)
 -- =====================================================================
 
@@ -10,13 +10,17 @@ BEGIN;
 INSERT INTO public.campuses (id, name, short_name, city, geom, is_pilot) VALUES
   ('ui-depok', 'Universitas Indonesia (Depok)', 'UI Depok', 'Depok', ST_SetSRID(ST_MakePoint(106.827, -6.362), 4326)::geography, true),
   ('unand-limau-manis', 'Universitas Andalas (Limau Manis)', 'Unand Padang', 'Padang', ST_SetSRID(ST_MakePoint(100.4602, -0.9143), 4326)::geography, true),
-  ('itera-lampung', 'Institut Teknologi Sumatera (ITERA)', 'ITERA Lampung', 'Lampung Selatan', ST_SetSRID(ST_MakePoint(105.3148, -5.3584), 4326)::geography, true)
+  ('itera-lampung', 'Institut Teknologi Sumatera (ITERA)', 'ITERA Lampung', 'Lampung Selatan', ST_SetSRID(ST_MakePoint(105.3148, -5.3584), 4326)::geography, true),
+  ('unila-bandarlampung', 'Universitas Lampung', 'Unila Lampung', 'Bandar Lampung', ST_SetSRID(ST_MakePoint(105.2435, -5.3644), 4326)::geography, true),
+  ('unp-padang', 'Universitas Negeri Padang', 'UNP Padang', 'Padang', ST_SetSRID(ST_MakePoint(100.3524, -0.8975), 4326)::geography, true)
 ON CONFLICT (id) DO UPDATE SET
   name = EXCLUDED.name,
+  short_name = EXCLUDED.short_name,
   city = EXCLUDED.city,
-  geom = EXCLUDED.geom;
+  geom = EXCLUDED.geom,
+  is_pilot = EXCLUDED.is_pilot;
 
--- 2. POINTS OF INTEREST (914 POIs)
+-- 2. POINTS OF INTEREST (1004 POIs)
 INSERT INTO public.pois (osm_type, osm_id, category, name, tags, geom) VALUES
   ('N', 4062837188, 'worship', 'Musholla / Masjid', '{"amenity":"place_of_worship"}'::jsonb, ST_SetSRID(ST_MakePoint(105.2851902, -5.3616906), 4326)::geography),
   ('N', 4072549501, 'worship', 'Musholla / Masjid', '{"amenity":"place_of_worship","religion":"muslim"}'::jsonb, ST_SetSRID(ST_MakePoint(105.292667, -5.3337713), 4326)::geography),
@@ -687,258 +691,348 @@ INSERT INTO public.pois (osm_type, osm_id, category, name, tags, geom) VALUES
   ('W', 1127709813, 'worship', 'As Salam', '{"amenity":"place_of_worship","building":"yes","name":"As Salam","religion":"muslim"}'::jsonb, ST_SetSRID(ST_MakePoint(100.4578015, -0.9136806), 4326)::geography),
   ('W', 1127709831, 'worship', 'Masjid Nurul ''Ilmi', '{"amenity":"place_of_worship","building":"yes","name":"Masjid Nurul ''Ilmi","religion":"muslim"}'::jsonb, ST_SetSRID(ST_MakePoint(100.4573921, -0.9174803), 4326)::geography),
   ('W', 1137514332, 'atm', 'Agen BRI link Eri Saputra ( Transaksi Mini Atm 24 Jam )', '{"addr:city":"Padang","addr:district":"Kec. Lubuk Kilangan","addr:housenumber":"8","addr:postcode":"25231","addr:province":"Sumatera Barat","addr:street":"Jl. Kalumpang , Bandar Buat , Kec. Lubuk Kilangan , Kota Padang , Sumatera Barat 25231","addr:subdistrict":"Bandar Buat","amenity":"bank","building":"yes","name":"Agen BRI link Eri Saputra ( Transaksi Mini Atm 24 Jam )"}'::jsonb, ST_SetSRID(ST_MakePoint(100.437693, -0.9463251), 4326)::geography),
-  ('N', 960001, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32914, -5.35583), 4326)::geography),
-  ('N', 960002, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30724, -5.35094), 4326)::geography),
-  ('N', 960003, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30887, -5.35194), 4326)::geography),
-  ('N', 960004, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33396, -5.35983), 4326)::geography),
-  ('N', 960005, 'food', 'Kafe Nugas & Coworking Point Coffee & Wifi Kencang', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32107, -5.36203), 4326)::geography),
-  ('N', 960006, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31098, -5.34819), 4326)::geography),
-  ('N', 960007, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30246, -5.3501), 4326)::geography),
-  ('N', 960008, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32214, -5.36481), 4326)::geography),
-  ('N', 960009, 'food', 'Warung Makan & Ampera Warteg Kharisma Bahari Murah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29551, -5.36622), 4326)::geography),
-  ('N', 960010, 'convenience', 'Minimarket & Agen Sembako Chandra Supermarket Grosir', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29642, -5.36824), 4326)::geography),
-  ('N', 960011, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29405, -5.37075), 4326)::geography),
-  ('N', 960012, 'convenience', 'Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29363, -5.36739), 4326)::geography),
-  ('N', 960013, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32407, -5.3595), 4326)::geography),
-  ('N', 960014, 'convenience', 'Bengkel Motor & Tambal Ban Bintang Motor & Sparepart', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31306, -5.35512), 4326)::geography),
-  ('N', 960015, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30279, -5.34858), 4326)::geography),
-  ('N', 960016, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30549, -5.35951), 4326)::geography),
-  ('N', 960017, 'convenience', 'Percetakan & Fotokopi Digital Print & Jilid Kilat', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29742, -5.37205), 4326)::geography),
-  ('N', 960018, 'convenience', 'Percetakan & Fotokopi Sentosa Print & Jilid Spiral', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33435, -5.35213), 4326)::geography),
-  ('N', 960019, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Puskesmas Rawat Inap Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29304, -5.37453), 4326)::geography),
-  ('N', 960020, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31666, -5.35465), 4326)::geography),
-  ('N', 960021, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32334, -5.36306), 4326)::geography),
-  ('N', 960022, 'convenience', 'Percetakan & Fotokopi Sentosa Print & Jilid Spiral', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29977, -5.36696), 4326)::geography),
-  ('N', 960023, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30459, -5.36102), 4326)::geography),
-  ('N', 960024, 'convenience', 'Bengkel Motor & Tambal Ban AHASS Honda Motor Rujukan', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32023, -5.35995), 4326)::geography),
-  ('N', 960025, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33224, -5.35624), 4326)::geography),
-  ('N', 960026, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31792, -5.35349), 4326)::geography),
-  ('N', 960027, 'convenience', 'Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30005, -5.36407), 4326)::geography),
-  ('N', 960028, 'convenience', 'Bengkel Motor & Tambal Ban Yamaha Service Point', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30633, -5.35079), 4326)::geography),
-  ('N', 960029, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30318, -5.35023), 4326)::geography),
-  ('N', 960030, 'food', 'Warung Makan & Ampera RM Ampera Salero Minang', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29733, -5.37322), 4326)::geography),
-  ('N', 960031, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30596, -5.35317), 4326)::geography),
-  ('N', 960032, 'food', 'Kafe Nugas & Coworking Warkop Madura 24 Jam Colokan', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31743, -5.35413), 4326)::geography),
-  ('N', 960033, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32131, -5.36276), 4326)::geography),
-  ('N', 960034, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30407, -5.362), 4326)::geography),
-  ('N', 960035, 'food', 'Warung Makan & Ampera Pecel Lele & Bebek Arema', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32152, -5.36122), 4326)::geography),
-  ('N', 960036, 'convenience', 'Minimarket & Agen Sembako Chandra Supermarket Grosir', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31077, -5.34903), 4326)::geography),
-  ('N', 960037, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29932, -5.37494), 4326)::geography),
-  ('N', 960038, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30848, -5.34885), 4326)::geography),
-  ('N', 960039, 'food', 'Kafe Nugas & Coworking Sudut Tenang Study Cafe', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30389, -5.35155), 4326)::geography),
-  ('N', 960040, 'food', 'Kafe Nugas & Coworking Sudut Tenang Study Cafe', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31075, -5.35196), 4326)::geography),
-  ('N', 960041, 'convenience', 'Minimarket & Agen Sembako Indomaret Fresh 24 Jam', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29294, -5.37469), 4326)::geography),
-  ('N', 960042, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29468, -5.37221), 4326)::geography),
-  ('N', 960043, 'convenience', 'Percetakan & Fotokopi Berkah Fotokopi 24 Jam', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.297, -5.37328), 4326)::geography),
-  ('N', 960044, 'food', 'Kafe Nugas & Coworking Point Coffee & Wifi Kencang', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30692, -5.348), 4326)::geography),
-  ('N', 960045, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31626, -5.35611), 4326)::geography),
-  ('N', 960046, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31085, -5.352), 4326)::geography),
-  ('N', 960047, 'food', 'Kafe Nugas & Coworking Sudut Tenang Study Cafe', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30266, -5.36388), 4326)::geography),
-  ('N', 960048, 'food', 'Kafe Nugas & Coworking Warkop Madura 24 Jam Colokan', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32283, -5.36375), 4326)::geography),
-  ('N', 960049, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32973, -5.35798), 4326)::geography),
-  ('N', 960050, 'convenience', 'Minimarket & Agen Sembako Chandra Supermarket Grosir', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30001, -5.36167), 4326)::geography),
-  ('N', 960051, 'convenience', 'Percetakan & Fotokopi Berkah Fotokopi 24 Jam', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30302, -5.34976), 4326)::geography),
-  ('N', 960052, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Presisi Tubeless Mahasiswa', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29548, -5.37113), 4326)::geography),
-  ('N', 960053, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30773, -5.35069), 4326)::geography),
-  ('N', 960054, 'convenience', 'Bengkel Motor & Tambal Ban AHASS Honda Motor Rujukan', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31303, -5.35454), 4326)::geography),
-  ('N', 960055, 'food', 'Kafe Nugas & Coworking Sudut Tenang Study Cafe', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33268, -5.35771), 4326)::geography),
-  ('N', 960056, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30234, -5.36283), 4326)::geography),
-  ('N', 960057, 'laundry', 'Laundry Kiloan Express Super Wash Kiloan 1 Day', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29809, -5.36656), 4326)::geography),
-  ('N', 960058, 'convenience', 'Bengkel Motor & Tambal Ban Sinar Jaya Motor & Ganti Oli', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3103, -5.34931), 4326)::geography),
-  ('N', 960059, 'laundry', 'Laundry Kiloan Express Super Wash Kiloan 1 Day', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31485, -5.35281), 4326)::geography),
-  ('N', 960060, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30233, -5.36134), 4326)::geography),
-  ('N', 960061, 'food', 'Kafe Nugas & Coworking Warkop Madura 24 Jam Colokan', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33097, -5.35884), 4326)::geography),
-  ('N', 960062, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Presisi Tubeless Mahasiswa', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32019, -5.36489), 4326)::geography),
-  ('N', 960063, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31548, -5.35349), 4326)::geography),
-  ('N', 960064, 'convenience', 'Percetakan & Fotokopi Mitra Mahasiswa ATK', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31697, -5.35304), 4326)::geography),
-  ('N', 960065, 'food', 'Warung Makan & Ampera Nasi Uduk & Pecel Barokah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30598, -5.35869), 4326)::geography),
-  ('N', 960066, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31057, -5.35131), 4326)::geography),
-  ('N', 960067, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30402, -5.36476), 4326)::geography),
-  ('N', 960068, 'food', 'Kafe Nugas & Coworking Sudut Tenang Study Cafe', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30632, -5.35167), 4326)::geography),
-  ('N', 960069, 'food', 'Kafe Nugas & Coworking Warkop Madura 24 Jam Colokan', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30408, -5.36202), 4326)::geography),
-  ('N', 960070, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33683, -5.35564), 4326)::geography),
-  ('N', 960071, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30031, -5.36161), 4326)::geography),
-  ('N', 960072, 'convenience', 'Bengkel Motor & Tambal Ban Bintang Motor & Sparepart', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30305, -5.36022), 4326)::geography),
-  ('N', 960073, 'convenience', 'Minimarket & Agen Sembako Indomaret Fresh 24 Jam', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30066, -5.36331), 4326)::geography),
-  ('N', 960074, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31389, -5.35474), 4326)::geography),
-  ('N', 960075, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29396, -5.36771), 4326)::geography),
-  ('N', 960076, 'food', 'Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30623, -5.34989), 4326)::geography),
-  ('N', 960077, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30734, -5.35154), 4326)::geography),
-  ('N', 960078, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30921, -5.34723), 4326)::geography),
-  ('N', 960079, 'food', 'Warung Makan & Ampera Soto Lamongan Mas Bejo', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30588, -5.34833), 4326)::geography),
-  ('N', 960080, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33474, -5.35401), 4326)::geography),
-  ('N', 960081, 'convenience', 'Bengkel Motor & Tambal Ban Yamaha Service Point', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3351, -5.35361), 4326)::geography),
-  ('N', 960082, 'convenience', 'Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30922, -5.35028), 4326)::geography),
-  ('N', 960083, 'convenience', 'Minimarket & Agen Sembako Chandra Supermarket Grosir', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31654, -5.35366), 4326)::geography),
-  ('N', 960084, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30682, -5.35385), 4326)::geography),
-  ('N', 960085, 'food', 'Warung Makan & Ampera Nasi Uduk & Pecel Barokah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29278, -5.37027), 4326)::geography),
-  ('N', 960086, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30364, -5.34824), 4326)::geography),
-  ('N', 960087, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32405, -5.36099), 4326)::geography),
-  ('N', 960088, 'food', 'Kafe Nugas & Coworking Point Coffee & Wifi Kencang', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33262, -5.35499), 4326)::geography),
-  ('N', 960089, 'food', 'Warung Makan & Ampera Soto Lamongan Mas Bejo', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29257, -5.36732), 4326)::geography),
-  ('N', 960090, 'convenience', 'Minimarket & Agen Sembako Indomaret Fresh 24 Jam', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30565, -5.35289), 4326)::geography),
-  ('N', 960091, 'convenience', 'Minimarket & Agen Sembako Indomaret Fresh 24 Jam', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30206, -5.35923), 4326)::geography),
-  ('N', 960092, 'convenience', 'Percetakan & Fotokopi Berkah Fotokopi 24 Jam', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31095, -5.3489), 4326)::geography),
-  ('N', 960093, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31406, -5.35419), 4326)::geography),
-  ('N', 960094, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32035, -5.36222), 4326)::geography),
-  ('N', 960095, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33497, -5.3555), 4326)::geography),
-  ('N', 960096, 'food', 'Kafe Nugas & Coworking Sudut Tenang Study Cafe', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3133, -5.35431), 4326)::geography),
-  ('N', 960097, 'convenience', 'Bengkel Motor & Tambal Ban Sinar Jaya Motor & Ganti Oli', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31055, -5.34966), 4326)::geography),
-  ('N', 960098, 'food', 'Kafe Nugas & Coworking Sudut Tenang Study Cafe', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30319, -5.35147), 4326)::geography),
-  ('N', 960099, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30268, -5.36479), 4326)::geography),
-  ('N', 960100, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Puskesmas Rawat Inap Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30775, -5.3478), 4326)::geography),
-  ('N', 960101, 'convenience', 'Bengkel Motor & Tambal Ban Bintang Motor & Sparepart', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29707, -5.36768), 4326)::geography),
-  ('N', 960102, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31909, -5.36056), 4326)::geography),
-  ('N', 960103, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31336, -5.35468), 4326)::geography),
-  ('N', 960104, 'food', 'Kafe Nugas & Coworking Point Coffee & Wifi Kencang', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30825, -5.34994), 4326)::geography),
-  ('N', 960105, 'convenience', 'Percetakan & Fotokopi Sentosa Print & Jilid Spiral', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33219, -5.36165), 4326)::geography),
-  ('N', 960106, 'convenience', 'Bengkel Motor & Tambal Ban Yamaha Service Point', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3228, -5.3598), 4326)::geography),
-  ('N', 960107, 'food', 'Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30419, -5.36073), 4326)::geography),
-  ('N', 960108, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30821, -5.35057), 4326)::geography),
-  ('N', 960109, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32834, -5.36038), 4326)::geography),
-  ('N', 960110, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30342, -5.35913), 4326)::geography),
-  ('N', 960111, 'food', 'Kafe Nugas & Coworking Point Coffee & Wifi Kencang', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29276, -5.36856), 4326)::geography),
-  ('N', 960112, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32802, -5.35724), 4326)::geography),
-  ('N', 960113, 'convenience', 'Bengkel Motor & Tambal Ban Yamaha Service Point', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3155, -5.35692), 4326)::geography),
-  ('N', 960114, 'food', 'Warung Makan & Ampera RM Ampera Salero Minang', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30656, -5.35343), 4326)::geography),
-  ('N', 960115, 'convenience', 'Minimarket & Agen Sembako Indomaret Fresh 24 Jam', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30567, -5.36155), 4326)::geography),
-  ('N', 960116, 'convenience', 'Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31693, -5.35675), 4326)::geography),
-  ('N', 960117, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30874, -5.3472), 4326)::geography),
-  ('N', 960118, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30869, -5.34944), 4326)::geography),
-  ('N', 960119, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32364, -5.36206), 4326)::geography),
-  ('N', 960120, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29614, -5.3728), 4326)::geography),
-  ('N', 960121, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31278, -5.35514), 4326)::geography),
-  ('N', 960122, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29928, -5.36855), 4326)::geography),
-  ('N', 960123, 'convenience', 'Bengkel Motor & Tambal Ban Yamaha Service Point', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30352, -5.35953), 4326)::geography),
-  ('N', 960124, 'food', 'Warung Makan & Ampera Pecel Lele & Bebek Arema', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33268, -5.35662), 4326)::geography),
-  ('N', 960125, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31397, -5.35675), 4326)::geography),
-  ('N', 960126, 'food', 'Kafe Nugas & Coworking Sudut Tenang Study Cafe', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29635, -5.37208), 4326)::geography),
-  ('N', 960127, 'convenience', 'Minimarket & Agen Sembako Chandra Supermarket Grosir', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32946, -5.36016), 4326)::geography),
-  ('N', 960128, 'laundry', 'Laundry Kiloan Express Super Wash Kiloan 1 Day', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32369, -5.36254), 4326)::geography),
-  ('N', 960129, 'food', 'Warung Makan & Ampera Pecel Lele & Bebek Arema', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31261, -5.35678), 4326)::geography),
-  ('N', 960130, 'convenience', 'Percetakan & Fotokopi Berkah Fotokopi 24 Jam', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32248, -5.36332), 4326)::geography),
-  ('N', 960131, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3052, -5.34942), 4326)::geography),
-  ('N', 960132, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29647, -5.36998), 4326)::geography),
-  ('N', 960133, 'convenience', 'Bengkel Motor & Tambal Ban AHASS Honda Motor Rujukan', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30021, -5.36351), 4326)::geography),
-  ('N', 960134, 'convenience', 'Minimarket & Agen Sembako Chandra Supermarket Grosir', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3122, -5.35268), 4326)::geography),
-  ('N', 960135, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29663, -5.36669), 4326)::geography),
-  ('N', 960136, 'food', 'Warung Makan & Ampera Pecel Lele & Bebek Arema', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30557, -5.35986), 4326)::geography),
-  ('N', 960137, 'food', 'Warung Makan & Ampera Soto Lamongan Mas Bejo', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33036, -5.35786), 4326)::geography),
-  ('N', 960138, 'convenience', 'Percetakan & Fotokopi Kharisma Grafika & Scan', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.2946, -5.36958), 4326)::geography),
-  ('N', 960139, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30523, -5.36006), 4326)::geography),
-  ('N', 960140, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31242, -5.35353), 4326)::geography),
-  ('N', 960141, 'convenience', 'Bengkel Motor & Tambal Ban Yamaha Service Point', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32271, -5.35942), 4326)::geography),
-  ('N', 960142, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30979, -5.34965), 4326)::geography),
-  ('N', 960143, 'convenience', 'Minimarket & Agen Sembako Indomaret Fresh 24 Jam', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33394, -5.36166), 4326)::geography),
-  ('N', 960144, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30805, -5.35181), 4326)::geography),
-  ('N', 960145, 'convenience', 'Minimarket & Agen Sembako Chandra Supermarket Grosir', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31082, -5.34908), 4326)::geography),
-  ('N', 960146, 'food', 'Warung Makan & Ampera Pecel Lele & Bebek Arema', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30729, -5.34894), 4326)::geography),
-  ('N', 960147, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32915, -5.35944), 4326)::geography),
-  ('N', 960148, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30194, -5.36026), 4326)::geography),
-  ('N', 960149, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32002, -5.35928), 4326)::geography),
-  ('N', 960150, 'convenience', 'Bengkel Motor & Tambal Ban AHASS Honda Motor Rujukan', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30651, -5.35237), 4326)::geography),
-  ('N', 960151, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31698, -5.35656), 4326)::geography),
-  ('N', 960152, 'convenience', 'Percetakan & Fotokopi Mitra Mahasiswa ATK', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32383, -5.36218), 4326)::geography),
-  ('N', 960153, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Puskesmas Rawat Inap Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29766, -5.37053), 4326)::geography),
-  ('N', 960154, 'food', 'Warung Makan & Ampera RM Ampera Salero Minang', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3021, -5.35086), 4326)::geography),
-  ('N', 960155, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31015, -5.35129), 4326)::geography),
-  ('N', 960156, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3106, -5.35122), 4326)::geography),
-  ('N', 960157, 'food', 'Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33032, -5.35922), 4326)::geography),
-  ('N', 960158, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Presisi Tubeless Mahasiswa', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30064, -5.36448), 4326)::geography),
-  ('N', 960159, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29303, -5.36923), 4326)::geography),
-  ('N', 960160, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30808, -5.34915), 4326)::geography),
-  ('N', 970001, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44675, -0.92535), 4326)::geography),
-  ('N', 970002, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44126, -0.92423), 4326)::geography),
-  ('N', 970003, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.4619, -0.91245), 4326)::geography),
-  ('N', 970004, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44241, -0.92605), 4326)::geography),
-  ('N', 970005, 'convenience', 'Minimarket & Agen Sembako Chandra Supermarket Grosir', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44953, -0.92664), 4326)::geography),
-  ('N', 970006, 'convenience', 'Percetakan & Fotokopi Sentosa Print & Jilid Spiral', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44074, -0.92522), 4326)::geography),
-  ('N', 970007, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44208, -0.92239), 4326)::geography),
-  ('N', 970008, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44311, -0.92483), 4326)::geography),
-  ('N', 970009, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44674, -0.9231), 4326)::geography),
-  ('N', 970010, 'food', 'Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46143, -0.91458), 4326)::geography),
-  ('N', 970011, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44157, -0.92688), 4326)::geography),
-  ('N', 970012, 'convenience', 'Percetakan & Fotokopi Kharisma Grafika & Scan', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44619, -0.92209), 4326)::geography),
-  ('N', 970013, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44251, -0.92817), 4326)::geography),
-  ('N', 970014, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44807, -0.92526), 4326)::geography),
-  ('N', 970015, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44413, -0.92632), 4326)::geography),
-  ('N', 970016, 'convenience', 'Percetakan & Fotokopi Berkah Fotokopi 24 Jam', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44943, -0.92504), 4326)::geography),
-  ('N', 970017, 'convenience', 'Minimarket & Agen Sembako Indomaret Fresh 24 Jam', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44629, -0.92338), 4326)::geography),
-  ('N', 970018, 'convenience', 'Bengkel Motor & Tambal Ban Bintang Motor & Sparepart', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44276, -0.92724), 4326)::geography),
-  ('N', 970019, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44349, -0.92332), 4326)::geography),
-  ('N', 970020, 'convenience', 'Percetakan & Fotokopi Mitra Mahasiswa ATK', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45859, -0.91663), 4326)::geography),
-  ('N', 970021, 'food', 'Warung Makan & Ampera Pecel Lele & Bebek Arema', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45916, -0.91441), 4326)::geography),
-  ('N', 970022, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44099, -0.92854), 4326)::geography),
-  ('N', 970023, 'convenience', 'Bengkel Motor & Tambal Ban Yamaha Service Point', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46396, -0.91411), 4326)::geography),
-  ('N', 970024, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44187, -0.92723), 4326)::geography),
-  ('N', 970025, 'convenience', 'Bengkel Motor & Tambal Ban Yamaha Service Point', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44815, -0.92247), 4326)::geography),
-  ('N', 970026, 'convenience', 'Bengkel Motor & Tambal Ban Sinar Jaya Motor & Ganti Oli', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44232, -0.92579), 4326)::geography),
-  ('N', 970027, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46411, -0.91262), 4326)::geography),
-  ('N', 970028, 'food', 'Kafe Nugas & Coworking Point Coffee & Wifi Kencang', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45602, -0.91772), 4326)::geography),
-  ('N', 970029, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44911, -0.92489), 4326)::geography),
-  ('N', 970030, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Puskesmas Rawat Inap Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46396, -0.91738), 4326)::geography),
-  ('N', 970031, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46404, -0.91451), 4326)::geography),
-  ('N', 970032, 'convenience', 'Percetakan & Fotokopi Mitra Mahasiswa ATK', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46376, -0.91254), 4326)::geography),
-  ('N', 970033, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44545, -0.92782), 4326)::geography),
-  ('N', 970034, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44477, -0.92637), 4326)::geography),
-  ('N', 970035, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44404, -0.92508), 4326)::geography),
-  ('N', 970036, 'laundry', 'Laundry Kiloan Express Super Wash Kiloan 1 Day', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44311, -0.92837), 4326)::geography),
-  ('N', 970037, 'food', 'Kafe Nugas & Coworking Sudut Tenang Study Cafe', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44852, -0.92294), 4326)::geography),
-  ('N', 970038, 'convenience', 'Minimarket & Agen Sembako Chandra Supermarket Grosir', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44995, -0.92516), 4326)::geography),
-  ('N', 970039, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44037, -0.92356), 4326)::geography),
-  ('N', 970040, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46471, -0.91523), 4326)::geography),
-  ('N', 970041, 'laundry', 'Laundry Kiloan Express Super Wash Kiloan 1 Day', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46054, -0.91636), 4326)::geography),
-  ('N', 970042, 'convenience', 'Bengkel Motor & Tambal Ban Bintang Motor & Sparepart', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45957, -0.91634), 4326)::geography),
-  ('N', 970043, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44947, -0.92411), 4326)::geography),
-  ('N', 970044, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44654, -0.92465), 4326)::geography),
-  ('N', 970045, 'food', 'Warung Makan & Ampera Nasi Uduk & Pecel Barokah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44462, -0.92234), 4326)::geography),
-  ('N', 980001, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82119, -6.36805), 4326)::geography),
-  ('N', 980002, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Kukusan Kelurahan","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82349, -6.35837), 4326)::geography),
-  ('N', 980003, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83313, -6.36483), 4326)::geography),
-  ('N', 980004, 'food', 'Warung Makan & Ampera Warteg Kharisma Bahari Murah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Kukusan Kelurahan","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82026, -6.35992), 4326)::geography),
-  ('N', 980005, 'convenience', 'Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83075, -6.36004), 4326)::geography),
-  ('N', 980006, 'convenience', 'Minimarket & Agen Sembako Indomaret Fresh 24 Jam', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82006, -6.36751), 4326)::geography),
-  ('N', 980007, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82012, -6.37099), 4326)::geography),
-  ('N', 980008, 'convenience', 'Bengkel Motor & Tambal Ban AHASS Honda Motor Rujukan', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83626, -6.36666), 4326)::geography),
-  ('N', 980009, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83182, -6.36184), 4326)::geography),
-  ('N', 980010, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83402, -6.35906), 4326)::geography),
-  ('N', 980011, 'convenience', 'Percetakan & Fotokopi Digital Print & Jilid Kilat', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83408, -6.36364), 4326)::geography),
-  ('N', 980012, 'food', 'Kafe Nugas & Coworking Warkop Madura 24 Jam Colokan', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Kukusan Kelurahan","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82329, -6.35614), 4326)::geography),
-  ('N', 980013, 'convenience', 'Percetakan & Fotokopi Mitra Mahasiswa ATK', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82197, -6.37008), 4326)::geography),
-  ('N', 980014, 'convenience', 'Percetakan & Fotokopi Mitra Mahasiswa ATK', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82021, -6.36778), 4326)::geography),
-  ('N', 980015, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82023, -6.36703), 4326)::geography),
-  ('N', 980016, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82376, -6.36528), 4326)::geography),
-  ('N', 980017, 'food', 'Warung Makan & Ampera Soto Lamongan Mas Bejo', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83051, -6.3631), 4326)::geography),
-  ('N', 980018, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82074, -6.36685), 4326)::geography),
-  ('N', 980019, 'convenience', 'Percetakan & Fotokopi Mitra Mahasiswa ATK', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82203, -6.36559), 4326)::geography),
-  ('N', 980020, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Kukusan Kelurahan","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82303, -6.35469), 4326)::geography),
-  ('N', 980021, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.8337, -6.36685), 4326)::geography),
-  ('N', 980022, 'convenience', 'Percetakan & Fotokopi Berkah Fotokopi 24 Jam', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82213, -6.36693), 4326)::geography),
-  ('N', 980023, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.8308, -6.36085), 4326)::geography),
-  ('N', 980024, 'convenience', 'Percetakan & Fotokopi Mitra Mahasiswa ATK', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.8358, -6.36985), 4326)::geography),
-  ('N', 980025, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83401, -6.35976), 4326)::geography),
-  ('N', 980026, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Kukusan Kelurahan","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82215, -6.3563), 4326)::geography),
-  ('N', 980027, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83398, -6.36731), 4326)::geography),
-  ('N', 980028, 'convenience', 'Bengkel Motor & Tambal Ban Bintang Motor & Sparepart', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83461, -6.3637), 4326)::geography),
-  ('N', 980029, 'food', 'Kafe Nugas & Coworking Sudut Tenang Study Cafe', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83245, -6.36232), 4326)::geography),
-  ('N', 980030, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Kukusan Kelurahan","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.8207, -6.35748), 4326)::geography),
-  ('N', 980031, 'food', 'Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83479, -6.36588), 4326)::geography),
-  ('N', 980032, 'convenience', 'Minimarket & Agen Sembako Chandra Supermarket Grosir', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83184, -6.36043), 4326)::geography),
-  ('N', 980033, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82376, -6.36622), 4326)::geography),
-  ('N', 980034, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Kukusan Kelurahan","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82467, -6.35717), 4326)::geography),
-  ('N', 980035, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Kukusan Kelurahan","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82466, -6.35411), 4326)::geography),
-  ('N', 980036, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.8332, -6.36704), 4326)::geography),
-  ('N', 980037, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Kukusan Kelurahan","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82192, -6.35883), 4326)::geography),
-  ('N', 980038, 'convenience', 'Percetakan & Fotokopi Mitra Mahasiswa ATK', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82217, -6.36583), 4326)::geography),
-  ('N', 980039, 'food', 'Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83527, -6.36613), 4326)::geography),
-  ('N', 980040, 'food', 'Kafe Nugas & Coworking Point Coffee & Wifi Kencang', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82163, -6.37039), 4326)::geography)
+  ('N', 960001, 'food', 'Warung Makan & Ampera Warteg Kharisma Bahari Murah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31098, -5.34951), 4326)::geography),
+  ('N', 960002, 'laundry', 'Laundry Kiloan Express Super Wash Kiloan 1 Day', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33168, -5.35581), 4326)::geography),
+  ('N', 960003, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30543, -5.35283), 4326)::geography),
+  ('N', 960004, 'food', 'Kafe Nugas & Coworking Sudut Tenang Study Cafe', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31013, -5.34973), 4326)::geography),
+  ('N', 960005, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30247, -5.36375), 4326)::geography),
+  ('N', 960006, 'laundry', 'Laundry Kiloan Express Super Wash Kiloan 1 Day', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32025, -5.36294), 4326)::geography),
+  ('N', 960007, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33279, -5.3568), 4326)::geography),
+  ('N', 960008, 'convenience', 'Percetakan & Fotokopi Berkah Fotokopi 24 Jam', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32867, -5.35574), 4326)::geography),
+  ('N', 960009, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30085, -5.36182), 4326)::geography),
+  ('N', 960010, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31971, -5.36323), 4326)::geography),
+  ('N', 960011, 'food', 'Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29831, -5.37403), 4326)::geography),
+  ('N', 960012, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31675, -5.35367), 4326)::geography),
+  ('N', 960013, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30565, -5.36307), 4326)::geography),
+  ('N', 960014, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30539, -5.35092), 4326)::geography),
+  ('N', 960015, 'convenience', 'Percetakan & Fotokopi Digital Print & Jilid Kilat', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32245, -5.36016), 4326)::geography),
+  ('N', 960016, 'convenience', 'Bengkel Motor & Tambal Ban Yamaha Service Point', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29687, -5.37052), 4326)::geography),
+  ('N', 960017, 'convenience', 'Minimarket & Agen Sembako Indomaret Fresh 24 Jam', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30191, -5.36492), 4326)::geography),
+  ('N', 960018, 'food', 'Kafe Nugas & Coworking Sudut Tenang Study Cafe', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30581, -5.36257), 4326)::geography),
+  ('N', 960019, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32873, -5.36087), 4326)::geography),
+  ('N', 960020, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30743, -5.34903), 4326)::geography),
+  ('N', 960021, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32205, -5.35949), 4326)::geography),
+  ('N', 960022, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.2924, -5.37412), 4326)::geography),
+  ('N', 960023, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30599, -5.36044), 4326)::geography),
+  ('N', 960024, 'convenience', 'Percetakan & Fotokopi Cepat Murah Skripsi', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32805, -5.35483), 4326)::geography),
+  ('N', 960025, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Puskesmas Rawat Inap Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29808, -5.37052), 4326)::geography),
+  ('N', 960026, 'food', 'Warung Makan & Ampera Pecel Lele & Bebek Arema', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29242, -5.37377), 4326)::geography),
+  ('N', 960027, 'convenience', 'Percetakan & Fotokopi Sentosa Print & Jilid Spiral', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33397, -5.35277), 4326)::geography),
+  ('N', 960028, 'convenience', 'Percetakan & Fotokopi Digital Print & Jilid Kilat', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30404, -5.35088), 4326)::geography),
+  ('N', 960029, 'convenience', 'Minimarket & Agen Sembako Chandra Supermarket Grosir', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32316, -5.36292), 4326)::geography),
+  ('N', 960030, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Puskesmas Rawat Inap Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3095, -5.3494), 4326)::geography),
+  ('N', 960031, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30873, -5.35167), 4326)::geography),
+  ('N', 960032, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3283, -5.35384), 4326)::geography),
+  ('N', 960033, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30821, -5.35114), 4326)::geography),
+  ('N', 960034, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31694, -5.355), 4326)::geography),
+  ('N', 960035, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32919, -5.36174), 4326)::geography),
+  ('N', 960036, 'food', 'Warung Makan & Ampera Nasi Uduk & Pecel Barokah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3062, -5.35094), 4326)::geography),
+  ('N', 960037, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33198, -5.36106), 4326)::geography),
+  ('N', 960038, 'convenience', 'Minimarket & Agen Sembako Indomaret Fresh 24 Jam', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30043, -5.36029), 4326)::geography),
+  ('N', 960039, 'convenience', 'Bengkel Motor & Tambal Ban Sinar Jaya Motor & Ganti Oli', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31653, -5.35488), 4326)::geography),
+  ('N', 960040, 'convenience', 'Minimarket & Agen Sembako Indomaret Fresh 24 Jam', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30682, -5.34941), 4326)::geography),
+  ('N', 960041, 'convenience', 'Percetakan & Fotokopi Digital Print & Jilid Kilat', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30392, -5.36378), 4326)::geography),
+  ('N', 960042, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32393, -5.36377), 4326)::geography),
+  ('N', 960043, 'convenience', 'Minimarket & Agen Sembako Chandra Supermarket Grosir', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30734, -5.35186), 4326)::geography),
+  ('N', 960044, 'convenience', 'Percetakan & Fotokopi Digital Print & Jilid Kilat', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30705, -5.3492), 4326)::geography),
+  ('N', 960045, 'food', 'Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29468, -5.36748), 4326)::geography),
+  ('N', 960046, 'convenience', 'Bengkel Motor & Tambal Ban Sinar Jaya Motor & Ganti Oli', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30319, -5.35019), 4326)::geography),
+  ('N', 960047, 'convenience', 'Percetakan & Fotokopi Digital Print & Jilid Kilat', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30565, -5.36354), 4326)::geography),
+  ('N', 960048, 'convenience', 'Bengkel Motor & Tambal Ban AHASS Honda Motor Rujukan', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31986, -5.3648), 4326)::geography),
+  ('N', 960049, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31925, -5.36121), 4326)::geography),
+  ('N', 960050, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32115, -5.36367), 4326)::geography),
+  ('N', 960051, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33238, -5.35889), 4326)::geography),
+  ('N', 960052, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Presisi Tubeless Mahasiswa', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33117, -5.35858), 4326)::geography),
+  ('N', 960053, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30388, -5.36446), 4326)::geography),
+  ('N', 960054, 'food', 'Warung Makan & Ampera Pecel Lele & Bebek Arema', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3033, -5.3483), 4326)::geography),
+  ('N', 960055, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Presisi Tubeless Mahasiswa', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31231, -5.35279), 4326)::geography),
+  ('N', 960056, 'convenience', 'Bengkel Motor & Tambal Ban Yamaha Service Point', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30132, -5.35954), 4326)::geography),
+  ('N', 960057, 'convenience', 'Percetakan & Fotokopi Sentosa Print & Jilid Spiral', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3021, -5.35812), 4326)::geography),
+  ('N', 960058, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31052, -5.35093), 4326)::geography),
+  ('N', 960059, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32909, -5.35715), 4326)::geography),
+  ('N', 960060, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30069, -5.36323), 4326)::geography),
+  ('N', 960061, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29566, -5.37232), 4326)::geography),
+  ('N', 960062, 'convenience', 'Bengkel Motor & Tambal Ban Yamaha Service Point', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29817, -5.37234), 4326)::geography),
+  ('N', 960063, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30412, -5.35926), 4326)::geography),
+  ('N', 960064, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29635, -5.36974), 4326)::geography),
+  ('N', 960065, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30395, -5.35033), 4326)::geography),
+  ('N', 960066, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30745, -5.35175), 4326)::geography),
+  ('N', 960067, 'food', 'Kafe Nugas & Coworking Point Coffee & Wifi Kencang', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32512, -5.36339), 4326)::geography),
+  ('N', 960068, 'convenience', 'Percetakan & Fotokopi Sentosa Print & Jilid Spiral', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3134, -5.35684), 4326)::geography),
+  ('N', 960069, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32984, -5.36072), 4326)::geography),
+  ('N', 960070, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30805, -5.35112), 4326)::geography),
+  ('N', 960071, 'convenience', 'Percetakan & Fotokopi Kharisma Grafika & Scan', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30721, -5.35153), 4326)::geography),
+  ('N', 960072, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30501, -5.35384), 4326)::geography),
+  ('N', 960073, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31354, -5.35301), 4326)::geography),
+  ('N', 960074, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33672, -5.35869), 4326)::geography),
+  ('N', 960075, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30881, -5.34862), 4326)::geography),
+  ('N', 960076, 'convenience', 'Percetakan & Fotokopi Mitra Mahasiswa ATK', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29458, -5.37364), 4326)::geography),
+  ('N', 960077, 'convenience', 'Percetakan & Fotokopi Cepat Murah Skripsi', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30658, -5.35103), 4326)::geography),
+  ('N', 960078, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32391, -5.36158), 4326)::geography),
+  ('N', 960079, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32168, -5.3601), 4326)::geography),
+  ('N', 960080, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33536, -5.35224), 4326)::geography),
+  ('N', 960081, 'food', 'Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32914, -5.35335), 4326)::geography),
+  ('N', 960082, 'convenience', 'Bengkel Motor & Tambal Ban Sinar Jaya Motor & Ganti Oli', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30408, -5.35386), 4326)::geography),
+  ('N', 960083, 'convenience', 'Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32586, -5.3622), 4326)::geography),
+  ('N', 960084, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30797, -5.34893), 4326)::geography),
+  ('N', 960085, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29942, -5.36656), 4326)::geography),
+  ('N', 960086, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30535, -5.36253), 4326)::geography),
+  ('N', 960087, 'convenience', 'Percetakan & Fotokopi Cepat Murah Skripsi', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30461, -5.34808), 4326)::geography),
+  ('N', 960088, 'food', 'Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30721, -5.34744), 4326)::geography),
+  ('N', 960089, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30726, -5.35038), 4326)::geography),
+  ('N', 960090, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31379, -5.35602), 4326)::geography),
+  ('N', 960091, 'food', 'Warung Makan & Ampera RM Ampera Salero Minang', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33448, -5.36165), 4326)::geography),
+  ('N', 960092, 'convenience', 'Minimarket & Agen Sembako Chandra Supermarket Grosir', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29904, -5.36944), 4326)::geography),
+  ('N', 960093, 'food', 'Warung Makan & Ampera Pecel Lele & Bebek Arema', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31603, -5.35247), 4326)::geography),
+  ('N', 960094, 'convenience', 'Percetakan & Fotokopi Digital Print & Jilid Kilat', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3072, -5.3504), 4326)::geography),
+  ('N', 960095, 'convenience', 'Minimarket & Agen Sembako Indomaret Fresh 24 Jam', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31047, -5.3487), 4326)::geography),
+  ('N', 960096, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3281, -5.35487), 4326)::geography),
+  ('N', 960097, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31762, -5.35201), 4326)::geography),
+  ('N', 960098, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32323, -5.36012), 4326)::geography),
+  ('N', 960099, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29825, -5.3685), 4326)::geography),
+  ('N', 960100, 'food', 'Warung Makan & Ampera Warteg Kharisma Bahari Murah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33531, -5.35302), 4326)::geography),
+  ('N', 960101, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32295, -5.36204), 4326)::geography),
+  ('N', 960102, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30275, -5.35962), 4326)::geography),
+  ('N', 960103, 'food', 'Warung Makan & Ampera Warteg Kharisma Bahari Murah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30401, -5.3599), 4326)::geography),
+  ('N', 960104, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Puskesmas Rawat Inap Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30541, -5.3519), 4326)::geography),
+  ('N', 960105, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Puskesmas Rawat Inap Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31062, -5.35097), 4326)::geography),
+  ('N', 960106, 'convenience', 'Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31951, -5.36376), 4326)::geography),
+  ('N', 960107, 'convenience', 'Percetakan & Fotokopi Digital Print & Jilid Kilat', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31676, -5.35575), 4326)::geography),
+  ('N', 960108, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30089, -5.3627), 4326)::geography),
+  ('N', 960109, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3054, -5.35269), 4326)::geography),
+  ('N', 960110, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30395, -5.35988), 4326)::geography),
+  ('N', 960111, 'convenience', 'Bengkel Motor & Tambal Ban Sinar Jaya Motor & Ganti Oli', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30796, -5.351), 4326)::geography),
+  ('N', 960112, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Puskesmas Rawat Inap Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3022, -5.36136), 4326)::geography),
+  ('N', 960113, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Puskesmas Rawat Inap Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33112, -5.36119), 4326)::geography),
+  ('N', 960114, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3045, -5.36378), 4326)::geography),
+  ('N', 960115, 'food', 'Warung Makan & Ampera Nasi Uduk & Pecel Barokah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30296, -5.36029), 4326)::geography),
+  ('N', 960116, 'food', 'Warung Makan & Ampera Warteg Kharisma Bahari Murah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30179, -5.36154), 4326)::geography),
+  ('N', 960117, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31996, -5.36029), 4326)::geography),
+  ('N', 960118, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30382, -5.36348), 4326)::geography),
+  ('N', 960119, 'convenience', 'Bengkel Motor & Tambal Ban Bintang Motor & Sparepart', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32511, -5.36129), 4326)::geography),
+  ('N', 960120, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30459, -5.35018), 4326)::geography),
+  ('N', 960121, 'convenience', 'Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30491, -5.35008), 4326)::geography),
+  ('N', 960122, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30556, -5.34992), 4326)::geography),
+  ('N', 960123, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3045, -5.3518), 4326)::geography),
+  ('N', 960124, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31003, -5.35156), 4326)::geography),
+  ('N', 960125, 'food', 'Warung Makan & Ampera RM Ampera Salero Minang', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30303, -5.34981), 4326)::geography),
+  ('N', 960126, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31676, -5.35308), 4326)::geography),
+  ('N', 960127, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29483, -5.37303), 4326)::geography),
+  ('N', 960128, 'convenience', 'Minimarket & Agen Sembako Chandra Supermarket Grosir', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3173, -5.35578), 4326)::geography),
+  ('N', 960129, 'food', 'Warung Makan & Ampera Nasi Uduk & Pecel Barokah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30443, -5.36098), 4326)::geography),
+  ('N', 960130, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29616, -5.37114), 4326)::geography),
+  ('N', 960131, 'convenience', 'Percetakan & Fotokopi Sentosa Print & Jilid Spiral', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33364, -5.35664), 4326)::geography),
+  ('N', 960132, 'convenience', 'Percetakan & Fotokopi Mitra Mahasiswa ATK', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30238, -5.34936), 4326)::geography),
+  ('N', 960133, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3146, -5.35201), 4326)::geography),
+  ('N', 960134, 'convenience', 'Percetakan & Fotokopi Mitra Mahasiswa ATK', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31357, -5.35302), 4326)::geography),
+  ('N', 960135, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29566, -5.36795), 4326)::geography),
+  ('N', 960136, 'convenience', 'Percetakan & Fotokopi Sentosa Print & Jilid Spiral', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30438, -5.35354), 4326)::geography),
+  ('N', 960137, 'convenience', 'Percetakan & Fotokopi Berkah Fotokopi 24 Jam', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32915, -5.36187), 4326)::geography),
+  ('N', 960138, 'food', 'Kafe Nugas & Coworking Point Coffee & Wifi Kencang', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31549, -5.35331), 4326)::geography),
+  ('N', 960139, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32203, -5.36292), 4326)::geography),
+  ('N', 960140, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30526, -5.36499), 4326)::geography),
+  ('N', 960141, 'food', 'Kafe Nugas & Coworking Point Coffee & Wifi Kencang', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32264, -5.35963), 4326)::geography),
+  ('N', 960142, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32314, -5.36416), 4326)::geography),
+  ('N', 960143, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29599, -5.37416), 4326)::geography),
+  ('N', 960144, 'convenience', 'Bengkel Motor & Tambal Ban Bintang Motor & Sparepart', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30204, -5.35317), 4326)::geography),
+  ('N', 960145, 'convenience', 'Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30777, -5.34864), 4326)::geography),
+  ('N', 960146, 'food', 'Warung Makan & Ampera Soto Lamongan Mas Bejo', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3087, -5.34993), 4326)::geography),
+  ('N', 960147, 'food', 'Kafe Nugas & Coworking Sudut Tenang Study Cafe', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.2981, -5.36989), 4326)::geography),
+  ('N', 960148, 'food', 'Kafe Nugas & Coworking Warkop Madura 24 Jam Colokan', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30494, -5.35825), 4326)::geography),
+  ('N', 960149, 'food', 'Warung Makan & Ampera Soto Lamongan Mas Bejo', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3289, -5.35362), 4326)::geography),
+  ('N', 960150, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31274, -5.35641), 4326)::geography),
+  ('N', 960151, 'food', 'Warung Makan & Ampera Soto Lamongan Mas Bejo', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Belakang Wisma & Embung ITERA","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32344, -5.36103), 4326)::geography),
+  ('N', 960152, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Presisi Tubeless Mahasiswa', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33453, -5.36194), 4326)::geography),
+  ('N', 960153, 'convenience', 'Percetakan & Fotokopi Sentosa Print & Jilid Spiral', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3026, -5.35074), 4326)::geography),
+  ('N', 960154, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Sukarame & Korpri Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29748, -5.36737), 4326)::geography),
+  ('N', 960155, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Way Huwi / Lapas Raya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30308, -5.35242), 4326)::geography),
+  ('N', 960156, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Terusan Ryacudu (Gerbang Utama)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31417, -5.35223), 4326)::geography),
+  ('N', 960157, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Sabah Balau & Tanjung Bintang","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33427, -5.36155), 4326)::geography),
+  ('N', 960158, 'food', 'Kafe Nugas & Coworking Point Coffee & Wifi Kencang', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30098, -5.36073), 4326)::geography),
+  ('N', 960159, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Perumahan Pemda Way Huwi","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31, -5.34767), 4326)::geography),
+  ('N', 960160, 'convenience', 'Percetakan & Fotokopi Mitra Mahasiswa ATK', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Jl. Airan Raya & Airan Jaya","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30052, -5.36446), 4326)::geography),
+  ('N', 970001, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44356, -0.92516), 4326)::geography),
+  ('N', 970002, 'convenience', 'Percetakan & Fotokopi Digital Print & Jilid Kilat', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.4456, -0.92612), 4326)::geography),
+  ('N', 970003, 'convenience', 'Percetakan & Fotokopi Cepat Murah Skripsi', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46316, -0.91785), 4326)::geography),
+  ('N', 970004, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45697, -0.91109), 4326)::geography),
+  ('N', 970005, 'food', 'Warung Makan & Ampera Soto Lamongan Mas Bejo', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44768, -0.92556), 4326)::geography),
+  ('N', 970006, 'convenience', 'Percetakan & Fotokopi Digital Print & Jilid Kilat', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44816, -0.92331), 4326)::geography),
+  ('N', 970007, 'food', 'Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45829, -0.91497), 4326)::geography),
+  ('N', 970008, 'convenience', 'Bengkel Motor & Tambal Ban Bintang Motor & Sparepart', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45646, -0.91706), 4326)::geography),
+  ('N', 970009, 'convenience', 'Minimarket & Agen Sembako Indomaret Fresh 24 Jam', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44957, -0.9269), 4326)::geography),
+  ('N', 970010, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.4467, -0.92476), 4326)::geography),
+  ('N', 970011, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.4484, -0.92615), 4326)::geography),
+  ('N', 970012, 'food', 'Kafe Nugas & Coworking Warkop Madura 24 Jam Colokan', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44869, -0.92367), 4326)::geography),
+  ('N', 970013, 'food', 'Warung Makan & Ampera Warteg Kharisma Bahari Murah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44834, -0.92358), 4326)::geography),
+  ('N', 970014, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46467, -0.9141), 4326)::geography),
+  ('N', 970015, 'convenience', 'Percetakan & Fotokopi Sentosa Print & Jilid Spiral', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44772, -0.92506), 4326)::geography),
+  ('N', 970016, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45657, -0.91252), 4326)::geography),
+  ('N', 970017, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44867, -0.92531), 4326)::geography),
+  ('N', 970018, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44401, -0.92613), 4326)::geography),
+  ('N', 970019, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44738, -0.92693), 4326)::geography),
+  ('N', 970020, 'convenience', 'Percetakan & Fotokopi Cepat Murah Skripsi', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46303, -0.91293), 4326)::geography),
+  ('N', 970021, 'convenience', 'Percetakan & Fotokopi Digital Print & Jilid Kilat', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45994, -0.9158), 4326)::geography),
+  ('N', 970022, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45643, -0.91281), 4326)::geography),
+  ('N', 970023, 'food', 'Kafe Nugas & Coworking Point Coffee & Wifi Kencang', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44623, -0.92368), 4326)::geography),
+  ('N', 970024, 'convenience', 'Percetakan & Fotokopi Sentosa Print & Jilid Spiral', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44022, -0.92643), 4326)::geography),
+  ('N', 970025, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44088, -0.92898), 4326)::geography),
+  ('N', 970026, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44156, -0.92521), 4326)::geography),
+  ('N', 970027, 'convenience', 'Percetakan & Fotokopi Cepat Murah Skripsi', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45618, -0.91616), 4326)::geography),
+  ('N', 970028, 'food', 'Warung Makan & Ampera RM Ampera Salero Minang', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44611, -0.9237), 4326)::geography),
+  ('N', 970029, 'convenience', 'Bengkel Motor & Tambal Ban Bintang Motor & Sparepart', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44596, -0.92764), 4326)::geography),
+  ('N', 970030, 'food', 'Kafe Nugas & Coworking Point Coffee & Wifi Kencang', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44989, -0.92575), 4326)::geography),
+  ('N', 970031, 'food', 'Warung Makan & Ampera Warteg Kharisma Bahari Murah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44028, -0.92319), 4326)::geography),
+  ('N', 970032, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.4462, -0.92596), 4326)::geography),
+  ('N', 970033, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44031, -0.92816), 4326)::geography),
+  ('N', 970034, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Presisi Tubeless Mahasiswa', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44148, -0.92823), 4326)::geography),
+  ('N', 970035, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46027, -0.91497), 4326)::geography),
+  ('N', 970036, 'food', 'Warung Makan & Ampera Warteg Kharisma Bahari Murah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46482, -0.9112), 4326)::geography),
+  ('N', 970037, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44887, -0.92691), 4326)::geography),
+  ('N', 970038, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46258, -0.91526), 4326)::geography),
+  ('N', 970039, 'food', 'Kafe Nugas & Coworking Sudut Tenang Study Cafe', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46443, -0.91158), 4326)::geography),
+  ('N', 970040, 'food', 'Warung Makan & Ampera Pecel Lele & Bebek Arema', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44128, -0.92656), 4326)::geography),
+  ('N', 970041, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44926, -0.92368), 4326)::geography),
+  ('N', 970042, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44228, -0.92618), 4326)::geography),
+  ('N', 970043, 'convenience', 'Bengkel Motor & Tambal Ban Bintang Motor & Sparepart', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Limau Manis","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46405, -0.91581), 4326)::geography),
+  ('N', 970044, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Pauh","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.4439, -0.92388), 4326)::geography),
+  ('N', 970045, 'convenience', 'Bengkel Motor & Tambal Ban Bintang Motor & Sparepart', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Pasar Baru","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44682, -0.92565), 4326)::geography),
+  ('N', 980001, 'convenience', 'Minimarket & Agen Sembako Indomaret Fresh 24 Jam', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83692, -6.36444), 4326)::geography),
+  ('N', 980002, 'food', 'Kafe Nugas & Coworking Point Coffee & Wifi Kencang', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83422, -6.36998), 4326)::geography),
+  ('N', 980003, 'convenience', 'Bengkel Motor & Tambal Ban AHASS Honda Motor Rujukan', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83078, -6.36378), 4326)::geography),
+  ('N', 980004, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.835, -6.36566), 4326)::geography),
+  ('N', 980005, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.81855, -6.36524), 4326)::geography),
+  ('N', 980006, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83715, -6.36989), 4326)::geography),
+  ('N', 980007, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83659, -6.36497), 4326)::geography),
+  ('N', 980008, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Kukusan Kelurahan","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82146, -6.35724), 4326)::geography),
+  ('N', 980009, 'convenience', 'Percetakan & Fotokopi Mitra Mahasiswa ATK', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82371, -6.36845), 4326)::geography),
+  ('N', 980010, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Kukusan Kelurahan","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82272, -6.35613), 4326)::geography),
+  ('N', 980011, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.8204, -6.36757), 4326)::geography),
+  ('N', 980012, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83028, -6.35971), 4326)::geography),
+  ('N', 980013, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.8185, -6.37073), 4326)::geography),
+  ('N', 980014, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83732, -6.36335), 4326)::geography),
+  ('N', 980015, 'convenience', 'Bengkel Motor & Tambal Ban Sinar Jaya Motor & Ganti Oli', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82055, -6.36671), 4326)::geography),
+  ('N', 980016, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Kukusan Kelurahan","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82397, -6.3574), 4326)::geography),
+  ('N', 980017, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83742, -6.36768), 4326)::geography),
+  ('N', 980018, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83106, -6.3622), 4326)::geography),
+  ('N', 980019, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Kukusan Kelurahan","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82395, -6.35757), 4326)::geography),
+  ('N', 980020, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83113, -6.36011), 4326)::geography),
+  ('N', 980021, 'laundry', 'Laundry Kiloan Express Super Wash Kiloan 1 Day', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.81933, -6.36743), 4326)::geography),
+  ('N', 980022, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82219, -6.37012), 4326)::geography),
+  ('N', 980023, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83405, -6.36458), 4326)::geography),
+  ('N', 980024, 'convenience', 'Bengkel Motor & Tambal Ban Bintang Motor & Sparepart', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83574, -6.36962), 4326)::geography),
+  ('N', 980025, 'food', 'Kafe Nugas & Coworking Point Coffee & Wifi Kencang', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Kukusan Kelurahan","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82372, -6.35573), 4326)::geography),
+  ('N', 980026, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83432, -6.36919), 4326)::geography),
+  ('N', 980027, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Kukusan Kelurahan","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82298, -6.35939), 4326)::geography),
+  ('N', 980028, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82244, -6.36564), 4326)::geography),
+  ('N', 980029, 'convenience', 'Bengkel Motor & Tambal Ban Bintang Motor & Sparepart', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83208, -6.36322), 4326)::geography),
+  ('N', 980030, 'food', 'Warung Makan & Ampera Bakso Solo & Mie Ayam Wonogiri', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83283, -6.36343), 4326)::geography),
+  ('N', 980031, 'convenience', 'Percetakan & Fotokopi Sentosa Print & Jilid Spiral', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Kukusan Kelurahan","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82495, -6.3592), 4326)::geography),
+  ('N', 980032, 'convenience', 'Percetakan & Fotokopi Digital Print & Jilid Kilat', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83494, -6.3643), 4326)::geography),
+  ('N', 980033, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83068, -6.36427), 4326)::geography),
+  ('N', 980034, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83491, -6.36281), 4326)::geography),
+  ('N', 980035, 'convenience', 'Bengkel Motor & Tambal Ban Yamaha Service Point', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83773, -6.36572), 4326)::geography),
+  ('N', 980036, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83614, -6.36575), 4326)::geography),
+  ('N', 980037, 'convenience', 'Bengkel Motor & Tambal Ban AHASS Honda Motor Rujukan', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Pondok Cina","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83203, -6.36446), 4326)::geography),
+  ('N', 980038, 'laundry', 'Laundry Kiloan Express Super Wash Kiloan 1 Day', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82182, -6.37064), 4326)::geography),
+  ('N', 980039, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Kukusan Teknik","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82152, -6.36827), 4326)::geography),
+  ('N', 980040, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Kober","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83547, -6.36578), 4326)::geography),
+  ('N', 990001, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Kampung Baru (Bumi Manti)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.25233, -5.35278), 4326)::geography),
+  ('N', 990002, 'food', 'Warung Makan & Ampera RM Ampera Salero Minang', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Rajabasa (Pramuka & Bypass)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.2321, -5.36419), 4326)::geography),
+  ('N', 990003, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Gedong Meneng (ZA Pagar Alam)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24294, -5.37098), 4326)::geography),
+  ('N', 990004, 'convenience', 'Percetakan & Fotokopi Cepat Murah Skripsi', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Rajabasa (Pramuka & Bypass)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23743, -5.35862), 4326)::geography),
+  ('N', 990005, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Gedong Meneng (ZA Pagar Alam)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23809, -5.36729), 4326)::geography),
+  ('N', 990006, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Gedong Meneng (ZA Pagar Alam)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24151, -5.3665), 4326)::geography),
+  ('N', 990007, 'convenience', 'Percetakan & Fotokopi Berkah Fotokopi 24 Jam', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Rajabasa (Pramuka & Bypass)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23334, -5.36619), 4326)::geography),
+  ('N', 990008, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Rajabasa (Pramuka & Bypass)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23409, -5.35909), 4326)::geography),
+  ('N', 990009, 'convenience', 'Minimarket & Agen Sembako Chandra Supermarket Grosir', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Kampung Baru Raya / Nunyai","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24324, -5.34988), 4326)::geography),
+  ('N', 990010, 'convenience', 'Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Kampung Baru (Bumi Manti)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.2475, -5.35233), 4326)::geography),
+  ('N', 990011, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Rajabasa (Pramuka & Bypass)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23475, -5.36592), 4326)::geography),
+  ('N', 990012, 'food', 'Warung Makan & Ampera Soto Lamongan Mas Bejo', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Kampung Baru (Bumi Manti)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24896, -5.35241), 4326)::geography),
+  ('N', 990013, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Kampung Baru Raya / Nunyai","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24593, -5.3509), 4326)::geography),
+  ('N', 990014, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Gedong Meneng (ZA Pagar Alam)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23749, -5.37036), 4326)::geography),
+  ('N', 990015, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Kampung Baru (Bumi Manti)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24823, -5.35631), 4326)::geography),
+  ('N', 990016, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Pratama Medika Bunda', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Rajabasa (Pramuka & Bypass)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23198, -5.3647), 4326)::geography),
+  ('N', 990017, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Gedong Meneng (ZA Pagar Alam)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23692, -5.3706), 4326)::geography),
+  ('N', 990018, 'convenience', 'Percetakan & Fotokopi Sentosa Print & Jilid Spiral', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Gedong Meneng (ZA Pagar Alam)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.2385, -5.36701), 4326)::geography),
+  ('N', 990019, 'convenience', 'Bengkel Motor & Tambal Ban AHASS Honda Motor Rujukan', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Gedong Meneng (ZA Pagar Alam)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24035, -5.36795), 4326)::geography),
+  ('N', 990020, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Kampung Baru (Bumi Manti)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.2518, -5.35713), 4326)::geography),
+  ('N', 990021, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Rajabasa (Pramuka & Bypass)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23114, -5.35858), 4326)::geography),
+  ('N', 990022, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Kampung Baru Raya / Nunyai","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.2431, -5.35204), 4326)::geography),
+  ('N', 990023, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Rajabasa (Pramuka & Bypass)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23776, -5.36672), 4326)::geography),
+  ('N', 990024, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Kampung Baru Raya / Nunyai","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24751, -5.35264), 4326)::geography),
+  ('N', 990025, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Kampung Baru Raya / Nunyai","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24435, -5.34901), 4326)::geography),
+  ('N', 990026, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Rajabasa (Pramuka & Bypass)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23375, -5.36025), 4326)::geography),
+  ('N', 990027, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Kampung Baru Raya / Nunyai","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24569, -5.35284), 4326)::geography),
+  ('N', 990028, 'convenience', 'Bengkel Motor & Tambal Ban Yamaha Service Point', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Gedong Meneng (ZA Pagar Alam)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24048, -5.36988), 4326)::geography),
+  ('N', 990029, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Kampung Baru (Bumi Manti)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24764, -5.35645), 4326)::geography),
+  ('N', 990030, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Gedong Meneng (ZA Pagar Alam)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23721, -5.37053), 4326)::geography),
+  ('N', 990031, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Kampung Baru (Bumi Manti)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24937, -5.35233), 4326)::geography),
+  ('N', 990032, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Gedong Meneng (ZA Pagar Alam)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23903, -5.36677), 4326)::geography),
+  ('N', 990033, 'convenience', 'Percetakan & Fotokopi Mitra Mahasiswa ATK', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Rajabasa (Pramuka & Bypass)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23638, -5.36399), 4326)::geography),
+  ('N', 990034, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Klinik Rawat Inap Pratama Sehat', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Kampung Baru Raya / Nunyai","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24677, -5.34836), 4326)::geography),
+  ('N', 990035, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Gedong Meneng (ZA Pagar Alam)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23714, -5.36774), 4326)::geography),
+  ('N', 990036, 'food', 'Warung Makan & Ampera Warteg Kharisma Bahari Murah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Rajabasa (Pramuka & Bypass)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23409, -5.35957), 4326)::geography),
+  ('N', 990037, 'convenience', 'Bengkel Motor & Tambal Ban AHASS Honda Motor Rujukan', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Kampung Baru Raya / Nunyai","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24366, -5.35341), 4326)::geography),
+  ('N', 990038, 'convenience', 'Bengkel Motor & Tambal Ban Bintang Motor & Sparepart', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Rajabasa (Pramuka & Bypass)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23252, -5.36505), 4326)::geography),
+  ('N', 990039, 'laundry', 'Laundry Kiloan Express Wangi Express Laundry Antar-Jemput', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Kampung Baru (Bumi Manti)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24829, -5.35281), 4326)::geography),
+  ('N', 990040, 'convenience', 'Minimarket & Agen Sembako Alfamart Point Kampus', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Rajabasa (Pramuka & Bypass)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.2321, -5.36539), 4326)::geography),
+  ('N', 990041, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Rajabasa (Pramuka & Bypass)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23021, -5.36691), 4326)::geography),
+  ('N', 990042, 'food', 'Kafe Nugas & Coworking Literasi Space & Roastery', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Gedong Meneng (ZA Pagar Alam)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24271, -5.36814), 4326)::geography),
+  ('N', 990043, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Berkah Sehat 24 Jam', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Gedong Meneng (ZA Pagar Alam)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23687, -5.36784), 4326)::geography),
+  ('N', 990044, 'food', 'Kafe Nugas & Coworking Point Coffee & Wifi Kencang', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Kampung Baru (Bumi Manti)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24671, -5.35526), 4326)::geography),
+  ('N', 990045, 'food', 'Warung Makan & Ampera Nasi Uduk & Pecel Barokah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Rajabasa (Pramuka & Bypass)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23101, -5.3621), 4326)::geography),
+  ('N', 995001, 'food', 'Warung Makan & Ampera RM Ampera Salero Minang', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Air Tawar Timur (Prof. Dr. Hamka)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35801, -0.89511), 4326)::geography),
+  ('N', 995002, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Tunggul Hitam & DPR","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35253, -0.89033), 4326)::geography),
+  ('N', 995003, 'convenience', 'Percetakan & Fotokopi Kharisma Grafika & Scan', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34862, -0.901), 4326)::geography),
+  ('N', 995004, 'food', 'Warung Makan & Ampera Nasi Uduk & Pecel Barokah', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34747, -0.89405), 4326)::geography),
+  ('N', 995005, 'convenience', 'Percetakan & Fotokopi Sentosa Print & Jilid Spiral', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Simpang Tinju & Gajah Mada","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35602, -0.90725), 4326)::geography),
+  ('N', 995006, 'convenience', 'Percetakan & Fotokopi Sentosa Print & Jilid Spiral', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35184, -0.89674), 4326)::geography),
+  ('N', 995007, 'food', 'Kafe Nugas & Coworking Sudut Tenang Study Cafe', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Simpang Tinju & Gajah Mada","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35873, -0.90344), 4326)::geography),
+  ('N', 995008, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.3482, -0.89667), 4326)::geography),
+  ('N', 995009, 'convenience', 'Bengkel Motor & Tambal Ban Bintang Motor & Sparepart', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Tunggul Hitam & DPR","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35344, -0.88883), 4326)::geography),
+  ('N', 995010, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34689, -0.89701), 4326)::geography),
+  ('N', 995011, 'convenience', 'Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34682, -0.90085), 4326)::geography),
+  ('N', 995012, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Simpang Tinju & Gajah Mada","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.36278, -0.90734), 4326)::geography),
+  ('N', 995013, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Simpang Tinju & Gajah Mada","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.36304, -0.90414), 4326)::geography),
+  ('N', 995014, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Air Tawar Timur (Prof. Dr. Hamka)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35342, -0.89314), 4326)::geography),
+  ('N', 995015, 'convenience', 'Percetakan & Fotokopi Cepat Murah Skripsi', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34764, -0.89635), 4326)::geography),
+  ('N', 995016, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34785, -0.8983), 4326)::geography),
+  ('N', 995017, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Air Tawar Timur (Prof. Dr. Hamka)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35509, -0.89786), 4326)::geography),
+  ('N', 995018, 'convenience', 'Percetakan & Fotokopi Cepat Murah Skripsi', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Simpang Tinju & Gajah Mada","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35874, -0.90777), 4326)::geography),
+  ('N', 995019, 'convenience', 'Percetakan & Fotokopi Kharisma Grafika & Scan', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Tunggul Hitam & DPR","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35004, -0.88661), 4326)::geography),
+  ('N', 995020, 'food', 'Warung Makan & Ampera RM Ampera Salero Minang', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Tunggul Hitam & DPR","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.3538, -0.88647), 4326)::geography),
+  ('N', 995021, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34887, -0.90197), 4326)::geography),
+  ('N', 995022, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34645, -0.89756), 4326)::geography),
+  ('N', 995023, 'convenience', 'Percetakan & Fotokopi Berkah Fotokopi 24 Jam', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Simpang Tinju & Gajah Mada","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35658, -0.90619), 4326)::geography),
+  ('N', 995024, 'laundry', 'Laundry Kiloan Express Clean & Fresh Kiloan Kilat', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Tunggul Hitam & DPR","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35522, -0.89171), 4326)::geography),
+  ('N', 995025, 'convenience', 'Bengkel Motor & Tambal Ban Bengkel Barokah Tambal Ban 24 Jam', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Simpang Tinju & Gajah Mada","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35798, -0.90524), 4326)::geography),
+  ('N', 995026, 'convenience', 'Percetakan & Fotokopi Digital Print & Jilid Kilat', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34939, -0.89949), 4326)::geography),
+  ('N', 995027, 'convenience', 'Minimarket & Agen Sembako Indomaret Fresh 24 Jam', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34915, -0.8953), 4326)::geography),
+  ('N', 995028, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Tunggul Hitam & DPR","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35644, -0.88798), 4326)::geography),
+  ('N', 995029, 'convenience', 'Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34729, -0.89942), 4326)::geography),
+  ('N', 995030, 'convenience', 'Bengkel Motor & Tambal Ban Yamaha Service Point', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Tunggul Hitam & DPR","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.354, -0.89071), 4326)::geography),
+  ('N', 995031, 'convenience', 'Bengkel Motor & Tambal Ban Sinar Jaya Motor & Ganti Oli', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Tunggul Hitam & DPR","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35043, -0.89007), 4326)::geography),
+  ('N', 995032, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Simpang Tinju & Gajah Mada","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.36282, -0.9034), 4326)::geography),
+  ('N', 995033, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Puskesmas Rawat Inap Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Tunggul Hitam & DPR","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.3578, -0.88848), 4326)::geography),
+  ('N', 995034, 'convenience', 'Bengkel Motor & Tambal Ban Yamaha Service Point', '{"distilled":"true","sub_type":"Bengkel Motor & Tambal Ban","zone":"Simpang Tinju & Gajah Mada","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35639, -0.90672), 4326)::geography),
+  ('N', 995035, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Tunggul Hitam & DPR","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35743, -0.89047), 4326)::geography),
+  ('N', 995036, 'convenience', 'Minimarket & Agen Sembako Toko Sembako & Agen Galon Aqua', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Simpang Tinju & Gajah Mada","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35979, -0.90647), 4326)::geography),
+  ('N', 995037, 'food', 'Warung Makan & Ampera Ayam Geprek Sambal Bawang Juara', '{"distilled":"true","sub_type":"Warung Makan & Ampera","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34632, -0.89766), 4326)::geography),
+  ('N', 995038, 'food', 'Kafe Nugas & Coworking Ruang Teman Co-Working Space', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34834, -0.89739), 4326)::geography),
+  ('N', 995039, 'convenience', 'Percetakan & Fotokopi Sentosa Print & Jilid Spiral', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Air Tawar Timur (Prof. Dr. Hamka)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35725, -0.89359), 4326)::geography),
+  ('N', 995040, 'convenience', 'Minimarket & Agen Sembako Swalayan Beras & Kebutuhan Kos', '{"distilled":"true","sub_type":"Minimarket & Agen Sembako","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34838, -0.89447), 4326)::geography),
+  ('N', 995041, 'food', 'Kafe Nugas & Coworking Kopi Dari Hati Kampus', '{"distilled":"true","sub_type":"Kafe Nugas & Coworking","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34837, -0.89911), 4326)::geography),
+  ('N', 995042, 'convenience', 'Percetakan & Fotokopi Cepat Murah Skripsi', '{"distilled":"true","sub_type":"Percetakan & Fotokopi","zone":"Tunggul Hitam & DPR","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35461, -0.88527), 4326)::geography),
+  ('N', 995043, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek K-24 Jam Dekat Kampus', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Air Tawar Timur (Prof. Dr. Hamka)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35614, -0.89453), 4326)::geography),
+  ('N', 995044, 'laundry', 'Laundry Kiloan Express Sakura Kiloan Cuci & Setrika Uap', '{"distilled":"true","sub_type":"Laundry Kiloan Express","zone":"Simpang Tinju & Gajah Mada","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.36292, -0.90552), 4326)::geography),
+  ('N', 995045, 'pharmacy', 'Klinik & Apotek Rujukan BPJS Apotek Kimia Farma Rujukan BPJS', '{"distilled":"true","sub_type":"Klinik & Apotek Rujukan BPJS","zone":"Air Tawar Barat (Cendrawasih)","verified_by":"KosMatch Extended Campus Infrastructure Pipeline"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34874, -0.90145), 4326)::geography)
 ON CONFLICT (osm_type, osm_id) DO UPDATE SET
   category = EXCLUDED.category,
   name = EXCLUDED.name,
   tags = EXCLUDED.tags,
   geom = EXCLUDED.geom;
 
--- 3. KOS LISTINGS WITH ENRICHED UTILITIES & RULES (222 Listings)
+-- 3. KOS LISTINGS WITH ENRICHED UTILITIES & RULES (285 Listings)
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
 SELECT 'Kos Graha Kukusan Mandiri', 'ui-depok', 1650000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["bathroom_inside","wifi","ac","desk_chair","closet"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.8212, -6.3685), 4326)::geography, 'verified', 'Dekat Pintu Tol Kukusan dan Gerbang FT UI. Lingkungan tenang, banyak warung makan mahasiswa.'
 WHERE NOT EXISTS (
@@ -1150,907 +1244,1222 @@ WHERE NOT EXISTS (
   SELECT 1 FROM public.listings WHERE name = 'Paviliun Sakura Way Huwi' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Asri Sukarame', 'itera-lampung', 1500000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29898, -5.36986), 4326)::geography, 'verified', 'Jl. Harapan Jaya. Perbatasan Sukarame dan ITERA, sangat dekat sentra percetakan buku dan fotokopi murah.'
+SELECT 'Rumah Kos Dahlia Jl.', 'itera-lampung', 900000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30562, -5.36471), 4326)::geography, 'verified', 'Jl. Airan Raya. Dekat Rumah Sakit Airan Raya, sangat ramai kafe, apotek 24 jam, dan resto cepat saji.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Asri Sukarame' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Dahlia Jl.' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Ceria Sukarame', 'itera-lampung', 1425000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29609, -5.37167), 4326)::geography, 'verified', 'Jl. Harapan Jaya. Fasilitas lengkap sekelas coliving studio, WiFi kecepatan tinggi dedicated fiber optic.'
+SELECT 'Kost Srikandi', 'itera-lampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32896, -5.36086), 4326)::geography, 'verified', 'Jl. R.A. Basyid. Kawasan timur ITERA yang berkembang pesat, kamar berukuran luas 3.5x4 meter.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Ceria Sukarame' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Kost Srikandi' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos Cahaya', 'itera-lampung', 1075000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32044, -5.36432), 4326)::geography, 'verified', 'Gang Tembus Asrama. Dekat asrama kampus TB, kantin mahasiswa, dan fasilitas sarana olahraga.'
+SELECT 'Kos Mandiri Perumahan', 'itera-lampung', 1125000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31024, -5.35003), 4326)::geography, 'verified', 'Jl. Sirsak. Akses mudah ke jalur belakang ITERA (Belwis), favorit mahasiswa tingkat akhir yang skripsi.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos Cahaya' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Kos Mandiri Perumahan' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Al-Barokah', 'itera-lampung', 1000000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32251, -5.3609), 4326)::geography, 'verified', 'Jl. Belwis Kampus. Jalan kaki langsung ke Gedung Kuliah Umum (GKU 1 dan GKU 2) tanpa hambatan jalan raya.'
+SELECT 'Wisma Pratama', 'itera-lampung', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30664, -5.35376), 4326)::geography, 'verified', 'Jl. Lapas Raya. Dekat sentra warung makan Lapas Raya, 5 menit ke gerbang ITERA via jalur tikus mahasiswa.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Al-Barokah' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Pratama' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Pratama', 'itera-lampung', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29882, -5.37394), 4326)::geography, 'verified', 'Jl. Senopati. Fasilitas lengkap sekelas coliving studio, WiFi kecepatan tinggi dedicated fiber optic.'
+SELECT 'D''Kost Berkah Sukarame', 'itera-lampung', 1150000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29985, -5.36616), 4326)::geography, 'verified', 'Jl. Korpri Raya. Dekat SPBU dan minimarket 24 jam, cocok bagi mahasiswa yang mobilitasnya tinggi.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Pratama' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Berkah Sukarame' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Kenanga', 'itera-lampung', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32533, -5.35933), 4326)::geography, 'verified', 'Jl. Belwis Kampus. Pemandangan asri danau embung kampus, suasana sejuk teduh untuk jogging dan belajar.'
+SELECT 'Wisma Cahaya', 'itera-lampung', 575000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3333, -5.36133), 4326)::geography, 'verified', 'Jl. Fajar Indah. Kawasan timur ITERA yang berkembang pesat, kamar berukuran luas 3.5x4 meter.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Kenanga' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Cahaya' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Rindang', 'itera-lampung', 1500000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33204, -5.35255), 4326)::geography, 'verified', 'Jl. Fajar Indah. Kawasan timur ITERA yang berkembang pesat, kamar berukuran luas 3.5x4 meter.'
+SELECT 'Rumah Kos Pratama Way', 'itera-lampung', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30368, -5.35161), 4326)::geography, 'verified', 'Jl. Lapas Raya. Jalan aspal mulus, dekat laundry kiloan dan toko kelontong, bebas banjir.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Rindang' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Pratama Way' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Rumah Kos Anggrek', 'itera-lampung', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31741, -5.35521), 4326)::geography, 'verified', 'Simpang Ryacudu. Dekat halte bus Trans Lampung dan pusat jajanan mahasiswa sore-malam.'
+SELECT 'D''Kost Putra Jaya Terusan', 'itera-lampung', 1000000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31221, -5.35357), 4326)::geography, 'verified', 'Gg. Raden Saleh. Akses angkutan dan ojek online 24 jam, fasilitas lengkap dekat minimarket.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Anggrek' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Putra Jaya Terusan' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Kencana', 'itera-lampung', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31306, -5.35267), 4326)::geography, 'verified', 'Gg. Hasan. Persis di koridor utama kampus ITERA, jalan kaki 3-5 menit langsung masuk gerbang depan.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Kencana' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Berkah Sukarame', 'itera-lampung', 875000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29716, -5.37022), 4326)::geography, 'verified', 'Jl. Harapan Jaya. Dekat SPBU dan minimarket 24 jam, cocok bagi mahasiswa yang mobilitasnya tinggi.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Berkah Sukarame' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Pratama', 'itera-lampung', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30358, -5.34883), 4326)::geography, 'verified', 'Gg. Murai. Kawasan favorit mahasiswa ITERA, air sumur jernih melimpah, lingkungan aman berpagar.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Pratama' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Kenanga', 'itera-lampung', 1300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29642, -5.37377), 4326)::geography, 'verified', 'Jl. Senopati. Fasilitas lengkap sekelas coliving studio, WiFi kecepatan tinggi dedicated fiber optic.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Kenanga' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Putra Jaya', 'itera-lampung', 1125000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3074, -5.34733), 4326)::geography, 'verified', 'Jl. Kelengkeng. Akses mudah ke jalur belakang ITERA (Belwis), favorit mahasiswa tingkat akhir yang skripsi.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Putra Jaya' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Ganesha', 'itera-lampung', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30415, -5.35124), 4326)::geography, 'verified', 'Gg. Murai. Dekat sentra warung makan Lapas Raya, 5 menit ke gerbang ITERA via jalur tikus mahasiswa.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Ganesha' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Rumah Kos Ceria Sabah', 'itera-lampung', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33247, -5.35454), 4326)::geography, 'verified', 'Jl. Fajar Indah. Lingkungan tenang, biaya sewa sangat bersahabat bagi kantong mahasiswa.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Ceria Sabah' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Berkah Terusan', 'itera-lampung', 700000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31689, -5.35433), 4326)::geography, 'verified', 'Jl. Terusan Ryacudu. Persis di koridor utama kampus ITERA, jalan kaki 3-5 menit langsung masuk gerbang depan.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Berkah Terusan' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Putri Cantika Perumahan', 'itera-lampung', 1300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30801, -5.34767), 4326)::geography, 'verified', 'Jl. Sirsak. Akses mudah ke jalur belakang ITERA (Belwis), favorit mahasiswa tingkat akhir yang skripsi.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Putri Cantika Perumahan' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost An-Nur Belakang', 'itera-lampung', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32459, -5.36), 4326)::geography, 'verified', 'Gang Tembus Asrama. Pemandangan asri danau embung kampus, suasana sejuk teduh untuk jogging dan belajar.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'D''Kost An-Nur Belakang' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Cendana Sabah', 'itera-lampung', 875000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33417, -5.35343), 4326)::geography, 'verified', 'Gg. Damai Sabah Balau. Lingkungan tenang, biaya sewa sangat bersahabat bagi kantong mahasiswa.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Cendana Sabah' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Cendana', 'itera-lampung', 1275000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30703, -5.35026), 4326)::geography, 'verified', 'Jl. Nangka. Kompleks perumahan tenang dan asri, jalan paving blok lebar, bebas polusi suara.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Cendana' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Rumah Kos Putri Cantika', 'itera-lampung', 1275000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31592, -5.35287), 4326)::geography, 'verified', 'Gg. Raden Saleh. Akses angkutan dan ojek online 24 jam, fasilitas lengkap dekat minimarket.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Putri Cantika' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Griya Indah', 'itera-lampung', 575000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33641, -5.35962), 4326)::geography, 'verified', 'Gg. Damai Sabah Balau. Kawasan timur ITERA yang berkembang pesat, kamar berukuran luas 3.5x4 meter.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Griya Indah' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos Ceria', 'itera-lampung', 550000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31033, -5.34977), 4326)::geography, 'verified', 'Jl. Sirsak. Kompleks perumahan tenang dan asri, jalan paving blok lebar, bebas polusi suara.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos Ceria' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Asri Perumahan', 'itera-lampung', 700000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30853, -5.34859), 4326)::geography, 'verified', 'Jl. Belwis. Kompleks perumahan tenang dan asri, jalan paving blok lebar, bebas polusi suara.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Asri Perumahan' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Sejahtera Belakang', 'itera-lampung', 850000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32517, -5.35913), 4326)::geography, 'verified', 'Jl. Belwis Kampus. Jalan kaki langsung ke Gedung Kuliah Umum (GKU 1 dan GKU 2) tanpa hambatan jalan raya.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Sejahtera Belakang' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos Anggrek', 'itera-lampung', 1500000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30795, -5.34809), 4326)::geography, 'verified', 'Jl. Kelengkeng. Kompleks perumahan tenang dan asri, jalan paving blok lebar, bebas polusi suara.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos Anggrek' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Srikandi', 'itera-lampung', 1475000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29445, -5.36738), 4326)::geography, 'verified', 'Jl. Harapan Jaya. Fasilitas lengkap sekelas coliving studio, WiFi kecepatan tinggi dedicated fiber optic.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Srikandi' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos Ganesha', 'itera-lampung', 975000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3253, -5.36307), 4326)::geography, 'verified', 'Jalur Embung C. Dekat asrama kampus TB, kantin mahasiswa, dan fasilitas sarana olahraga.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos Ganesha' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Nusantara', 'itera-lampung', 1325000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31006, -5.35026), 4326)::geography, 'verified', 'Jl. Kelengkeng. Akses mudah ke jalur belakang ITERA (Belwis), favorit mahasiswa tingkat akhir yang skripsi.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Nusantara' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost Griya Indah Sukarame', 'itera-lampung', 1050000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29927, -5.36679), 4326)::geography, 'verified', 'Jl. Harapan Jaya. Perbatasan Sukarame dan ITERA, sangat dekat sentra percetakan buku dan fotokopi murah.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'D''Kost Griya Indah Sukarame' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost Griya Indah Belakang', 'itera-lampung', 1075000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32159, -5.3614), 4326)::geography, 'verified', 'Gang Tembus Asrama. Jalan kaki langsung ke Gedung Kuliah Umum (GKU 1 dan GKU 2) tanpa hambatan jalan raya.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'D''Kost Griya Indah Belakang' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Melati Perumahan', 'itera-lampung', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30962, -5.35105), 4326)::geography, 'verified', 'Jl. Sirsak. Kompleks perumahan tenang dan asri, jalan paving blok lebar, bebas polusi suara.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Melati Perumahan' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Khairunnisa', 'itera-lampung', 1025000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30167, -5.35811), 4326)::geography, 'verified', 'Gg. Airan 1. Dekat Rumah Sakit Airan Raya, sangat ramai kafe, apotek 24 jam, dan resto cepat saji.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Khairunnisa' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Berkah Belakang', 'itera-lampung', 675000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32115, -5.35917), 4326)::geography, 'verified', 'Jl. Belwis Kampus. Pemandangan asri danau embung kampus, suasana sejuk teduh untuk jogging dan belajar.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Berkah Belakang' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Melati', 'itera-lampung', 1300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30399, -5.35028), 4326)::geography, 'verified', 'Gg. Murai. Jalan aspal mulus, dekat laundry kiloan dan toko kelontong, bebas banjir.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Melati' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos Al-Ikhlas', 'itera-lampung', 1425000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31408, -5.35268), 4326)::geography, 'verified', 'Gg. Raden Saleh. Persis di koridor utama kampus ITERA, jalan kaki 3-5 menit langsung masuk gerbang depan.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos Al-Ikhlas' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya An-Nur Sabah', 'itera-lampung', 925000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3287, -5.36111), 4326)::geography, 'verified', 'Jl. Fajar Indah. Halaman luas, parkiran aman berpagar tinggi dengan penjagaan warga.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya An-Nur Sabah' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Barokah Belakang', 'itera-lampung', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32471, -5.36227), 4326)::geography, 'verified', 'Jalur Embung C. Pemandangan asri danau embung kampus, suasana sejuk teduh untuk jogging dan belajar.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Barokah Belakang' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Srikandi', 'itera-lampung', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","water_heater","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31423, -5.35346), 4326)::geography, 'verified', 'Gg. Raden Saleh. Dekat halte bus Trans Lampung dan pusat jajanan mahasiswa sore-malam.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Srikandi' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Putra Jaya Terusan', 'itera-lampung', 1025000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31534, -5.35692), 4326)::geography, 'verified', 'Gg. Hasan. Akses angkutan dan ojek online 24 jam, fasilitas lengkap dekat minimarket.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Putra Jaya Terusan' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Griya Indah Way', 'itera-lampung', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30305, -5.35286), 4326)::geography, 'verified', 'Gg. Kancil. Kawasan favorit mahasiswa ITERA, air sumur jernih melimpah, lingkungan aman berpagar.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Griya Indah Way' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Pelangi Sukarame', 'itera-lampung', 1725000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","water_heater","access_24h","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29914, -5.36704), 4326)::geography, 'verified', 'Jl. Korpri Raya. Perbatasan Sukarame dan ITERA, sangat dekat sentra percetakan buku dan fotokopi murah.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Pelangi Sukarame' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Al-Hikmah', 'itera-lampung', 900000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32052, -5.36158), 4326)::geography, 'verified', 'Jl. Belwis Kampus. Pemandangan asri danau embung kampus, suasana sejuk teduh untuk jogging dan belajar.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Al-Hikmah' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Rumah Kos An-Nur Jl.', 'itera-lampung', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30408, -5.36377), 4326)::geography, 'verified', 'Jl. Airan Raya. Tipe hunian modern, akses 7 menit tembus ke gerbang ITERA, parkir motor luas berkanopi.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos An-Nur Jl.' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Flamboyan', 'itera-lampung', 750000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33575, -5.35248), 4326)::geography, 'verified', 'Jl. Fajar Indah. Halaman luas, parkiran aman berpagar tinggi dengan penjagaan warga.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Flamboyan' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost Khairunnisa', 'itera-lampung', 850000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32372, -5.35994), 4326)::geography, 'verified', 'Jl. Belwis Kampus. Jalan kaki langsung ke Gedung Kuliah Umum (GKU 1 dan GKU 2) tanpa hambatan jalan raya.'
+SELECT 'D''Kost Khairunnisa', 'itera-lampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33338, -5.35495), 4326)::geography, 'verified', 'Gg. Damai Sabah Balau. Halaman luas, parkiran aman berpagar tinggi dengan penjagaan warga.'
 WHERE NOT EXISTS (
   SELECT 1 FROM public.listings WHERE name = 'D''Kost Khairunnisa' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Pelangi Terusan', 'itera-lampung', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31217, -5.35381), 4326)::geography, 'verified', 'Gg. Raden Saleh. Akses angkutan dan ojek online 24 jam, fasilitas lengkap dekat minimarket.'
+SELECT 'Rumah Kos Cendana', 'itera-lampung', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30309, -5.36415), 4326)::geography, 'verified', 'Jl. Airan Raya. Tipe hunian modern, akses 7 menit tembus ke gerbang ITERA, parkir motor luas berkanopi.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Pelangi Terusan' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Cendana' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Mahasiswa Belakang', 'itera-lampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32542, -5.3623), 4326)::geography, 'verified', 'Jl. Belwis Kampus. Dekat asrama kampus TB, kantin mahasiswa, dan fasilitas sarana olahraga.'
+SELECT 'Kost Pelangi Belakang', 'itera-lampung', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32067, -5.35901), 4326)::geography, 'verified', 'Gang Tembus Asrama. Jalan kaki langsung ke Gedung Kuliah Umum (GKU 1 dan GKU 2) tanpa hambatan jalan raya.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Mahasiswa Belakang' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Kost Pelangi Belakang' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Sentosa', 'itera-lampung', 900000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32537, -5.36071), 4326)::geography, 'verified', 'Jl. Belwis Kampus. Pemandangan asri danau embung kampus, suasana sejuk teduh untuk jogging dan belajar.'
+SELECT 'Kost Melati', 'itera-lampung', 700000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32493, -5.3613), 4326)::geography, 'verified', 'Jalur Embung C. Pemandangan asri danau embung kampus, suasana sejuk teduh untuk jogging dan belajar.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Sentosa' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Kost Melati' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Rumah Kos Barokah', 'itera-lampung', 1150000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31629, -5.35292), 4326)::geography, 'verified', 'Gg. Hasan. Dekat halte bus Trans Lampung dan pusat jajanan mahasiswa sore-malam.'
+SELECT 'Pondok Anggrek', 'itera-lampung', 1425000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.2995, -5.36782), 4326)::geography, 'verified', 'Jl. Endro Suratmin. Dekat SPBU dan minimarket 24 jam, cocok bagi mahasiswa yang mobilitasnya tinggi.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Barokah' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Anggrek' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost Khairunnisa Terusan', 'itera-lampung', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31265, -5.35643), 4326)::geography, 'verified', 'Gg. Raden Saleh. Akses angkutan dan ojek online 24 jam, fasilitas lengkap dekat minimarket.'
+SELECT 'Griya Dahlia Terusan', 'itera-lampung', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31342, -5.35325), 4326)::geography, 'verified', 'Gg. Hasan. Persis di koridor utama kampus ITERA, jalan kaki 3-5 menit langsung masuk gerbang depan.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'D''Kost Khairunnisa Terusan' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Griya Dahlia Terusan' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Al-Barokah', 'itera-lampung', 750000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33109, -5.35339), 4326)::geography, 'verified', 'Jl. R.A. Basyid. Kawasan timur ITERA yang berkembang pesat, kamar berukuran luas 3.5x4 meter.'
+SELECT 'Griya Sejahtera Sukarame', 'itera-lampung', 1700000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29537, -5.37211), 4326)::geography, 'verified', 'Jl. Korpri Raya. Dekat SPBU dan minimarket 24 jam, cocok bagi mahasiswa yang mobilitasnya tinggi.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Al-Barokah' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Griya Sejahtera Sukarame' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Rindang Terusan', 'itera-lampung', 675000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31727, -5.35584), 4326)::geography, 'verified', 'Jl. Terusan Ryacudu. Akses angkutan dan ojek online 24 jam, fasilitas lengkap dekat minimarket.'
+SELECT 'Griya Harmoni Perumahan', 'itera-lampung', 1225000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30964, -5.35), 4326)::geography, 'verified', 'Jl. Sirsak. Akses mudah ke jalur belakang ITERA (Belwis), favorit mahasiswa tingkat akhir yang skripsi.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Rindang Terusan' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Griya Harmoni Perumahan' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Sakinah Terusan', 'itera-lampung', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31769, -5.35289), 4326)::geography, 'verified', 'Gg. Raden Saleh. Akses angkutan dan ojek online 24 jam, fasilitas lengkap dekat minimarket.'
+SELECT 'Kos Permata', 'itera-lampung', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33, -5.35385), 4326)::geography, 'verified', 'Jl. R.A. Basyid. Kawasan timur ITERA yang berkembang pesat, kamar berukuran luas 3.5x4 meter.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Sakinah Terusan' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Kos Permata' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Putri Cantika Terusan', 'itera-lampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31362, -5.35254), 4326)::geography, 'verified', 'Jl. Terusan Ryacudu. Dekat halte bus Trans Lampung dan pusat jajanan mahasiswa sore-malam.'
+SELECT 'Asrama Sentosa Sukarame', 'itera-lampung', 1475000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29405, -5.36735), 4326)::geography, 'verified', 'Jl. Harapan Jaya. Dekat SPBU dan minimarket 24 jam, cocok bagi mahasiswa yang mobilitasnya tinggi.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Putri Cantika Terusan' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Sentosa Sukarame' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Srikandi Way', 'itera-lampung', 1075000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30582, -5.34952), 4326)::geography, 'verified', 'Gg. Murai. Kawasan favorit mahasiswa ITERA, air sumur jernih melimpah, lingkungan aman berpagar.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Srikandi Way' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Putri Cantika Sukarame', 'itera-lampung', 1275000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29695, -5.37204), 4326)::geography, 'verified', 'Jl. Korpri Raya. Perbatasan Sukarame dan ITERA, sangat dekat sentra percetakan buku dan fotokopi murah.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Putri Cantika Sukarame' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Amanah Perumahan', 'itera-lampung', 1100000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31026, -5.3496), 4326)::geography, 'verified', 'Jl. Belwis. Keamanan portal malam 24 jam, lingkungan ramah keluarga dan mahasiswa.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Amanah Perumahan' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost Asri', 'itera-lampung', 675000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32348, -5.36373), 4326)::geography, 'verified', 'Jl. Belwis Kampus. Jalan kaki langsung ke Gedung Kuliah Umum (GKU 1 dan GKU 2) tanpa hambatan jalan raya.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'D''Kost Asri' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost Rindang', 'itera-lampung', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29573, -5.36921), 4326)::geography, 'verified', 'Jl. Harapan Jaya. Perbatasan Sukarame dan ITERA, sangat dekat sentra percetakan buku dan fotokopi murah.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'D''Kost Rindang' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Pratama Way', 'itera-lampung', 975000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30442, -5.35211), 4326)::geography, 'verified', 'Jl. Lapas Raya. Kawasan favorit mahasiswa ITERA, air sumur jernih melimpah, lingkungan aman berpagar.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Pratama Way' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Al-Barokah', 'itera-lampung', 625000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30403, -5.36379), 4326)::geography, 'verified', 'Jl. Airan Raya. Tipe hunian modern, akses 7 menit tembus ke gerbang ITERA, parkir motor luas berkanopi.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Al-Barokah' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama An-Nur', 'itera-lampung', 950000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3031, -5.34884), 4326)::geography, 'verified', 'Jl. Lapas Raya. Dekat sentra warung makan Lapas Raya, 5 menit ke gerbang ITERA via jalur tikus mahasiswa.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama An-Nur' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Rindang', 'itera-lampung', 1425000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30058, -5.35813), 4326)::geography, 'verified', 'Jl. Airan Jaya. Tipe hunian modern, akses 7 menit tembus ke gerbang ITERA, parkir motor luas berkanopi.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Rindang' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Griya Indah Terusan', 'itera-lampung', 1150000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31246, -5.3563), 4326)::geography, 'verified', 'Simpang Ryacudu. Dekat halte bus Trans Lampung dan pusat jajanan mahasiswa sore-malam.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Griya Indah Terusan' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Nusantara', 'itera-lampung', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30111, -5.36276), 4326)::geography, 'verified', 'Gg. Airan 1. Tipe hunian modern, akses 7 menit tembus ke gerbang ITERA, parkir motor luas berkanopi.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Nusantara' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Berkah', 'itera-lampung', 1000000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29242, -5.36845), 4326)::geography, 'verified', 'Jl. Korpri Raya. Fasilitas lengkap sekelas coliving studio, WiFi kecepatan tinggi dedicated fiber optic.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Berkah' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Pertiwi Way', 'itera-lampung', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30278, -5.35276), 4326)::geography, 'verified', 'Jl. Lapas Jaya. Dekat sentra warung makan Lapas Raya, 5 menit ke gerbang ITERA via jalur tikus mahasiswa.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Pertiwi Way' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Ganesha Perumahan', 'itera-lampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30913, -5.34989), 4326)::geography, 'verified', 'Jl. Manggis. Keamanan portal malam 24 jam, lingkungan ramah keluarga dan mahasiswa.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Ganesha Perumahan' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos Sakinah Terusan', 'itera-lampung', 1375000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31242, -5.35352), 4326)::geography, 'verified', 'Gg. Hasan. Persis di koridor utama kampus ITERA, jalan kaki 3-5 menit langsung masuk gerbang depan.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos Sakinah Terusan' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Melati Sabah', 'itera-lampung', 675000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32958, -5.36179), 4326)::geography, 'verified', 'Gg. Damai Sabah Balau. Kawasan timur ITERA yang berkembang pesat, kamar berukuran luas 3.5x4 meter.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Melati Sabah' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos Berkah', 'itera-lampung', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30551, -5.35061), 4326)::geography, 'verified', 'Gg. Kancil. Dekat sentra warung makan Lapas Raya, 5 menit ke gerbang ITERA via jalur tikus mahasiswa.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos Berkah' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Mahasiswa Jl.', 'itera-lampung', 675000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3033, -5.36242), 4326)::geography, 'verified', 'Gg. Airan 1. Sirkulasi udara sejuk, air bersih lancar dengan toren cadangan.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Mahasiswa Jl.' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos Srikandi Way', 'itera-lampung', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3055, -5.35385), 4326)::geography, 'verified', 'Jl. Lapas Jaya. Kawasan favorit mahasiswa ITERA, air sumur jernih melimpah, lingkungan aman berpagar.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos Srikandi Way' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost Kenanga', 'itera-lampung', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33043, -5.35802), 4326)::geography, 'verified', 'Gg. Damai Sabah Balau. Lingkungan tenang, biaya sewa sangat bersahabat bagi kantong mahasiswa.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'D''Kost Kenanga' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos Khairunnisa Jl.', 'itera-lampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30249, -5.35832), 4326)::geography, 'verified', 'Jl. Airan Raya. Tipe hunian modern, akses 7 menit tembus ke gerbang ITERA, parkir motor luas berkanopi.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos Khairunnisa Jl.' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos Nusantara Jl.', 'itera-lampung', 1425000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30139, -5.35971), 4326)::geography, 'verified', 'Jl. Airan Raya. Tipe hunian modern, akses 7 menit tembus ke gerbang ITERA, parkir motor luas berkanopi.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos Nusantara Jl.' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Rumah Kos Kemuning Perumahan', 'itera-lampung', 1050000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30911, -5.35167), 4326)::geography, 'verified', 'Jl. Kelengkeng. Kompleks perumahan tenang dan asri, jalan paving blok lebar, bebas polusi suara.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Kemuning Perumahan' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost Al-Barokah Sabah', 'itera-lampung', 650000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33038, -5.35351), 4326)::geography, 'verified', 'Jl. R.A. Basyid. Kawasan timur ITERA yang berkembang pesat, kamar berukuran luas 3.5x4 meter.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'D''Kost Al-Barokah Sabah' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost Harmoni', 'itera-lampung', 675000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32151, -5.35976), 4326)::geography, 'verified', 'Jl. Belwis Kampus. Jalan kaki langsung ke Gedung Kuliah Umum (GKU 1 dan GKU 2) tanpa hambatan jalan raya.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'D''Kost Harmoni' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Griya Indah Way', 'itera-lampung', 800000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30394, -5.3528), 4326)::geography, 'verified', 'Gg. Kancil. Kawasan favorit mahasiswa ITERA, air sumur jernih melimpah, lingkungan aman berpagar.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Griya Indah Way' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Putra Jaya Perumahan', 'itera-lampung', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31034, -5.35139), 4326)::geography, 'verified', 'Jl. Manggis. Akses mudah ke jalur belakang ITERA (Belwis), favorit mahasiswa tingkat akhir yang skripsi.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Putra Jaya Perumahan' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Asri', 'itera-lampung', 1500000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","water_heater","access_24h","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31249, -5.353), 4326)::geography, 'verified', 'Gg. Hasan. Dekat halte bus Trans Lampung dan pusat jajanan mahasiswa sore-malam.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Asri' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Sejahtera', 'itera-lampung', 1500000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.2922, -5.36979), 4326)::geography, 'verified', 'Jl. Senopati. Dekat SPBU dan minimarket 24 jam, cocok bagi mahasiswa yang mobilitasnya tinggi.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Sejahtera' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Mahasiswa Jl.', 'itera-lampung', 975000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30445, -5.36286), 4326)::geography, 'verified', 'Gg. Airan 1. Sirkulasi udara sejuk, air bersih lancar dengan toren cadangan.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Mahasiswa Jl.' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Ceria', 'itera-lampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31743, -5.3553), 4326)::geography, 'verified', 'Jl. Terusan Ryacudu. Dekat halte bus Trans Lampung dan pusat jajanan mahasiswa sore-malam.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Ceria' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Sentosa Perumahan', 'itera-lampung', 700000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30746, -5.35033), 4326)::geography, 'verified', 'Jl. Kelengkeng. Kompleks perumahan tenang dan asri, jalan paving blok lebar, bebas polusi suara.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Sentosa Perumahan' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Asri Perumahan', 'itera-lampung', 600000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30998, -5.35092), 4326)::geography, 'verified', 'Jl. Kelengkeng. Akses mudah ke jalur belakang ITERA (Belwis), favorit mahasiswa tingkat akhir yang skripsi.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Asri Perumahan' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Asri', 'itera-lampung', 650000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32007, -5.36298), 4326)::geography, 'verified', 'Jalur Embung C. Jalan kaki langsung ke Gedung Kuliah Umum (GKU 1 dan GKU 2) tanpa hambatan jalan raya.'
+SELECT 'Griya Asri', 'itera-lampung', 650000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32928, -5.35985), 4326)::geography, 'verified', 'Gg. Damai Sabah Balau. Lingkungan tenang, biaya sewa sangat bersahabat bagi kantong mahasiswa.'
 WHERE NOT EXISTS (
   SELECT 1 FROM public.listings WHERE name = 'Griya Asri' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost Griya Indah Perumahan', 'itera-lampung', 1150000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30739, -5.35189), 4326)::geography, 'verified', 'Jl. Sirsak. Akses mudah ke jalur belakang ITERA (Belwis), favorit mahasiswa tingkat akhir yang skripsi.'
+SELECT 'Asrama Pelangi', 'itera-lampung', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31301, -5.35644), 4326)::geography, 'verified', 'Gg. Raden Saleh. Persis di koridor utama kampus ITERA, jalan kaki 3-5 menit langsung masuk gerbang depan.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'D''Kost Griya Indah Perumahan' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Pelangi' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Nusantara Perumahan', 'itera-lampung', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30896, -5.34848), 4326)::geography, 'verified', 'Jl. Belwis. Akses mudah ke jalur belakang ITERA (Belwis), favorit mahasiswa tingkat akhir yang skripsi.'
+SELECT 'Pondok Harmoni', 'itera-lampung', 1425000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29597, -5.37282), 4326)::geography, 'verified', 'Jl. Harapan Jaya. Fasilitas lengkap sekelas coliving studio, WiFi kecepatan tinggi dedicated fiber optic.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Nusantara Perumahan' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Harmoni' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Pratama Sabah', 'itera-lampung', 900000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33207, -5.35314), 4326)::geography, 'verified', 'Jl. R.A. Basyid. Kawasan timur ITERA yang berkembang pesat, kamar berukuran luas 3.5x4 meter.'
+SELECT 'Pondok Flamboyan', 'itera-lampung', 1500000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31326, -5.3569), 4326)::geography, 'verified', 'Jl. Terusan Ryacudu. Dekat halte bus Trans Lampung dan pusat jajanan mahasiswa sore-malam.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Pratama Sabah' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Flamboyan' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Berkah Sukarame', 'itera-lampung', 1425000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.2997, -5.37062), 4326)::geography, 'verified', 'Jl. Korpri Raya. Dekat SPBU dan minimarket 24 jam, cocok bagi mahasiswa yang mobilitasnya tinggi.'
+SELECT 'Kost Permata Way', 'itera-lampung', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30296, -5.35366), 4326)::geography, 'verified', 'Jl. Lapas Raya. Kawasan favorit mahasiswa ITERA, air sumur jernih melimpah, lingkungan aman berpagar.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Berkah Sukarame' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Kost Permata Way' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost Bintang', 'itera-lampung', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33055, -5.35273), 4326)::geography, 'verified', 'Jl. Fajar Indah. Halaman luas, parkiran aman berpagar tinggi dengan penjagaan warga.'
+SELECT 'Paviliun Asri', 'itera-lampung', 1300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30032, -5.36286), 4326)::geography, 'verified', 'Gg. Melati Airan. Dekat Rumah Sakit Airan Raya, sangat ramai kafe, apotek 24 jam, dan resto cepat saji.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'D''Kost Bintang' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Asri' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Pelangi', 'itera-lampung', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30626, -5.35043), 4326)::geography, 'verified', 'Jl. Lapas Jaya. Dekat sentra warung makan Lapas Raya, 5 menit ke gerbang ITERA via jalur tikus mahasiswa.'
+SELECT 'Griya Cahaya Terusan', 'itera-lampung', 1600000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31279, -5.35501), 4326)::geography, 'verified', 'Simpang Ryacudu. Dekat halte bus Trans Lampung dan pusat jajanan mahasiswa sore-malam.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Pelangi' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Griya Cahaya Terusan' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya An-Nur', 'itera-lampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30363, -5.35836), 4326)::geography, 'verified', 'Gg. Melati Airan. Dekat Rumah Sakit Airan Raya, sangat ramai kafe, apotek 24 jam, dan resto cepat saji.'
+SELECT 'D''Kost Flamboyan', 'itera-lampung', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30304, -5.34857), 4326)::geography, 'verified', 'Jl. Lapas Raya. Dekat sentra warung makan Lapas Raya, 5 menit ke gerbang ITERA via jalur tikus mahasiswa.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya An-Nur' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Flamboyan' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Al-Hikmah Jl.', 'itera-lampung', 1325000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30183, -5.35995), 4326)::geography, 'verified', 'Gg. Melati Airan. Tipe hunian modern, akses 7 menit tembus ke gerbang ITERA, parkir motor luas berkanopi.'
+SELECT 'D''Kost Amanah Way', 'itera-lampung', 1025000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30539, -5.35182), 4326)::geography, 'verified', 'Jl. Lapas Raya. Kawasan favorit mahasiswa ITERA, air sumur jernih melimpah, lingkungan aman berpagar.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Al-Hikmah Jl.' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Amanah Way' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Al-Ikhlas Sukarame', 'itera-lampung', 1700000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29668, -5.37041), 4326)::geography, 'verified', 'Jl. Korpri Raya. Fasilitas lengkap sekelas coliving studio, WiFi kecepatan tinggi dedicated fiber optic.'
+SELECT 'D''Kost Flamboyan Sukarame', 'itera-lampung', 1600000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29947, -5.37098), 4326)::geography, 'verified', 'Jl. Senopati. Dekat SPBU dan minimarket 24 jam, cocok bagi mahasiswa yang mobilitasnya tinggi.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Al-Ikhlas Sukarame' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Flamboyan Sukarame' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Amanah', 'itera-lampung', 650000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30921, -5.34862), 4326)::geography, 'verified', 'Jl. Nangka. Akses mudah ke jalur belakang ITERA (Belwis), favorit mahasiswa tingkat akhir yang skripsi.'
+SELECT 'Paviliun Flamboyan Belakang', 'itera-lampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31996, -5.36474), 4326)::geography, 'verified', 'Jl. Belwis Kampus. Dekat asrama kampus TB, kantin mahasiswa, dan fasilitas sarana olahraga.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Amanah' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Flamboyan Belakang' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Bintang', 'itera-lampung', 1025000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.2968, -5.3713), 4326)::geography, 'verified', 'Jl. Harapan Jaya. Dekat SPBU dan minimarket 24 jam, cocok bagi mahasiswa yang mobilitasnya tinggi.'
+SELECT 'Paviliun Permata', 'itera-lampung', 1475000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31347, -5.35393), 4326)::geography, 'verified', 'Gg. Hasan. Akses angkutan dan ojek online 24 jam, fasilitas lengkap dekat minimarket.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Bintang' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Permata' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos Sakinah', 'itera-lampung', 1075000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30146, -5.35995), 4326)::geography, 'verified', 'Jl. Airan Raya. Tipe hunian modern, akses 7 menit tembus ke gerbang ITERA, parkir motor luas berkanopi.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos Sakinah' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Griya Indah', 'itera-lampung', 1150000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33239, -5.35865), 4326)::geography, 'verified', 'Jl. Fajar Indah. Lingkungan tenang, biaya sewa sangat bersahabat bagi kantong mahasiswa.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Griya Indah' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Kencana', 'itera-lampung', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3223, -5.36096), 4326)::geography, 'verified', 'Jalur Embung C. Dekat asrama kampus TB, kantin mahasiswa, dan fasilitas sarana olahraga.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Kencana' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama An-Nur Sabah', 'itera-lampung', 625000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32831, -5.35655), 4326)::geography, 'verified', 'Jl. Fajar Indah. Kawasan timur ITERA yang berkembang pesat, kamar berukuran luas 3.5x4 meter.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama An-Nur Sabah' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Al-Hikmah Jl.', 'itera-lampung', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30163, -5.36411), 4326)::geography, 'verified', 'Gg. Melati Airan. Sirkulasi udara sejuk, air bersih lancar dengan toren cadangan.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Al-Hikmah Jl.' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Rumah Kos Pelangi Belakang', 'itera-lampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32542, -5.36075), 4326)::geography, 'verified', 'Jalur Embung C. Jalan kaki langsung ke Gedung Kuliah Umum (GKU 1 dan GKU 2) tanpa hambatan jalan raya.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Pelangi Belakang' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Berkah Way', 'itera-lampung', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater","access_24h","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30615, -5.35189), 4326)::geography, 'verified', 'Jl. Lapas Raya. Kawasan favorit mahasiswa ITERA, air sumur jernih melimpah, lingkungan aman berpagar.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Berkah Way' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos Al-Ikhlas Terusan', 'itera-lampung', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3168, -5.35443), 4326)::geography, 'verified', 'Gg. Hasan. Dekat halte bus Trans Lampung dan pusat jajanan mahasiswa sore-malam.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos Al-Ikhlas Terusan' AND campus_id = 'itera-lampung'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Rumah Kos Permata', 'itera-lampung', 1500000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31923, -5.36221), 4326)::geography, 'verified', 'Gang Tembus Asrama. Jalan kaki langsung ke Gedung Kuliah Umum (GKU 1 dan GKU 2) tanpa hambatan jalan raya.'
+SELECT 'Rumah Kos Permata', 'itera-lampung', 925000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32318, -5.36415), 4326)::geography, 'verified', 'Jalur Embung C. Jalan kaki langsung ke Gedung Kuliah Umum (GKU 1 dan GKU 2) tanpa hambatan jalan raya.'
 WHERE NOT EXISTS (
   SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Permata' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Harmoni', 'itera-lampung', 1500000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30469, -5.36274), 4326)::geography, 'verified', 'Gg. Melati Airan. Sirkulasi udara sejuk, air bersih lancar dengan toren cadangan.'
+SELECT 'Kos Ceria Jl.', 'itera-lampung', 1475000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","water_heater","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3045, -5.35807), 4326)::geography, 'verified', 'Gg. Airan 1. Sirkulasi udara sejuk, air bersih lancar dengan toren cadangan.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Harmoni' AND campus_id = 'itera-lampung'
+  SELECT 1 FROM public.listings WHERE name = 'Kos Ceria Jl.' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Flamboyan Pondok', 'ui-depok', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83173, -6.36277), 4326)::geography, 'verified', 'Jl. Kancil. Akses jembatan penyeberangan kampus ke FIB dan FEB.'
+SELECT 'Griya Rindang', 'itera-lampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30565, -5.35074), 4326)::geography, 'verified', 'Gg. Murai. Dekat sentra warung makan Lapas Raya, 5 menit ke gerbang ITERA via jalur tikus mahasiswa.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Flamboyan Pondok' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Griya Rindang' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Griya Indah', 'ui-depok', 1275000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83643, -6.3634), 4326)::geography, 'verified', 'Jl. Sawo. Sentra kos legendaris mahasiswa UI, aneka kuliner dan laundry 24 jam.'
+SELECT 'Wisma Al-Ikhlas', 'itera-lampung', 1100000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30545, -5.35882), 4326)::geography, 'verified', 'Jl. Airan Raya. Tipe hunian modern, akses 7 menit tembus ke gerbang ITERA, parkir motor luas berkanopi.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Griya Indah' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Al-Ikhlas' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Rumah Kos Sakinah Kukusan', 'ui-depok', 1300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82586, -6.35609), 4326)::geography, 'verified', 'Jl. KH Ahmad Dahlan. Suasana perumahan sejuk, dekat lapangan dan masjid.'
+SELECT 'Kost Nusantara', 'itera-lampung', 1500000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3002, -5.36449), 4326)::geography, 'verified', 'Gg. Airan 1. Dekat Rumah Sakit Airan Raya, sangat ramai kafe, apotek 24 jam, dan resto cepat saji.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Sakinah Kukusan' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Kost Nusantara' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Barokah', 'ui-depok', 1475000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82307, -6.36884), 4326)::geography, 'verified', 'Jl. Rawa Maya. Sangat dekat gerbang Kutek FT UI, banyak warung makan murah.'
+SELECT 'D''Kost Srikandi', 'itera-lampung', 1075000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30722, -5.35071), 4326)::geography, 'verified', 'Jl. Nangka. Akses mudah ke jalur belakang ITERA (Belwis), favorit mahasiswa tingkat akhir yang skripsi.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Barokah' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Srikandi' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Putra Jaya Kober', 'ui-depok', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83618, -6.36494), 4326)::geography, 'verified', 'Jl. Sawo. Dekat Stasiun UI dan perpustakaan.'
+SELECT 'Pondok Ceria Sabah', 'itera-lampung', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32857, -5.3591), 4326)::geography, 'verified', 'Jl. Fajar Indah. Halaman luas, parkiran aman berpagar tinggi dengan penjagaan warga.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Putra Jaya Kober' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Ceria Sabah' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Srikandi', 'ui-depok', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83341, -6.36378), 4326)::geography, 'verified', 'Jl. Kober. Dekat Stasiun UI dan perpustakaan.'
+SELECT 'Paviliun Al-Ikhlas', 'itera-lampung', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30269, -5.35097), 4326)::geography, 'verified', 'Gg. Murai. Dekat sentra warung makan Lapas Raya, 5 menit ke gerbang ITERA via jalur tikus mahasiswa.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Srikandi' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Al-Ikhlas' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Melati', 'ui-depok', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83417, -6.3643), 4326)::geography, 'verified', 'Jl. Sawo. Dekat Stasiun UI dan perpustakaan.'
+SELECT 'Paviliun Anggrek Jl.', 'itera-lampung', 1325000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3021, -5.36226), 4326)::geography, 'verified', 'Jl. Airan Raya. Sirkulasi udara sejuk, air bersih lancar dengan toren cadangan.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Melati' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Anggrek Jl.' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Al-Ikhlas Kukusan', 'ui-depok', 1600000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82068, -6.36633), 4326)::geography, 'verified', 'Jl. Rawa Maya. Sangat dekat gerbang Kutek FT UI, banyak warung makan murah.'
+SELECT 'Rumah Kos Kemuning', 'itera-lampung', 950000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32166, -5.3617), 4326)::geography, 'verified', 'Jalur Embung C. Dekat asrama kampus TB, kantin mahasiswa, dan fasilitas sarana olahraga.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Al-Ikhlas Kukusan' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Kemuning' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost Harmoni Kober', 'ui-depok', 1725000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83572, -6.36868), 4326)::geography, 'verified', 'Jl. Sawo. Sentra kos legendaris mahasiswa UI, aneka kuliner dan laundry 24 jam.'
+SELECT 'Wisma Bintang', 'itera-lampung', 975000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30362, -5.35247), 4326)::geography, 'verified', 'Gg. Murai. Kawasan favorit mahasiswa ITERA, air sumur jernih melimpah, lingkungan aman berpagar.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'D''Kost Harmoni Kober' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Bintang' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Kencana', 'ui-depok', 2075000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83316, -6.36198), 4326)::geography, 'verified', 'Jl. Kancil. Dekat Stasiun KRL Pondok Cina dan Margonda Raya.'
+SELECT 'Wisma Dahlia', 'itera-lampung', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","water_heater","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31269, -5.35255), 4326)::geography, 'verified', 'Simpang Ryacudu. Dekat halte bus Trans Lampung dan pusat jajanan mahasiswa sore-malam.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Kencana' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Dahlia' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Bintang Kober', 'ui-depok', 1100000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83651, -6.36444), 4326)::geography, 'verified', 'Jl. Sawo. Dekat Stasiun UI dan perpustakaan.'
+SELECT 'Paviliun Al-Hikmah Terusan', 'itera-lampung', 1275000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31373, -5.35619), 4326)::geography, 'verified', 'Jl. Terusan Ryacudu. Akses angkutan dan ojek online 24 jam, fasilitas lengkap dekat minimarket.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Bintang Kober' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Al-Hikmah Terusan' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Permata Pondok', 'ui-depok', 1775000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","water_heater","parking_car"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83204, -6.36305), 4326)::geography, 'verified', 'Gang Pondok Cina. Akses jembatan penyeberangan kampus ke FIB dan FEB.'
+SELECT 'Kos Al-Barokah', 'itera-lampung', 850000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33272, -5.35775), 4326)::geography, 'verified', 'Gg. Damai Sabah Balau. Halaman luas, parkiran aman berpagar tinggi dengan penjagaan warga.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Permata Pondok' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Kos Al-Barokah' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Rumah Kos Kencana Kukusan', 'ui-depok', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.81915, -6.36947), 4326)::geography, 'verified', 'Jl. Mandor Togog. Sangat dekat gerbang Kutek FT UI, banyak warung makan murah.'
+SELECT 'Griya Ceria', 'itera-lampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30978, -5.34748), 4326)::geography, 'verified', 'Jl. Sirsak. Keamanan portal malam 24 jam, lingkungan ramah keluarga dan mahasiswa.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Kencana Kukusan' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Griya Ceria' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Cahaya Kukusan', 'ui-depok', 1000000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82157, -6.35847), 4326)::geography, 'verified', 'Jl. Palakali. Pintu Kukel UI, akses cepat ke FMIPA dan RIK.'
+SELECT 'Rumah Kos Anggrek Sabah', 'itera-lampung', 1500000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33136, -5.36096), 4326)::geography, 'verified', 'Jl. Fajar Indah. Halaman luas, parkiran aman berpagar tinggi dengan penjagaan warga.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Cahaya Kukusan' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Anggrek Sabah' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost Khairunnisa Kober', 'ui-depok', 1100000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83708, -6.36543), 4326)::geography, 'verified', 'Jl. Kober. Sentra kos legendaris mahasiswa UI, aneka kuliner dan laundry 24 jam.'
+SELECT 'Kost Ganesha Belakang', 'itera-lampung', 900000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31993, -5.36364), 4326)::geography, 'verified', 'Jl. Belwis Kampus. Pemandangan asri danau embung kampus, suasana sejuk teduh untuk jogging dan belajar.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'D''Kost Khairunnisa Kober' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Kost Ganesha Belakang' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Harmoni', 'ui-depok', 2225000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83337, -6.36084), 4326)::geography, 'verified', 'Gang Pondok Cina. Dekat Stasiun KRL Pondok Cina dan Margonda Raya.'
+SELECT 'Wisma Amanah', 'itera-lampung', 600000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33377, -5.35528), 4326)::geography, 'verified', 'Jl. R.A. Basyid. Kawasan timur ITERA yang berkembang pesat, kamar berukuran luas 3.5x4 meter.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Harmoni' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Amanah' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Kenanga Kober', 'ui-depok', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83482, -6.36744), 4326)::geography, 'verified', 'Jl. Margonda Gg. Kober. Sentra kos legendaris mahasiswa UI, aneka kuliner dan laundry 24 jam.'
+SELECT 'Rumah Kos Srikandi Way', 'itera-lampung', 775000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30568, -5.35399), 4326)::geography, 'verified', 'Jl. Lapas Raya. Kawasan favorit mahasiswa ITERA, air sumur jernih melimpah, lingkungan aman berpagar.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Kenanga Kober' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Srikandi Way' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Asri Kukusan', 'ui-depok', 1100000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82029, -6.3562), 4326)::geography, 'verified', 'Jl. STM Mandiri. Pintu Kukel UI, akses cepat ke FMIPA dan RIK.'
+SELECT 'Asrama Sakinah Sabah', 'itera-lampung', 725000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33454, -5.35762), 4326)::geography, 'verified', 'Jl. R.A. Basyid. Kawasan timur ITERA yang berkembang pesat, kamar berukuran luas 3.5x4 meter.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Asri Kukusan' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Sakinah Sabah' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Sejahtera Kukusan', 'ui-depok', 1575000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82132, -6.36659), 4326)::geography, 'verified', 'Jl. Mandor Togog. Sangat dekat gerbang Kutek FT UI, banyak warung makan murah.'
+SELECT 'Griya Srikandi Jl.', 'itera-lampung', 1375000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30244, -5.36177), 4326)::geography, 'verified', 'Gg. Melati Airan. Sirkulasi udara sejuk, air bersih lancar dengan toren cadangan.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Sejahtera Kukusan' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Griya Srikandi Jl.' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Al-Ikhlas', 'ui-depok', 1700000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.81984, -6.36568), 4326)::geography, 'verified', 'Jl. Juragan Sinda. Sangat dekat gerbang Kutek FT UI, banyak warung makan murah.'
+SELECT 'Rumah Kos Griya Indah', 'itera-lampung', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29713, -5.37488), 4326)::geography, 'verified', 'Jl. Endro Suratmin. Perbatasan Sukarame dan ITERA, sangat dekat sentra percetakan buku dan fotokopi murah.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Al-Ikhlas' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Griya Indah' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Cendana', 'ui-depok', 1525000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82084, -6.3675), 4326)::geography, 'verified', 'Jl. Rawa Maya. Sangat dekat gerbang Kutek FT UI, banyak warung makan murah.'
+SELECT 'Pondok Dahlia Sukarame', 'itera-lampung', 1300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29322, -5.37084), 4326)::geography, 'verified', 'Jl. Senopati. Perbatasan Sukarame dan ITERA, sangat dekat sentra percetakan buku dan fotokopi murah.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Cendana' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Dahlia Sukarame' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Putra Jaya Kukusan', 'ui-depok', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82448, -6.35895), 4326)::geography, 'verified', 'Jl. KH Ahmad Dahlan. Suasana perumahan sejuk, dekat lapangan dan masjid.'
+SELECT 'Asrama Mahasiswa', 'itera-lampung', 1375000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31616, -5.35344), 4326)::geography, 'verified', 'Simpang Ryacudu. Akses angkutan dan ojek online 24 jam, fasilitas lengkap dekat minimarket.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Putra Jaya Kukusan' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Mahasiswa' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos An-Nur', 'ui-depok', 1500000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.81821, -6.36883), 4326)::geography, 'verified', 'Jl. Juragan Sinda. Sangat dekat gerbang Kutek FT UI, banyak warung makan murah.'
+SELECT 'Asrama Asri Way', 'itera-lampung', 1025000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30613, -5.35395), 4326)::geography, 'verified', 'Jl. Lapas Jaya. Kawasan favorit mahasiswa ITERA, air sumur jernih melimpah, lingkungan aman berpagar.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos An-Nur' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Asri Way' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Melati Pondok', 'ui-depok', 2300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.8346, -6.3616), 4326)::geography, 'verified', 'Gang Pondok Cina. Akses jembatan penyeberangan kampus ke FIB dan FEB.'
+SELECT 'Griya Pratama Belakang', 'itera-lampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31913, -5.36344), 4326)::geography, 'verified', 'Gang Tembus Asrama. Jalan kaki langsung ke Gedung Kuliah Umum (GKU 1 dan GKU 2) tanpa hambatan jalan raya.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Melati Pondok' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Griya Pratama Belakang' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos Kenanga', 'ui-depok', 1150000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82291, -6.35708), 4326)::geography, 'verified', 'Jl. STM Mandiri. Suasana perumahan sejuk, dekat lapangan dan masjid.'
+SELECT 'Pondok Cahaya Jl.', 'itera-lampung', 1225000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30288, -5.36119), 4326)::geography, 'verified', 'Gg. Melati Airan. Dekat Rumah Sakit Airan Raya, sangat ramai kafe, apotek 24 jam, dan resto cepat saji.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos Kenanga' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Cahaya Jl.' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Rindang Pondok', 'ui-depok', 550000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83378, -6.36045), 4326)::geography, 'verified', 'Jl. Kancil. Akses jembatan penyeberangan kampus ke FIB dan FEB.'
+SELECT 'Rumah Kos Dahlia', 'itera-lampung', 1150000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3102, -5.34851), 4326)::geography, 'verified', 'Jl. Kelengkeng. Kompleks perumahan tenang dan asri, jalan paving blok lebar, bebas polusi suara.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Rindang Pondok' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Dahlia' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Sejahtera', 'ui-depok', 1875000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83159, -6.36211), 4326)::geography, 'verified', 'Jl. Kancil. Akses jembatan penyeberangan kampus ke FIB dan FEB.'
+SELECT 'Rumah Kos Dahlia Sukarame', 'itera-lampung', 925000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29223, -5.37487), 4326)::geography, 'verified', 'Jl. Korpri Raya. Dekat SPBU dan minimarket 24 jam, cocok bagi mahasiswa yang mobilitasnya tinggi.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Sejahtera' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Dahlia Sukarame' AND campus_id = 'itera-lampung'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Al-Hikmah Kukusan', 'ui-depok', 600000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82468, -6.35768), 4326)::geography, 'verified', 'Jl. KH Ahmad Dahlan. Suasana perumahan sejuk, dekat lapangan dan masjid.'
+SELECT 'Pondok Srikandi Terusan', 'itera-lampung', 1300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31774, -5.35617), 4326)::geography, 'verified', 'Simpang Ryacudu. Dekat halte bus Trans Lampung dan pusat jajanan mahasiswa sore-malam.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Srikandi Terusan' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kost Ceria Terusan', 'itera-lampung', 1500000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31614, -5.35658), 4326)::geography, 'verified', 'Gg. Hasan. Dekat halte bus Trans Lampung dan pusat jajanan mahasiswa sore-malam.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kost Ceria Terusan' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kost Bintang Terusan', 'itera-lampung', 1175000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31416, -5.35546), 4326)::geography, 'verified', 'Gg. Raden Saleh. Persis di koridor utama kampus ITERA, jalan kaki 3-5 menit langsung masuk gerbang depan.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kost Bintang Terusan' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Cendana Sukarame', 'itera-lampung', 700000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.2984, -5.37325), 4326)::geography, 'verified', 'Jl. Korpri Raya. Dekat SPBU dan minimarket 24 jam, cocok bagi mahasiswa yang mobilitasnya tinggi.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Cendana Sukarame' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Rindang', 'itera-lampung', 1600000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","access_24h","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29889, -5.3742), 4326)::geography, 'verified', 'Jl. Senopati. Perbatasan Sukarame dan ITERA, sangat dekat sentra percetakan buku dan fotokopi murah.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Rindang' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Wisma An-Nur', 'itera-lampung', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32823, -5.36141), 4326)::geography, 'verified', 'Jl. Fajar Indah. Lingkungan tenang, biaya sewa sangat bersahabat bagi kantong mahasiswa.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Wisma An-Nur' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Paviliun Cendana', 'itera-lampung', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30003, -5.36085), 4326)::geography, 'verified', 'Jl. Airan Raya. Dekat Rumah Sakit Airan Raya, sangat ramai kafe, apotek 24 jam, dan resto cepat saji.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Cendana' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Wisma Sejahtera Sabah', 'itera-lampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32819, -5.36136), 4326)::geography, 'verified', 'Jl. Fajar Indah. Lingkungan tenang, biaya sewa sangat bersahabat bagi kantong mahasiswa.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Sejahtera Sabah' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Griya Indah', 'itera-lampung', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29437, -5.36903), 4326)::geography, 'verified', 'Jl. Senopati. Fasilitas lengkap sekelas coliving studio, WiFi kecepatan tinggi dedicated fiber optic.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Griya Indah' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kost Khairunnisa', 'itera-lampung', 1100000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31486, -5.35428), 4326)::geography, 'verified', 'Gg. Hasan. Persis di koridor utama kampus ITERA, jalan kaki 3-5 menit langsung masuk gerbang depan.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kost Khairunnisa' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Asrama Pelangi Terusan', 'itera-lampung', 1100000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31491, -5.35477), 4326)::geography, 'verified', 'Simpang Ryacudu. Akses angkutan dan ojek online 24 jam, fasilitas lengkap dekat minimarket.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Pelangi Terusan' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Mandiri Terusan', 'itera-lampung', 725000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31339, -5.35522), 4326)::geography, 'verified', 'Simpang Ryacudu. Akses angkutan dan ojek online 24 jam, fasilitas lengkap dekat minimarket.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Mandiri Terusan' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Kemuning', 'itera-lampung', 725000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33611, -5.35774), 4326)::geography, 'verified', 'Jl. Fajar Indah. Kawasan timur ITERA yang berkembang pesat, kamar berukuran luas 3.5x4 meter.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Kemuning' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Permata Way', 'itera-lampung', 675000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30537, -5.35358), 4326)::geography, 'verified', 'Jl. Lapas Raya. Kawasan favorit mahasiswa ITERA, air sumur jernih melimpah, lingkungan aman berpagar.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Permata Way' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Wisma Dahlia Way', 'itera-lampung', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30464, -5.35065), 4326)::geography, 'verified', 'Gg. Kancil. Dekat sentra warung makan Lapas Raya, 5 menit ke gerbang ITERA via jalur tikus mahasiswa.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Dahlia Way' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Asrama Mawar', 'itera-lampung', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3099, -5.35097), 4326)::geography, 'verified', 'Jl. Belwis. Kompleks perumahan tenang dan asri, jalan paving blok lebar, bebas polusi suara.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Mawar' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Paviliun Melati Sukarame', 'itera-lampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29975, -5.37213), 4326)::geography, 'verified', 'Jl. Endro Suratmin. Fasilitas lengkap sekelas coliving studio, WiFi kecepatan tinggi dedicated fiber optic.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Melati Sukarame' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Putri Cantika Terusan', 'itera-lampung', 650000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31656, -5.35245), 4326)::geography, 'verified', 'Jl. Terusan Ryacudu. Dekat halte bus Trans Lampung dan pusat jajanan mahasiswa sore-malam.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Putri Cantika Terusan' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Pondok Putri Cantika Way', 'itera-lampung', 1600000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","parking_car"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30564, -5.35098), 4326)::geography, 'verified', 'Gg. Murai. Jalan aspal mulus, dekat laundry kiloan dan toko kelontong, bebas banjir.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Putri Cantika Way' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kost Anggrek Sukarame', 'itera-lampung', 1475000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29909, -5.37452), 4326)::geography, 'verified', 'Jl. Harapan Jaya. Dekat SPBU dan minimarket 24 jam, cocok bagi mahasiswa yang mobilitasnya tinggi.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kost Anggrek Sukarame' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kost Rindang Belakang', 'itera-lampung', 1075000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32389, -5.36222), 4326)::geography, 'verified', 'Jalur Embung C. Dekat asrama kampus TB, kantin mahasiswa, dan fasilitas sarana olahraga.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kost Rindang Belakang' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Wisma Rindang Way', 'itera-lampung', 825000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30622, -5.35356), 4326)::geography, 'verified', 'Jl. Lapas Jaya. Dekat sentra warung makan Lapas Raya, 5 menit ke gerbang ITERA via jalur tikus mahasiswa.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Rindang Way' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Mahasiswa', 'itera-lampung', 1500000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30504, -5.35097), 4326)::geography, 'verified', 'Jl. Lapas Raya. Dekat sentra warung makan Lapas Raya, 5 menit ke gerbang ITERA via jalur tikus mahasiswa.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Mahasiswa' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Pondok Sakinah Sukarame', 'itera-lampung', 1125000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29303, -5.36841), 4326)::geography, 'verified', 'Jl. Korpri Raya. Perbatasan Sukarame dan ITERA, sangat dekat sentra percetakan buku dan fotokopi murah.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Sakinah Sukarame' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Pondok Kenanga', 'itera-lampung', 550000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31045, -5.35103), 4326)::geography, 'verified', 'Jl. Kelengkeng. Akses mudah ke jalur belakang ITERA (Belwis), favorit mahasiswa tingkat akhir yang skripsi.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Kenanga' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Bintang Belakang', 'itera-lampung', 750000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32579, -5.36238), 4326)::geography, 'verified', 'Jalur Embung C. Dekat asrama kampus TB, kantin mahasiswa, dan fasilitas sarana olahraga.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Bintang Belakang' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Wisma Khairunnisa Sukarame', 'itera-lampung', 700000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29253, -5.37353), 4326)::geography, 'verified', 'Jl. Senopati. Dekat SPBU dan minimarket 24 jam, cocok bagi mahasiswa yang mobilitasnya tinggi.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Khairunnisa Sukarame' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Kemuning Terusan', 'itera-lampung', 1150000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31426, -5.35535), 4326)::geography, 'verified', 'Simpang Ryacudu. Akses angkutan dan ojek online 24 jam, fasilitas lengkap dekat minimarket.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Kemuning Terusan' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Pondok Nusantara Terusan', 'itera-lampung', 1375000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31338, -5.35258), 4326)::geography, 'verified', 'Gg. Raden Saleh. Persis di koridor utama kampus ITERA, jalan kaki 3-5 menit langsung masuk gerbang depan.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Nusantara Terusan' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Asri Sabah', 'itera-lampung', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33421, -5.35446), 4326)::geography, 'verified', 'Gg. Damai Sabah Balau. Lingkungan tenang, biaya sewa sangat bersahabat bagi kantong mahasiswa.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Asri Sabah' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Paviliun Al-Hikmah', 'itera-lampung', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30496, -5.34949), 4326)::geography, 'verified', 'Gg. Kancil. Dekat sentra warung makan Lapas Raya, 5 menit ke gerbang ITERA via jalur tikus mahasiswa.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Al-Hikmah' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Asrama Cahaya Jl.', 'itera-lampung', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30217, -5.36197), 4326)::geography, 'verified', 'Gg. Airan 1. Dekat Rumah Sakit Airan Raya, sangat ramai kafe, apotek 24 jam, dan resto cepat saji.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Cahaya Jl.' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Griya Indah', 'itera-lampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32151, -5.36194), 4326)::geography, 'verified', 'Gang Tembus Asrama. Jalan kaki langsung ke Gedung Kuliah Umum (GKU 1 dan GKU 2) tanpa hambatan jalan raya.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Griya Indah' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Putra Jaya Sabah', 'itera-lampung', 800000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32836, -5.35745), 4326)::geography, 'verified', 'Jl. R.A. Basyid. Kawasan timur ITERA yang berkembang pesat, kamar berukuran luas 3.5x4 meter.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Putra Jaya Sabah' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Paviliun Bintang Sukarame', 'itera-lampung', 950000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29374, -5.37417), 4326)::geography, 'verified', 'Jl. Senopati. Fasilitas lengkap sekelas coliving studio, WiFi kecepatan tinggi dedicated fiber optic.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Bintang Sukarame' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Kencana Perumahan', 'itera-lampung', 1300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30724, -5.34752), 4326)::geography, 'verified', 'Jl. Kelengkeng. Akses mudah ke jalur belakang ITERA (Belwis), favorit mahasiswa tingkat akhir yang skripsi.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Kencana Perumahan' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Asrama Pertiwi', 'itera-lampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3256, -5.36146), 4326)::geography, 'verified', 'Jalur Embung C. Dekat asrama kampus TB, kantin mahasiswa, dan fasilitas sarana olahraga.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Pertiwi' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Sentosa Sukarame', 'itera-lampung', 1300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29945, -5.36771), 4326)::geography, 'verified', 'Jl. Harapan Jaya. Dekat SPBU dan minimarket 24 jam, cocok bagi mahasiswa yang mobilitasnya tinggi.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Sentosa Sukarame' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Mawar', 'itera-lampung', 700000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32375, -5.35962), 4326)::geography, 'verified', 'Gang Tembus Asrama. Dekat asrama kampus TB, kantin mahasiswa, dan fasilitas sarana olahraga.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Mawar' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Mahasiswa Belakang', 'itera-lampung', 650000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32546, -5.36325), 4326)::geography, 'verified', 'Jalur Embung C. Dekat asrama kampus TB, kantin mahasiswa, dan fasilitas sarana olahraga.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Mahasiswa Belakang' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Nusantara', 'itera-lampung', 825000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30337, -5.34866), 4326)::geography, 'verified', 'Gg. Murai. Kawasan favorit mahasiswa ITERA, air sumur jernih melimpah, lingkungan aman berpagar.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Nusantara' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Sejahtera Sukarame', 'itera-lampung', 1175000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29672, -5.36792), 4326)::geography, 'verified', 'Jl. Senopati. Dekat SPBU dan minimarket 24 jam, cocok bagi mahasiswa yang mobilitasnya tinggi.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Sejahtera Sukarame' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Paviliun Kencana', 'itera-lampung', 1050000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.31432, -5.35297), 4326)::geography, 'verified', 'Gg. Hasan. Dekat halte bus Trans Lampung dan pusat jajanan mahasiswa sore-malam.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Kencana' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Pelangi Sabah', 'itera-lampung', 1150000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.33641, -5.35598), 4326)::geography, 'verified', 'Jl. R.A. Basyid. Lingkungan tenang, biaya sewa sangat bersahabat bagi kantong mahasiswa.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Pelangi Sabah' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Amanah Way', 'itera-lampung', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3048, -5.35381), 4326)::geography, 'verified', 'Jl. Lapas Raya. Jalan aspal mulus, dekat laundry kiloan dan toko kelontong, bebas banjir.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Amanah Way' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Asrama Amanah', 'itera-lampung', 1175000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29527, -5.36843), 4326)::geography, 'verified', 'Jl. Endro Suratmin. Dekat SPBU dan minimarket 24 jam, cocok bagi mahasiswa yang mobilitasnya tinggi.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Amanah' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Harmoni Belakang', 'itera-lampung', 725000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.32018, -5.36108), 4326)::geography, 'verified', 'Gang Tembus Asrama. Jalan kaki langsung ke Gedung Kuliah Umum (GKU 1 dan GKU 2) tanpa hambatan jalan raya.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Harmoni Belakang' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kost Pratama Sabah', 'itera-lampung', 675000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.3333, -5.35255), 4326)::geography, 'verified', 'Gg. Damai Sabah Balau. Kawasan timur ITERA yang berkembang pesat, kamar berukuran luas 3.5x4 meter.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kost Pratama Sabah' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Al-Ikhlas', 'itera-lampung', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30252, -5.35871), 4326)::geography, 'verified', 'Jl. Airan Raya. Dekat Rumah Sakit Airan Raya, sangat ramai kafe, apotek 24 jam, dan resto cepat saji.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Al-Ikhlas' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Wisma Asri Jl.', 'itera-lampung', 850000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.30267, -5.36407), 4326)::geography, 'verified', 'Jl. Airan Raya. Sirkulasi udara sejuk, air bersih lancar dengan toren cadangan.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Asri Jl.' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Bintang Sukarame', 'itera-lampung', 1525000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.29398, -5.37072), 4326)::geography, 'verified', 'Jl. Senopati. Fasilitas lengkap sekelas coliving studio, WiFi kecepatan tinggi dedicated fiber optic.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Bintang Sukarame' AND campus_id = 'itera-lampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Pratama Kukusan', 'ui-depok', 650000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82093, -6.36964), 4326)::geography, 'verified', 'Jl. Rawa Maya. Sangat dekat gerbang Kutek FT UI, banyak warung makan murah.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Pratama Kukusan' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Wisma Mandiri Kukusan', 'ui-depok', 1500000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82129, -6.35766), 4326)::geography, 'verified', 'Jl. STM Mandiri. Pintu Kukel UI, akses cepat ke FMIPA dan RIK.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Mandiri Kukusan' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Rindang Kukusan', 'ui-depok', 1300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.8201, -6.35706), 4326)::geography, 'verified', 'Jl. Palakali. Suasana perumahan sejuk, dekat lapangan dan masjid.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Rindang Kukusan' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Paviliun Putra Jaya Pondok', 'ui-depok', 1825000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.8305, -6.36252), 4326)::geography, 'verified', 'Gang Pondok Cina. Dekat Stasiun KRL Pondok Cina dan Margonda Raya.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Putra Jaya Pondok' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Cendana', 'ui-depok', 1900000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83464, -6.3619), 4326)::geography, 'verified', 'Jl. Kancil. Dekat Stasiun KRL Pondok Cina dan Margonda Raya.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Cendana' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Mandiri Kukusan', 'ui-depok', 1150000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82081, -6.36619), 4326)::geography, 'verified', 'Jl. Juragan Sinda. Jalan kaki ke fakultas teknik dan vokasi, lingkungan asri.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Mandiri Kukusan' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Harmoni Pondok', 'ui-depok', 550000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83167, -6.36474), 4326)::geography, 'verified', 'Gang Pondok Cina. Dekat Stasiun KRL Pondok Cina dan Margonda Raya.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Harmoni Pondok' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Paviliun Ceria Kukusan', 'ui-depok', 625000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.81926, -6.36548), 4326)::geography, 'verified', 'Jl. Juragan Sinda. Sangat dekat gerbang Kutek FT UI, banyak warung makan murah.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Ceria Kukusan' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Harmoni', 'ui-depok', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82108, -6.36817), 4326)::geography, 'verified', 'Jl. Mandor Togog. Jalan kaki ke fakultas teknik dan vokasi, lingkungan asri.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Harmoni' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Asrama Al-Hikmah', 'ui-depok', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83569, -6.36556), 4326)::geography, 'verified', 'Jl. Margonda Gg. Kober. Sentra kos legendaris mahasiswa UI, aneka kuliner dan laundry 24 jam.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Al-Hikmah' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Permata Pondok', 'ui-depok', 2175000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83393, -6.36388), 4326)::geography, 'verified', 'Jl. Kancil. Akses jembatan penyeberangan kampus ke FIB dan FEB.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Permata Pondok' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Asrama Melati', 'ui-depok', 1225000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.81935, -6.36843), 4326)::geography, 'verified', 'Jl. Mandor Togog. Jalan kaki ke fakultas teknik dan vokasi, lingkungan asri.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Melati' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Kenanga Kukusan', 'ui-depok', 650000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.8211, -6.37098), 4326)::geography, 'verified', 'Jl. Rawa Maya. Jalan kaki ke fakultas teknik dan vokasi, lingkungan asri.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Kenanga Kukusan' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Paviliun Anggrek', 'ui-depok', 1800000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82321, -6.36559), 4326)::geography, 'verified', 'Jl. Rawa Maya. Jalan kaki ke fakultas teknik dan vokasi, lingkungan asri.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Anggrek' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Pondok Al-Barokah Kukusan', 'ui-depok', 1625000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.81877, -6.3697), 4326)::geography, 'verified', 'Jl. Juragan Sinda. Sangat dekat gerbang Kutek FT UI, banyak warung makan murah.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Al-Barokah Kukusan' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Pondok Flamboyan Kober', 'ui-depok', 1475000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83576, -6.36408), 4326)::geography, 'verified', 'Jl. Margonda Gg. Kober. Dekat Stasiun UI dan perpustakaan.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Flamboyan Kober' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Wisma Berkah', 'ui-depok', 1950000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83144, -6.36112), 4326)::geography, 'verified', 'Jl. Kancil. Akses jembatan penyeberangan kampus ke FIB dan FEB.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Berkah' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Khairunnisa Kukusan', 'ui-depok', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82438, -6.35901), 4326)::geography, 'verified', 'Jl. KH Ahmad Dahlan. Suasana perumahan sejuk, dekat lapangan dan masjid.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Khairunnisa Kukusan' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Ganesha Kober', 'ui-depok', 1300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83436, -6.36366), 4326)::geography, 'verified', 'Jl. Margonda Gg. Kober. Dekat Stasiun UI dan perpustakaan.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Ganesha Kober' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kost Permata Kober', 'ui-depok', 1475000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83483, -6.36502), 4326)::geography, 'verified', 'Jl. Margonda Gg. Kober. Sentra kos legendaris mahasiswa UI, aneka kuliner dan laundry 24 jam.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kost Permata Kober' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Mandiri Kukusan', 'ui-depok', 1850000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82248, -6.36993), 4326)::geography, 'verified', 'Jl. Rawa Maya. Sangat dekat gerbang Kutek FT UI, banyak warung makan murah.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Mandiri Kukusan' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Paviliun Kencana Kukusan', 'ui-depok', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","parking_car"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82378, -6.35964), 4326)::geography, 'verified', 'Jl. Palakali. Suasana perumahan sejuk, dekat lapangan dan masjid.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Kencana Kukusan' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Berkah Pondok', 'ui-depok', 600000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83196, -6.36413), 4326)::geography, 'verified', 'Jl. Kancil. Akses jembatan penyeberangan kampus ke FIB dan FEB.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Berkah Pondok' AND campus_id = 'ui-depok'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Asrama Al-Hikmah Kukusan', 'ui-depok', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82174, -6.35884), 4326)::geography, 'verified', 'Jl. Palakali. Pintu Kukel UI, akses cepat ke FMIPA dan RIK.'
 WHERE NOT EXISTS (
   SELECT 1 FROM public.listings WHERE name = 'Asrama Al-Hikmah Kukusan' AND campus_id = 'ui-depok'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Mandiri Pondok', 'ui-depok', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83369, -6.36481), 4326)::geography, 'verified', 'Gang Pondok Cina. Akses jembatan penyeberangan kampus ke FIB dan FEB.'
+SELECT 'Pondok Putra Jaya Pondok', 'ui-depok', 2125000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","parking_car"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83169, -6.36193), 4326)::geography, 'verified', 'Gang Pondok Cina. Dekat Stasiun KRL Pondok Cina dan Margonda Raya.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Mandiri Pondok' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Putra Jaya Pondok' AND campus_id = 'ui-depok'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Cendana Pondok', 'ui-depok', 2275000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83312, -6.36076), 4326)::geography, 'verified', 'Gang Pondok Cina. Dekat Stasiun KRL Pondok Cina dan Margonda Raya.'
+SELECT 'Paviliun Griya Indah Kukusan', 'ui-depok', 1100000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82375, -6.36554), 4326)::geography, 'verified', 'Jl. Rawa Maya. Jalan kaki ke fakultas teknik dan vokasi, lingkungan asri.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Cendana Pondok' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Griya Indah Kukusan' AND campus_id = 'ui-depok'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos Bintang Pondok', 'ui-depok', 1500000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","water_heater","access_24h","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83041, -6.36202), 4326)::geography, 'verified', 'Gang Pondok Cina. Akses jembatan penyeberangan kampus ke FIB dan FEB.'
+SELECT 'Kost Al-Hikmah', 'ui-depok', 2125000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.833, -6.361), 4326)::geography, 'verified', 'Jl. Kancil. Dekat Stasiun KRL Pondok Cina dan Margonda Raya.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos Bintang Pondok' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Kost Al-Hikmah' AND campus_id = 'ui-depok'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost Mawar Kukusan', 'ui-depok', 1700000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.81881, -6.37007), 4326)::geography, 'verified', 'Jl. H. Amat. Jalan kaki ke fakultas teknik dan vokasi, lingkungan asri.'
+SELECT 'Rumah Kos Cahaya', 'ui-depok', 1225000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83652, -6.36433), 4326)::geography, 'verified', 'Jl. Margonda Gg. Kober. Dekat Stasiun UI dan perpustakaan.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'D''Kost Mawar Kukusan' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Cahaya' AND campus_id = 'ui-depok'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Khairunnisa Kukusan', 'ui-depok', 1600000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82175, -6.36946), 4326)::geography, 'verified', 'Jl. Juragan Sinda. Jalan kaki ke fakultas teknik dan vokasi, lingkungan asri.'
+SELECT 'Paviliun Khairunnisa Kukusan', 'ui-depok', 1125000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.82434, -6.35996), 4326)::geography, 'verified', 'Jl. Palakali. Pintu Kukel UI, akses cepat ke FMIPA dan RIK.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Khairunnisa Kukusan' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Khairunnisa Kukusan' AND campus_id = 'ui-depok'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Kencana', 'ui-depok', 1975000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.8339, -6.363), 4326)::geography, 'verified', 'Gang Pondok Cina. Akses jembatan penyeberangan kampus ke FIB dan FEB.'
+SELECT 'Kos Bintang', 'ui-depok', 2275000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","water_heater","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83252, -6.36455), 4326)::geography, 'verified', 'Jl. Kancil. Dekat Stasiun KRL Pondok Cina dan Margonda Raya.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Kencana' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Kos Bintang' AND campus_id = 'ui-depok'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Sakinah Kukusan', 'ui-depok', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.8222, -6.3675), 4326)::geography, 'verified', 'Jl. H. Amat. Sangat dekat gerbang Kutek FT UI, banyak warung makan murah.'
+SELECT 'Kos Flamboyan Kober', 'ui-depok', 1375000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83323, -6.36792), 4326)::geography, 'verified', 'Jl. Sawo. Dekat Stasiun UI dan perpustakaan.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Sakinah Kukusan' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Kos Flamboyan Kober' AND campus_id = 'ui-depok'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok An-Nur Kober', 'ui-depok', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83369, -6.36774), 4326)::geography, 'verified', 'Jl. Sawo. Sentra kos legendaris mahasiswa UI, aneka kuliner dan laundry 24 jam.'
+SELECT 'Griya Kemuning Kukusan', 'ui-depok', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.81865, -6.3709), 4326)::geography, 'verified', 'Jl. H. Amat. Sangat dekat gerbang Kutek FT UI, banyak warung makan murah.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok An-Nur Kober' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Griya Kemuning Kukusan' AND campus_id = 'ui-depok'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Al-Ikhlas Pondok', 'ui-depok', 1300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83398, -6.36462), 4326)::geography, 'verified', 'Gang Pondok Cina. Dekat Stasiun KRL Pondok Cina dan Margonda Raya.'
+SELECT 'Wisma Mawar', 'ui-depok', 1525000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.8308, -6.36348), 4326)::geography, 'verified', 'Jl. Kancil. Akses jembatan penyeberangan kampus ke FIB dan FEB.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Al-Ikhlas Pondok' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Mawar' AND campus_id = 'ui-depok'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos Putri Cantika Pondok', 'ui-depok', 1325000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83481, -6.35945), 4326)::geography, 'verified', 'Jl. Margonda Raya. Dekat Stasiun KRL Pondok Cina dan Margonda Raya.'
+SELECT 'Kos Srikandi', 'ui-depok', 1950000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83356, -6.35954), 4326)::geography, 'verified', 'Jl. Margonda Raya. Dekat Stasiun KRL Pondok Cina dan Margonda Raya.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos Putri Cantika Pondok' AND campus_id = 'ui-depok'
+  SELECT 1 FROM public.listings WHERE name = 'Kos Srikandi' AND campus_id = 'ui-depok'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Mawar Pauh', 'unand-limau-manis', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater","access_24h","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44315, -0.92552), 4326)::geography, 'verified', 'Simpang Pisang. Kamar luas, lingkungan warga minang yang ramah.'
+SELECT 'Paviliun Cahaya Kober', 'ui-depok', 1600000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83459, -6.36833), 4326)::geography, 'verified', 'Jl. Margonda Gg. Kober. Sentra kos legendaris mahasiswa UI, aneka kuliner dan laundry 24 jam.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Mawar Pauh' AND campus_id = 'unand-limau-manis'
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Cahaya Kober' AND campus_id = 'ui-depok'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Pertiwi', 'unand-limau-manis', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44288, -0.92575), 4326)::geography, 'verified', 'Pasar Pauh. Kamar luas, lingkungan warga minang yang ramah.'
+SELECT 'Kos Griya Indah Kober', 'ui-depok', 1050000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83439, -6.36498), 4326)::geography, 'verified', 'Jl. Sawo. Dekat Stasiun UI dan perpustakaan.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Pertiwi' AND campus_id = 'unand-limau-manis'
+  SELECT 1 FROM public.listings WHERE name = 'Kos Griya Indah Kober' AND campus_id = 'ui-depok'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Al-Hikmah Limau', 'unand-limau-manis', 650000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46087, -0.91537), 4326)::geography, 'verified', 'Perumahan Dosen Unand. Udara sejuk perbukitan Limau Manis, dekat Masjid Nurul Ilmi dan Rektorat.'
+SELECT 'Pondok Rindang Kukusan', 'ui-depok', 1525000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","water_heater","access_24h","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.8204, -6.35887), 4326)::geography, 'verified', 'Jl. KH Ahmad Dahlan. Suasana perumahan sejuk, dekat lapangan dan masjid.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Al-Hikmah Limau' AND campus_id = 'unand-limau-manis'
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Rindang Kukusan' AND campus_id = 'ui-depok'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost Putra Jaya', 'unand-limau-manis', 1125000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46415, -0.9146), 4326)::geography, 'verified', 'Jl. Kampus Unand. Udara sejuk perbukitan Limau Manis, dekat Masjid Nurul Ilmi dan Rektorat.'
+SELECT 'Wisma Pelangi Kober', 'ui-depok', 650000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(106.83396, -6.36726), 4326)::geography, 'verified', 'Jl. Margonda Gg. Kober. Sentra kos legendaris mahasiswa UI, aneka kuliner dan laundry 24 jam.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'D''Kost Putra Jaya' AND campus_id = 'unand-limau-manis'
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Pelangi Kober' AND campus_id = 'ui-depok'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Putra Jaya', 'unand-limau-manis', 975000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44636, -0.92397), 4326)::geography, 'verified', 'Jl. Pasar Baru. Pusat kos dan kuliner Pasar Baru Unand, sentra angkot ke pusat kota.'
+SELECT 'Griya Srikandi Limau', 'unand-limau-manis', 1275000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46233, -0.91522), 4326)::geography, 'verified', 'Batu Busuk. Udara sejuk perbukitan Limau Manis, dekat Masjid Nurul Ilmi dan Rektorat.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Putra Jaya' AND campus_id = 'unand-limau-manis'
+  SELECT 1 FROM public.listings WHERE name = 'Griya Srikandi Limau' AND campus_id = 'unand-limau-manis'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost Melati Pauh', 'unand-limau-manis', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44572, -0.92344), 4326)::geography, 'verified', 'Pasar Pauh. Kawasan Pauh yang ramai, ampera padang murah meriah di mana-mana.'
+SELECT 'Griya Harmoni', 'unand-limau-manis', 1100000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45836, -0.91717), 4326)::geography, 'verified', 'Jl. Kampus Unand. Akses jalan kaki ke gedung perkuliahan.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'D''Kost Melati Pauh' AND campus_id = 'unand-limau-manis'
+  SELECT 1 FROM public.listings WHERE name = 'Griya Harmoni' AND campus_id = 'unand-limau-manis'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Dahlia', 'unand-limau-manis', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44255, -0.9239), 4326)::geography, 'verified', 'Pasar Pauh. Kamar luas, lingkungan warga minang yang ramah.'
+SELECT 'Kost Harmoni Limau', 'unand-limau-manis', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46422, -0.91792), 4326)::geography, 'verified', 'Jl. Kampus Unand. Akses jalan kaki ke gedung perkuliahan.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Dahlia' AND campus_id = 'unand-limau-manis'
+  SELECT 1 FROM public.listings WHERE name = 'Kost Harmoni Limau' AND campus_id = 'unand-limau-manis'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Rumah Kos Mahasiswa Pasar', 'unand-limau-manis', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44933, -0.92484), 4326)::geography, 'verified', 'Jl. Simpang Kampus. Pusat kos dan kuliner Pasar Baru Unand, sentra angkot ke pusat kota.'
+SELECT 'Wisma Pertiwi', 'unand-limau-manis', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44031, -0.92201), 4326)::geography, 'verified', 'Jl. Mohammad Hatta. Kamar luas, lingkungan warga minang yang ramah.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Mahasiswa Pasar' AND campus_id = 'unand-limau-manis'
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Pertiwi' AND campus_id = 'unand-limau-manis'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Kencana Limau', 'unand-limau-manis', 1125000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45645, -0.91768), 4326)::geography, 'verified', 'Batu Busuk. Udara sejuk perbukitan Limau Manis, dekat Masjid Nurul Ilmi dan Rektorat.'
+SELECT 'D''Kost Sakinah Limau', 'unand-limau-manis', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45604, -0.91195), 4326)::geography, 'verified', 'Jl. Kampus Unand. Akses jalan kaki ke gedung perkuliahan.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Kencana Limau' AND campus_id = 'unand-limau-manis'
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Sakinah Limau' AND campus_id = 'unand-limau-manis'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Putri Cantika Pauh', 'unand-limau-manis', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44585, -0.92476), 4326)::geography, 'verified', 'Simpang Pisang. Kamar luas, lingkungan warga minang yang ramah.'
+SELECT 'Griya Ceria Limau', 'unand-limau-manis', 625000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46289, -0.91761), 4326)::geography, 'verified', 'Jl. Kampus Unand. Akses jalan kaki ke gedung perkuliahan.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Putri Cantika Pauh' AND campus_id = 'unand-limau-manis'
+  SELECT 1 FROM public.listings WHERE name = 'Griya Ceria Limau' AND campus_id = 'unand-limau-manis'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Melati Pasar', 'unand-limau-manis', 975000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44788, -0.92695), 4326)::geography, 'verified', 'Jl. Koto Panjang. Dekat toko buku, fotokopi, dan minimarket.'
+SELECT 'Rumah Kos Kencana Pasar', 'unand-limau-manis', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44902, -0.92633), 4326)::geography, 'verified', 'Jl. Koto Panjang. Dekat toko buku, fotokopi, dan minimarket.'
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Melati Pasar' AND campus_id = 'unand-limau-manis'
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Kencana Pasar' AND campus_id = 'unand-limau-manis'
 );
 INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Rumah Kos Nusantara', 'unand-limau-manis', 825000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.4414, -0.92382), 4326)::geography, 'verified', 'Simpang Pisang. Kawasan Pauh yang ramai, ampera padang murah meriah di mana-mana.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Nusantara' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos Permata Pasar', 'unand-limau-manis', 775000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44869, -0.92606), 4326)::geography, 'verified', 'Jl. Pasar Baru. Pusat kos dan kuliner Pasar Baru Unand, sentra angkot ke pusat kota.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos Permata Pasar' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Paviliun Rindang Pauh', 'unand-limau-manis', 925000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44446, -0.92248), 4326)::geography, 'verified', 'Pasar Pauh. Kamar luas, lingkungan warga minang yang ramah.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Paviliun Rindang Pauh' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Amanah Pasar', 'unand-limau-manis', 1175000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44793, -0.92526), 4326)::geography, 'verified', 'Jl. Simpang Kampus. Dekat toko buku, fotokopi, dan minimarket.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Amanah Pasar' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Rumah Kos Pratama', 'unand-limau-manis', 1125000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44987, -0.92203), 4326)::geography, 'verified', 'Jl. Koto Panjang. Pusat kos dan kuliner Pasar Baru Unand, sentra angkot ke pusat kota.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Pratama' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Rumah Kos Al-Ikhlas', 'unand-limau-manis', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46385, -0.91214), 4326)::geography, 'verified', 'Batu Busuk. Akses jalan kaki ke gedung perkuliahan.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Al-Ikhlas' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kos Putri Cantika', 'unand-limau-manis', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45962, -0.91305), 4326)::geography, 'verified', 'Batu Busuk. Akses jalan kaki ke gedung perkuliahan.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kos Putri Cantika' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Srikandi Pasar', 'unand-limau-manis', 1000000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44725, -0.92664), 4326)::geography, 'verified', 'Jl. Koto Panjang. Pusat kos dan kuliner Pasar Baru Unand, sentra angkot ke pusat kota.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Srikandi Pasar' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'D''Kost Kencana Pasar', 'unand-limau-manis', 575000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44845, -0.92695), 4326)::geography, 'verified', 'Jl. Koto Panjang. Pusat kos dan kuliner Pasar Baru Unand, sentra angkot ke pusat kota.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'D''Kost Kencana Pasar' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Al-Ikhlas Limau', 'unand-limau-manis', 625000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46233, -0.91076), 4326)::geography, 'verified', 'Perumahan Dosen Unand. Akses jalan kaki ke gedung perkuliahan.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Al-Ikhlas Limau' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Al-Ikhlas Pasar', 'unand-limau-manis', 1075000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44812, -0.92607), 4326)::geography, 'verified', 'Jl. Koto Panjang. Dekat toko buku, fotokopi, dan minimarket.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Al-Ikhlas Pasar' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Kencana Pauh', 'unand-limau-manis', 1600000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44589, -0.92725), 4326)::geography, 'verified', 'Jl. Mohammad Hatta. Kawasan Pauh yang ramai, ampera padang murah meriah di mana-mana.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Kencana Pauh' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Wisma Bintang', 'unand-limau-manis', 1175000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44929, -0.92358), 4326)::geography, 'verified', 'Jl. Pasar Baru. Pusat kos dan kuliner Pasar Baru Unand, sentra angkot ke pusat kota.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Wisma Bintang' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Kost Khairunnisa Pauh', 'unand-limau-manis', 900000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44556, -0.92486), 4326)::geography, 'verified', 'Simpang Pisang. Kawasan Pauh yang ramai, ampera padang murah meriah di mana-mana.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Kost Khairunnisa Pauh' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Kencana Pasar', 'unand-limau-manis', 1125000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44863, -0.92313), 4326)::geography, 'verified', 'Jl. Pasar Baru. Pusat kos dan kuliner Pasar Baru Unand, sentra angkot ke pusat kota.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Kencana Pasar' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Rumah Kos Pertiwi', 'unand-limau-manis', 1300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44479, -0.92395), 4326)::geography, 'verified', 'Jl. Mohammad Hatta. Kawasan Pauh yang ramai, ampera padang murah meriah di mana-mana.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Pertiwi' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Sentosa', 'unand-limau-manis', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45615, -0.91633), 4326)::geography, 'verified', 'Perumahan Dosen Unand. Udara sejuk perbukitan Limau Manis, dekat Masjid Nurul Ilmi dan Rektorat.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Griya Sentosa' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Al-Hikmah Pasar', 'unand-limau-manis', 925000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.4486, -0.92353), 4326)::geography, 'verified', 'Jl. Koto Panjang. Dekat toko buku, fotokopi, dan minimarket.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Al-Hikmah Pasar' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Asrama Anggrek', 'unand-limau-manis', 775000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44853, -0.92628), 4326)::geography, 'verified', 'Jl. Pasar Baru. Dekat toko buku, fotokopi, dan minimarket.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Asrama Anggrek' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Pondok Al-Barokah', 'unand-limau-manis', 1150000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44862, -0.92358), 4326)::geography, 'verified', 'Jl. Simpang Kampus. Dekat toko buku, fotokopi, dan minimarket.'
-WHERE NOT EXISTS (
-  SELECT 1 FROM public.listings WHERE name = 'Pondok Al-Barokah' AND campus_id = 'unand-limau-manis'
-);
-INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
-SELECT 'Griya Flamboyan', 'unand-limau-manis', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46279, -0.91339), 4326)::geography, 'verified', 'Batu Busuk. Udara sejuk perbukitan Limau Manis, dekat Masjid Nurul Ilmi dan Rektorat.'
+SELECT 'Griya Flamboyan', 'unand-limau-manis', 750000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44776, -0.92299), 4326)::geography, 'verified', 'Jl. Pasar Baru. Dekat toko buku, fotokopi, dan minimarket.'
 WHERE NOT EXISTS (
   SELECT 1 FROM public.listings WHERE name = 'Griya Flamboyan' AND campus_id = 'unand-limau-manis'
 );
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Putri Cantika', 'unand-limau-manis', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46111, -0.9175), 4326)::geography, 'verified', 'Perumahan Dosen Unand. Akses jalan kaki ke gedung perkuliahan.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Putri Cantika' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kost Harmoni', 'unand-limau-manis', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.4401, -0.92452), 4326)::geography, 'verified', 'Jl. Mohammad Hatta. Kamar luas, lingkungan warga minang yang ramah.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kost Harmoni' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Paviliun Sejahtera', 'unand-limau-manis', 575000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.4444, -0.9229), 4326)::geography, 'verified', 'Pasar Pauh. Kawasan Pauh yang ramai, ampera padang murah meriah di mana-mana.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Sejahtera' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Mahasiswa Pasar', 'unand-limau-manis', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44838, -0.92299), 4326)::geography, 'verified', 'Jl. Pasar Baru. Pusat kos dan kuliner Pasar Baru Unand, sentra angkot ke pusat kota.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Mahasiswa Pasar' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Putra Jaya Pauh', 'unand-limau-manis', 1600000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","access_24h","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44421, -0.92301), 4326)::geography, 'verified', 'Simpang Pisang. Kamar luas, lingkungan warga minang yang ramah.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Putra Jaya Pauh' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Kemuning Pauh', 'unand-limau-manis', 1600000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44093, -0.9273), 4326)::geography, 'verified', 'Simpang Pisang. Kamar luas, lingkungan warga minang yang ramah.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Kemuning Pauh' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Pondok Dahlia', 'unand-limau-manis', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46279, -0.91087), 4326)::geography, 'verified', 'Batu Busuk. Udara sejuk perbukitan Limau Manis, dekat Masjid Nurul Ilmi dan Rektorat.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Dahlia' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Kencana Limau', 'unand-limau-manis', 825000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45658, -0.91517), 4326)::geography, 'verified', 'Jl. Kampus Unand. Akses jalan kaki ke gedung perkuliahan.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Kencana Limau' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Putri Cantika', 'unand-limau-manis', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44209, -0.9269), 4326)::geography, 'verified', 'Jl. Mohammad Hatta. Kawasan Pauh yang ramai, ampera padang murah meriah di mana-mana.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Putri Cantika' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Wisma Harmoni Pauh', 'unand-limau-manis', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44235, -0.92837), 4326)::geography, 'verified', 'Jl. Mohammad Hatta. Kamar luas, lingkungan warga minang yang ramah.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Harmoni Pauh' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Griya Indah Limau', 'unand-limau-manis', 1050000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.45742, -0.91126), 4326)::geography, 'verified', 'Perumahan Dosen Unand. Akses jalan kaki ke gedung perkuliahan.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Griya Indah Limau' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Kemuning Pasar', 'unand-limau-manis', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44648, -0.92625), 4326)::geography, 'verified', 'Jl. Pasar Baru. Pusat kos dan kuliner Pasar Baru Unand, sentra angkot ke pusat kota.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Kemuning Pasar' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Mahasiswa Limau', 'unand-limau-manis', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46415, -0.91187), 4326)::geography, 'verified', 'Perumahan Dosen Unand. Udara sejuk perbukitan Limau Manis, dekat Masjid Nurul Ilmi dan Rektorat.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Mahasiswa Limau' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kost Rindang', 'unand-limau-manis', 900000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.4584, -0.91328), 4326)::geography, 'verified', 'Jl. Kampus Unand. Akses jalan kaki ke gedung perkuliahan.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kost Rindang' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kost Mahasiswa Pasar', 'unand-limau-manis', 925000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44947, -0.92408), 4326)::geography, 'verified', 'Jl. Pasar Baru. Pusat kos dan kuliner Pasar Baru Unand, sentra angkot ke pusat kota.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kost Mahasiswa Pasar' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Flamboyan Pasar', 'unand-limau-manis', 725000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44896, -0.92306), 4326)::geography, 'verified', 'Jl. Koto Panjang. Dekat toko buku, fotokopi, dan minimarket.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Flamboyan Pasar' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Barokah Limau', 'unand-limau-manis', 1150000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46325, -0.91522), 4326)::geography, 'verified', 'Batu Busuk. Akses jalan kaki ke gedung perkuliahan.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Barokah Limau' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Sentosa', 'unand-limau-manis', 1150000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44144, -0.92443), 4326)::geography, 'verified', 'Simpang Pisang. Kamar luas, lingkungan warga minang yang ramah.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Sentosa' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Bintang Pasar', 'unand-limau-manis', 950000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44632, -0.92548), 4326)::geography, 'verified', 'Jl. Simpang Kampus. Pusat kos dan kuliner Pasar Baru Unand, sentra angkot ke pusat kota.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Bintang Pasar' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Mahasiswa', 'unand-limau-manis', 575000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46141, -0.91011), 4326)::geography, 'verified', 'Perumahan Dosen Unand. Udara sejuk perbukitan Limau Manis, dekat Masjid Nurul Ilmi dan Rektorat.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Mahasiswa' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Permata', 'unand-limau-manis', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.46469, -0.91295), 4326)::geography, 'verified', 'Batu Busuk. Udara sejuk perbukitan Limau Manis, dekat Masjid Nurul Ilmi dan Rektorat.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Permata' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Kenanga Pauh', 'unand-limau-manis', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","parking_car"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44049, -0.92483), 4326)::geography, 'verified', 'Jl. Mohammad Hatta. Kamar luas, lingkungan warga minang yang ramah.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Kenanga Pauh' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost An-Nur Pauh', 'unand-limau-manis', 925000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.44179, -0.92363), 4326)::geography, 'verified', 'Jl. Mohammad Hatta. Kamar luas, lingkungan warga minang yang ramah.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost An-Nur Pauh' AND campus_id = 'unand-limau-manis'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Pondok Cendana Kampung', 'unila-bandarlampung', 1150000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24747, -5.35374), 4326)::geography, 'verified', 'Gg. Kenanga Nunyai. Dekat lapangan olahraga dan minimarket 24 jam.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Cendana Kampung' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Wisma Nusantara Kampung', 'unila-bandarlampung', 600000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24374, -5.35088), 4326)::geography, 'verified', 'Gg. Kenanga Nunyai. Dekat lapangan olahraga dan minimarket 24 jam.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Nusantara Kampung' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Dahlia', 'unila-bandarlampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23768, -5.36522), 4326)::geography, 'verified', 'Gg. Damai Rajabasa. Keamanan portal malam 24 jam, dekat klinik pratama rujukan BPJS.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Dahlia' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Asri Rajabasa', 'unila-bandarlampung', 1325000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23288, -5.3596), 4326)::geography, 'verified', 'Gg. Damai Rajabasa. Keamanan portal malam 24 jam, dekat klinik pratama rujukan BPJS.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Asri Rajabasa' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Melati Kampung', 'unila-bandarlampung', 1150000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24749, -5.35148), 4326)::geography, 'verified', 'Gg. Cendana. Lingkungan perumahan asri bebas polusi suara knalpot, sangat nyaman untuk istirahat.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Melati Kampung' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Ceria Gedong', 'unila-bandarlampung', 1125000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23623, -5.36525), 4326)::geography, 'verified', 'Jl. Prof. Sumantri Brojonegoro. Dekat halte busway Trans Bandar Lampung dan aneka rumah makan modern.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Ceria Gedong' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Paviliun Amanah', 'unila-bandarlampung', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23619, -5.35852), 4326)::geography, 'verified', 'Jl. Pramuka. Suasana tenang untuk fokus belajar skripsi, kamar luas dengan sirkulasi udara sejuk.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Amanah' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Wisma Nusantara', 'unila-bandarlampung', 1425000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23752, -5.36956), 4326)::geography, 'verified', 'Jl. ZA Pagar Alam. Bangunan kokoh modern, parkir motor luas berkanopi, bebas banjir.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Nusantara' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Ceria', 'unila-bandarlampung', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24943, -5.35871), 4326)::geography, 'verified', 'Jl. Bumi Manti II. Pusat hunian kos paling ramai dekat FMIPA dan FKIP Unila, jalan kaki ke gerbang belakang.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Ceria' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Sakinah', 'unila-bandarlampung', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23776, -5.37144), 4326)::geography, 'verified', 'Jl. ZA Pagar Alam. Akses sangat cepat ke Fakultas Hukum, FEB, dan Gedung Rektorat Unila.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Sakinah' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Pondok Ganesha', 'unila-bandarlampung', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24791, -5.35301), 4326)::geography, 'verified', 'Jl. Nunyai Raya. Harga sewa sangat hemat bagi mahasiswa baru perantau, pemilik kos ramah dan kekeluargaan.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Ganesha' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Bintang Kampung', 'unila-bandarlampung', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.2485, -5.35602), 4326)::geography, 'verified', 'Gg. Pelita. Air sumur bor jernih melimpah, lingkungan aman berpagar dan ramai sesama mahasiswa Unila.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Bintang Kampung' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Barokah', 'unila-bandarlampung', 600000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24252, -5.35052), 4326)::geography, 'verified', 'Gg. Cendana. Dekat lapangan olahraga dan minimarket 24 jam.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Barokah' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kost Permata Kampung', 'unila-bandarlampung', 575000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24716, -5.3506), 4326)::geography, 'verified', 'Gg. Kenanga Nunyai. Lingkungan perumahan asri bebas polusi suara knalpot, sangat nyaman untuk istirahat.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kost Permata Kampung' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Asrama Al-Ikhlas Kampung', 'unila-bandarlampung', 1300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.25056, -5.35495), 4326)::geography, 'verified', 'Gg. Mawar Kp. Baru. Kawasan kuliner mahasiswa 24 jam, dekat masjid besar, fotokopi, dan laundry kiloan murah.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Al-Ikhlas Kampung' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Mahasiswa Kampung', 'unila-bandarlampung', 900000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24432, -5.35177), 4326)::geography, 'verified', 'Gg. Kenanga Nunyai. Dekat lapangan olahraga dan minimarket 24 jam.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Mahasiswa Kampung' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Pondok Barokah Kampung', 'unila-bandarlampung', 950000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.25238, -5.35258), 4326)::geography, 'verified', 'Gg. Dahlia. Air sumur bor jernih melimpah, lingkungan aman berpagar dan ramai sesama mahasiswa Unila.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Barokah Kampung' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Asrama Sentosa', 'unila-bandarlampung', 725000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23787, -5.35883), 4326)::geography, 'verified', 'Jl. Pramuka. Keamanan portal malam 24 jam, dekat klinik pratama rujukan BPJS.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Sentosa' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Sejahtera Gedong', 'unila-bandarlampung', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.236, -5.37034), 4326)::geography, 'verified', 'Jl. ZA Pagar Alam. Bangunan kokoh modern, parkir motor luas berkanopi, bebas banjir.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Sejahtera Gedong' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Mahasiswa', 'unila-bandarlampung', 1425000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23855, -5.36991), 4326)::geography, 'verified', 'Gg. Haji Said. Dekat halte busway Trans Bandar Lampung dan aneka rumah makan modern.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Mahasiswa' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Asrama Ceria Gedong', 'unila-bandarlampung', 1175000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23912, -5.36862), 4326)::geography, 'verified', 'Gg. Haji Said. Bangunan kokoh modern, parkir motor luas berkanopi, bebas banjir.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Ceria Gedong' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Harmoni Kampung', 'unila-bandarlampung', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.25254, -5.35257), 4326)::geography, 'verified', 'Gg. Mawar Kp. Baru. Air sumur bor jernih melimpah, lingkungan aman berpagar dan ramai sesama mahasiswa Unila.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Harmoni Kampung' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Barokah', 'unila-bandarlampung', 725000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24714, -5.35214), 4326)::geography, 'verified', 'Gg. Mawar Kp. Baru. Air sumur bor jernih melimpah, lingkungan aman berpagar dan ramai sesama mahasiswa Unila.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Barokah' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Mahasiswa', 'unila-bandarlampung', 1375000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23798, -5.36622), 4326)::geography, 'verified', 'Gg. Haji Said. Akses sangat cepat ke Fakultas Hukum, FEB, dan Gedung Rektorat Unila.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Mahasiswa' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Paviliun Griya Indah Rajabasa', 'unila-bandarlampung', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23286, -5.36562), 4326)::geography, 'verified', 'Gg. Damai Rajabasa. Akses strategis ke terminal Rajabasa dan kampus Unila, banyak apotek dan kafe nugas.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Griya Indah Rajabasa' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Barokah', 'unila-bandarlampung', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23653, -5.3658), 4326)::geography, 'verified', 'Jl. Pramuka. Suasana tenang untuk fokus belajar skripsi, kamar luas dengan sirkulasi udara sejuk.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Barokah' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Pondok Asri Kampung', 'unila-bandarlampung', 700000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24948, -5.35342), 4326)::geography, 'verified', 'Gg. Mawar Kp. Baru. Air sumur bor jernih melimpah, lingkungan aman berpagar dan ramai sesama mahasiswa Unila.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Asri Kampung' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Mawar', 'unila-bandarlampung', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.25153, -5.35888), 4326)::geography, 'verified', 'Jl. Bumi Manti II. Kawasan kuliner mahasiswa 24 jam, dekat masjid besar, fotokopi, dan laundry kiloan murah.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Mawar' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Asrama Kenanga', 'unila-bandarlampung', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24659, -5.35008), 4326)::geography, 'verified', 'Gg. Cendana. Dekat lapangan olahraga dan minimarket 24 jam.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Kenanga' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Bintang Gedong', 'unila-bandarlampung', 1475000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.24116, -5.3679), 4326)::geography, 'verified', 'Jl. ZA Pagar Alam. Bangunan kokoh modern, parkir motor luas berkanopi, bebas banjir.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Bintang Gedong' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Kenanga Gedong', 'unila-bandarlampung', 575000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(105.23776, -5.36648), 4326)::geography, 'verified', 'Gg. Haji Said. Akses sangat cepat ke Fakultas Hukum, FEB, dan Gedung Rektorat Unila.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Kenanga Gedong' AND campus_id = 'unila-bandarlampung'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Pondok Mawar Simpang', 'unp-padang', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35703, -0.90712), 4326)::geography, 'verified', 'Jl. Anggrek Simpang Tinju. Banyak klinik 24 jam, apotek, swalayan, dan sentra jajanan malam mahasiswa.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Mawar Simpang' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Paviliun Al-Ikhlas Air', 'unp-padang', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35887, -0.89553), 4326)::geography, 'verified', 'Gg. Melati Air Tawar. Tepat di koridor utama kampus UNP depan Basko Grand Mall, akses transportasi angkot 24 jam.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Al-Ikhlas Air' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Sentosa Simpang', 'unp-padang', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35795, -0.90403), 4326)::geography, 'verified', 'Simpang Tinju. Persimpangan strategis yang menghubungkan UNP dengan pusat kota Padang.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Sentosa Simpang' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Cahaya Simpang', 'unp-padang', 650000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35859, -0.90434), 4326)::geography, 'verified', 'Jl. Anggrek Simpang Tinju. Banyak klinik 24 jam, apotek, swalayan, dan sentra jajanan malam mahasiswa.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Cahaya Simpang' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kost Kemuning Simpang', 'unp-padang', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35903, -0.9052), 4326)::geography, 'verified', 'Jl. Anggrek Simpang Tinju. Persimpangan strategis yang menghubungkan UNP dengan pusat kota Padang.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kost Kemuning Simpang' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Wisma Griya Indah Air', 'unp-padang', 825000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.3501, -0.89641), 4326)::geography, 'verified', 'Jl. Merpati. Dikelilingi warung ampera masakan Padang murah meriah, dekat laundry dan fotokopi skripsi.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Griya Indah Air' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Pelangi', 'unp-padang', 1350000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.3539, -0.88769), 4326)::geography, 'verified', 'Jl. Dakota. Sewa bulanan bersahabat bagi kantong mahasiswa mandiri, air PDAM/sumur bersih tidak berbau.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Pelangi' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kost Sejahtera Tunggul', 'unp-padang', 750000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35234, -0.88814), 4326)::geography, 'verified', 'Gg. Bersama Tunggul Hitam. Sewa bulanan bersahabat bagi kantong mahasiswa mandiri, air PDAM/sumur bersih tidak berbau.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kost Sejahtera Tunggul' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Asrama Asri Air', 'unp-padang', 1100000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35892, -0.89353), 4326)::geography, 'verified', 'Jl. Prof. Dr. Hamka. Fasilitas kamar lengkap, WiFi internet stabil, gerbang pagar besi aman terkunci malam.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Asri Air' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Paviliun Cahaya', 'unp-padang', 1300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35414, -0.89011), 4326)::geography, 'verified', 'Jl. DPR Tunggul Hitam. Kawasan hunian tenang dan nyaman di utara kampus UNP, dekat Stasiun KRL Air Tawar.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Cahaya' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Dahlia', 'unp-padang', 775000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35257, -0.8918), 4326)::geography, 'verified', 'Gg. Bersama Tunggul Hitam. Sewa bulanan bersahabat bagi kantong mahasiswa mandiri, air PDAM/sumur bersih tidak berbau.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Dahlia' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Sejahtera Air', 'unp-padang', 875000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34696, -0.90152), 4326)::geography, 'verified', 'Jl. Rajawali Air Tawar. Sentra hunian kos legendaris mahasiswa UNP, jalan kaki 3-5 menit tembus gerbang fakultas olahraga & teknik.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Sejahtera Air' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Sejahtera', 'unp-padang', 1300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35843, -0.89291), 4326)::geography, 'verified', 'Jl. Belibis. Fasilitas kamar lengkap, WiFi internet stabil, gerbang pagar besi aman terkunci malam.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Sejahtera' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Paviliun Melati Tunggul', 'unp-padang', 1200000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35005, -0.88918), 4326)::geography, 'verified', 'Jl. Dakota. Bebas banjir rob, akses jalan aspal mulus dapat dilewati mobil dan motor.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Paviliun Melati Tunggul' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Putra Jaya Air', 'unp-padang', 1550000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h","parking_car"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35814, -0.8916), 4326)::geography, 'verified', 'Jl. Teratai. Tepat di koridor utama kampus UNP depan Basko Grand Mall, akses transportasi angkot 24 jam.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Putra Jaya Air' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Mandiri Air', 'unp-padang', 1500000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen","parking_car"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35765, -0.89747), 4326)::geography, 'verified', 'Jl. Belibis. Tepat di koridor utama kampus UNP depan Basko Grand Mall, akses transportasi angkot 24 jam.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Mandiri Air' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'D''Kost Putra Jaya', 'unp-padang', 1000000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.36105, -0.90221), 4326)::geography, 'verified', 'Jl. Gajah Mada. Banyak klinik 24 jam, apotek, swalayan, dan sentra jajanan malam mahasiswa.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'D''Kost Putra Jaya' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kost Mandiri', 'unp-padang', 1000000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34787, -0.89823), 4326)::geography, 'verified', 'Jl. Cendrawasih. Dikelilingi warung ampera masakan Padang murah meriah, dekat laundry dan fotokopi skripsi.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kost Mandiri' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Harmoni Tunggul', 'unp-padang', 900000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35503, -0.88927), 4326)::geography, 'verified', 'Jl. DPR Tunggul Hitam. Sewa bulanan bersahabat bagi kantong mahasiswa mandiri, air PDAM/sumur bersih tidak berbau.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Harmoni Tunggul' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Wisma Barokah', 'unp-padang', 1500000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35557, -0.89095), 4326)::geography, 'verified', 'Jl. DPR Tunggul Hitam. Bebas banjir rob, akses jalan aspal mulus dapat dilewati mobil dan motor.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Barokah' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Mahasiswa Air', 'unp-padang', 1250000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34937, -0.89602), 4326)::geography, 'verified', 'Jl. Rajawali Air Tawar. Dikelilingi warung ampera masakan Padang murah meriah, dekat laundry dan fotokopi skripsi.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Mahasiswa Air' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Amanah Air', 'unp-padang', 650000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34725, -0.90114), 4326)::geography, 'verified', 'Jl. Merpati. Sentra hunian kos legendaris mahasiswa UNP, jalan kaki 3-5 menit tembus gerbang fakultas olahraga & teknik.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Amanah Air' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Anggrek', 'unp-padang', 825000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.3578, -0.89144), 4326)::geography, 'verified', 'Gg. Bersama Tunggul Hitam. Bebas banjir rob, akses jalan aspal mulus dapat dilewati mobil dan motor.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Anggrek' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kost Sakinah Tunggul', 'unp-padang', 625000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35184, -0.88602), 4326)::geography, 'verified', 'Jl. Hercules. Bebas banjir rob, akses jalan aspal mulus dapat dilewati mobil dan motor.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kost Sakinah Tunggul' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Rumah Kos Ceria Simpang', 'unp-padang', 1025000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.36328, -0.9067), 4326)::geography, 'verified', 'Jl. Gajah Mada. Banyak klinik 24 jam, apotek, swalayan, dan sentra jajanan malam mahasiswa.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Rumah Kos Ceria Simpang' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Pondok Kemuning Air', 'unp-padang', 875000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.34684, -0.8964), 4326)::geography, 'verified', 'Jl. Merpati. Dekat pantai Padang dengan hembusan angin sejuk, lingkungan mahasiswa aktif dan guyub.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Pondok Kemuning Air' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Kemuning Air', 'unp-padang', 825000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35046, -0.89769), 4326)::geography, 'verified', 'Gg. Garuda. Dikelilingi warung ampera masakan Padang murah meriah, dekat laundry dan fotokopi skripsi.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Kemuning Air' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Cendana Tunggul', 'unp-padang', 1450000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","water_heater","access_24h","shared_kitchen"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35199, -0.88982), 4326)::geography, 'verified', 'Jl. Dakota. Sewa bulanan bersahabat bagi kantong mahasiswa mandiri, air PDAM/sumur bersih tidak berbau.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Cendana Tunggul' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Wisma Permata Simpang', 'unp-padang', 750000, '{"electricity":"included","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":true,"pets_allowed":false,"room_size":"3x3 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35671, -0.90625), 4326)::geography, 'verified', 'Jl. Anggrek Simpang Tinju. Persimpangan strategis yang menghubungkan UNP dengan pusat kota Padang.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Wisma Permata Simpang' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Griya Putri Cantika Tunggul', 'unp-padang', 1600000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.3577, -0.89161), 4326)::geography, 'verified', 'Gg. Bersama Tunggul Hitam. Sewa bulanan bersahabat bagi kantong mahasiswa mandiri, air PDAM/sumur bersih tidak berbau.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Griya Putri Cantika Tunggul' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Asrama Ganesha Simpang', 'unp-padang', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","ac","water_heater","access_24h"]'::jsonb, '{"curfew":"24_jam_portal_mandiri","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.36049, -0.90748), 4326)::geography, 'verified', 'Jl. Anggrek Simpang Tinju. Persimpangan strategis yang menghubungkan UNP dengan pusat kota Padang.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Ganesha Simpang' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Asrama Cahaya Air', 'unp-padang', 1300000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":200000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"22:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3x3.5 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35078, -0.89978), 4326)::geography, 'verified', 'Jl. Rajawali Air Tawar. Sentra hunian kos legendaris mahasiswa UNP, jalan kaki 3-5 menit tembus gerbang fakultas olahraga & teknik.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Asrama Cahaya Air' AND campus_id = 'unp-padang'
+);
+INSERT INTO public.listings (name, campus_id, rent_monthly, utilities, facilities, rules, geom, status, description)
+SELECT 'Kos Mawar Air', 'unp-padang', 1400000, '{"electricity":"token_mandiri","water":"included_sumur_bor","wifi":"included","trash_cleaning":"included","deposit":500000}'::jsonb, '["wifi","desk_chair","closet","parking_motorcycle","bathroom_inside","ac","shared_kitchen"]'::jsonb, '{"curfew":"23:00_wib","guest_policy":"tamu_di_ruang_tamu_bersama","opposite_gender_in_room":false,"smoking_allowed":false,"pets_allowed":false,"room_size":"3.5x4 m²"}'::jsonb, ST_SetSRID(ST_MakePoint(100.35063, -0.89891), 4326)::geography, 'verified', 'Jl. Merpati. Dikelilingi warung ampera masakan Padang murah meriah, dekat laundry dan fotokopi skripsi.'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.listings WHERE name = 'Kos Mawar Air' AND campus_id = 'unp-padang'
+);
 
--- 4. PRE-COMPUTED COMMUTE CACHE (2235 Routes)
+-- 4. PRE-COMPUTED COMMUTE CACHE (3096 Routes)
 INSERT INTO public.commute_cache (origin_cell, dest_id, mode, minutes, distance_m, fetched_at) VALUES
   ('-6.369,106.821', 'ui-depok', 'walking', 17, 1208, now()),
   ('-6.369,106.821', 'ui-depok', 'motorcycle', 4, 1256, now()),
@@ -2610,1683 +3019,2544 @@ INSERT INTO public.commute_cache (origin_cell, dest_id, mode, minutes, distance_
   ('-5.351,105.307', 'itera-akses-sabahbalau', 'walking', 41, 3039, now()),
   ('-5.351,105.307', 'itera-akses-sabahbalau', 'motorcycle', 8, 3160, now()),
   ('-5.351,105.307', 'itera-akses-sabahbalau', 'driving-car', 11, 3282, now()),
-  ('-5.370,105.299', 'itera-lampung', 'walking', 37, 2708, now()),
-  ('-5.370,105.299', 'itera-lampung', 'motorcycle', 8, 2816, now()),
-  ('-5.370,105.299', 'itera-lampung', 'driving-car', 10, 2924, now()),
-  ('-5.370,105.299', 'itera-gerbang-utama', 'walking', 37, 2708, now()),
-  ('-5.370,105.299', 'itera-gerbang-utama', 'motorcycle', 8, 2816, now()),
-  ('-5.370,105.299', 'itera-gerbang-utama', 'driving-car', 10, 2924, now()),
-  ('-5.370,105.299', 'itera-simpang-wayhuwi', 'walking', 33, 2414, now()),
-  ('-5.370,105.299', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2510, now()),
-  ('-5.370,105.299', 'itera-simpang-wayhuwi', 'driving-car', 9, 2607, now()),
-  ('-5.370,105.299', 'itera-akses-sabahbalau', 'walking', 41, 3059, now()),
-  ('-5.370,105.299', 'itera-akses-sabahbalau', 'motorcycle', 8, 3181, now()),
-  ('-5.370,105.299', 'itera-akses-sabahbalau', 'driving-car', 12, 3303, now()),
-  ('-5.372,105.296', 'itera-lampung', 'walking', 43, 3179, now()),
-  ('-5.372,105.296', 'itera-lampung', 'motorcycle', 9, 3306, now()),
-  ('-5.372,105.296', 'itera-lampung', 'driving-car', 12, 3433, now()),
-  ('-5.372,105.296', 'itera-gerbang-utama', 'walking', 43, 3179, now()),
-  ('-5.372,105.296', 'itera-gerbang-utama', 'motorcycle', 9, 3306, now()),
-  ('-5.372,105.296', 'itera-gerbang-utama', 'driving-car', 12, 3433, now()),
-  ('-5.372,105.296', 'itera-simpang-wayhuwi', 'walking', 38, 2844, now()),
-  ('-5.372,105.296', 'itera-simpang-wayhuwi', 'motorcycle', 8, 2958, now()),
-  ('-5.372,105.296', 'itera-simpang-wayhuwi', 'driving-car', 11, 3071, now()),
-  ('-5.372,105.296', 'itera-akses-sabahbalau', 'walking', 47, 3485, now()),
-  ('-5.372,105.296', 'itera-akses-sabahbalau', 'motorcycle', 10, 3624, now()),
-  ('-5.372,105.296', 'itera-akses-sabahbalau', 'driving-car', 13, 3764, now()),
-  ('-5.364,105.320', 'itera-lampung', 'walking', 16, 1134, now()),
-  ('-5.364,105.320', 'itera-lampung', 'motorcycle', 3, 1179, now()),
-  ('-5.364,105.320', 'itera-lampung', 'driving-car', 5, 1224, now()),
-  ('-5.364,105.320', 'itera-gerbang-utama', 'walking', 16, 1134, now()),
-  ('-5.364,105.320', 'itera-gerbang-utama', 'motorcycle', 3, 1179, now()),
-  ('-5.364,105.320', 'itera-gerbang-utama', 'driving-car', 5, 1224, now()),
-  ('-5.364,105.320', 'itera-simpang-wayhuwi', 'walking', 29, 2155, now()),
-  ('-5.364,105.320', 'itera-simpang-wayhuwi', 'motorcycle', 6, 2241, now()),
-  ('-5.364,105.320', 'itera-simpang-wayhuwi', 'driving-car', 8, 2327, now()),
-  ('-5.364,105.320', 'itera-akses-sabahbalau', 'walking', 7, 518, now()),
-  ('-5.364,105.320', 'itera-akses-sabahbalau', 'motorcycle', 2, 538, now()),
-  ('-5.364,105.320', 'itera-akses-sabahbalau', 'driving-car', 2, 559, now()),
-  ('-5.361,105.323', 'itera-lampung', 'walking', 15, 1123, now()),
-  ('-5.361,105.323', 'itera-lampung', 'motorcycle', 3, 1167, now()),
-  ('-5.361,105.323', 'itera-lampung', 'driving-car', 5, 1212, now()),
-  ('-5.361,105.323', 'itera-gerbang-utama', 'walking', 15, 1123, now()),
-  ('-5.361,105.323', 'itera-gerbang-utama', 'motorcycle', 3, 1167, now()),
-  ('-5.361,105.323', 'itera-gerbang-utama', 'driving-car', 5, 1212, now()),
-  ('-5.361,105.323', 'itera-simpang-wayhuwi', 'walking', 29, 2169, now()),
-  ('-5.361,105.323', 'itera-simpang-wayhuwi', 'motorcycle', 6, 2256, now()),
-  ('-5.361,105.323', 'itera-simpang-wayhuwi', 'driving-car', 8, 2342, now()),
-  ('-5.361,105.323', 'itera-akses-sabahbalau', 'walking', 14, 1009, now()),
-  ('-5.361,105.323', 'itera-akses-sabahbalau', 'motorcycle', 3, 1049, now()),
-  ('-5.361,105.323', 'itera-akses-sabahbalau', 'driving-car', 4, 1089, now()),
-  ('-5.374,105.299', 'itera-lampung', 'walking', 42, 3091, now()),
-  ('-5.374,105.299', 'itera-lampung', 'motorcycle', 9, 3215, now()),
-  ('-5.374,105.299', 'itera-lampung', 'driving-car', 12, 3339, now()),
-  ('-5.374,105.299', 'itera-gerbang-utama', 'walking', 42, 3091, now()),
-  ('-5.374,105.299', 'itera-gerbang-utama', 'motorcycle', 9, 3215, now()),
-  ('-5.374,105.299', 'itera-gerbang-utama', 'driving-car', 12, 3339, now()),
-  ('-5.374,105.299', 'itera-simpang-wayhuwi', 'walking', 39, 2923, now()),
-  ('-5.374,105.299', 'itera-simpang-wayhuwi', 'motorcycle', 8, 3039, now()),
-  ('-5.374,105.299', 'itera-simpang-wayhuwi', 'driving-car', 11, 3156, now()),
+  ('-5.365,105.306', 'itera-lampung', 'walking', 21, 1544, now()),
+  ('-5.365,105.306', 'itera-lampung', 'motorcycle', 5, 1606, now()),
+  ('-5.365,105.306', 'itera-lampung', 'driving-car', 6, 1667, now()),
+  ('-5.365,105.306', 'itera-gerbang-utama', 'walking', 21, 1544, now()),
+  ('-5.365,105.306', 'itera-gerbang-utama', 'motorcycle', 5, 1606, now()),
+  ('-5.365,105.306', 'itera-gerbang-utama', 'driving-car', 6, 1667, now()),
+  ('-5.365,105.306', 'itera-simpang-wayhuwi', 'walking', 19, 1389, now()),
+  ('-5.365,105.306', 'itera-simpang-wayhuwi', 'motorcycle', 4, 1444, now()),
+  ('-5.365,105.306', 'itera-simpang-wayhuwi', 'driving-car', 5, 1500, now()),
+  ('-5.365,105.306', 'itera-akses-sabahbalau', 'walking', 30, 2178, now()),
+  ('-5.365,105.306', 'itera-akses-sabahbalau', 'motorcycle', 6, 2265, now()),
+  ('-5.365,105.306', 'itera-akses-sabahbalau', 'driving-car', 8, 2352, now()),
+  ('-5.361,105.329', 'itera-lampung', 'walking', 27, 1989, now()),
+  ('-5.361,105.329', 'itera-lampung', 'motorcycle', 6, 2068, now()),
+  ('-5.361,105.329', 'itera-lampung', 'driving-car', 8, 2148, now()),
+  ('-5.361,105.329', 'itera-gerbang-utama', 'walking', 27, 1989, now()),
+  ('-5.361,105.329', 'itera-gerbang-utama', 'motorcycle', 6, 2068, now()),
+  ('-5.361,105.329', 'itera-gerbang-utama', 'driving-car', 8, 2148, now()),
+  ('-5.361,105.329', 'itera-simpang-wayhuwi', 'walking', 41, 3013, now()),
+  ('-5.361,105.329', 'itera-simpang-wayhuwi', 'motorcycle', 8, 3133, now()),
+  ('-5.361,105.329', 'itera-simpang-wayhuwi', 'driving-car', 11, 3254, now()),
+  ('-5.361,105.329', 'itera-akses-sabahbalau', 'walking', 20, 1483, now()),
+  ('-5.361,105.329', 'itera-akses-sabahbalau', 'motorcycle', 4, 1542, now()),
+  ('-5.361,105.329', 'itera-akses-sabahbalau', 'driving-car', 6, 1601, now()),
+  ('-5.350,105.310', 'itera-lampung', 'walking', 18, 1324, now()),
+  ('-5.350,105.310', 'itera-lampung', 'motorcycle', 4, 1377, now()),
+  ('-5.350,105.310', 'itera-lampung', 'driving-car', 5, 1430, now()),
+  ('-5.350,105.310', 'itera-gerbang-utama', 'walking', 18, 1324, now()),
+  ('-5.350,105.310', 'itera-gerbang-utama', 'motorcycle', 4, 1377, now()),
+  ('-5.350,105.310', 'itera-gerbang-utama', 'driving-car', 5, 1430, now()),
+  ('-5.350,105.310', 'itera-simpang-wayhuwi', 'walking', 11, 758, now()),
+  ('-5.350,105.310', 'itera-simpang-wayhuwi', 'motorcycle', 2, 788, now()),
+  ('-5.350,105.310', 'itera-simpang-wayhuwi', 'driving-car', 3, 818, now()),
+  ('-5.350,105.310', 'itera-akses-sabahbalau', 'walking', 39, 2908, now()),
+  ('-5.350,105.310', 'itera-akses-sabahbalau', 'motorcycle', 8, 3024, now()),
+  ('-5.350,105.310', 'itera-akses-sabahbalau', 'driving-car', 11, 3140, now()),
+  ('-5.354,105.307', 'itera-lampung', 'walking', 18, 1300, now()),
+  ('-5.354,105.307', 'itera-lampung', 'motorcycle', 4, 1352, now()),
+  ('-5.354,105.307', 'itera-lampung', 'driving-car', 5, 1404, now()),
+  ('-5.354,105.307', 'itera-gerbang-utama', 'walking', 18, 1300, now()),
+  ('-5.354,105.307', 'itera-gerbang-utama', 'motorcycle', 4, 1352, now()),
+  ('-5.354,105.307', 'itera-gerbang-utama', 'driving-car', 5, 1404, now()),
+  ('-5.354,105.307', 'itera-simpang-wayhuwi', 'walking', 4, 255, now()),
+  ('-5.354,105.307', 'itera-simpang-wayhuwi', 'motorcycle', 1, 265, now()),
+  ('-5.354,105.307', 'itera-simpang-wayhuwi', 'driving-car', 2, 275, now()),
+  ('-5.354,105.307', 'itera-akses-sabahbalau', 'walking', 38, 2805, now()),
+  ('-5.354,105.307', 'itera-akses-sabahbalau', 'motorcycle', 8, 2917, now()),
+  ('-5.354,105.307', 'itera-akses-sabahbalau', 'driving-car', 11, 3029, now()),
+  ('-5.366,105.300', 'itera-lampung', 'walking', 32, 2334, now()),
+  ('-5.366,105.300', 'itera-lampung', 'motorcycle', 7, 2427, now()),
+  ('-5.366,105.300', 'itera-lampung', 'driving-car', 9, 2520, now()),
+  ('-5.366,105.300', 'itera-gerbang-utama', 'walking', 32, 2334, now()),
+  ('-5.366,105.300', 'itera-gerbang-utama', 'motorcycle', 7, 2427, now()),
+  ('-5.366,105.300', 'itera-gerbang-utama', 'driving-car', 9, 2520, now()),
+  ('-5.366,105.300', 'itera-simpang-wayhuwi', 'walking', 26, 1918, now()),
+  ('-5.366,105.300', 'itera-simpang-wayhuwi', 'motorcycle', 5, 1994, now()),
+  ('-5.366,105.300', 'itera-simpang-wayhuwi', 'driving-car', 7, 2071, now()),
+  ('-5.366,105.300', 'itera-akses-sabahbalau', 'walking', 40, 2938, now()),
+  ('-5.366,105.300', 'itera-akses-sabahbalau', 'motorcycle', 8, 3055, now()),
+  ('-5.366,105.300', 'itera-akses-sabahbalau', 'driving-car', 11, 3173, now()),
+  ('-5.361,105.333', 'itera-lampung', 'walking', 35, 2593, now()),
+  ('-5.361,105.333', 'itera-lampung', 'motorcycle', 7, 2696, now()),
+  ('-5.361,105.333', 'itera-lampung', 'driving-car', 10, 2800, now()),
+  ('-5.361,105.333', 'itera-gerbang-utama', 'walking', 35, 2593, now()),
+  ('-5.361,105.333', 'itera-gerbang-utama', 'motorcycle', 7, 2696, now()),
+  ('-5.361,105.333', 'itera-gerbang-utama', 'driving-car', 10, 2800, now()),
+  ('-5.361,105.333', 'itera-simpang-wayhuwi', 'walking', 49, 3610, now()),
+  ('-5.361,105.333', 'itera-simpang-wayhuwi', 'motorcycle', 10, 3754, now()),
+  ('-5.361,105.333', 'itera-simpang-wayhuwi', 'driving-car', 13, 3899, now()),
+  ('-5.361,105.333', 'itera-akses-sabahbalau', 'walking', 26, 1939, now()),
+  ('-5.361,105.333', 'itera-akses-sabahbalau', 'motorcycle', 6, 2016, now()),
+  ('-5.361,105.333', 'itera-akses-sabahbalau', 'driving-car', 7, 2094, now()),
+  ('-5.352,105.304', 'itera-lampung', 'walking', 25, 1805, now()),
+  ('-5.352,105.304', 'itera-lampung', 'motorcycle', 5, 1877, now()),
+  ('-5.352,105.304', 'itera-lampung', 'driving-car', 7, 1949, now()),
+  ('-5.352,105.304', 'itera-gerbang-utama', 'walking', 25, 1805, now()),
+  ('-5.352,105.304', 'itera-gerbang-utama', 'motorcycle', 5, 1877, now()),
+  ('-5.352,105.304', 'itera-gerbang-utama', 'driving-car', 7, 1949, now()),
+  ('-5.352,105.304', 'itera-simpang-wayhuwi', 'walking', 11, 761, now()),
+  ('-5.352,105.304', 'itera-simpang-wayhuwi', 'motorcycle', 2, 792, now()),
+  ('-5.352,105.304', 'itera-simpang-wayhuwi', 'driving-car', 3, 822, now()),
+  ('-5.352,105.304', 'itera-akses-sabahbalau', 'walking', 45, 3306, now()),
+  ('-5.352,105.304', 'itera-akses-sabahbalau', 'motorcycle', 9, 3439, now()),
+  ('-5.352,105.304', 'itera-akses-sabahbalau', 'driving-car', 12, 3571, now()),
+  ('-5.354,105.312', 'itera-lampung', 'walking', 11, 761, now()),
+  ('-5.354,105.312', 'itera-lampung', 'motorcycle', 2, 792, now()),
+  ('-5.354,105.312', 'itera-lampung', 'driving-car', 3, 822, now()),
+  ('-5.354,105.312', 'itera-gerbang-utama', 'walking', 11, 761, now()),
+  ('-5.354,105.312', 'itera-gerbang-utama', 'motorcycle', 2, 792, now()),
+  ('-5.354,105.312', 'itera-gerbang-utama', 'driving-car', 3, 822, now()),
+  ('-5.354,105.312', 'itera-simpang-wayhuwi', 'walking', 9, 615, now()),
+  ('-5.354,105.312', 'itera-simpang-wayhuwi', 'motorcycle', 2, 640, now()),
+  ('-5.354,105.312', 'itera-simpang-wayhuwi', 'driving-car', 3, 664, now()),
+  ('-5.354,105.312', 'itera-akses-sabahbalau', 'walking', 32, 2346, now()),
+  ('-5.354,105.312', 'itera-akses-sabahbalau', 'motorcycle', 7, 2440, now()),
+  ('-5.354,105.312', 'itera-akses-sabahbalau', 'driving-car', 9, 2534, now()),
+  ('-5.355,105.333', 'itera-lampung', 'walking', 35, 2615, now()),
+  ('-5.355,105.333', 'itera-lampung', 'motorcycle', 7, 2720, now()),
+  ('-5.355,105.333', 'itera-lampung', 'driving-car', 10, 2824, now()),
+  ('-5.355,105.333', 'itera-gerbang-utama', 'walking', 35, 2615, now()),
+  ('-5.355,105.333', 'itera-gerbang-utama', 'motorcycle', 7, 2720, now()),
+  ('-5.355,105.333', 'itera-gerbang-utama', 'driving-car', 10, 2824, now()),
+  ('-5.355,105.333', 'itera-simpang-wayhuwi', 'walking', 47, 3513, now()),
+  ('-5.355,105.333', 'itera-simpang-wayhuwi', 'motorcycle', 10, 3653, now()),
+  ('-5.355,105.333', 'itera-simpang-wayhuwi', 'driving-car', 13, 3794, now()),
+  ('-5.355,105.333', 'itera-akses-sabahbalau', 'walking', 34, 2495, now()),
+  ('-5.355,105.333', 'itera-akses-sabahbalau', 'motorcycle', 7, 2595, now()),
+  ('-5.355,105.333', 'itera-akses-sabahbalau', 'driving-car', 9, 2695, now()),
+  ('-5.364,105.303', 'itera-lampung', 'walking', 25, 1806, now()),
+  ('-5.364,105.303', 'itera-lampung', 'motorcycle', 5, 1879, now()),
+  ('-5.364,105.303', 'itera-lampung', 'driving-car', 7, 1951, now()),
+  ('-5.364,105.303', 'itera-gerbang-utama', 'walking', 25, 1806, now()),
+  ('-5.364,105.303', 'itera-gerbang-utama', 'motorcycle', 5, 1879, now()),
+  ('-5.364,105.303', 'itera-gerbang-utama', 'driving-car', 7, 1951, now()),
+  ('-5.364,105.303', 'itera-simpang-wayhuwi', 'walking', 20, 1443, now()),
+  ('-5.364,105.303', 'itera-simpang-wayhuwi', 'motorcycle', 4, 1500, now()),
+  ('-5.364,105.303', 'itera-simpang-wayhuwi', 'driving-car', 6, 1558, now()),
+  ('-5.364,105.303', 'itera-akses-sabahbalau', 'walking', 34, 2535, now()),
+  ('-5.364,105.303', 'itera-akses-sabahbalau', 'motorcycle', 7, 2636, now()),
+  ('-5.364,105.303', 'itera-akses-sabahbalau', 'driving-car', 10, 2738, now()),
+  ('-5.359,105.321', 'itera-lampung', 'walking', 11, 816, now()),
+  ('-5.359,105.321', 'itera-lampung', 'motorcycle', 3, 849, now()),
+  ('-5.359,105.321', 'itera-lampung', 'driving-car', 3, 882, now()),
+  ('-5.359,105.321', 'itera-gerbang-utama', 'walking', 11, 816, now()),
+  ('-5.359,105.321', 'itera-gerbang-utama', 'motorcycle', 3, 849, now()),
+  ('-5.359,105.321', 'itera-gerbang-utama', 'driving-car', 3, 882, now()),
+  ('-5.359,105.321', 'itera-simpang-wayhuwi', 'walking', 25, 1840, now()),
+  ('-5.359,105.321', 'itera-simpang-wayhuwi', 'motorcycle', 5, 1914, now()),
+  ('-5.359,105.321', 'itera-simpang-wayhuwi', 'driving-car', 7, 1987, now()),
+  ('-5.359,105.321', 'itera-akses-sabahbalau', 'walking', 17, 1250, now()),
+  ('-5.359,105.321', 'itera-akses-sabahbalau', 'motorcycle', 4, 1300, now()),
+  ('-5.359,105.321', 'itera-akses-sabahbalau', 'driving-car', 5, 1350, now()),
+  ('-5.361,105.325', 'itera-lampung', 'walking', 20, 1459, now()),
+  ('-5.361,105.325', 'itera-lampung', 'motorcycle', 4, 1517, now()),
+  ('-5.361,105.325', 'itera-lampung', 'driving-car', 6, 1575, now()),
+  ('-5.361,105.325', 'itera-gerbang-utama', 'walking', 20, 1459, now()),
+  ('-5.361,105.325', 'itera-gerbang-utama', 'motorcycle', 4, 1517, now()),
+  ('-5.361,105.325', 'itera-gerbang-utama', 'driving-car', 6, 1575, now()),
+  ('-5.361,105.325', 'itera-simpang-wayhuwi', 'walking', 34, 2501, now()),
+  ('-5.361,105.325', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2601, now()),
+  ('-5.361,105.325', 'itera-simpang-wayhuwi', 'driving-car', 10, 2701, now()),
+  ('-5.361,105.325', 'itera-akses-sabahbalau', 'walking', 15, 1079, now()),
+  ('-5.361,105.325', 'itera-akses-sabahbalau', 'motorcycle', 3, 1122, now()),
+  ('-5.361,105.325', 'itera-akses-sabahbalau', 'driving-car', 4, 1165, now()),
+  ('-5.368,105.299', 'itera-lampung', 'walking', 34, 2490, now()),
+  ('-5.368,105.299', 'itera-lampung', 'motorcycle', 7, 2590, now()),
+  ('-5.368,105.299', 'itera-lampung', 'driving-car', 9, 2689, now()),
+  ('-5.368,105.299', 'itera-gerbang-utama', 'walking', 34, 2490, now()),
+  ('-5.368,105.299', 'itera-gerbang-utama', 'motorcycle', 7, 2590, now()),
+  ('-5.368,105.299', 'itera-gerbang-utama', 'driving-car', 9, 2689, now()),
+  ('-5.368,105.299', 'itera-simpang-wayhuwi', 'walking', 29, 2135, now()),
+  ('-5.368,105.299', 'itera-simpang-wayhuwi', 'motorcycle', 6, 2220, now()),
+  ('-5.368,105.299', 'itera-simpang-wayhuwi', 'driving-car', 8, 2306, now()),
+  ('-5.368,105.299', 'itera-akses-sabahbalau', 'walking', 40, 2975, now()),
+  ('-5.368,105.299', 'itera-akses-sabahbalau', 'motorcycle', 8, 3094, now()),
+  ('-5.368,105.299', 'itera-akses-sabahbalau', 'driving-car', 11, 3213, now()),
+  ('-5.353,105.313', 'itera-lampung', 'walking', 10, 741, now()),
+  ('-5.353,105.313', 'itera-lampung', 'motorcycle', 2, 771, now()),
+  ('-5.353,105.313', 'itera-lampung', 'driving-car', 3, 801, now()),
+  ('-5.353,105.313', 'itera-gerbang-utama', 'walking', 10, 741, now()),
+  ('-5.353,105.313', 'itera-gerbang-utama', 'motorcycle', 2, 771, now()),
+  ('-5.353,105.313', 'itera-gerbang-utama', 'driving-car', 3, 801, now()),
+  ('-5.353,105.313', 'itera-simpang-wayhuwi', 'walking', 11, 789, now()),
+  ('-5.353,105.313', 'itera-simpang-wayhuwi', 'motorcycle', 3, 820, now()),
+  ('-5.353,105.313', 'itera-simpang-wayhuwi', 'driving-car', 3, 852, now()),
+  ('-5.353,105.313', 'itera-akses-sabahbalau', 'walking', 31, 2303, now()),
+  ('-5.353,105.313', 'itera-akses-sabahbalau', 'motorcycle', 6, 2395, now()),
+  ('-5.353,105.313', 'itera-akses-sabahbalau', 'driving-car', 9, 2487, now()),
+  ('-5.372,105.295', 'itera-lampung', 'walking', 44, 3295, now()),
+  ('-5.372,105.295', 'itera-lampung', 'motorcycle', 9, 3427, now()),
+  ('-5.372,105.295', 'itera-lampung', 'driving-car', 12, 3559, now()),
+  ('-5.372,105.295', 'itera-gerbang-utama', 'walking', 44, 3295, now()),
+  ('-5.372,105.295', 'itera-gerbang-utama', 'motorcycle', 9, 3427, now()),
+  ('-5.372,105.295', 'itera-gerbang-utama', 'driving-car', 12, 3559, now()),
+  ('-5.372,105.295', 'itera-simpang-wayhuwi', 'walking', 40, 2951, now()),
+  ('-5.372,105.295', 'itera-simpang-wayhuwi', 'motorcycle', 8, 3069, now()),
+  ('-5.372,105.295', 'itera-simpang-wayhuwi', 'driving-car', 11, 3187, now()),
+  ('-5.372,105.295', 'itera-akses-sabahbalau', 'walking', 48, 3593, now()),
+  ('-5.372,105.295', 'itera-akses-sabahbalau', 'motorcycle', 10, 3736, now()),
+  ('-5.372,105.295', 'itera-akses-sabahbalau', 'driving-car', 13, 3880, now()),
+  ('-5.354,105.330', 'itera-lampung', 'walking', 30, 2196, now()),
+  ('-5.354,105.330', 'itera-lampung', 'motorcycle', 6, 2284, now()),
+  ('-5.354,105.330', 'itera-lampung', 'driving-car', 8, 2372, now()),
+  ('-5.354,105.330', 'itera-gerbang-utama', 'walking', 30, 2196, now()),
+  ('-5.354,105.330', 'itera-gerbang-utama', 'motorcycle', 6, 2284, now()),
+  ('-5.354,105.330', 'itera-gerbang-utama', 'driving-car', 8, 2372, now()),
+  ('-5.354,105.330', 'itera-simpang-wayhuwi', 'walking', 41, 3049, now()),
+  ('-5.354,105.330', 'itera-simpang-wayhuwi', 'motorcycle', 8, 3171, now()),
+  ('-5.354,105.330', 'itera-simpang-wayhuwi', 'driving-car', 11, 3293, now()),
+  ('-5.354,105.330', 'itera-akses-sabahbalau', 'walking', 32, 2328, now()),
+  ('-5.354,105.330', 'itera-akses-sabahbalau', 'motorcycle', 7, 2421, now()),
+  ('-5.354,105.330', 'itera-akses-sabahbalau', 'driving-car', 9, 2514, now()),
+  ('-5.367,105.294', 'itera-lampung', 'walking', 42, 3130, now()),
+  ('-5.367,105.294', 'itera-lampung', 'motorcycle', 9, 3255, now()),
+  ('-5.367,105.294', 'itera-lampung', 'driving-car', 12, 3380, now()),
+  ('-5.367,105.294', 'itera-gerbang-utama', 'walking', 42, 3130, now()),
+  ('-5.367,105.294', 'itera-gerbang-utama', 'motorcycle', 9, 3255, now()),
+  ('-5.367,105.294', 'itera-gerbang-utama', 'driving-car', 12, 3380, now()),
+  ('-5.367,105.294', 'itera-simpang-wayhuwi', 'walking', 35, 2584, now()),
+  ('-5.367,105.294', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2687, now()),
+  ('-5.367,105.294', 'itera-simpang-wayhuwi', 'driving-car', 10, 2790, now()),
+  ('-5.367,105.294', 'itera-akses-sabahbalau', 'walking', 50, 3730, now()),
+  ('-5.367,105.294', 'itera-akses-sabahbalau', 'motorcycle', 10, 3879, now()),
+  ('-5.367,105.294', 'itera-akses-sabahbalau', 'driving-car', 14, 4028, now()),
+  ('-5.360,105.329', 'itera-lampung', 'walking', 27, 2014, now()),
+  ('-5.360,105.329', 'itera-lampung', 'motorcycle', 6, 2094, now()),
+  ('-5.360,105.329', 'itera-lampung', 'driving-car', 8, 2175, now()),
+  ('-5.360,105.329', 'itera-gerbang-utama', 'walking', 27, 2014, now()),
+  ('-5.360,105.329', 'itera-gerbang-utama', 'motorcycle', 6, 2094, now()),
+  ('-5.360,105.329', 'itera-gerbang-utama', 'driving-car', 8, 2175, now()),
+  ('-5.360,105.329', 'itera-simpang-wayhuwi', 'walking', 41, 3021, now()),
+  ('-5.360,105.329', 'itera-simpang-wayhuwi', 'motorcycle', 8, 3142, now()),
+  ('-5.360,105.329', 'itera-simpang-wayhuwi', 'driving-car', 11, 3263, now()),
+  ('-5.360,105.329', 'itera-akses-sabahbalau', 'walking', 22, 1611, now()),
+  ('-5.360,105.329', 'itera-akses-sabahbalau', 'motorcycle', 5, 1676, now()),
+  ('-5.360,105.329', 'itera-akses-sabahbalau', 'driving-car', 6, 1740, now()),
+  ('-5.356,105.313', 'itera-lampung', 'walking', 5, 369, now()),
+  ('-5.356,105.313', 'itera-lampung', 'motorcycle', 1, 384, now()),
+  ('-5.356,105.313', 'itera-lampung', 'driving-car', 2, 398, now()),
+  ('-5.356,105.313', 'itera-gerbang-utama', 'walking', 5, 369, now()),
+  ('-5.356,105.313', 'itera-gerbang-utama', 'motorcycle', 1, 384, now()),
+  ('-5.356,105.313', 'itera-gerbang-utama', 'driving-car', 2, 398, now()),
+  ('-5.356,105.313', 'itera-simpang-wayhuwi', 'walking', 10, 721, now()),
+  ('-5.356,105.313', 'itera-simpang-wayhuwi', 'motorcycle', 2, 750, now()),
+  ('-5.356,105.313', 'itera-simpang-wayhuwi', 'driving-car', 3, 779, now()),
+  ('-5.356,105.313', 'itera-akses-sabahbalau', 'walking', 26, 1950, now()),
+  ('-5.356,105.313', 'itera-akses-sabahbalau', 'motorcycle', 6, 2028, now()),
+  ('-5.356,105.313', 'itera-akses-sabahbalau', 'driving-car', 8, 2106, now()),
+  ('-5.373,105.296', 'itera-lampung', 'walking', 44, 3288, now()),
+  ('-5.373,105.296', 'itera-lampung', 'motorcycle', 9, 3419, now()),
+  ('-5.373,105.296', 'itera-lampung', 'driving-car', 12, 3551, now()),
+  ('-5.373,105.296', 'itera-gerbang-utama', 'walking', 44, 3288, now()),
+  ('-5.373,105.296', 'itera-gerbang-utama', 'motorcycle', 9, 3419, now()),
+  ('-5.373,105.296', 'itera-gerbang-utama', 'driving-car', 12, 3551, now()),
+  ('-5.373,105.296', 'itera-simpang-wayhuwi', 'walking', 40, 2984, now()),
+  ('-5.373,105.296', 'itera-simpang-wayhuwi', 'motorcycle', 8, 3103, now()),
+  ('-5.373,105.296', 'itera-simpang-wayhuwi', 'driving-car', 11, 3222, now()),
+  ('-5.373,105.296', 'itera-akses-sabahbalau', 'walking', 48, 3528, now()),
+  ('-5.373,105.296', 'itera-akses-sabahbalau', 'motorcycle', 10, 3669, now()),
+  ('-5.373,105.296', 'itera-akses-sabahbalau', 'driving-car', 13, 3810, now()),
+  ('-5.357,105.313', 'itera-lampung', 'walking', 4, 299, now()),
+  ('-5.357,105.313', 'itera-lampung', 'motorcycle', 1, 311, now()),
+  ('-5.357,105.313', 'itera-lampung', 'driving-car', 2, 323, now()),
+  ('-5.357,105.313', 'itera-gerbang-utama', 'walking', 4, 299, now()),
+  ('-5.357,105.313', 'itera-gerbang-utama', 'motorcycle', 1, 311, now()),
+  ('-5.357,105.313', 'itera-gerbang-utama', 'driving-car', 2, 323, now()),
+  ('-5.357,105.313', 'itera-simpang-wayhuwi', 'walking', 11, 774, now()),
+  ('-5.357,105.313', 'itera-simpang-wayhuwi', 'motorcycle', 3, 805, now()),
+  ('-5.357,105.313', 'itera-simpang-wayhuwi', 'driving-car', 3, 836, now()),
+  ('-5.357,105.313', 'itera-akses-sabahbalau', 'walking', 26, 1879, now()),
+  ('-5.357,105.313', 'itera-akses-sabahbalau', 'motorcycle', 5, 1954, now()),
+  ('-5.357,105.313', 'itera-akses-sabahbalau', 'driving-car', 7, 2029, now()),
+  ('-5.354,105.303', 'itera-lampung', 'walking', 24, 1766, now()),
+  ('-5.354,105.303', 'itera-lampung', 'motorcycle', 5, 1837, now()),
+  ('-5.354,105.303', 'itera-lampung', 'driving-car', 7, 1908, now()),
+  ('-5.354,105.303', 'itera-gerbang-utama', 'walking', 24, 1766, now()),
+  ('-5.354,105.303', 'itera-gerbang-utama', 'motorcycle', 5, 1837, now()),
+  ('-5.354,105.303', 'itera-gerbang-utama', 'driving-car', 7, 1908, now()),
+  ('-5.354,105.303', 'itera-simpang-wayhuwi', 'walking', 10, 723, now()),
+  ('-5.354,105.303', 'itera-simpang-wayhuwi', 'motorcycle', 2, 751, now()),
+  ('-5.354,105.303', 'itera-simpang-wayhuwi', 'driving-car', 3, 780, now()),
+  ('-5.354,105.303', 'itera-akses-sabahbalau', 'walking', 43, 3195, now()),
+  ('-5.354,105.303', 'itera-akses-sabahbalau', 'motorcycle', 9, 3323, now()),
+  ('-5.354,105.303', 'itera-akses-sabahbalau', 'driving-car', 12, 3451, now()),
+  ('-5.363,105.300', 'itera-lampung', 'walking', 28, 2098, now()),
+  ('-5.363,105.300', 'itera-lampung', 'motorcycle', 6, 2181, now()),
+  ('-5.363,105.300', 'itera-lampung', 'driving-car', 8, 2265, now()),
+  ('-5.363,105.300', 'itera-gerbang-utama', 'walking', 28, 2098, now()),
+  ('-5.363,105.300', 'itera-gerbang-utama', 'motorcycle', 6, 2181, now()),
+  ('-5.363,105.300', 'itera-gerbang-utama', 'driving-car', 8, 2265, now()),
+  ('-5.363,105.300', 'itera-simpang-wayhuwi', 'walking', 21, 1524, now()),
+  ('-5.363,105.300', 'itera-simpang-wayhuwi', 'motorcycle', 4, 1585, now()),
+  ('-5.363,105.300', 'itera-simpang-wayhuwi', 'driving-car', 6, 1646, now()),
+  ('-5.363,105.300', 'itera-akses-sabahbalau', 'walking', 40, 2950, now()),
+  ('-5.363,105.300', 'itera-akses-sabahbalau', 'motorcycle', 8, 3068, now()),
+  ('-5.363,105.300', 'itera-akses-sabahbalau', 'driving-car', 11, 3186, now()),
+  ('-5.355,105.313', 'itera-lampung', 'walking', 8, 548, now()),
+  ('-5.355,105.313', 'itera-lampung', 'motorcycle', 2, 569, now()),
+  ('-5.355,105.313', 'itera-lampung', 'driving-car', 2, 591, now()),
+  ('-5.355,105.313', 'itera-gerbang-utama', 'walking', 8, 548, now()),
+  ('-5.355,105.313', 'itera-gerbang-utama', 'motorcycle', 2, 569, now()),
+  ('-5.355,105.313', 'itera-gerbang-utama', 'driving-car', 2, 591, now()),
+  ('-5.355,105.313', 'itera-simpang-wayhuwi', 'walking', 9, 663, now()),
+  ('-5.355,105.313', 'itera-simpang-wayhuwi', 'motorcycle', 2, 689, now()),
+  ('-5.355,105.313', 'itera-simpang-wayhuwi', 'driving-car', 3, 716, now()),
+  ('-5.355,105.313', 'itera-akses-sabahbalau', 'walking', 29, 2134, now()),
+  ('-5.355,105.313', 'itera-akses-sabahbalau', 'motorcycle', 6, 2219, now()),
+  ('-5.355,105.313', 'itera-akses-sabahbalau', 'driving-car', 8, 2304, now()),
+  ('-5.349,105.303', 'itera-lampung', 'walking', 29, 2125, now()),
+  ('-5.349,105.303', 'itera-lampung', 'motorcycle', 6, 2210, now()),
+  ('-5.349,105.303', 'itera-lampung', 'driving-car', 8, 2295, now()),
+  ('-5.349,105.303', 'itera-gerbang-utama', 'walking', 29, 2125, now()),
+  ('-5.349,105.303', 'itera-gerbang-utama', 'motorcycle', 6, 2210, now()),
+  ('-5.349,105.303', 'itera-gerbang-utama', 'driving-car', 8, 2295, now()),
+  ('-5.349,105.303', 'itera-simpang-wayhuwi', 'walking', 16, 1128, now()),
+  ('-5.349,105.303', 'itera-simpang-wayhuwi', 'motorcycle', 3, 1173, now()),
+  ('-5.349,105.303', 'itera-simpang-wayhuwi', 'driving-car', 5, 1218, now()),
+  ('-5.349,105.303', 'itera-akses-sabahbalau', 'walking', 49, 3670, now()),
+  ('-5.349,105.303', 'itera-akses-sabahbalau', 'motorcycle', 10, 3817, now()),
+  ('-5.349,105.303', 'itera-akses-sabahbalau', 'driving-car', 14, 3964, now()),
+  ('-5.352,105.305', 'itera-lampung', 'walking', 22, 1591, now()),
+  ('-5.352,105.305', 'itera-lampung', 'motorcycle', 5, 1655, now()),
+  ('-5.352,105.305', 'itera-lampung', 'driving-car', 6, 1719, now()),
+  ('-5.352,105.305', 'itera-gerbang-utama', 'walking', 22, 1591, now()),
+  ('-5.352,105.305', 'itera-gerbang-utama', 'motorcycle', 5, 1655, now()),
+  ('-5.352,105.305', 'itera-gerbang-utama', 'driving-car', 6, 1719, now()),
+  ('-5.352,105.305', 'itera-simpang-wayhuwi', 'walking', 8, 571, now()),
+  ('-5.352,105.305', 'itera-simpang-wayhuwi', 'motorcycle', 2, 594, now()),
+  ('-5.352,105.305', 'itera-simpang-wayhuwi', 'driving-car', 3, 617, now()),
+  ('-5.352,105.305', 'itera-akses-sabahbalau', 'walking', 42, 3119, now()),
+  ('-5.352,105.305', 'itera-akses-sabahbalau', 'motorcycle', 9, 3244, now()),
+  ('-5.352,105.305', 'itera-akses-sabahbalau', 'driving-car', 12, 3368, now()),
+  ('-5.371,105.299', 'itera-lampung', 'walking', 37, 2749, now()),
+  ('-5.371,105.299', 'itera-lampung', 'motorcycle', 8, 2859, now()),
+  ('-5.371,105.299', 'itera-lampung', 'driving-car', 10, 2969, now()),
+  ('-5.371,105.299', 'itera-gerbang-utama', 'walking', 37, 2749, now()),
+  ('-5.371,105.299', 'itera-gerbang-utama', 'motorcycle', 8, 2859, now()),
+  ('-5.371,105.299', 'itera-gerbang-utama', 'driving-car', 10, 2969, now()),
+  ('-5.371,105.299', 'itera-simpang-wayhuwi', 'walking', 34, 2515, now()),
+  ('-5.371,105.299', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2616, now()),
+  ('-5.371,105.299', 'itera-simpang-wayhuwi', 'driving-car', 10, 2716, now()),
+  ('-5.371,105.299', 'itera-akses-sabahbalau', 'walking', 41, 3008, now()),
+  ('-5.371,105.299', 'itera-akses-sabahbalau', 'motorcycle', 8, 3128, now()),
+  ('-5.371,105.299', 'itera-akses-sabahbalau', 'driving-car', 11, 3248, now()),
+  ('-5.365,105.320', 'itera-lampung', 'walking', 16, 1134, now()),
+  ('-5.365,105.320', 'itera-lampung', 'motorcycle', 3, 1179, now()),
+  ('-5.365,105.320', 'itera-lampung', 'driving-car', 5, 1224, now()),
+  ('-5.365,105.320', 'itera-gerbang-utama', 'walking', 16, 1134, now()),
+  ('-5.365,105.320', 'itera-gerbang-utama', 'motorcycle', 3, 1179, now()),
+  ('-5.365,105.320', 'itera-gerbang-utama', 'driving-car', 5, 1224, now()),
+  ('-5.365,105.320', 'itera-simpang-wayhuwi', 'walking', 29, 2139, now()),
+  ('-5.365,105.320', 'itera-simpang-wayhuwi', 'motorcycle', 6, 2224, now()),
+  ('-5.365,105.320', 'itera-simpang-wayhuwi', 'driving-car', 8, 2310, now()),
+  ('-5.365,105.320', 'itera-akses-sabahbalau', 'walking', 7, 475, now()),
+  ('-5.365,105.320', 'itera-akses-sabahbalau', 'motorcycle', 2, 494, now()),
+  ('-5.365,105.320', 'itera-akses-sabahbalau', 'driving-car', 2, 513, now()),
+  ('-5.354,105.313', 'itera-lampung', 'walking', 9, 648, now()),
+  ('-5.354,105.313', 'itera-lampung', 'motorcycle', 2, 673, now()),
+  ('-5.354,105.313', 'itera-lampung', 'driving-car', 3, 699, now()),
+  ('-5.354,105.313', 'itera-gerbang-utama', 'walking', 9, 648, now()),
+  ('-5.354,105.313', 'itera-gerbang-utama', 'motorcycle', 2, 673, now()),
+  ('-5.354,105.313', 'itera-gerbang-utama', 'driving-car', 3, 699, now()),
+  ('-5.354,105.313', 'itera-simpang-wayhuwi', 'walking', 11, 771, now()),
+  ('-5.354,105.313', 'itera-simpang-wayhuwi', 'motorcycle', 3, 802, now()),
+  ('-5.354,105.313', 'itera-simpang-wayhuwi', 'driving-car', 3, 833, now()),
+  ('-5.354,105.313', 'itera-akses-sabahbalau', 'walking', 30, 2216, now()),
+  ('-5.354,105.313', 'itera-akses-sabahbalau', 'motorcycle', 6, 2305, now()),
+  ('-5.354,105.313', 'itera-akses-sabahbalau', 'driving-car', 8, 2394, now()),
+  ('-5.364,105.323', 'itera-lampung', 'walking', 19, 1409, now()),
+  ('-5.364,105.323', 'itera-lampung', 'motorcycle', 4, 1465, now()),
+  ('-5.364,105.323', 'itera-lampung', 'driving-car', 6, 1521, now()),
+  ('-5.364,105.323', 'itera-gerbang-utama', 'walking', 19, 1409, now()),
+  ('-5.364,105.323', 'itera-gerbang-utama', 'motorcycle', 4, 1465, now()),
+  ('-5.364,105.323', 'itera-gerbang-utama', 'driving-car', 6, 1521, now()),
+  ('-5.364,105.323', 'itera-simpang-wayhuwi', 'walking', 33, 2456, now()),
+  ('-5.364,105.323', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2555, now()),
+  ('-5.364,105.323', 'itera-simpang-wayhuwi', 'driving-car', 9, 2653, now()),
+  ('-5.364,105.323', 'itera-akses-sabahbalau', 'walking', 9, 614, now()),
+  ('-5.364,105.323', 'itera-akses-sabahbalau', 'motorcycle', 2, 638, now()),
+  ('-5.364,105.323', 'itera-akses-sabahbalau', 'driving-car', 3, 663, now()),
+  ('-5.358,105.305', 'itera-lampung', 'walking', 20, 1426, now()),
+  ('-5.358,105.305', 'itera-lampung', 'motorcycle', 4, 1483, now()),
+  ('-5.358,105.305', 'itera-lampung', 'driving-car', 6, 1540, now()),
+  ('-5.358,105.305', 'itera-gerbang-utama', 'walking', 20, 1426, now()),
+  ('-5.358,105.305', 'itera-gerbang-utama', 'motorcycle', 4, 1483, now()),
+  ('-5.358,105.305', 'itera-gerbang-utama', 'driving-car', 6, 1540, now()),
+  ('-5.358,105.305', 'itera-simpang-wayhuwi', 'walking', 9, 645, now()),
+  ('-5.358,105.305', 'itera-simpang-wayhuwi', 'motorcycle', 2, 671, now()),
+  ('-5.358,105.305', 'itera-simpang-wayhuwi', 'driving-car', 3, 697, now()),
+  ('-5.358,105.305', 'itera-akses-sabahbalau', 'walking', 36, 2668, now()),
+  ('-5.358,105.305', 'itera-akses-sabahbalau', 'motorcycle', 7, 2774, now()),
+  ('-5.358,105.305', 'itera-akses-sabahbalau', 'driving-car', 10, 2881, now()),
+  ('-5.351,105.306', 'itera-lampung', 'walking', 23, 1654, now()),
+  ('-5.351,105.306', 'itera-lampung', 'motorcycle', 5, 1720, now()),
+  ('-5.351,105.306', 'itera-lampung', 'driving-car', 6, 1786, now()),
+  ('-5.351,105.306', 'itera-gerbang-utama', 'walking', 23, 1654, now()),
+  ('-5.351,105.306', 'itera-gerbang-utama', 'motorcycle', 5, 1720, now()),
+  ('-5.351,105.306', 'itera-gerbang-utama', 'driving-car', 6, 1786, now()),
+  ('-5.351,105.306', 'itera-simpang-wayhuwi', 'walking', 9, 675, now()),
+  ('-5.351,105.306', 'itera-simpang-wayhuwi', 'motorcycle', 2, 702, now()),
+  ('-5.351,105.306', 'itera-simpang-wayhuwi', 'driving-car', 3, 729, now()),
+  ('-5.351,105.306', 'itera-akses-sabahbalau', 'walking', 43, 3204, now()),
+  ('-5.351,105.306', 'itera-akses-sabahbalau', 'motorcycle', 9, 3332, now()),
+  ('-5.351,105.306', 'itera-akses-sabahbalau', 'driving-car', 12, 3460, now()),
+  ('-5.359,105.305', 'itera-lampung', 'walking', 18, 1295, now()),
+  ('-5.359,105.305', 'itera-lampung', 'motorcycle', 4, 1347, now()),
+  ('-5.359,105.305', 'itera-lampung', 'driving-car', 5, 1399, now()),
+  ('-5.359,105.305', 'itera-gerbang-utama', 'walking', 18, 1295, now()),
+  ('-5.359,105.305', 'itera-gerbang-utama', 'motorcycle', 4, 1347, now()),
+  ('-5.359,105.305', 'itera-gerbang-utama', 'driving-car', 5, 1399, now()),
+  ('-5.359,105.305', 'itera-simpang-wayhuwi', 'walking', 9, 638, now()),
+  ('-5.359,105.305', 'itera-simpang-wayhuwi', 'motorcycle', 2, 663, now()),
+  ('-5.359,105.305', 'itera-simpang-wayhuwi', 'driving-car', 3, 689, now()),
+  ('-5.359,105.305', 'itera-akses-sabahbalau', 'walking', 34, 2501, now()),
+  ('-5.359,105.305', 'itera-akses-sabahbalau', 'motorcycle', 7, 2601, now()),
+  ('-5.359,105.305', 'itera-akses-sabahbalau', 'driving-car', 10, 2701, now()),
+  ('-5.364,105.300', 'itera-lampung', 'walking', 30, 2190, now()),
+  ('-5.364,105.300', 'itera-lampung', 'motorcycle', 6, 2278, now()),
+  ('-5.364,105.300', 'itera-lampung', 'driving-car', 8, 2365, now()),
+  ('-5.364,105.300', 'itera-gerbang-utama', 'walking', 30, 2190, now()),
+  ('-5.364,105.300', 'itera-gerbang-utama', 'motorcycle', 6, 2278, now()),
+  ('-5.364,105.300', 'itera-gerbang-utama', 'driving-car', 8, 2365, now()),
+  ('-5.364,105.300', 'itera-simpang-wayhuwi', 'walking', 23, 1705, now()),
+  ('-5.364,105.300', 'itera-simpang-wayhuwi', 'motorcycle', 5, 1773, now()),
+  ('-5.364,105.300', 'itera-simpang-wayhuwi', 'driving-car', 7, 1841, now()),
+  ('-5.364,105.300', 'itera-akses-sabahbalau', 'walking', 39, 2920, now()),
+  ('-5.364,105.300', 'itera-akses-sabahbalau', 'motorcycle', 8, 3037, now()),
+  ('-5.364,105.300', 'itera-akses-sabahbalau', 'driving-car', 11, 3154, now()),
+  ('-5.359,105.329', 'itera-lampung', 'walking', 26, 1908, now()),
+  ('-5.359,105.329', 'itera-lampung', 'motorcycle', 5, 1984, now()),
+  ('-5.359,105.329', 'itera-lampung', 'driving-car', 7, 2060, now()),
+  ('-5.359,105.329', 'itera-gerbang-utama', 'walking', 26, 1908, now()),
+  ('-5.359,105.329', 'itera-gerbang-utama', 'motorcycle', 5, 1984, now()),
+  ('-5.359,105.329', 'itera-gerbang-utama', 'driving-car', 7, 2060, now()),
+  ('-5.359,105.329', 'itera-simpang-wayhuwi', 'walking', 39, 2903, now()),
+  ('-5.359,105.329', 'itera-simpang-wayhuwi', 'motorcycle', 8, 3019, now()),
+  ('-5.359,105.329', 'itera-simpang-wayhuwi', 'driving-car', 11, 3135, now()),
+  ('-5.359,105.329', 'itera-akses-sabahbalau', 'walking', 22, 1621, now()),
+  ('-5.359,105.329', 'itera-akses-sabahbalau', 'motorcycle', 5, 1686, now()),
+  ('-5.359,105.329', 'itera-akses-sabahbalau', 'driving-car', 6, 1751, now()),
+  ('-5.351,105.303', 'itera-lampung', 'walking', 27, 1969, now()),
+  ('-5.351,105.303', 'itera-lampung', 'motorcycle', 6, 2048, now()),
+  ('-5.351,105.303', 'itera-lampung', 'driving-car', 8, 2126, now()),
+  ('-5.351,105.303', 'itera-gerbang-utama', 'walking', 27, 1969, now()),
+  ('-5.351,105.303', 'itera-gerbang-utama', 'motorcycle', 6, 2048, now()),
+  ('-5.351,105.303', 'itera-gerbang-utama', 'driving-car', 8, 2126, now()),
+  ('-5.351,105.303', 'itera-simpang-wayhuwi', 'walking', 13, 924, now()),
+  ('-5.351,105.303', 'itera-simpang-wayhuwi', 'motorcycle', 3, 961, now()),
+  ('-5.351,105.303', 'itera-simpang-wayhuwi', 'driving-car', 4, 998, now()),
+  ('-5.351,105.303', 'itera-akses-sabahbalau', 'walking', 47, 3468, now()),
+  ('-5.351,105.303', 'itera-akses-sabahbalau', 'motorcycle', 10, 3606, now()),
+  ('-5.351,105.303', 'itera-akses-sabahbalau', 'driving-car', 13, 3745, now()),
+  ('-5.362,105.302', 'itera-lampung', 'walking', 25, 1838, now()),
+  ('-5.362,105.302', 'itera-lampung', 'motorcycle', 5, 1911, now()),
+  ('-5.362,105.302', 'itera-lampung', 'driving-car', 7, 1985, now()),
+  ('-5.362,105.302', 'itera-gerbang-utama', 'walking', 25, 1838, now()),
+  ('-5.362,105.302', 'itera-gerbang-utama', 'motorcycle', 5, 1911, now()),
+  ('-5.362,105.302', 'itera-gerbang-utama', 'driving-car', 7, 1985, now()),
+  ('-5.362,105.302', 'itera-simpang-wayhuwi', 'walking', 18, 1298, now()),
+  ('-5.362,105.302', 'itera-simpang-wayhuwi', 'motorcycle', 4, 1349, now()),
+  ('-5.362,105.302', 'itera-simpang-wayhuwi', 'driving-car', 5, 1401, now()),
+  ('-5.362,105.302', 'itera-akses-sabahbalau', 'walking', 37, 2735, now()),
+  ('-5.362,105.302', 'itera-akses-sabahbalau', 'motorcycle', 8, 2844, now()),
+  ('-5.362,105.302', 'itera-akses-sabahbalau', 'driving-car', 10, 2954, now()),
+  ('-5.362,105.322', 'itera-lampung', 'walking', 15, 1054, now()),
+  ('-5.362,105.322', 'itera-lampung', 'motorcycle', 3, 1096, now()),
+  ('-5.362,105.322', 'itera-lampung', 'driving-car', 4, 1138, now()),
+  ('-5.362,105.322', 'itera-gerbang-utama', 'walking', 15, 1054, now()),
+  ('-5.362,105.322', 'itera-gerbang-utama', 'motorcycle', 3, 1096, now()),
+  ('-5.362,105.322', 'itera-gerbang-utama', 'driving-car', 4, 1138, now()),
+  ('-5.362,105.322', 'itera-simpang-wayhuwi', 'walking', 29, 2108, now()),
+  ('-5.362,105.322', 'itera-simpang-wayhuwi', 'motorcycle', 6, 2192, now()),
+  ('-5.362,105.322', 'itera-simpang-wayhuwi', 'driving-car', 8, 2276, now()),
+  ('-5.362,105.322', 'itera-akses-sabahbalau', 'walking', 12, 880, now()),
+  ('-5.362,105.322', 'itera-akses-sabahbalau', 'motorcycle', 3, 915, now()),
+  ('-5.362,105.322', 'itera-akses-sabahbalau', 'driving-car', 4, 950, now()),
+  ('-5.356,105.314', 'itera-lampung', 'walking', 5, 341, now()),
+  ('-5.356,105.314', 'itera-lampung', 'motorcycle', 1, 355, now()),
+  ('-5.356,105.314', 'itera-lampung', 'driving-car', 2, 369, now()),
+  ('-5.356,105.314', 'itera-gerbang-utama', 'walking', 5, 341, now()),
+  ('-5.356,105.314', 'itera-gerbang-utama', 'motorcycle', 1, 355, now()),
+  ('-5.356,105.314', 'itera-gerbang-utama', 'driving-car', 2, 369, now()),
+  ('-5.356,105.314', 'itera-simpang-wayhuwi', 'walking', 11, 810, now()),
+  ('-5.356,105.314', 'itera-simpang-wayhuwi', 'motorcycle', 3, 842, now()),
+  ('-5.356,105.314', 'itera-simpang-wayhuwi', 'driving-car', 3, 875, now()),
+  ('-5.356,105.314', 'itera-akses-sabahbalau', 'walking', 26, 1925, now()),
+  ('-5.356,105.314', 'itera-akses-sabahbalau', 'motorcycle', 6, 2002, now()),
+  ('-5.356,105.314', 'itera-akses-sabahbalau', 'driving-car', 7, 2079, now()),
+  ('-5.358,105.333', 'itera-lampung', 'walking', 34, 2481, now()),
+  ('-5.358,105.333', 'itera-lampung', 'motorcycle', 7, 2581, now()),
+  ('-5.358,105.333', 'itera-lampung', 'driving-car', 9, 2680, now()),
+  ('-5.358,105.333', 'itera-gerbang-utama', 'walking', 34, 2481, now()),
+  ('-5.358,105.333', 'itera-gerbang-utama', 'motorcycle', 7, 2581, now()),
+  ('-5.358,105.333', 'itera-gerbang-utama', 'driving-car', 9, 2680, now()),
+  ('-5.358,105.333', 'itera-simpang-wayhuwi', 'walking', 46, 3443, now()),
+  ('-5.358,105.333', 'itera-simpang-wayhuwi', 'motorcycle', 9, 3580, now()),
+  ('-5.358,105.333', 'itera-simpang-wayhuwi', 'driving-car', 13, 3718, now()),
+  ('-5.358,105.333', 'itera-akses-sabahbalau', 'walking', 29, 2159, now()),
+  ('-5.358,105.333', 'itera-akses-sabahbalau', 'motorcycle', 6, 2245, now()),
+  ('-5.358,105.333', 'itera-akses-sabahbalau', 'driving-car', 8, 2331, now()),
+  ('-5.347,105.310', 'itera-lampung', 'walking', 23, 1669, now()),
+  ('-5.347,105.310', 'itera-lampung', 'motorcycle', 5, 1736, now()),
+  ('-5.347,105.310', 'itera-lampung', 'driving-car', 7, 1802, now()),
+  ('-5.347,105.310', 'itera-gerbang-utama', 'walking', 23, 1669, now()),
+  ('-5.347,105.310', 'itera-gerbang-utama', 'motorcycle', 5, 1736, now()),
+  ('-5.347,105.310', 'itera-gerbang-utama', 'driving-car', 7, 1802, now()),
+  ('-5.347,105.310', 'itera-simpang-wayhuwi', 'walking', 15, 1074, now()),
+  ('-5.347,105.310', 'itera-simpang-wayhuwi', 'motorcycle', 3, 1117, now()),
+  ('-5.347,105.310', 'itera-simpang-wayhuwi', 'driving-car', 4, 1160, now()),
+  ('-5.347,105.310', 'itera-akses-sabahbalau', 'walking', 44, 3248, now()),
+  ('-5.347,105.310', 'itera-akses-sabahbalau', 'motorcycle', 9, 3377, now()),
+  ('-5.347,105.310', 'itera-akses-sabahbalau', 'driving-car', 12, 3507, now()),
+  ('-5.361,105.331', 'itera-lampung', 'walking', 31, 2319, now()),
+  ('-5.361,105.331', 'itera-lampung', 'motorcycle', 7, 2412, now()),
+  ('-5.361,105.331', 'itera-lampung', 'driving-car', 9, 2504, now()),
+  ('-5.361,105.331', 'itera-gerbang-utama', 'walking', 31, 2319, now()),
+  ('-5.361,105.331', 'itera-gerbang-utama', 'motorcycle', 7, 2412, now()),
+  ('-5.361,105.331', 'itera-gerbang-utama', 'driving-car', 9, 2504, now()),
+  ('-5.361,105.331', 'itera-simpang-wayhuwi', 'walking', 45, 3338, now()),
+  ('-5.361,105.331', 'itera-simpang-wayhuwi', 'motorcycle', 9, 3471, now()),
+  ('-5.361,105.331', 'itera-simpang-wayhuwi', 'driving-car', 13, 3605, now()),
+  ('-5.361,105.331', 'itera-akses-sabahbalau', 'walking', 24, 1736, now()),
+  ('-5.361,105.331', 'itera-akses-sabahbalau', 'motorcycle', 5, 1806, now()),
+  ('-5.361,105.331', 'itera-akses-sabahbalau', 'driving-car', 7, 1875, now()),
+  ('-5.364,105.320', 'itera-lampung', 'walking', 14, 1018, now()),
+  ('-5.364,105.320', 'itera-lampung', 'motorcycle', 3, 1058, now()),
+  ('-5.364,105.320', 'itera-lampung', 'driving-car', 4, 1099, now()),
+  ('-5.364,105.320', 'itera-gerbang-utama', 'walking', 14, 1018, now()),
+  ('-5.364,105.320', 'itera-gerbang-utama', 'motorcycle', 3, 1058, now()),
+  ('-5.364,105.320', 'itera-gerbang-utama', 'driving-car', 4, 1099, now()),
+  ('-5.364,105.320', 'itera-simpang-wayhuwi', 'walking', 28, 2041, now()),
+  ('-5.364,105.320', 'itera-simpang-wayhuwi', 'motorcycle', 6, 2123, now()),
+  ('-5.364,105.320', 'itera-simpang-wayhuwi', 'driving-car', 8, 2205, now()),
+  ('-5.364,105.320', 'itera-akses-sabahbalau', 'walking', 9, 624, now()),
+  ('-5.364,105.320', 'itera-akses-sabahbalau', 'motorcycle', 2, 649, now()),
+  ('-5.364,105.320', 'itera-akses-sabahbalau', 'driving-car', 3, 674, now()),
+  ('-5.355,105.334', 'itera-lampung', 'walking', 36, 2661, now()),
+  ('-5.355,105.334', 'itera-lampung', 'motorcycle', 7, 2768, now()),
+  ('-5.355,105.334', 'itera-lampung', 'driving-car', 10, 2874, now()),
+  ('-5.355,105.334', 'itera-gerbang-utama', 'walking', 36, 2661, now()),
+  ('-5.355,105.334', 'itera-gerbang-utama', 'motorcycle', 7, 2768, now()),
+  ('-5.355,105.334', 'itera-gerbang-utama', 'driving-car', 10, 2874, now()),
+  ('-5.355,105.334', 'itera-simpang-wayhuwi', 'walking', 48, 3566, now()),
+  ('-5.355,105.334', 'itera-simpang-wayhuwi', 'motorcycle', 10, 3709, now()),
+  ('-5.355,105.334', 'itera-simpang-wayhuwi', 'driving-car', 13, 3852, now()),
+  ('-5.355,105.334', 'itera-akses-sabahbalau', 'walking', 34, 2500, now()),
+  ('-5.355,105.334', 'itera-akses-sabahbalau', 'motorcycle', 7, 2600, now()),
+  ('-5.355,105.334', 'itera-akses-sabahbalau', 'driving-car', 9, 2700, now()),
+  ('-5.358,105.335', 'itera-lampung', 'walking', 37, 2734, now()),
+  ('-5.358,105.335', 'itera-lampung', 'motorcycle', 8, 2843, now()),
+  ('-5.358,105.335', 'itera-lampung', 'driving-car', 10, 2952, now()),
+  ('-5.358,105.335', 'itera-gerbang-utama', 'walking', 37, 2734, now()),
+  ('-5.358,105.335', 'itera-gerbang-utama', 'motorcycle', 8, 2843, now()),
+  ('-5.358,105.335', 'itera-gerbang-utama', 'driving-car', 10, 2952, now()),
+  ('-5.358,105.335', 'itera-simpang-wayhuwi', 'walking', 50, 3691, now()),
+  ('-5.358,105.335', 'itera-simpang-wayhuwi', 'motorcycle', 10, 3839, now()),
+  ('-5.358,105.335', 'itera-simpang-wayhuwi', 'driving-car', 14, 3987, now()),
+  ('-5.358,105.335', 'itera-akses-sabahbalau', 'walking', 32, 2365, now()),
+  ('-5.358,105.335', 'itera-akses-sabahbalau', 'motorcycle', 7, 2460, now()),
+  ('-5.358,105.335', 'itera-akses-sabahbalau', 'driving-car', 9, 2554, now()),
+  ('-5.375,105.297', 'itera-lampung', 'walking', 45, 3350, now()),
+  ('-5.375,105.297', 'itera-lampung', 'motorcycle', 9, 3484, now()),
+  ('-5.375,105.297', 'itera-lampung', 'driving-car', 13, 3618, now()),
+  ('-5.375,105.297', 'itera-gerbang-utama', 'walking', 45, 3350, now()),
+  ('-5.375,105.297', 'itera-gerbang-utama', 'motorcycle', 9, 3484, now()),
+  ('-5.375,105.297', 'itera-gerbang-utama', 'driving-car', 13, 3618, now()),
+  ('-5.375,105.297', 'itera-simpang-wayhuwi', 'walking', 42, 3146, now()),
+  ('-5.375,105.297', 'itera-simpang-wayhuwi', 'motorcycle', 9, 3272, now()),
+  ('-5.375,105.297', 'itera-simpang-wayhuwi', 'driving-car', 12, 3398, now()),
+  ('-5.375,105.297', 'itera-akses-sabahbalau', 'walking', 46, 3439, now()),
+  ('-5.375,105.297', 'itera-akses-sabahbalau', 'motorcycle', 9, 3576, now()),
+  ('-5.375,105.297', 'itera-akses-sabahbalau', 'driving-car', 13, 3714, now()),
+  ('-5.371,105.293', 'itera-lampung', 'walking', 47, 3451, now()),
+  ('-5.371,105.293', 'itera-lampung', 'motorcycle', 9, 3589, now()),
+  ('-5.371,105.293', 'itera-lampung', 'driving-car', 13, 3727, now()),
+  ('-5.371,105.293', 'itera-gerbang-utama', 'walking', 47, 3451, now()),
+  ('-5.371,105.293', 'itera-gerbang-utama', 'motorcycle', 9, 3589, now()),
+  ('-5.371,105.293', 'itera-gerbang-utama', 'driving-car', 13, 3727, now()),
+  ('-5.371,105.293', 'itera-simpang-wayhuwi', 'walking', 41, 3005, now()),
+  ('-5.371,105.293', 'itera-simpang-wayhuwi', 'motorcycle', 8, 3125, now()),
+  ('-5.371,105.293', 'itera-simpang-wayhuwi', 'driving-car', 11, 3245, now()),
+  ('-5.371,105.293', 'itera-akses-sabahbalau', 'walking', 52, 3865, now()),
+  ('-5.371,105.293', 'itera-akses-sabahbalau', 'motorcycle', 11, 4020, now()),
+  ('-5.371,105.293', 'itera-akses-sabahbalau', 'driving-car', 14, 4174, now()),
+  ('-5.353,105.316', 'itera-lampung', 'walking', 10, 715, now()),
+  ('-5.353,105.316', 'itera-lampung', 'motorcycle', 2, 744, now()),
+  ('-5.353,105.316', 'itera-lampung', 'driving-car', 3, 772, now()),
+  ('-5.353,105.316', 'itera-gerbang-utama', 'walking', 10, 715, now()),
+  ('-5.353,105.316', 'itera-gerbang-utama', 'motorcycle', 2, 744, now()),
+  ('-5.353,105.316', 'itera-gerbang-utama', 'driving-car', 3, 772, now()),
+  ('-5.353,105.316', 'itera-simpang-wayhuwi', 'walking', 16, 1150, now()),
+  ('-5.353,105.316', 'itera-simpang-wayhuwi', 'motorcycle', 3, 1196, now()),
+  ('-5.353,105.316', 'itera-simpang-wayhuwi', 'driving-car', 5, 1242, now()),
+  ('-5.353,105.316', 'itera-akses-sabahbalau', 'walking', 29, 2131, now()),
+  ('-5.353,105.316', 'itera-akses-sabahbalau', 'motorcycle', 6, 2217, now()),
+  ('-5.353,105.316', 'itera-akses-sabahbalau', 'driving-car', 8, 2302, now()),
+  ('-5.363,105.319', 'itera-lampung', 'walking', 13, 921, now()),
+  ('-5.363,105.319', 'itera-lampung', 'motorcycle', 3, 958, now()),
+  ('-5.363,105.319', 'itera-lampung', 'driving-car', 4, 995, now()),
+  ('-5.363,105.319', 'itera-gerbang-utama', 'walking', 13, 921, now()),
+  ('-5.363,105.319', 'itera-gerbang-utama', 'motorcycle', 3, 958, now()),
+  ('-5.363,105.319', 'itera-gerbang-utama', 'driving-car', 4, 995, now()),
+  ('-5.363,105.319', 'itera-simpang-wayhuwi', 'walking', 26, 1936, now()),
+  ('-5.363,105.319', 'itera-simpang-wayhuwi', 'motorcycle', 6, 2014, now()),
+  ('-5.363,105.319', 'itera-simpang-wayhuwi', 'driving-car', 7, 2091, now()),
+  ('-5.363,105.319', 'itera-akses-sabahbalau', 'walking', 10, 685, now()),
+  ('-5.363,105.319', 'itera-akses-sabahbalau', 'motorcycle', 2, 712, now()),
+  ('-5.363,105.319', 'itera-akses-sabahbalau', 'driving-car', 3, 740, now()),
+  ('-5.361,105.303', 'itera-lampung', 'walking', 23, 1695, now()),
+  ('-5.361,105.303', 'itera-lampung', 'motorcycle', 5, 1763, now()),
+  ('-5.361,105.303', 'itera-lampung', 'driving-car', 7, 1831, now()),
+  ('-5.361,105.303', 'itera-gerbang-utama', 'walking', 23, 1695, now()),
+  ('-5.361,105.303', 'itera-gerbang-utama', 'motorcycle', 5, 1763, now()),
+  ('-5.361,105.303', 'itera-gerbang-utama', 'driving-car', 7, 1831, now()),
+  ('-5.361,105.303', 'itera-simpang-wayhuwi', 'walking', 15, 1115, now()),
+  ('-5.361,105.303', 'itera-simpang-wayhuwi', 'motorcycle', 3, 1160, now()),
+  ('-5.361,105.303', 'itera-simpang-wayhuwi', 'driving-car', 5, 1204, now()),
+  ('-5.361,105.303', 'itera-akses-sabahbalau', 'walking', 36, 2680, now()),
+  ('-5.361,105.303', 'itera-akses-sabahbalau', 'motorcycle', 7, 2787, now()),
+  ('-5.361,105.303', 'itera-akses-sabahbalau', 'driving-car', 10, 2894, now()),
+  ('-5.349,105.310', 'itera-lampung', 'walking', 21, 1515, now()),
+  ('-5.349,105.310', 'itera-lampung', 'motorcycle', 4, 1576, now()),
+  ('-5.349,105.310', 'itera-lampung', 'driving-car', 6, 1636, now()),
+  ('-5.349,105.310', 'itera-gerbang-utama', 'walking', 21, 1515, now()),
+  ('-5.349,105.310', 'itera-gerbang-utama', 'motorcycle', 4, 1576, now()),
+  ('-5.349,105.310', 'itera-gerbang-utama', 'driving-car', 6, 1636, now()),
+  ('-5.349,105.310', 'itera-simpang-wayhuwi', 'walking', 13, 953, now()),
+  ('-5.349,105.310', 'itera-simpang-wayhuwi', 'motorcycle', 3, 991, now()),
+  ('-5.349,105.310', 'itera-simpang-wayhuwi', 'driving-car', 4, 1029, now()),
+  ('-5.349,105.310', 'itera-akses-sabahbalau', 'walking', 42, 3094, now()),
+  ('-5.349,105.310', 'itera-akses-sabahbalau', 'motorcycle', 9, 3218, now()),
+  ('-5.349,105.310', 'itera-akses-sabahbalau', 'driving-car', 12, 3341, now()),
+  ('-5.375,105.292', 'itera-lampung', 'walking', 52, 3873, now()),
+  ('-5.375,105.292', 'itera-lampung', 'motorcycle', 11, 4027, now()),
+  ('-5.375,105.292', 'itera-lampung', 'driving-car', 14, 4182, now()),
+  ('-5.375,105.292', 'itera-gerbang-utama', 'walking', 52, 3873, now()),
+  ('-5.375,105.292', 'itera-gerbang-utama', 'motorcycle', 11, 4027, now()),
+  ('-5.375,105.292', 'itera-gerbang-utama', 'driving-car', 14, 4182, now()),
+  ('-5.375,105.292', 'itera-simpang-wayhuwi', 'walking', 47, 3520, now()),
+  ('-5.375,105.292', 'itera-simpang-wayhuwi', 'motorcycle', 10, 3661, now()),
+  ('-5.375,105.292', 'itera-simpang-wayhuwi', 'driving-car', 13, 3802, now()),
+  ('-5.375,105.292', 'itera-akses-sabahbalau', 'walking', 55, 4094, now()),
+  ('-5.375,105.292', 'itera-akses-sabahbalau', 'motorcycle', 11, 4258, now()),
+  ('-5.375,105.292', 'itera-akses-sabahbalau', 'driving-car', 15, 4421, now()),
+  ('-5.356,105.318', 'itera-lampung', 'walking', 7, 511, now()),
+  ('-5.356,105.318', 'itera-lampung', 'motorcycle', 2, 532, now()),
+  ('-5.356,105.318', 'itera-lampung', 'driving-car', 2, 552, now()),
+  ('-5.356,105.318', 'itera-gerbang-utama', 'walking', 7, 511, now()),
+  ('-5.356,105.318', 'itera-gerbang-utama', 'motorcycle', 2, 532, now()),
+  ('-5.356,105.318', 'itera-gerbang-utama', 'driving-car', 2, 552, now()),
+  ('-5.356,105.318', 'itera-simpang-wayhuwi', 'walking', 19, 1358, now()),
+  ('-5.356,105.318', 'itera-simpang-wayhuwi', 'motorcycle', 4, 1412, now()),
+  ('-5.356,105.318', 'itera-simpang-wayhuwi', 'driving-car', 5, 1466, now()),
+  ('-5.356,105.318', 'itera-akses-sabahbalau', 'walking', 23, 1705, now()),
+  ('-5.356,105.318', 'itera-akses-sabahbalau', 'motorcycle', 5, 1773, now()),
+  ('-5.356,105.318', 'itera-akses-sabahbalau', 'driving-car', 7, 1841, now()),
+  ('-5.357,105.316', 'itera-lampung', 'walking', 5, 314, now()),
+  ('-5.357,105.316', 'itera-lampung', 'motorcycle', 1, 326, now()),
+  ('-5.357,105.316', 'itera-lampung', 'driving-car', 2, 339, now()),
+  ('-5.357,105.316', 'itera-gerbang-utama', 'walking', 5, 314, now()),
+  ('-5.357,105.316', 'itera-gerbang-utama', 'motorcycle', 1, 326, now()),
+  ('-5.357,105.316', 'itera-gerbang-utama', 'driving-car', 2, 339, now()),
+  ('-5.357,105.316', 'itera-simpang-wayhuwi', 'walking', 16, 1148, now()),
+  ('-5.357,105.316', 'itera-simpang-wayhuwi', 'motorcycle', 3, 1193, now()),
+  ('-5.357,105.316', 'itera-simpang-wayhuwi', 'driving-car', 5, 1239, now()),
+  ('-5.357,105.316', 'itera-akses-sabahbalau', 'walking', 23, 1724, now()),
+  ('-5.357,105.316', 'itera-akses-sabahbalau', 'motorcycle', 5, 1793, now()),
+  ('-5.357,105.316', 'itera-akses-sabahbalau', 'driving-car', 7, 1862, now()),
+  ('-5.355,105.314', 'itera-lampung', 'walking', 6, 419, now()),
+  ('-5.355,105.314', 'itera-lampung', 'motorcycle', 2, 436, now()),
+  ('-5.355,105.314', 'itera-lampung', 'driving-car', 2, 452, now()),
+  ('-5.355,105.314', 'itera-gerbang-utama', 'walking', 6, 419, now()),
+  ('-5.355,105.314', 'itera-gerbang-utama', 'motorcycle', 2, 436, now()),
+  ('-5.355,105.314', 'itera-gerbang-utama', 'driving-car', 2, 452, now()),
+  ('-5.355,105.314', 'itera-simpang-wayhuwi', 'walking', 12, 855, now()),
+  ('-5.355,105.314', 'itera-simpang-wayhuwi', 'motorcycle', 3, 889, now()),
+  ('-5.355,105.314', 'itera-simpang-wayhuwi', 'driving-car', 4, 923, now()),
+  ('-5.355,105.314', 'itera-akses-sabahbalau', 'walking', 27, 1984, now()),
+  ('-5.355,105.314', 'itera-akses-sabahbalau', 'motorcycle', 6, 2063, now()),
+  ('-5.355,105.314', 'itera-akses-sabahbalau', 'driving-car', 8, 2142, now()),
+  ('-5.373,105.298', 'itera-lampung', 'walking', 41, 3068, now()),
+  ('-5.373,105.298', 'itera-lampung', 'motorcycle', 8, 3190, now()),
+  ('-5.373,105.298', 'itera-lampung', 'driving-car', 12, 3313, now()),
+  ('-5.373,105.298', 'itera-gerbang-utama', 'walking', 41, 3068, now()),
+  ('-5.373,105.298', 'itera-gerbang-utama', 'motorcycle', 8, 3190, now()),
+  ('-5.373,105.298', 'itera-gerbang-utama', 'driving-car', 12, 3313, now()),
+  ('-5.373,105.298', 'itera-simpang-wayhuwi', 'walking', 39, 2864, now()),
+  ('-5.373,105.298', 'itera-simpang-wayhuwi', 'motorcycle', 8, 2978, now()),
+  ('-5.373,105.298', 'itera-simpang-wayhuwi', 'driving-car', 11, 3093, now()),
+  ('-5.373,105.298', 'itera-akses-sabahbalau', 'walking', 43, 3211, now()),
+  ('-5.373,105.298', 'itera-akses-sabahbalau', 'motorcycle', 9, 3340, now()),
+  ('-5.373,105.298', 'itera-akses-sabahbalau', 'driving-car', 12, 3468, now()),
+  ('-5.374,105.299', 'itera-lampung', 'walking', 42, 3110, now()),
+  ('-5.374,105.299', 'itera-lampung', 'motorcycle', 9, 3234, now()),
+  ('-5.374,105.299', 'itera-lampung', 'driving-car', 12, 3359, now()),
+  ('-5.374,105.299', 'itera-gerbang-utama', 'walking', 42, 3110, now()),
+  ('-5.374,105.299', 'itera-gerbang-utama', 'motorcycle', 9, 3234, now()),
+  ('-5.374,105.299', 'itera-gerbang-utama', 'driving-car', 12, 3359, now()),
+  ('-5.374,105.299', 'itera-simpang-wayhuwi', 'walking', 40, 2951, now()),
+  ('-5.374,105.299', 'itera-simpang-wayhuwi', 'motorcycle', 8, 3069, now()),
+  ('-5.374,105.299', 'itera-simpang-wayhuwi', 'driving-car', 11, 3187, now()),
   ('-5.374,105.299', 'itera-akses-sabahbalau', 'walking', 43, 3179, now()),
   ('-5.374,105.299', 'itera-akses-sabahbalau', 'motorcycle', 9, 3306, now()),
   ('-5.374,105.299', 'itera-akses-sabahbalau', 'driving-car', 12, 3433, now()),
-  ('-5.359,105.325', 'itera-lampung', 'walking', 20, 1463, now()),
-  ('-5.359,105.325', 'itera-lampung', 'motorcycle', 4, 1521, now()),
-  ('-5.359,105.325', 'itera-lampung', 'driving-car', 6, 1580, now()),
-  ('-5.359,105.325', 'itera-gerbang-utama', 'walking', 20, 1463, now()),
-  ('-5.359,105.325', 'itera-gerbang-utama', 'motorcycle', 4, 1521, now()),
-  ('-5.359,105.325', 'itera-gerbang-utama', 'driving-car', 6, 1580, now()),
-  ('-5.359,105.325', 'itera-simpang-wayhuwi', 'walking', 33, 2473, now()),
-  ('-5.359,105.325', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2571, now()),
-  ('-5.359,105.325', 'itera-simpang-wayhuwi', 'driving-car', 9, 2670, now()),
-  ('-5.359,105.325', 'itera-akses-sabahbalau', 'walking', 18, 1346, now()),
-  ('-5.359,105.325', 'itera-akses-sabahbalau', 'motorcycle', 4, 1400, now()),
-  ('-5.359,105.325', 'itera-akses-sabahbalau', 'driving-car', 5, 1454, now()),
-  ('-5.353,105.332', 'itera-lampung', 'walking', 34, 2520, now()),
-  ('-5.353,105.332', 'itera-lampung', 'motorcycle', 7, 2621, now()),
-  ('-5.353,105.332', 'itera-lampung', 'driving-car', 10, 2722, now()),
-  ('-5.353,105.332', 'itera-gerbang-utama', 'walking', 34, 2520, now()),
-  ('-5.353,105.332', 'itera-gerbang-utama', 'motorcycle', 7, 2621, now()),
-  ('-5.353,105.332', 'itera-gerbang-utama', 'driving-car', 10, 2722, now()),
-  ('-5.353,105.332', 'itera-simpang-wayhuwi', 'walking', 45, 3344, now()),
-  ('-5.353,105.332', 'itera-simpang-wayhuwi', 'motorcycle', 9, 3478, now()),
-  ('-5.353,105.332', 'itera-simpang-wayhuwi', 'driving-car', 13, 3611, now()),
-  ('-5.353,105.332', 'itera-akses-sabahbalau', 'walking', 36, 2635, now()),
-  ('-5.353,105.332', 'itera-akses-sabahbalau', 'motorcycle', 7, 2740, now()),
-  ('-5.353,105.332', 'itera-akses-sabahbalau', 'driving-car', 10, 2846, now()),
-  ('-5.355,105.317', 'itera-lampung', 'walking', 8, 573, now()),
-  ('-5.355,105.317', 'itera-lampung', 'motorcycle', 2, 595, now()),
-  ('-5.355,105.317', 'itera-lampung', 'driving-car', 3, 618, now()),
-  ('-5.355,105.317', 'itera-gerbang-utama', 'walking', 8, 573, now()),
-  ('-5.355,105.317', 'itera-gerbang-utama', 'motorcycle', 2, 595, now()),
-  ('-5.355,105.317', 'itera-gerbang-utama', 'driving-car', 3, 618, now()),
-  ('-5.355,105.317', 'itera-simpang-wayhuwi', 'walking', 18, 1303, now()),
-  ('-5.355,105.317', 'itera-simpang-wayhuwi', 'motorcycle', 4, 1355, now()),
-  ('-5.355,105.317', 'itera-simpang-wayhuwi', 'driving-car', 5, 1407, now()),
-  ('-5.355,105.317', 'itera-akses-sabahbalau', 'walking', 25, 1846, now()),
-  ('-5.355,105.317', 'itera-akses-sabahbalau', 'motorcycle', 5, 1920, now()),
-  ('-5.355,105.317', 'itera-akses-sabahbalau', 'driving-car', 7, 1994, now()),
-  ('-5.353,105.313', 'itera-lampung', 'walking', 12, 833, now()),
-  ('-5.353,105.313', 'itera-lampung', 'motorcycle', 3, 866, now()),
-  ('-5.353,105.313', 'itera-lampung', 'driving-car', 3, 899, now()),
-  ('-5.353,105.313', 'itera-gerbang-utama', 'walking', 12, 833, now()),
-  ('-5.353,105.313', 'itera-gerbang-utama', 'motorcycle', 3, 866, now()),
-  ('-5.353,105.313', 'itera-gerbang-utama', 'driving-car', 3, 899, now()),
-  ('-5.353,105.313', 'itera-simpang-wayhuwi', 'walking', 11, 771, now()),
-  ('-5.353,105.313', 'itera-simpang-wayhuwi', 'motorcycle', 3, 802, now()),
-  ('-5.353,105.313', 'itera-simpang-wayhuwi', 'driving-car', 3, 833, now()),
-  ('-5.353,105.313', 'itera-akses-sabahbalau', 'walking', 32, 2398, now()),
-  ('-5.353,105.313', 'itera-akses-sabahbalau', 'motorcycle', 7, 2493, now()),
-  ('-5.353,105.313', 'itera-akses-sabahbalau', 'driving-car', 9, 2589, now()),
-  ('-5.370,105.297', 'itera-lampung', 'walking', 40, 2943, now()),
-  ('-5.370,105.297', 'itera-lampung', 'motorcycle', 8, 3060, now()),
-  ('-5.370,105.297', 'itera-lampung', 'driving-car', 11, 3178, now()),
-  ('-5.370,105.297', 'itera-gerbang-utama', 'walking', 40, 2943, now()),
-  ('-5.370,105.297', 'itera-gerbang-utama', 'motorcycle', 8, 3060, now()),
-  ('-5.370,105.297', 'itera-gerbang-utama', 'driving-car', 11, 3178, now()),
-  ('-5.370,105.297', 'itera-simpang-wayhuwi', 'walking', 35, 2594, now()),
-  ('-5.370,105.297', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2698, now()),
-  ('-5.370,105.297', 'itera-simpang-wayhuwi', 'driving-car', 10, 2801, now()),
-  ('-5.370,105.297', 'itera-akses-sabahbalau', 'walking', 45, 3314, now()),
-  ('-5.370,105.297', 'itera-akses-sabahbalau', 'motorcycle', 9, 3446, now()),
-  ('-5.370,105.297', 'itera-akses-sabahbalau', 'driving-car', 12, 3579, now()),
-  ('-5.349,105.304', 'itera-lampung', 'walking', 28, 2045, now()),
-  ('-5.349,105.304', 'itera-lampung', 'motorcycle', 6, 2127, now()),
-  ('-5.349,105.304', 'itera-lampung', 'driving-car', 8, 2209, now()),
-  ('-5.349,105.304', 'itera-gerbang-utama', 'walking', 28, 2045, now()),
-  ('-5.349,105.304', 'itera-gerbang-utama', 'motorcycle', 6, 2127, now()),
-  ('-5.349,105.304', 'itera-gerbang-utama', 'driving-car', 8, 2209, now()),
-  ('-5.349,105.304', 'itera-simpang-wayhuwi', 'walking', 15, 1054, now()),
-  ('-5.349,105.304', 'itera-simpang-wayhuwi', 'motorcycle', 3, 1096, now()),
-  ('-5.349,105.304', 'itera-simpang-wayhuwi', 'driving-car', 4, 1138, now()),
-  ('-5.349,105.304', 'itera-akses-sabahbalau', 'walking', 48, 3594, now()),
-  ('-5.349,105.304', 'itera-akses-sabahbalau', 'motorcycle', 10, 3738, now()),
-  ('-5.349,105.304', 'itera-akses-sabahbalau', 'driving-car', 13, 3881, now()),
-  ('-5.374,105.296', 'itera-lampung', 'walking', 45, 3321, now()),
-  ('-5.374,105.296', 'itera-lampung', 'motorcycle', 9, 3454, now()),
-  ('-5.374,105.296', 'itera-lampung', 'driving-car', 12, 3587, now()),
-  ('-5.374,105.296', 'itera-gerbang-utama', 'walking', 45, 3321, now()),
-  ('-5.374,105.296', 'itera-gerbang-utama', 'motorcycle', 9, 3454, now()),
-  ('-5.374,105.296', 'itera-gerbang-utama', 'driving-car', 12, 3587, now()),
-  ('-5.374,105.296', 'itera-simpang-wayhuwi', 'walking', 41, 3061, now()),
-  ('-5.374,105.296', 'itera-simpang-wayhuwi', 'motorcycle', 8, 3184, now()),
-  ('-5.374,105.296', 'itera-simpang-wayhuwi', 'driving-car', 12, 3306, now()),
-  ('-5.374,105.296', 'itera-akses-sabahbalau', 'walking', 47, 3495, now()),
-  ('-5.374,105.296', 'itera-akses-sabahbalau', 'motorcycle', 10, 3635, now()),
-  ('-5.374,105.296', 'itera-akses-sabahbalau', 'driving-car', 13, 3775, now()),
-  ('-5.347,105.307', 'itera-lampung', 'walking', 25, 1849, now()),
-  ('-5.347,105.307', 'itera-lampung', 'motorcycle', 5, 1923, now()),
-  ('-5.347,105.307', 'itera-lampung', 'driving-car', 7, 1997, now()),
-  ('-5.347,105.307', 'itera-gerbang-utama', 'walking', 25, 1849, now()),
-  ('-5.347,105.307', 'itera-gerbang-utama', 'motorcycle', 5, 1923, now()),
-  ('-5.347,105.307', 'itera-gerbang-utama', 'driving-car', 7, 1997, now()),
-  ('-5.347,105.307', 'itera-simpang-wayhuwi', 'walking', 15, 1069, now()),
-  ('-5.347,105.307', 'itera-simpang-wayhuwi', 'motorcycle', 3, 1112, now()),
-  ('-5.347,105.307', 'itera-simpang-wayhuwi', 'driving-car', 4, 1154, now()),
-  ('-5.347,105.307', 'itera-akses-sabahbalau', 'walking', 46, 3435, now()),
-  ('-5.347,105.307', 'itera-akses-sabahbalau', 'motorcycle', 9, 3572, now()),
-  ('-5.347,105.307', 'itera-akses-sabahbalau', 'driving-car', 13, 3710, now()),
-  ('-5.351,105.304', 'itera-lampung', 'walking', 24, 1779, now()),
-  ('-5.351,105.304', 'itera-lampung', 'motorcycle', 5, 1850, now()),
-  ('-5.351,105.304', 'itera-lampung', 'driving-car', 7, 1921, now()),
-  ('-5.351,105.304', 'itera-gerbang-utama', 'walking', 24, 1779, now()),
-  ('-5.351,105.304', 'itera-gerbang-utama', 'motorcycle', 5, 1850, now()),
-  ('-5.351,105.304', 'itera-gerbang-utama', 'driving-car', 7, 1921, now()),
-  ('-5.351,105.304', 'itera-simpang-wayhuwi', 'walking', 10, 746, now()),
-  ('-5.351,105.304', 'itera-simpang-wayhuwi', 'motorcycle', 2, 776, now()),
-  ('-5.351,105.304', 'itera-simpang-wayhuwi', 'driving-car', 3, 806, now()),
-  ('-5.351,105.304', 'itera-akses-sabahbalau', 'walking', 44, 3296, now()),
-  ('-5.351,105.304', 'itera-akses-sabahbalau', 'motorcycle', 9, 3428, now()),
-  ('-5.351,105.304', 'itera-akses-sabahbalau', 'driving-car', 12, 3560, now()),
-  ('-5.355,105.332', 'itera-lampung', 'walking', 34, 2504, now()),
-  ('-5.355,105.332', 'itera-lampung', 'motorcycle', 7, 2604, now()),
-  ('-5.355,105.332', 'itera-lampung', 'driving-car', 10, 2704, now()),
-  ('-5.355,105.332', 'itera-gerbang-utama', 'walking', 34, 2504, now()),
-  ('-5.355,105.332', 'itera-gerbang-utama', 'motorcycle', 7, 2604, now()),
-  ('-5.355,105.332', 'itera-gerbang-utama', 'driving-car', 10, 2704, now()),
-  ('-5.355,105.332', 'itera-simpang-wayhuwi', 'walking', 46, 3388, now()),
-  ('-5.355,105.332', 'itera-simpang-wayhuwi', 'motorcycle', 9, 3523, now()),
-  ('-5.355,105.332', 'itera-simpang-wayhuwi', 'driving-car', 13, 3659, now()),
-  ('-5.355,105.332', 'itera-akses-sabahbalau', 'walking', 33, 2454, now()),
-  ('-5.355,105.332', 'itera-akses-sabahbalau', 'motorcycle', 7, 2552, now()),
-  ('-5.355,105.332', 'itera-akses-sabahbalau', 'driving-car', 9, 2650, now()),
-  ('-5.354,105.317', 'itera-lampung', 'walking', 9, 635, now()),
-  ('-5.354,105.317', 'itera-lampung', 'motorcycle', 2, 660, now()),
-  ('-5.354,105.317', 'itera-lampung', 'driving-car', 3, 686, now()),
-  ('-5.354,105.317', 'itera-gerbang-utama', 'walking', 9, 635, now()),
-  ('-5.354,105.317', 'itera-gerbang-utama', 'motorcycle', 2, 660, now()),
-  ('-5.354,105.317', 'itera-gerbang-utama', 'driving-car', 3, 686, now()),
-  ('-5.354,105.317', 'itera-simpang-wayhuwi', 'walking', 17, 1234, now()),
-  ('-5.354,105.317', 'itera-simpang-wayhuwi', 'motorcycle', 4, 1283, now()),
-  ('-5.354,105.317', 'itera-simpang-wayhuwi', 'driving-car', 5, 1332, now()),
-  ('-5.354,105.317', 'itera-akses-sabahbalau', 'walking', 27, 1984, now()),
-  ('-5.354,105.317', 'itera-akses-sabahbalau', 'motorcycle', 6, 2063, now()),
-  ('-5.354,105.317', 'itera-akses-sabahbalau', 'driving-car', 8, 2142, now()),
-  ('-5.348,105.308', 'itera-lampung', 'walking', 24, 1763, now()),
-  ('-5.348,105.308', 'itera-lampung', 'motorcycle', 5, 1833, now()),
-  ('-5.348,105.308', 'itera-lampung', 'driving-car', 7, 1904, now()),
-  ('-5.348,105.308', 'itera-gerbang-utama', 'walking', 24, 1763, now()),
-  ('-5.348,105.308', 'itera-gerbang-utama', 'motorcycle', 5, 1833, now()),
-  ('-5.348,105.308', 'itera-gerbang-utama', 'driving-car', 7, 1904, now()),
-  ('-5.348,105.308', 'itera-simpang-wayhuwi', 'walking', 14, 1019, now()),
-  ('-5.348,105.308', 'itera-simpang-wayhuwi', 'motorcycle', 3, 1060, now()),
-  ('-5.348,105.308', 'itera-simpang-wayhuwi', 'driving-car', 4, 1100, now()),
-  ('-5.348,105.308', 'itera-akses-sabahbalau', 'walking', 45, 3349, now()),
-  ('-5.348,105.308', 'itera-akses-sabahbalau', 'motorcycle', 9, 3483, now()),
-  ('-5.348,105.308', 'itera-akses-sabahbalau', 'driving-car', 13, 3617, now()),
-  ('-5.360,105.325', 'itera-lampung', 'walking', 19, 1373, now()),
-  ('-5.360,105.325', 'itera-lampung', 'motorcycle', 4, 1427, now()),
-  ('-5.360,105.325', 'itera-lampung', 'driving-car', 5, 1482, now()),
-  ('-5.360,105.325', 'itera-gerbang-utama', 'walking', 19, 1373, now()),
-  ('-5.360,105.325', 'itera-gerbang-utama', 'motorcycle', 4, 1427, now()),
-  ('-5.360,105.325', 'itera-gerbang-utama', 'driving-car', 5, 1482, now()),
-  ('-5.360,105.325', 'itera-simpang-wayhuwi', 'walking', 32, 2399, now()),
-  ('-5.360,105.325', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2495, now()),
-  ('-5.360,105.325', 'itera-simpang-wayhuwi', 'driving-car', 9, 2591, now()),
-  ('-5.360,105.325', 'itera-akses-sabahbalau', 'walking', 17, 1218, now()),
-  ('-5.360,105.325', 'itera-akses-sabahbalau', 'motorcycle', 4, 1266, now()),
-  ('-5.360,105.325', 'itera-akses-sabahbalau', 'driving-car', 5, 1315, now()),
-  ('-5.353,105.334', 'itera-lampung', 'walking', 37, 2769, now()),
-  ('-5.353,105.334', 'itera-lampung', 'motorcycle', 8, 2880, now()),
-  ('-5.353,105.334', 'itera-lampung', 'driving-car', 10, 2990, now()),
-  ('-5.353,105.334', 'itera-gerbang-utama', 'walking', 37, 2769, now()),
-  ('-5.353,105.334', 'itera-gerbang-utama', 'motorcycle', 8, 2880, now()),
-  ('-5.353,105.334', 'itera-gerbang-utama', 'driving-car', 10, 2990, now()),
-  ('-5.353,105.334', 'itera-simpang-wayhuwi', 'walking', 49, 3629, now()),
-  ('-5.353,105.334', 'itera-simpang-wayhuwi', 'motorcycle', 10, 3774, now()),
-  ('-5.353,105.334', 'itera-simpang-wayhuwi', 'driving-car', 14, 3919, now()),
-  ('-5.353,105.334', 'itera-akses-sabahbalau', 'walking', 37, 2725, now()),
-  ('-5.353,105.334', 'itera-akses-sabahbalau', 'motorcycle', 8, 2834, now()),
-  ('-5.353,105.334', 'itera-akses-sabahbalau', 'driving-car', 10, 2943, now()),
-  ('-5.350,105.307', 'itera-lampung', 'walking', 21, 1561, now()),
-  ('-5.350,105.307', 'itera-lampung', 'motorcycle', 5, 1624, now()),
-  ('-5.350,105.307', 'itera-lampung', 'driving-car', 6, 1686, now()),
-  ('-5.350,105.307', 'itera-gerbang-utama', 'walking', 21, 1561, now()),
-  ('-5.350,105.307', 'itera-gerbang-utama', 'motorcycle', 5, 1624, now()),
-  ('-5.350,105.307', 'itera-gerbang-utama', 'driving-car', 6, 1686, now()),
-  ('-5.350,105.307', 'itera-simpang-wayhuwi', 'walking', 9, 673, now()),
-  ('-5.350,105.307', 'itera-simpang-wayhuwi', 'motorcycle', 2, 699, now()),
-  ('-5.350,105.307', 'itera-simpang-wayhuwi', 'driving-car', 3, 726, now()),
-  ('-5.350,105.307', 'itera-akses-sabahbalau', 'walking', 42, 3134, now()),
-  ('-5.350,105.307', 'itera-akses-sabahbalau', 'motorcycle', 9, 3259, now()),
-  ('-5.350,105.307', 'itera-akses-sabahbalau', 'driving-car', 12, 3384, now()),
-  ('-5.353,105.316', 'itera-lampung', 'walking', 11, 784, now()),
-  ('-5.353,105.316', 'itera-lampung', 'motorcycle', 3, 815, now()),
-  ('-5.353,105.316', 'itera-lampung', 'driving-car', 3, 846, now()),
-  ('-5.353,105.316', 'itera-gerbang-utama', 'walking', 11, 784, now()),
-  ('-5.353,105.316', 'itera-gerbang-utama', 'motorcycle', 3, 815, now()),
-  ('-5.353,105.316', 'itera-gerbang-utama', 'driving-car', 3, 846, now()),
-  ('-5.353,105.316', 'itera-simpang-wayhuwi', 'walking', 16, 1135, now()),
-  ('-5.353,105.316', 'itera-simpang-wayhuwi', 'motorcycle', 3, 1180, now()),
-  ('-5.353,105.316', 'itera-simpang-wayhuwi', 'driving-car', 5, 1226, now()),
-  ('-5.353,105.316', 'itera-akses-sabahbalau', 'walking', 30, 2218, now()),
-  ('-5.353,105.316', 'itera-akses-sabahbalau', 'motorcycle', 6, 2306, now()),
-  ('-5.353,105.316', 'itera-akses-sabahbalau', 'driving-car', 8, 2395, now()),
-  ('-5.360,105.336', 'itera-lampung', 'walking', 40, 2995, now()),
-  ('-5.360,105.336', 'itera-lampung', 'motorcycle', 8, 3115, now()),
-  ('-5.360,105.336', 'itera-lampung', 'driving-car', 11, 3235, now()),
-  ('-5.360,105.336', 'itera-gerbang-utama', 'walking', 40, 2995, now()),
-  ('-5.360,105.336', 'itera-gerbang-utama', 'motorcycle', 8, 3115, now()),
-  ('-5.360,105.336', 'itera-gerbang-utama', 'driving-car', 11, 3235, now()),
-  ('-5.360,105.336', 'itera-simpang-wayhuwi', 'walking', 54, 3984, now()),
-  ('-5.360,105.336', 'itera-simpang-wayhuwi', 'motorcycle', 11, 4143, now()),
-  ('-5.360,105.336', 'itera-simpang-wayhuwi', 'driving-car', 15, 4302, now()),
-  ('-5.360,105.336', 'itera-akses-sabahbalau', 'walking', 33, 2430, now()),
-  ('-5.360,105.336', 'itera-akses-sabahbalau', 'motorcycle', 7, 2527, now()),
-  ('-5.360,105.336', 'itera-akses-sabahbalau', 'driving-car', 9, 2624, now()),
-  ('-5.350,105.310', 'itera-lampung', 'walking', 18, 1350, now()),
-  ('-5.350,105.310', 'itera-lampung', 'motorcycle', 4, 1404, now()),
-  ('-5.350,105.310', 'itera-lampung', 'driving-car', 5, 1458, now()),
-  ('-5.350,105.310', 'itera-gerbang-utama', 'walking', 18, 1350, now()),
-  ('-5.350,105.310', 'itera-gerbang-utama', 'motorcycle', 4, 1404, now()),
-  ('-5.350,105.310', 'itera-gerbang-utama', 'driving-car', 5, 1458, now()),
-  ('-5.350,105.310', 'itera-simpang-wayhuwi', 'walking', 11, 795, now()),
-  ('-5.350,105.310', 'itera-simpang-wayhuwi', 'motorcycle', 3, 827, now()),
-  ('-5.350,105.310', 'itera-simpang-wayhuwi', 'driving-car', 3, 859, now()),
-  ('-5.350,105.310', 'itera-akses-sabahbalau', 'walking', 40, 2933, now()),
-  ('-5.350,105.310', 'itera-akses-sabahbalau', 'motorcycle', 8, 3050, now()),
-  ('-5.350,105.310', 'itera-akses-sabahbalau', 'driving-car', 11, 3167, now()),
-  ('-5.349,105.309', 'itera-lampung', 'walking', 22, 1616, now()),
-  ('-5.349,105.309', 'itera-lampung', 'motorcycle', 5, 1681, now()),
-  ('-5.349,105.309', 'itera-lampung', 'driving-car', 6, 1746, now()),
-  ('-5.349,105.309', 'itera-gerbang-utama', 'walking', 22, 1616, now()),
-  ('-5.349,105.309', 'itera-gerbang-utama', 'motorcycle', 5, 1681, now()),
-  ('-5.349,105.309', 'itera-gerbang-utama', 'driving-car', 6, 1746, now()),
-  ('-5.349,105.309', 'itera-simpang-wayhuwi', 'walking', 12, 894, now()),
-  ('-5.349,105.309', 'itera-simpang-wayhuwi', 'motorcycle', 3, 930, now()),
-  ('-5.349,105.309', 'itera-simpang-wayhuwi', 'driving-car', 4, 965, now()),
-  ('-5.349,105.309', 'itera-akses-sabahbalau', 'walking', 43, 3203, now()),
-  ('-5.349,105.309', 'itera-akses-sabahbalau', 'motorcycle', 9, 3331, now()),
-  ('-5.349,105.309', 'itera-akses-sabahbalau', 'driving-car', 12, 3459, now()),
-  ('-5.367,105.294', 'itera-lampung', 'walking', 42, 3080, now()),
-  ('-5.367,105.294', 'itera-lampung', 'motorcycle', 9, 3203, now()),
-  ('-5.367,105.294', 'itera-lampung', 'driving-car', 12, 3326, now()),
-  ('-5.367,105.294', 'itera-gerbang-utama', 'walking', 42, 3080, now()),
-  ('-5.367,105.294', 'itera-gerbang-utama', 'motorcycle', 9, 3203, now()),
-  ('-5.367,105.294', 'itera-gerbang-utama', 'driving-car', 12, 3326, now()),
-  ('-5.367,105.294', 'itera-simpang-wayhuwi', 'walking', 34, 2545, now()),
-  ('-5.367,105.294', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2647, now()),
-  ('-5.367,105.294', 'itera-simpang-wayhuwi', 'driving-car', 10, 2749, now()),
-  ('-5.367,105.294', 'itera-akses-sabahbalau', 'walking', 49, 3675, now()),
-  ('-5.367,105.294', 'itera-akses-sabahbalau', 'motorcycle', 10, 3822, now()),
-  ('-5.367,105.294', 'itera-akses-sabahbalau', 'driving-car', 14, 3969, now()),
-  ('-5.363,105.325', 'itera-lampung', 'walking', 22, 1591, now()),
-  ('-5.363,105.325', 'itera-lampung', 'motorcycle', 5, 1655, now()),
-  ('-5.363,105.325', 'itera-lampung', 'driving-car', 6, 1719, now()),
-  ('-5.363,105.325', 'itera-gerbang-utama', 'walking', 22, 1591, now()),
-  ('-5.363,105.325', 'itera-gerbang-utama', 'motorcycle', 5, 1655, now()),
-  ('-5.363,105.325', 'itera-gerbang-utama', 'driving-car', 6, 1719, now()),
-  ('-5.363,105.325', 'itera-simpang-wayhuwi', 'walking', 36, 2644, now()),
-  ('-5.363,105.325', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2750, now()),
-  ('-5.363,105.325', 'itera-simpang-wayhuwi', 'driving-car', 10, 2855, now()),
-  ('-5.363,105.325', 'itera-akses-sabahbalau', 'walking', 13, 908, now()),
-  ('-5.363,105.325', 'itera-akses-sabahbalau', 'motorcycle', 3, 944, now()),
-  ('-5.363,105.325', 'itera-akses-sabahbalau', 'driving-car', 4, 980, now()),
-  ('-5.367,105.299', 'itera-lampung', 'walking', 33, 2445, now()),
-  ('-5.367,105.299', 'itera-lampung', 'motorcycle', 7, 2543, now()),
-  ('-5.367,105.299', 'itera-lampung', 'driving-car', 9, 2641, now()),
-  ('-5.367,105.299', 'itera-gerbang-utama', 'walking', 33, 2445, now()),
-  ('-5.367,105.299', 'itera-gerbang-utama', 'motorcycle', 7, 2543, now()),
-  ('-5.367,105.299', 'itera-gerbang-utama', 'driving-car', 9, 2641, now()),
-  ('-5.367,105.299', 'itera-simpang-wayhuwi', 'walking', 28, 2036, now()),
-  ('-5.367,105.299', 'itera-simpang-wayhuwi', 'motorcycle', 6, 2118, now()),
-  ('-5.367,105.299', 'itera-simpang-wayhuwi', 'driving-car', 8, 2199, now()),
-  ('-5.367,105.299', 'itera-akses-sabahbalau', 'walking', 41, 3011, now()),
-  ('-5.367,105.299', 'itera-akses-sabahbalau', 'motorcycle', 8, 3132, now()),
-  ('-5.367,105.299', 'itera-akses-sabahbalau', 'driving-car', 11, 3252, now()),
-  ('-5.361,105.322', 'itera-lampung', 'walking', 14, 1028, now()),
-  ('-5.361,105.322', 'itera-lampung', 'motorcycle', 3, 1069, now()),
-  ('-5.361,105.322', 'itera-lampung', 'driving-car', 4, 1110, now()),
-  ('-5.361,105.322', 'itera-gerbang-utama', 'walking', 14, 1028, now()),
-  ('-5.361,105.322', 'itera-gerbang-utama', 'motorcycle', 3, 1069, now()),
-  ('-5.361,105.322', 'itera-gerbang-utama', 'driving-car', 4, 1110, now()),
-  ('-5.361,105.322', 'itera-simpang-wayhuwi', 'walking', 28, 2080, now()),
-  ('-5.361,105.322', 'itera-simpang-wayhuwi', 'motorcycle', 6, 2163, now()),
-  ('-5.361,105.322', 'itera-simpang-wayhuwi', 'driving-car', 8, 2246, now()),
-  ('-5.361,105.322', 'itera-akses-sabahbalau', 'walking', 13, 921, now()),
-  ('-5.361,105.322', 'itera-akses-sabahbalau', 'motorcycle', 3, 958, now()),
-  ('-5.361,105.322', 'itera-akses-sabahbalau', 'driving-car', 4, 995, now()),
-  ('-5.351,105.310', 'itera-lampung', 'walking', 17, 1248, now()),
-  ('-5.351,105.310', 'itera-lampung', 'motorcycle', 4, 1297, now()),
-  ('-5.351,105.310', 'itera-lampung', 'driving-car', 5, 1347, now()),
-  ('-5.351,105.310', 'itera-gerbang-utama', 'walking', 17, 1248, now()),
-  ('-5.351,105.310', 'itera-gerbang-utama', 'motorcycle', 4, 1297, now()),
-  ('-5.351,105.310', 'itera-gerbang-utama', 'driving-car', 5, 1347, now()),
-  ('-5.351,105.310', 'itera-simpang-wayhuwi', 'walking', 8, 593, now()),
-  ('-5.351,105.310', 'itera-simpang-wayhuwi', 'motorcycle', 2, 616, now()),
-  ('-5.351,105.310', 'itera-simpang-wayhuwi', 'driving-car', 3, 640, now()),
-  ('-5.351,105.310', 'itera-akses-sabahbalau', 'walking', 38, 2834, now()),
-  ('-5.351,105.310', 'itera-akses-sabahbalau', 'motorcycle', 8, 2947, now()),
-  ('-5.351,105.310', 'itera-akses-sabahbalau', 'driving-car', 11, 3060, now()),
-  ('-5.358,105.302', 'itera-lampung', 'walking', 25, 1818, now()),
-  ('-5.358,105.302', 'itera-lampung', 'motorcycle', 5, 1890, now()),
-  ('-5.358,105.302', 'itera-lampung', 'driving-car', 7, 1963, now()),
-  ('-5.358,105.302', 'itera-gerbang-utama', 'walking', 25, 1818, now()),
-  ('-5.358,105.302', 'itera-gerbang-utama', 'motorcycle', 5, 1890, now()),
-  ('-5.358,105.302', 'itera-gerbang-utama', 'driving-car', 7, 1963, now()),
-  ('-5.358,105.302', 'itera-simpang-wayhuwi', 'walking', 14, 976, now()),
-  ('-5.358,105.302', 'itera-simpang-wayhuwi', 'motorcycle', 3, 1015, now()),
-  ('-5.358,105.302', 'itera-simpang-wayhuwi', 'driving-car', 4, 1054, now()),
-  ('-5.358,105.302', 'itera-akses-sabahbalau', 'walking', 41, 3008, now()),
-  ('-5.358,105.302', 'itera-akses-sabahbalau', 'motorcycle', 8, 3128, now()),
-  ('-5.358,105.302', 'itera-akses-sabahbalau', 'driving-car', 11, 3248, now()),
-  ('-5.359,105.321', 'itera-lampung', 'walking', 12, 885, now()),
-  ('-5.359,105.321', 'itera-lampung', 'motorcycle', 3, 920, now()),
-  ('-5.359,105.321', 'itera-lampung', 'driving-car', 4, 956, now()),
-  ('-5.359,105.321', 'itera-gerbang-utama', 'walking', 12, 885, now()),
-  ('-5.359,105.321', 'itera-gerbang-utama', 'motorcycle', 3, 920, now()),
-  ('-5.359,105.321', 'itera-gerbang-utama', 'driving-car', 4, 956, now()),
-  ('-5.359,105.321', 'itera-simpang-wayhuwi', 'walking', 26, 1910, now()),
-  ('-5.359,105.321', 'itera-simpang-wayhuwi', 'motorcycle', 5, 1986, now()),
-  ('-5.359,105.321', 'itera-simpang-wayhuwi', 'driving-car', 7, 2063, now()),
-  ('-5.359,105.321', 'itera-akses-sabahbalau', 'walking', 17, 1228, now()),
-  ('-5.359,105.321', 'itera-akses-sabahbalau', 'motorcycle', 4, 1277, now()),
-  ('-5.359,105.321', 'itera-akses-sabahbalau', 'driving-car', 5, 1326, now()),
-  ('-5.350,105.304', 'itera-lampung', 'walking', 25, 1874, now()),
-  ('-5.350,105.304', 'itera-lampung', 'motorcycle', 5, 1949, now()),
-  ('-5.350,105.304', 'itera-lampung', 'driving-car', 7, 2024, now()),
-  ('-5.350,105.304', 'itera-gerbang-utama', 'walking', 25, 1874, now()),
-  ('-5.350,105.304', 'itera-gerbang-utama', 'motorcycle', 5, 1949, now()),
-  ('-5.350,105.304', 'itera-gerbang-utama', 'driving-car', 7, 2024, now()),
-  ('-5.350,105.304', 'itera-simpang-wayhuwi', 'walking', 12, 859, now()),
-  ('-5.350,105.304', 'itera-simpang-wayhuwi', 'motorcycle', 3, 893, now()),
-  ('-5.350,105.304', 'itera-simpang-wayhuwi', 'driving-car', 4, 927, now()),
-  ('-5.350,105.304', 'itera-akses-sabahbalau', 'walking', 46, 3408, now()),
-  ('-5.350,105.304', 'itera-akses-sabahbalau', 'motorcycle', 9, 3544, now()),
-  ('-5.350,105.304', 'itera-akses-sabahbalau', 'driving-car', 13, 3680, now()),
-  ('-5.353,105.314', 'itera-lampung', 'walking', 11, 801, now()),
-  ('-5.353,105.314', 'itera-lampung', 'motorcycle', 3, 833, now()),
-  ('-5.353,105.314', 'itera-lampung', 'driving-car', 3, 865, now()),
-  ('-5.353,105.314', 'itera-gerbang-utama', 'walking', 11, 801, now()),
-  ('-5.353,105.314', 'itera-gerbang-utama', 'motorcycle', 3, 833, now()),
-  ('-5.353,105.314', 'itera-gerbang-utama', 'driving-car', 3, 865, now()),
-  ('-5.353,105.314', 'itera-simpang-wayhuwi', 'walking', 13, 901, now()),
-  ('-5.353,105.314', 'itera-simpang-wayhuwi', 'motorcycle', 3, 937, now()),
-  ('-5.353,105.314', 'itera-simpang-wayhuwi', 'driving-car', 4, 973, now()),
-  ('-5.353,105.314', 'itera-akses-sabahbalau', 'walking', 32, 2335, now()),
-  ('-5.353,105.314', 'itera-akses-sabahbalau', 'motorcycle', 7, 2428, now()),
-  ('-5.353,105.314', 'itera-akses-sabahbalau', 'driving-car', 9, 2522, now()),
-  ('-5.361,105.329', 'itera-lampung', 'walking', 27, 1960, now()),
-  ('-5.361,105.329', 'itera-lampung', 'motorcycle', 6, 2038, now()),
-  ('-5.361,105.329', 'itera-lampung', 'driving-car', 8, 2117, now()),
-  ('-5.361,105.329', 'itera-gerbang-utama', 'walking', 27, 1960, now()),
-  ('-5.361,105.329', 'itera-gerbang-utama', 'motorcycle', 6, 2038, now()),
-  ('-5.361,105.329', 'itera-gerbang-utama', 'driving-car', 8, 2117, now()),
-  ('-5.361,105.329', 'itera-simpang-wayhuwi', 'walking', 40, 2988, now()),
-  ('-5.361,105.329', 'itera-simpang-wayhuwi', 'motorcycle', 8, 3107, now()),
-  ('-5.361,105.329', 'itera-simpang-wayhuwi', 'driving-car', 11, 3227, now()),
-  ('-5.361,105.329', 'itera-akses-sabahbalau', 'walking', 20, 1433, now()),
-  ('-5.361,105.329', 'itera-akses-sabahbalau', 'motorcycle', 4, 1490, now()),
-  ('-5.361,105.329', 'itera-akses-sabahbalau', 'driving-car', 6, 1547, now()),
-  ('-5.357,105.315', 'itera-lampung', 'walking', 3, 219, now()),
-  ('-5.357,105.315', 'itera-lampung', 'motorcycle', 1, 228, now()),
-  ('-5.357,105.315', 'itera-lampung', 'driving-car', 2, 236, now()),
-  ('-5.357,105.315', 'itera-gerbang-utama', 'walking', 3, 219, now()),
-  ('-5.357,105.315', 'itera-gerbang-utama', 'motorcycle', 1, 228, now()),
-  ('-5.357,105.315', 'itera-gerbang-utama', 'driving-car', 2, 236, now()),
-  ('-5.357,105.315', 'itera-simpang-wayhuwi', 'walking', 14, 1050, now()),
-  ('-5.357,105.315', 'itera-simpang-wayhuwi', 'motorcycle', 3, 1092, now()),
-  ('-5.357,105.315', 'itera-simpang-wayhuwi', 'driving-car', 4, 1134, now()),
-  ('-5.357,105.315', 'itera-akses-sabahbalau', 'walking', 24, 1728, now()),
-  ('-5.357,105.315', 'itera-akses-sabahbalau', 'motorcycle', 5, 1797, now()),
-  ('-5.357,105.315', 'itera-akses-sabahbalau', 'driving-car', 7, 1866, now()),
-  ('-5.353,105.303', 'itera-lampung', 'walking', 24, 1799, now()),
-  ('-5.353,105.303', 'itera-lampung', 'motorcycle', 5, 1871, now()),
-  ('-5.353,105.303', 'itera-lampung', 'driving-car', 7, 1943, now()),
-  ('-5.353,105.303', 'itera-gerbang-utama', 'walking', 24, 1799, now()),
-  ('-5.353,105.303', 'itera-gerbang-utama', 'motorcycle', 5, 1871, now()),
-  ('-5.353,105.303', 'itera-gerbang-utama', 'driving-car', 7, 1943, now()),
-  ('-5.353,105.303', 'itera-simpang-wayhuwi', 'walking', 10, 746, now()),
-  ('-5.353,105.303', 'itera-simpang-wayhuwi', 'motorcycle', 2, 776, now()),
-  ('-5.353,105.303', 'itera-simpang-wayhuwi', 'driving-car', 3, 806, now()),
-  ('-5.353,105.303', 'itera-akses-sabahbalau', 'walking', 44, 3255, now()),
-  ('-5.353,105.303', 'itera-akses-sabahbalau', 'motorcycle', 9, 3385, now()),
-  ('-5.353,105.303', 'itera-akses-sabahbalau', 'driving-car', 12, 3515, now()),
-  ('-5.362,105.321', 'itera-lampung', 'walking', 13, 906, now()),
-  ('-5.362,105.321', 'itera-lampung', 'motorcycle', 3, 943, now()),
-  ('-5.362,105.321', 'itera-lampung', 'driving-car', 4, 979, now()),
-  ('-5.362,105.321', 'itera-gerbang-utama', 'walking', 13, 906, now()),
-  ('-5.362,105.321', 'itera-gerbang-utama', 'motorcycle', 3, 943, now()),
-  ('-5.362,105.321', 'itera-gerbang-utama', 'driving-car', 4, 979, now()),
-  ('-5.362,105.321', 'itera-simpang-wayhuwi', 'walking', 27, 1959, now()),
-  ('-5.362,105.321', 'itera-simpang-wayhuwi', 'motorcycle', 6, 2037, now()),
-  ('-5.362,105.321', 'itera-simpang-wayhuwi', 'driving-car', 8, 2115, now()),
-  ('-5.362,105.321', 'itera-akses-sabahbalau', 'walking', 12, 895, now()),
-  ('-5.362,105.321', 'itera-akses-sabahbalau', 'motorcycle', 3, 931, now()),
-  ('-5.362,105.321', 'itera-akses-sabahbalau', 'driving-car', 4, 967, now()),
-  ('-5.364,105.304', 'itera-lampung', 'walking', 23, 1661, now()),
-  ('-5.364,105.304', 'itera-lampung', 'motorcycle', 5, 1728, now()),
-  ('-5.364,105.304', 'itera-lampung', 'driving-car', 6, 1794, now()),
-  ('-5.364,105.304', 'itera-gerbang-utama', 'walking', 23, 1661, now()),
-  ('-5.364,105.304', 'itera-gerbang-utama', 'motorcycle', 5, 1728, now()),
-  ('-5.364,105.304', 'itera-gerbang-utama', 'driving-car', 6, 1794, now()),
-  ('-5.364,105.304', 'itera-simpang-wayhuwi', 'walking', 18, 1334, now()),
-  ('-5.364,105.304', 'itera-simpang-wayhuwi', 'motorcycle', 4, 1387, now()),
-  ('-5.364,105.304', 'itera-simpang-wayhuwi', 'driving-car', 5, 1440, now()),
-  ('-5.364,105.304', 'itera-akses-sabahbalau', 'walking', 33, 2414, now()),
-  ('-5.364,105.304', 'itera-akses-sabahbalau', 'motorcycle', 7, 2510, now()),
-  ('-5.364,105.304', 'itera-akses-sabahbalau', 'driving-car', 9, 2607, now()),
-  ('-5.352,105.336', 'itera-lampung', 'walking', 41, 3014, now()),
-  ('-5.352,105.336', 'itera-lampung', 'motorcycle', 8, 3134, now()),
-  ('-5.352,105.336', 'itera-lampung', 'driving-car', 11, 3255, now()),
-  ('-5.352,105.336', 'itera-gerbang-utama', 'walking', 41, 3014, now()),
-  ('-5.352,105.336', 'itera-gerbang-utama', 'motorcycle', 8, 3134, now()),
-  ('-5.352,105.336', 'itera-gerbang-utama', 'driving-car', 11, 3255, now()),
-  ('-5.352,105.336', 'itera-simpang-wayhuwi', 'walking', 52, 3856, now()),
-  ('-5.352,105.336', 'itera-simpang-wayhuwi', 'motorcycle', 11, 4011, now()),
-  ('-5.352,105.336', 'itera-simpang-wayhuwi', 'driving-car', 14, 4165, now()),
-  ('-5.352,105.336', 'itera-akses-sabahbalau', 'walking', 40, 2970, now()),
-  ('-5.352,105.336', 'itera-akses-sabahbalau', 'motorcycle', 8, 3089, now()),
-  ('-5.352,105.336', 'itera-akses-sabahbalau', 'driving-car', 11, 3208, now()),
-  ('-5.360,105.324', 'itera-lampung', 'walking', 17, 1253, now()),
-  ('-5.360,105.324', 'itera-lampung', 'motorcycle', 4, 1303, now()),
-  ('-5.360,105.324', 'itera-lampung', 'driving-car', 5, 1353, now()),
-  ('-5.360,105.324', 'itera-gerbang-utama', 'walking', 17, 1253, now()),
-  ('-5.360,105.324', 'itera-gerbang-utama', 'motorcycle', 4, 1303, now()),
-  ('-5.360,105.324', 'itera-gerbang-utama', 'driving-car', 5, 1353, now()),
-  ('-5.360,105.324', 'itera-simpang-wayhuwi', 'walking', 31, 2281, now()),
-  ('-5.360,105.324', 'itera-simpang-wayhuwi', 'motorcycle', 6, 2373, now()),
-  ('-5.360,105.324', 'itera-simpang-wayhuwi', 'driving-car', 9, 2464, now()),
-  ('-5.360,105.324', 'itera-akses-sabahbalau', 'walking', 16, 1181, now()),
-  ('-5.360,105.324', 'itera-akses-sabahbalau', 'motorcycle', 4, 1229, now()),
-  ('-5.360,105.324', 'itera-akses-sabahbalau', 'driving-car', 5, 1276, now()),
-  ('-5.354,105.312', 'itera-lampung', 'walking', 10, 735, now()),
-  ('-5.354,105.312', 'itera-lampung', 'motorcycle', 2, 764, now()),
-  ('-5.354,105.312', 'itera-lampung', 'driving-car', 3, 794, now()),
-  ('-5.354,105.312', 'itera-gerbang-utama', 'walking', 10, 735, now()),
-  ('-5.354,105.312', 'itera-gerbang-utama', 'motorcycle', 2, 764, now()),
-  ('-5.354,105.312', 'itera-gerbang-utama', 'driving-car', 3, 794, now()),
-  ('-5.354,105.312', 'itera-simpang-wayhuwi', 'walking', 8, 600, now()),
-  ('-5.354,105.312', 'itera-simpang-wayhuwi', 'motorcycle', 2, 624, now()),
-  ('-5.354,105.312', 'itera-simpang-wayhuwi', 'driving-car', 3, 648, now()),
-  ('-5.354,105.312', 'itera-akses-sabahbalau', 'walking', 31, 2320, now()),
-  ('-5.354,105.312', 'itera-akses-sabahbalau', 'motorcycle', 7, 2413, now()),
-  ('-5.354,105.312', 'itera-akses-sabahbalau', 'driving-car', 9, 2506, now()),
-  ('-5.361,105.325', 'itera-lampung', 'walking', 20, 1498, now()),
-  ('-5.361,105.325', 'itera-lampung', 'motorcycle', 4, 1557, now()),
-  ('-5.361,105.325', 'itera-lampung', 'driving-car', 6, 1617, now()),
-  ('-5.361,105.325', 'itera-gerbang-utama', 'walking', 20, 1498, now()),
-  ('-5.361,105.325', 'itera-gerbang-utama', 'motorcycle', 4, 1557, now()),
-  ('-5.361,105.325', 'itera-gerbang-utama', 'driving-car', 6, 1617, now()),
-  ('-5.361,105.325', 'itera-simpang-wayhuwi', 'walking', 34, 2531, now()),
-  ('-5.361,105.325', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2633, now()),
-  ('-5.361,105.325', 'itera-simpang-wayhuwi', 'driving-car', 10, 2734, now()),
-  ('-5.361,105.325', 'itera-akses-sabahbalau', 'walking', 16, 1180, now()),
-  ('-5.361,105.325', 'itera-akses-sabahbalau', 'motorcycle', 4, 1227, now()),
-  ('-5.361,105.325', 'itera-akses-sabahbalau', 'driving-car', 5, 1274, now()),
-  ('-5.356,105.313', 'itera-lampung', 'walking', 6, 404, now()),
-  ('-5.356,105.313', 'itera-lampung', 'motorcycle', 2, 420, now()),
-  ('-5.356,105.313', 'itera-lampung', 'driving-car', 2, 436, now()),
-  ('-5.356,105.313', 'itera-gerbang-utama', 'walking', 6, 404, now()),
-  ('-5.356,105.313', 'itera-gerbang-utama', 'motorcycle', 2, 420, now()),
-  ('-5.356,105.313', 'itera-gerbang-utama', 'driving-car', 2, 436, now()),
-  ('-5.356,105.313', 'itera-simpang-wayhuwi', 'walking', 9, 674, now()),
-  ('-5.356,105.313', 'itera-simpang-wayhuwi', 'motorcycle', 2, 701, now()),
-  ('-5.356,105.313', 'itera-simpang-wayhuwi', 'driving-car', 3, 728, now()),
-  ('-5.356,105.313', 'itera-akses-sabahbalau', 'walking', 27, 1980, now()),
-  ('-5.356,105.313', 'itera-akses-sabahbalau', 'motorcycle', 6, 2059, now()),
-  ('-5.356,105.313', 'itera-akses-sabahbalau', 'driving-car', 8, 2138, now()),
-  ('-5.353,105.331', 'itera-lampung', 'walking', 32, 2360, now()),
-  ('-5.353,105.331', 'itera-lampung', 'motorcycle', 7, 2454, now()),
-  ('-5.353,105.331', 'itera-lampung', 'driving-car', 9, 2549, now()),
-  ('-5.353,105.331', 'itera-gerbang-utama', 'walking', 32, 2360, now()),
-  ('-5.353,105.331', 'itera-gerbang-utama', 'motorcycle', 7, 2454, now()),
-  ('-5.353,105.331', 'itera-gerbang-utama', 'driving-car', 9, 2549, now()),
-  ('-5.353,105.331', 'itera-simpang-wayhuwi', 'walking', 43, 3204, now()),
-  ('-5.353,105.331', 'itera-simpang-wayhuwi', 'motorcycle', 9, 3332, now()),
-  ('-5.353,105.331', 'itera-simpang-wayhuwi', 'driving-car', 12, 3460, now()),
-  ('-5.353,105.331', 'itera-akses-sabahbalau', 'walking', 33, 2465, now()),
-  ('-5.353,105.331', 'itera-akses-sabahbalau', 'motorcycle', 7, 2564, now()),
-  ('-5.353,105.331', 'itera-akses-sabahbalau', 'driving-car', 9, 2662, now()),
-  ('-5.356,105.317', 'itera-lampung', 'walking', 7, 494, now()),
-  ('-5.356,105.317', 'itera-lampung', 'motorcycle', 2, 514, now()),
-  ('-5.356,105.317', 'itera-lampung', 'driving-car', 2, 533, now()),
-  ('-5.356,105.317', 'itera-gerbang-utama', 'walking', 7, 494, now()),
-  ('-5.356,105.317', 'itera-gerbang-utama', 'motorcycle', 2, 514, now()),
-  ('-5.356,105.317', 'itera-gerbang-utama', 'driving-car', 2, 533, now()),
-  ('-5.356,105.317', 'itera-simpang-wayhuwi', 'walking', 18, 1289, now()),
-  ('-5.356,105.317', 'itera-simpang-wayhuwi', 'motorcycle', 4, 1340, now()),
-  ('-5.356,105.317', 'itera-simpang-wayhuwi', 'driving-car', 5, 1392, now()),
-  ('-5.356,105.317', 'itera-akses-sabahbalau', 'walking', 24, 1768, now()),
-  ('-5.356,105.317', 'itera-akses-sabahbalau', 'motorcycle', 5, 1838, now()),
-  ('-5.356,105.317', 'itera-akses-sabahbalau', 'driving-car', 7, 1909, now()),
-  ('-5.353,105.318', 'itera-lampung', 'walking', 12, 864, now()),
-  ('-5.353,105.318', 'itera-lampung', 'motorcycle', 3, 898, now()),
-  ('-5.353,105.318', 'itera-lampung', 'driving-car', 4, 933, now()),
-  ('-5.353,105.318', 'itera-gerbang-utama', 'walking', 12, 864, now()),
-  ('-5.353,105.318', 'itera-gerbang-utama', 'motorcycle', 3, 898, now()),
-  ('-5.353,105.318', 'itera-gerbang-utama', 'driving-car', 4, 933, now()),
-  ('-5.353,105.318', 'itera-simpang-wayhuwi', 'walking', 19, 1373, now()),
-  ('-5.353,105.318', 'itera-simpang-wayhuwi', 'motorcycle', 4, 1427, now()),
-  ('-5.353,105.318', 'itera-simpang-wayhuwi', 'driving-car', 5, 1482, now()),
-  ('-5.353,105.318', 'itera-akses-sabahbalau', 'walking', 29, 2150, now()),
-  ('-5.353,105.318', 'itera-akses-sabahbalau', 'motorcycle', 6, 2236, now()),
-  ('-5.353,105.318', 'itera-akses-sabahbalau', 'driving-car', 8, 2322, now()),
-  ('-5.350,105.306', 'itera-lampung', 'walking', 24, 1751, now()),
-  ('-5.350,105.306', 'itera-lampung', 'motorcycle', 5, 1821, now()),
-  ('-5.350,105.306', 'itera-lampung', 'driving-car', 7, 1891, now()),
-  ('-5.350,105.306', 'itera-gerbang-utama', 'walking', 24, 1751, now()),
-  ('-5.350,105.306', 'itera-gerbang-utama', 'motorcycle', 5, 1821, now()),
-  ('-5.350,105.306', 'itera-gerbang-utama', 'driving-car', 7, 1891, now()),
-  ('-5.350,105.306', 'itera-simpang-wayhuwi', 'walking', 11, 819, now()),
-  ('-5.350,105.306', 'itera-simpang-wayhuwi', 'motorcycle', 3, 852, now()),
-  ('-5.350,105.306', 'itera-simpang-wayhuwi', 'driving-car', 3, 884, now()),
-  ('-5.350,105.306', 'itera-akses-sabahbalau', 'walking', 45, 3319, now()),
-  ('-5.350,105.306', 'itera-akses-sabahbalau', 'motorcycle', 9, 3452, now()),
-  ('-5.350,105.306', 'itera-akses-sabahbalau', 'driving-car', 12, 3584, now()),
-  ('-5.372,105.297', 'itera-lampung', 'walking', 42, 3114, now()),
-  ('-5.372,105.297', 'itera-lampung', 'motorcycle', 9, 3238, now()),
-  ('-5.372,105.297', 'itera-lampung', 'driving-car', 12, 3363, now()),
-  ('-5.372,105.297', 'itera-gerbang-utama', 'walking', 42, 3114, now()),
-  ('-5.372,105.297', 'itera-gerbang-utama', 'motorcycle', 9, 3238, now()),
-  ('-5.372,105.297', 'itera-gerbang-utama', 'driving-car', 12, 3363, now()),
-  ('-5.372,105.297', 'itera-simpang-wayhuwi', 'walking', 38, 2819, now()),
-  ('-5.372,105.297', 'itera-simpang-wayhuwi', 'motorcycle', 8, 2932, now()),
-  ('-5.372,105.297', 'itera-simpang-wayhuwi', 'driving-car', 11, 3044, now()),
-  ('-5.372,105.297', 'itera-akses-sabahbalau', 'walking', 45, 3375, now()),
-  ('-5.372,105.297', 'itera-akses-sabahbalau', 'motorcycle', 9, 3510, now()),
-  ('-5.372,105.297', 'itera-akses-sabahbalau', 'driving-car', 13, 3645, now()),
-  ('-5.364,105.323', 'itera-lampung', 'walking', 19, 1411, now()),
-  ('-5.364,105.323', 'itera-lampung', 'motorcycle', 4, 1468, now()),
-  ('-5.364,105.323', 'itera-lampung', 'driving-car', 6, 1524, now()),
-  ('-5.364,105.323', 'itera-gerbang-utama', 'walking', 19, 1411, now()),
-  ('-5.364,105.323', 'itera-gerbang-utama', 'motorcycle', 4, 1468, now()),
-  ('-5.364,105.323', 'itera-gerbang-utama', 'driving-car', 6, 1524, now()),
-  ('-5.364,105.323', 'itera-simpang-wayhuwi', 'walking', 33, 2463, now()),
-  ('-5.364,105.323', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2561, now()),
-  ('-5.364,105.323', 'itera-simpang-wayhuwi', 'driving-car', 9, 2660, now()),
-  ('-5.364,105.323', 'itera-akses-sabahbalau', 'walking', 10, 685, now()),
-  ('-5.364,105.323', 'itera-akses-sabahbalau', 'motorcycle', 2, 712, now()),
-  ('-5.364,105.323', 'itera-akses-sabahbalau', 'driving-car', 3, 740, now()),
-  ('-5.369,105.296', 'itera-lampung', 'walking', 41, 3036, now()),
-  ('-5.369,105.296', 'itera-lampung', 'motorcycle', 8, 3158, now()),
-  ('-5.369,105.296', 'itera-lampung', 'driving-car', 11, 3279, now()),
-  ('-5.369,105.296', 'itera-gerbang-utama', 'walking', 41, 3036, now()),
-  ('-5.369,105.296', 'itera-gerbang-utama', 'motorcycle', 8, 3158, now()),
-  ('-5.369,105.296', 'itera-gerbang-utama', 'driving-car', 11, 3279, now()),
-  ('-5.369,105.296', 'itera-simpang-wayhuwi', 'walking', 35, 2605, now()),
-  ('-5.369,105.296', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2709, now()),
-  ('-5.369,105.296', 'itera-simpang-wayhuwi', 'driving-car', 10, 2813, now()),
-  ('-5.369,105.296', 'itera-akses-sabahbalau', 'walking', 47, 3501, now()),
-  ('-5.369,105.296', 'itera-akses-sabahbalau', 'motorcycle', 10, 3641, now()),
-  ('-5.369,105.296', 'itera-akses-sabahbalau', 'driving-car', 13, 3781, now()),
-  ('-5.352,105.304', 'itera-lampung', 'walking', 23, 1681, now()),
-  ('-5.352,105.304', 'itera-lampung', 'motorcycle', 5, 1749, now()),
-  ('-5.352,105.304', 'itera-lampung', 'driving-car', 7, 1816, now()),
-  ('-5.352,105.304', 'itera-gerbang-utama', 'walking', 23, 1681, now()),
-  ('-5.352,105.304', 'itera-gerbang-utama', 'motorcycle', 5, 1749, now()),
-  ('-5.352,105.304', 'itera-gerbang-utama', 'driving-car', 7, 1816, now()),
-  ('-5.352,105.304', 'itera-simpang-wayhuwi', 'walking', 9, 638, now()),
-  ('-5.352,105.304', 'itera-simpang-wayhuwi', 'motorcycle', 2, 663, now()),
-  ('-5.352,105.304', 'itera-simpang-wayhuwi', 'driving-car', 3, 689, now()),
-  ('-5.352,105.304', 'itera-akses-sabahbalau', 'walking', 43, 3185, now()),
-  ('-5.352,105.304', 'itera-akses-sabahbalau', 'motorcycle', 9, 3312, now()),
-  ('-5.352,105.304', 'itera-akses-sabahbalau', 'driving-car', 12, 3440, now()),
-  ('-5.349,105.303', 'itera-lampung', 'walking', 28, 2095, now()),
-  ('-5.349,105.303', 'itera-lampung', 'motorcycle', 6, 2179, now()),
-  ('-5.349,105.303', 'itera-lampung', 'driving-car', 8, 2263, now()),
-  ('-5.349,105.303', 'itera-gerbang-utama', 'walking', 28, 2095, now()),
-  ('-5.349,105.303', 'itera-gerbang-utama', 'motorcycle', 6, 2179, now()),
-  ('-5.349,105.303', 'itera-gerbang-utama', 'driving-car', 8, 2263, now()),
-  ('-5.349,105.303', 'itera-simpang-wayhuwi', 'walking', 15, 1093, now()),
-  ('-5.349,105.303', 'itera-simpang-wayhuwi', 'motorcycle', 3, 1136, now()),
-  ('-5.349,105.303', 'itera-simpang-wayhuwi', 'driving-car', 4, 1180, now()),
-  ('-5.349,105.303', 'itera-akses-sabahbalau', 'walking', 49, 3638, now()),
-  ('-5.349,105.303', 'itera-akses-sabahbalau', 'motorcycle', 10, 3783, now()),
-  ('-5.349,105.303', 'itera-akses-sabahbalau', 'driving-car', 14, 3929, now()),
-  ('-5.358,105.301', 'itera-lampung', 'walking', 27, 1969, now()),
-  ('-5.358,105.301', 'itera-lampung', 'motorcycle', 6, 2048, now()),
-  ('-5.358,105.301', 'itera-lampung', 'driving-car', 8, 2126, now()),
-  ('-5.358,105.301', 'itera-gerbang-utama', 'walking', 27, 1969, now()),
-  ('-5.358,105.301', 'itera-gerbang-utama', 'motorcycle', 6, 2048, now()),
-  ('-5.358,105.301', 'itera-gerbang-utama', 'driving-car', 8, 2126, now()),
-  ('-5.358,105.301', 'itera-simpang-wayhuwi', 'walking', 15, 1115, now()),
-  ('-5.358,105.301', 'itera-simpang-wayhuwi', 'motorcycle', 3, 1160, now()),
-  ('-5.358,105.301', 'itera-simpang-wayhuwi', 'driving-car', 5, 1204, now()),
-  ('-5.358,105.301', 'itera-akses-sabahbalau', 'walking', 42, 3141, now()),
-  ('-5.358,105.301', 'itera-akses-sabahbalau', 'motorcycle', 9, 3267, now()),
-  ('-5.358,105.301', 'itera-akses-sabahbalau', 'driving-car', 12, 3393, now()),
-  ('-5.356,105.312', 'itera-lampung', 'walking', 6, 436, now()),
-  ('-5.356,105.312', 'itera-lampung', 'motorcycle', 2, 454, now()),
-  ('-5.356,105.312', 'itera-lampung', 'driving-car', 2, 471, now()),
-  ('-5.356,105.312', 'itera-gerbang-utama', 'walking', 6, 436, now()),
-  ('-5.356,105.312', 'itera-gerbang-utama', 'motorcycle', 2, 454, now()),
-  ('-5.356,105.312', 'itera-gerbang-utama', 'driving-car', 2, 471, now()),
-  ('-5.356,105.312', 'itera-simpang-wayhuwi', 'walking', 9, 643, now()),
-  ('-5.356,105.312', 'itera-simpang-wayhuwi', 'motorcycle', 2, 668, now()),
-  ('-5.356,105.312', 'itera-simpang-wayhuwi', 'driving-car', 3, 694, now()),
-  ('-5.356,105.312', 'itera-akses-sabahbalau', 'walking', 27, 2010, now()),
-  ('-5.356,105.312', 'itera-akses-sabahbalau', 'motorcycle', 6, 2090, now()),
-  ('-5.356,105.312', 'itera-akses-sabahbalau', 'driving-car', 8, 2171, now()),
-  ('-5.363,105.301', 'itera-lampung', 'walking', 27, 1989, now()),
-  ('-5.363,105.301', 'itera-lampung', 'motorcycle', 6, 2068, now()),
-  ('-5.363,105.301', 'itera-lampung', 'driving-car', 8, 2148, now()),
-  ('-5.363,105.301', 'itera-gerbang-utama', 'walking', 27, 1989, now()),
-  ('-5.363,105.301', 'itera-gerbang-utama', 'motorcycle', 6, 2068, now()),
-  ('-5.363,105.301', 'itera-gerbang-utama', 'driving-car', 8, 2148, now()),
-  ('-5.363,105.301', 'itera-simpang-wayhuwi', 'walking', 20, 1440, now()),
-  ('-5.363,105.301', 'itera-simpang-wayhuwi', 'motorcycle', 4, 1498, now()),
-  ('-5.363,105.301', 'itera-simpang-wayhuwi', 'driving-car', 6, 1555, now()),
-  ('-5.363,105.301', 'itera-akses-sabahbalau', 'walking', 38, 2848, now()),
-  ('-5.363,105.301', 'itera-akses-sabahbalau', 'motorcycle', 8, 2961, now()),
-  ('-5.363,105.301', 'itera-akses-sabahbalau', 'driving-car', 11, 3075, now()),
-  ('-5.368,105.292', 'itera-lampung', 'walking', 46, 3398, now()),
-  ('-5.368,105.292', 'itera-lampung', 'motorcycle', 9, 3533, now()),
-  ('-5.368,105.292', 'itera-lampung', 'driving-car', 13, 3669, now()),
-  ('-5.368,105.292', 'itera-gerbang-utama', 'walking', 46, 3398, now()),
-  ('-5.368,105.292', 'itera-gerbang-utama', 'motorcycle', 9, 3533, now()),
-  ('-5.368,105.292', 'itera-gerbang-utama', 'driving-car', 13, 3669, now()),
-  ('-5.368,105.292', 'itera-simpang-wayhuwi', 'walking', 39, 2854, now()),
-  ('-5.368,105.292', 'itera-simpang-wayhuwi', 'motorcycle', 8, 2968, now()),
-  ('-5.368,105.292', 'itera-simpang-wayhuwi', 'driving-car', 11, 3082, now()),
-  ('-5.368,105.292', 'itera-akses-sabahbalau', 'walking', 53, 3955, now()),
-  ('-5.368,105.292', 'itera-akses-sabahbalau', 'motorcycle', 11, 4113, now()),
-  ('-5.368,105.292', 'itera-akses-sabahbalau', 'driving-car', 15, 4271, now()),
-  ('-5.350,105.309', 'itera-lampung', 'walking', 19, 1420, now()),
-  ('-5.350,105.309', 'itera-lampung', 'motorcycle', 4, 1477, now()),
-  ('-5.350,105.309', 'itera-lampung', 'driving-car', 6, 1534, now()),
-  ('-5.350,105.309', 'itera-gerbang-utama', 'walking', 19, 1420, now()),
-  ('-5.350,105.309', 'itera-gerbang-utama', 'motorcycle', 4, 1477, now()),
-  ('-5.350,105.309', 'itera-gerbang-utama', 'driving-car', 6, 1534, now()),
-  ('-5.350,105.309', 'itera-simpang-wayhuwi', 'walking', 10, 728, now()),
-  ('-5.350,105.309', 'itera-simpang-wayhuwi', 'motorcycle', 2, 757, now()),
-  ('-5.350,105.309', 'itera-simpang-wayhuwi', 'driving-car', 3, 786, now()),
-  ('-5.350,105.309', 'itera-akses-sabahbalau', 'walking', 41, 3006, now()),
-  ('-5.350,105.309', 'itera-akses-sabahbalau', 'motorcycle', 8, 3127, now()),
-  ('-5.350,105.309', 'itera-akses-sabahbalau', 'driving-car', 11, 3247, now()),
-  ('-5.362,105.330', 'itera-lampung', 'walking', 28, 2099, now()),
-  ('-5.362,105.330', 'itera-lampung', 'motorcycle', 6, 2183, now()),
-  ('-5.362,105.330', 'itera-lampung', 'driving-car', 8, 2267, now()),
-  ('-5.362,105.330', 'itera-gerbang-utama', 'walking', 28, 2099, now()),
-  ('-5.362,105.330', 'itera-gerbang-utama', 'motorcycle', 6, 2183, now()),
-  ('-5.362,105.330', 'itera-gerbang-utama', 'driving-car', 8, 2267, now()),
-  ('-5.362,105.330', 'itera-simpang-wayhuwi', 'walking', 42, 3133, now()),
-  ('-5.362,105.330', 'itera-simpang-wayhuwi', 'motorcycle', 9, 3258, now()),
-  ('-5.362,105.330', 'itera-simpang-wayhuwi', 'driving-car', 12, 3383, now()),
-  ('-5.362,105.330', 'itera-akses-sabahbalau', 'walking', 20, 1468, now()),
-  ('-5.362,105.330', 'itera-akses-sabahbalau', 'motorcycle', 4, 1526, now()),
-  ('-5.362,105.330', 'itera-akses-sabahbalau', 'driving-car', 6, 1585, now()),
-  ('-5.351,105.306', 'itera-lampung', 'walking', 23, 1681, now()),
-  ('-5.351,105.306', 'itera-lampung', 'motorcycle', 5, 1749, now()),
-  ('-5.351,105.306', 'itera-lampung', 'driving-car', 7, 1816, now()),
-  ('-5.351,105.306', 'itera-gerbang-utama', 'walking', 23, 1681, now()),
-  ('-5.351,105.306', 'itera-gerbang-utama', 'motorcycle', 5, 1749, now()),
-  ('-5.351,105.306', 'itera-gerbang-utama', 'driving-car', 7, 1816, now()),
-  ('-5.351,105.306', 'itera-simpang-wayhuwi', 'walking', 10, 701, now()),
-  ('-5.351,105.306', 'itera-simpang-wayhuwi', 'motorcycle', 2, 729, now()),
-  ('-5.351,105.306', 'itera-simpang-wayhuwi', 'driving-car', 3, 757, now()),
-  ('-5.351,105.306', 'itera-akses-sabahbalau', 'walking', 44, 3231, now()),
-  ('-5.351,105.306', 'itera-akses-sabahbalau', 'motorcycle', 9, 3361, now()),
-  ('-5.351,105.306', 'itera-akses-sabahbalau', 'driving-car', 12, 3490, now()),
-  ('-5.362,105.303', 'itera-lampung', 'walking', 23, 1686, now()),
-  ('-5.362,105.303', 'itera-lampung', 'motorcycle', 5, 1754, now()),
-  ('-5.362,105.303', 'itera-lampung', 'driving-car', 7, 1821, now()),
-  ('-5.362,105.303', 'itera-gerbang-utama', 'walking', 23, 1686, now()),
-  ('-5.362,105.303', 'itera-gerbang-utama', 'motorcycle', 5, 1754, now()),
-  ('-5.362,105.303', 'itera-gerbang-utama', 'driving-car', 7, 1821, now()),
-  ('-5.362,105.303', 'itera-simpang-wayhuwi', 'walking', 17, 1219, now()),
-  ('-5.362,105.303', 'itera-simpang-wayhuwi', 'motorcycle', 4, 1268, now()),
-  ('-5.362,105.303', 'itera-simpang-wayhuwi', 'driving-car', 5, 1316, now()),
-  ('-5.362,105.303', 'itera-akses-sabahbalau', 'walking', 35, 2569, now()),
-  ('-5.362,105.303', 'itera-akses-sabahbalau', 'motorcycle', 7, 2672, now()),
-  ('-5.362,105.303', 'itera-akses-sabahbalau', 'driving-car', 10, 2774, now()),
-  ('-5.354,105.305', 'itera-lampung', 'walking', 20, 1434, now()),
-  ('-5.354,105.305', 'itera-lampung', 'motorcycle', 4, 1491, now()),
-  ('-5.354,105.305', 'itera-lampung', 'driving-car', 6, 1548, now()),
-  ('-5.354,105.305', 'itera-gerbang-utama', 'walking', 20, 1434, now()),
-  ('-5.354,105.305', 'itera-gerbang-utama', 'motorcycle', 4, 1491, now()),
-  ('-5.354,105.305', 'itera-gerbang-utama', 'driving-car', 6, 1548, now()),
-  ('-5.354,105.305', 'itera-simpang-wayhuwi', 'walking', 6, 381, now()),
-  ('-5.354,105.305', 'itera-simpang-wayhuwi', 'motorcycle', 1, 397, now()),
-  ('-5.354,105.305', 'itera-simpang-wayhuwi', 'driving-car', 2, 412, now()),
-  ('-5.354,105.305', 'itera-akses-sabahbalau', 'walking', 39, 2910, now()),
-  ('-5.354,105.305', 'itera-akses-sabahbalau', 'motorcycle', 8, 3026, now()),
-  ('-5.354,105.305', 'itera-akses-sabahbalau', 'driving-car', 11, 3143, now()),
-  ('-5.358,105.330', 'itera-lampung', 'walking', 29, 2164, now()),
-  ('-5.358,105.330', 'itera-lampung', 'motorcycle', 6, 2250, now()),
-  ('-5.358,105.330', 'itera-lampung', 'driving-car', 8, 2337, now()),
-  ('-5.358,105.330', 'itera-gerbang-utama', 'walking', 29, 2164, now()),
-  ('-5.358,105.330', 'itera-gerbang-utama', 'motorcycle', 6, 2250, now()),
-  ('-5.358,105.330', 'itera-gerbang-utama', 'driving-car', 8, 2337, now()),
-  ('-5.358,105.330', 'itera-simpang-wayhuwi', 'walking', 42, 3133, now()),
-  ('-5.358,105.330', 'itera-simpang-wayhuwi', 'motorcycle', 9, 3258, now()),
-  ('-5.358,105.330', 'itera-simpang-wayhuwi', 'driving-car', 12, 3383, now()),
-  ('-5.358,105.330', 'itera-akses-sabahbalau', 'walking', 26, 1905, now()),
-  ('-5.358,105.330', 'itera-akses-sabahbalau', 'motorcycle', 5, 1981, now()),
-  ('-5.358,105.330', 'itera-akses-sabahbalau', 'driving-car', 7, 2057, now()),
-  ('-5.360,105.301', 'itera-lampung', 'walking', 25, 1865, now()),
-  ('-5.360,105.301', 'itera-lampung', 'motorcycle', 5, 1940, now()),
-  ('-5.360,105.301', 'itera-lampung', 'driving-car', 7, 2014, now()),
-  ('-5.360,105.301', 'itera-gerbang-utama', 'walking', 25, 1865, now()),
-  ('-5.360,105.301', 'itera-gerbang-utama', 'motorcycle', 5, 1940, now()),
-  ('-5.360,105.301', 'itera-gerbang-utama', 'driving-car', 7, 2014, now()),
-  ('-5.360,105.301', 'itera-simpang-wayhuwi', 'walking', 15, 1125, now()),
-  ('-5.360,105.301', 'itera-simpang-wayhuwi', 'motorcycle', 3, 1170, now()),
-  ('-5.360,105.301', 'itera-simpang-wayhuwi', 'driving-car', 5, 1215, now()),
-  ('-5.360,105.301', 'itera-akses-sabahbalau', 'walking', 40, 2949, now()),
-  ('-5.360,105.301', 'itera-akses-sabahbalau', 'motorcycle', 8, 3067, now()),
-  ('-5.360,105.301', 'itera-akses-sabahbalau', 'driving-car', 11, 3185, now()),
-  ('-5.352,105.309', 'itera-lampung', 'walking', 17, 1223, now()),
-  ('-5.352,105.309', 'itera-lampung', 'motorcycle', 4, 1271, now()),
-  ('-5.352,105.309', 'itera-lampung', 'driving-car', 5, 1320, now()),
-  ('-5.352,105.309', 'itera-gerbang-utama', 'walking', 17, 1223, now()),
-  ('-5.352,105.309', 'itera-gerbang-utama', 'motorcycle', 4, 1271, now()),
-  ('-5.352,105.309', 'itera-gerbang-utama', 'driving-car', 5, 1320, now()),
-  ('-5.352,105.309', 'itera-simpang-wayhuwi', 'walking', 7, 488, now()),
-  ('-5.352,105.309', 'itera-simpang-wayhuwi', 'motorcycle', 2, 507, now()),
-  ('-5.352,105.309', 'itera-simpang-wayhuwi', 'driving-car', 2, 527, now()),
-  ('-5.352,105.309', 'itera-akses-sabahbalau', 'walking', 38, 2804, now()),
-  ('-5.352,105.309', 'itera-akses-sabahbalau', 'motorcycle', 8, 2916, now()),
-  ('-5.352,105.309', 'itera-akses-sabahbalau', 'driving-car', 11, 3028, now()),
-  ('-5.354,105.330', 'itera-lampung', 'walking', 31, 2261, now()),
-  ('-5.354,105.330', 'itera-lampung', 'motorcycle', 6, 2352, now()),
-  ('-5.354,105.330', 'itera-lampung', 'driving-car', 9, 2442, now()),
-  ('-5.354,105.330', 'itera-gerbang-utama', 'walking', 31, 2261, now()),
-  ('-5.354,105.330', 'itera-gerbang-utama', 'motorcycle', 6, 2352, now()),
-  ('-5.354,105.330', 'itera-gerbang-utama', 'driving-car', 9, 2442, now()),
-  ('-5.354,105.330', 'itera-simpang-wayhuwi', 'walking', 42, 3104, now()),
-  ('-5.354,105.330', 'itera-simpang-wayhuwi', 'motorcycle', 9, 3228, now()),
-  ('-5.354,105.330', 'itera-simpang-wayhuwi', 'driving-car', 12, 3352, now()),
-  ('-5.354,105.330', 'itera-akses-sabahbalau', 'walking', 32, 2396, now()),
-  ('-5.354,105.330', 'itera-akses-sabahbalau', 'motorcycle', 7, 2492, now()),
-  ('-5.354,105.330', 'itera-akses-sabahbalau', 'driving-car', 9, 2588, now()),
-  ('-5.360,105.322', 'itera-lampung', 'walking', 13, 948, now()),
-  ('-5.360,105.322', 'itera-lampung', 'motorcycle', 3, 985, now()),
-  ('-5.360,105.322', 'itera-lampung', 'driving-car', 4, 1023, now()),
-  ('-5.360,105.322', 'itera-gerbang-utama', 'walking', 13, 948, now()),
-  ('-5.360,105.322', 'itera-gerbang-utama', 'motorcycle', 3, 985, now()),
-  ('-5.360,105.322', 'itera-gerbang-utama', 'driving-car', 4, 1023, now()),
-  ('-5.360,105.322', 'itera-simpang-wayhuwi', 'walking', 27, 1984, now()),
-  ('-5.360,105.322', 'itera-simpang-wayhuwi', 'motorcycle', 6, 2063, now()),
-  ('-5.360,105.322', 'itera-simpang-wayhuwi', 'driving-car', 8, 2142, now()),
-  ('-5.360,105.322', 'itera-akses-sabahbalau', 'walking', 16, 1148, now()),
-  ('-5.360,105.322', 'itera-akses-sabahbalau', 'motorcycle', 3, 1193, now()),
-  ('-5.360,105.322', 'itera-akses-sabahbalau', 'driving-car', 5, 1239, now()),
-  ('-5.353,105.304', 'itera-lampung', 'walking', 23, 1693, now()),
-  ('-5.353,105.304', 'itera-lampung', 'motorcycle', 5, 1760, now()),
-  ('-5.353,105.304', 'itera-lampung', 'driving-car', 7, 1828, now()),
-  ('-5.353,105.304', 'itera-gerbang-utama', 'walking', 23, 1693, now()),
-  ('-5.353,105.304', 'itera-gerbang-utama', 'motorcycle', 5, 1760, now()),
-  ('-5.353,105.304', 'itera-gerbang-utama', 'driving-car', 7, 1828, now()),
-  ('-5.353,105.304', 'itera-simpang-wayhuwi', 'walking', 9, 640, now()),
-  ('-5.353,105.304', 'itera-simpang-wayhuwi', 'motorcycle', 2, 666, now()),
-  ('-5.353,105.304', 'itera-simpang-wayhuwi', 'driving-car', 3, 691, now()),
-  ('-5.353,105.304', 'itera-akses-sabahbalau', 'walking', 43, 3169, now()),
-  ('-5.353,105.304', 'itera-akses-sabahbalau', 'motorcycle', 9, 3296, now()),
-  ('-5.353,105.304', 'itera-akses-sabahbalau', 'driving-car', 12, 3422, now()),
-  ('-5.353,105.312', 'itera-lampung', 'walking', 11, 816, now()),
-  ('-5.353,105.312', 'itera-lampung', 'motorcycle', 3, 849, now()),
-  ('-5.353,105.312', 'itera-lampung', 'driving-car', 3, 882, now()),
-  ('-5.353,105.312', 'itera-gerbang-utama', 'walking', 11, 816, now()),
-  ('-5.353,105.312', 'itera-gerbang-utama', 'motorcycle', 3, 849, now()),
-  ('-5.353,105.312', 'itera-gerbang-utama', 'driving-car', 3, 882, now()),
-  ('-5.353,105.312', 'itera-simpang-wayhuwi', 'walking', 10, 681, now()),
-  ('-5.353,105.312', 'itera-simpang-wayhuwi', 'motorcycle', 2, 709, now()),
-  ('-5.353,105.312', 'itera-simpang-wayhuwi', 'driving-car', 3, 736, now()),
-  ('-5.353,105.312', 'itera-akses-sabahbalau', 'walking', 32, 2395, now()),
-  ('-5.353,105.312', 'itera-akses-sabahbalau', 'motorcycle', 7, 2491, now()),
-  ('-5.353,105.312', 'itera-akses-sabahbalau', 'driving-car', 9, 2587, now()),
-  ('-5.370,105.292', 'itera-lampung', 'walking', 47, 3505, now()),
-  ('-5.370,105.292', 'itera-lampung', 'motorcycle', 10, 3645, now()),
-  ('-5.370,105.292', 'itera-lampung', 'driving-car', 13, 3785, now()),
-  ('-5.370,105.292', 'itera-gerbang-utama', 'walking', 47, 3505, now()),
-  ('-5.370,105.292', 'itera-gerbang-utama', 'motorcycle', 10, 3645, now()),
-  ('-5.370,105.292', 'itera-gerbang-utama', 'driving-car', 13, 3785, now()),
-  ('-5.370,105.292', 'itera-simpang-wayhuwi', 'walking', 41, 3001, now()),
-  ('-5.370,105.292', 'itera-simpang-wayhuwi', 'motorcycle', 8, 3121, now()),
-  ('-5.370,105.292', 'itera-simpang-wayhuwi', 'driving-car', 11, 3241, now()),
-  ('-5.370,105.292', 'itera-akses-sabahbalau', 'walking', 54, 3994, now()),
-  ('-5.370,105.292', 'itera-akses-sabahbalau', 'motorcycle', 11, 4154, now()),
-  ('-5.370,105.292', 'itera-akses-sabahbalau', 'driving-car', 15, 4313, now()),
-  ('-5.363,105.304', 'itera-lampung', 'walking', 21, 1561, now()),
-  ('-5.363,105.304', 'itera-lampung', 'motorcycle', 5, 1624, now()),
-  ('-5.363,105.304', 'itera-lampung', 'driving-car', 6, 1686, now()),
-  ('-5.363,105.304', 'itera-gerbang-utama', 'walking', 21, 1561, now()),
-  ('-5.363,105.304', 'itera-gerbang-utama', 'motorcycle', 5, 1624, now()),
-  ('-5.363,105.304', 'itera-gerbang-utama', 'driving-car', 6, 1686, now()),
-  ('-5.363,105.304', 'itera-simpang-wayhuwi', 'walking', 16, 1198, now()),
-  ('-5.363,105.304', 'itera-simpang-wayhuwi', 'motorcycle', 4, 1245, now()),
-  ('-5.363,105.304', 'itera-simpang-wayhuwi', 'driving-car', 5, 1293, now()),
-  ('-5.363,105.304', 'itera-akses-sabahbalau', 'walking', 32, 2399, now()),
-  ('-5.363,105.304', 'itera-akses-sabahbalau', 'motorcycle', 7, 2495, now()),
-  ('-5.363,105.304', 'itera-akses-sabahbalau', 'driving-car', 9, 2591, now()),
-  ('-5.363,105.320', 'itera-lampung', 'walking', 13, 968, now()),
-  ('-5.363,105.320', 'itera-lampung', 'motorcycle', 3, 1006, now()),
-  ('-5.363,105.320', 'itera-lampung', 'driving-car', 4, 1045, now()),
-  ('-5.363,105.320', 'itera-gerbang-utama', 'walking', 13, 968, now()),
-  ('-5.363,105.320', 'itera-gerbang-utama', 'motorcycle', 3, 1006, now()),
-  ('-5.363,105.320', 'itera-gerbang-utama', 'driving-car', 4, 1045, now()),
-  ('-5.363,105.320', 'itera-simpang-wayhuwi', 'walking', 27, 2005, now()),
-  ('-5.363,105.320', 'itera-simpang-wayhuwi', 'motorcycle', 6, 2085, now()),
-  ('-5.363,105.320', 'itera-simpang-wayhuwi', 'driving-car', 8, 2165, now()),
-  ('-5.363,105.320', 'itera-akses-sabahbalau', 'walking', 10, 710, now()),
-  ('-5.363,105.320', 'itera-akses-sabahbalau', 'motorcycle', 2, 738, now()),
-  ('-5.363,105.320', 'itera-akses-sabahbalau', 'driving-car', 3, 767, now()),
-  ('-5.352,105.307', 'itera-lampung', 'walking', 19, 1368, now()),
-  ('-5.352,105.307', 'itera-lampung', 'motorcycle', 4, 1422, now()),
-  ('-5.352,105.307', 'itera-lampung', 'driving-car', 5, 1477, now()),
-  ('-5.352,105.307', 'itera-gerbang-utama', 'walking', 19, 1368, now()),
-  ('-5.352,105.307', 'itera-gerbang-utama', 'motorcycle', 4, 1422, now()),
-  ('-5.352,105.307', 'itera-gerbang-utama', 'driving-car', 5, 1477, now()),
-  ('-5.352,105.307', 'itera-simpang-wayhuwi', 'walking', 6, 440, now()),
-  ('-5.352,105.307', 'itera-simpang-wayhuwi', 'motorcycle', 2, 458, now()),
-  ('-5.352,105.307', 'itera-simpang-wayhuwi', 'driving-car', 2, 475, now()),
-  ('-5.352,105.307', 'itera-akses-sabahbalau', 'walking', 40, 2926, now()),
-  ('-5.352,105.307', 'itera-akses-sabahbalau', 'motorcycle', 8, 3043, now()),
-  ('-5.352,105.307', 'itera-akses-sabahbalau', 'driving-car', 11, 3160, now()),
-  ('-5.348,105.309', 'itera-lampung', 'walking', 22, 1599, now()),
-  ('-5.348,105.309', 'itera-lampung', 'motorcycle', 5, 1663, now()),
-  ('-5.348,105.309', 'itera-lampung', 'driving-car', 6, 1727, now()),
-  ('-5.348,105.309', 'itera-gerbang-utama', 'walking', 22, 1599, now()),
-  ('-5.348,105.309', 'itera-gerbang-utama', 'motorcycle', 5, 1663, now()),
-  ('-5.348,105.309', 'itera-gerbang-utama', 'driving-car', 6, 1727, now()),
-  ('-5.348,105.309', 'itera-simpang-wayhuwi', 'walking', 13, 916, now()),
-  ('-5.348,105.309', 'itera-simpang-wayhuwi', 'motorcycle', 3, 953, now()),
-  ('-5.348,105.309', 'itera-simpang-wayhuwi', 'driving-car', 4, 990, now()),
-  ('-5.348,105.309', 'itera-akses-sabahbalau', 'walking', 43, 3184, now()),
-  ('-5.348,105.309', 'itera-akses-sabahbalau', 'motorcycle', 9, 3311, now()),
-  ('-5.348,105.309', 'itera-akses-sabahbalau', 'driving-car', 12, 3438, now()),
-  ('-5.371,105.300', 'itera-lampung', 'walking', 36, 2693, now()),
-  ('-5.371,105.300', 'itera-lampung', 'motorcycle', 7, 2800, now()),
-  ('-5.371,105.300', 'itera-lampung', 'driving-car', 10, 2908, now()),
-  ('-5.371,105.300', 'itera-gerbang-utama', 'walking', 36, 2693, now()),
-  ('-5.371,105.300', 'itera-gerbang-utama', 'motorcycle', 7, 2800, now()),
-  ('-5.371,105.300', 'itera-gerbang-utama', 'driving-car', 10, 2908, now()),
-  ('-5.371,105.300', 'itera-simpang-wayhuwi', 'walking', 33, 2456, now()),
-  ('-5.371,105.300', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2555, now()),
-  ('-5.371,105.300', 'itera-simpang-wayhuwi', 'driving-car', 9, 2653, now()),
-  ('-5.371,105.300', 'itera-akses-sabahbalau', 'walking', 40, 2970, now()),
-  ('-5.371,105.300', 'itera-akses-sabahbalau', 'motorcycle', 8, 3089, now()),
-  ('-5.371,105.300', 'itera-akses-sabahbalau', 'driving-car', 11, 3208, now()),
-  ('-5.358,105.304', 'itera-lampung', 'walking', 21, 1546, now()),
-  ('-5.358,105.304', 'itera-lampung', 'motorcycle', 5, 1608, now()),
-  ('-5.358,105.304', 'itera-lampung', 'driving-car', 6, 1670, now()),
-  ('-5.358,105.304', 'itera-gerbang-utama', 'walking', 21, 1546, now()),
-  ('-5.358,105.304', 'itera-gerbang-utama', 'motorcycle', 5, 1608, now()),
-  ('-5.358,105.304', 'itera-gerbang-utama', 'driving-car', 6, 1670, now()),
-  ('-5.358,105.304', 'itera-simpang-wayhuwi', 'walking', 11, 764, now()),
-  ('-5.358,105.304', 'itera-simpang-wayhuwi', 'motorcycle', 2, 794, now()),
-  ('-5.358,105.304', 'itera-simpang-wayhuwi', 'driving-car', 3, 825, now()),
-  ('-5.358,105.304', 'itera-akses-sabahbalau', 'walking', 37, 2753, now()),
-  ('-5.358,105.304', 'itera-akses-sabahbalau', 'motorcycle', 8, 2863, now()),
-  ('-5.358,105.304', 'itera-akses-sabahbalau', 'driving-car', 10, 2973, now()),
-  ('-5.360,105.302', 'itera-lampung', 'walking', 25, 1808, now()),
-  ('-5.360,105.302', 'itera-lampung', 'motorcycle', 5, 1880, now()),
-  ('-5.360,105.302', 'itera-lampung', 'driving-car', 7, 1952, now()),
-  ('-5.360,105.302', 'itera-gerbang-utama', 'walking', 25, 1808, now()),
-  ('-5.360,105.302', 'itera-gerbang-utama', 'motorcycle', 5, 1880, now()),
-  ('-5.360,105.302', 'itera-gerbang-utama', 'driving-car', 7, 1952, now()),
-  ('-5.360,105.302', 'itera-simpang-wayhuwi', 'walking', 15, 1096, now()),
-  ('-5.360,105.302', 'itera-simpang-wayhuwi', 'motorcycle', 3, 1140, now()),
-  ('-5.360,105.302', 'itera-simpang-wayhuwi', 'driving-car', 4, 1184, now()),
-  ('-5.360,105.302', 'itera-akses-sabahbalau', 'walking', 39, 2879, now()),
-  ('-5.360,105.302', 'itera-akses-sabahbalau', 'motorcycle', 8, 2994, now()),
-  ('-5.360,105.302', 'itera-akses-sabahbalau', 'driving-car', 11, 3109, now()),
-  ('-5.371,105.297', 'itera-lampung', 'walking', 41, 3069, now()),
-  ('-5.371,105.297', 'itera-lampung', 'motorcycle', 8, 3192, now()),
-  ('-5.371,105.297', 'itera-lampung', 'driving-car', 12, 3314, now()),
-  ('-5.371,105.297', 'itera-gerbang-utama', 'walking', 41, 3069, now()),
-  ('-5.371,105.297', 'itera-gerbang-utama', 'motorcycle', 8, 3192, now()),
-  ('-5.371,105.297', 'itera-gerbang-utama', 'driving-car', 12, 3314, now()),
-  ('-5.371,105.297', 'itera-simpang-wayhuwi', 'walking', 37, 2745, now()),
-  ('-5.371,105.297', 'itera-simpang-wayhuwi', 'motorcycle', 8, 2855, now()),
-  ('-5.371,105.297', 'itera-simpang-wayhuwi', 'driving-car', 10, 2965, now()),
-  ('-5.371,105.297', 'itera-akses-sabahbalau', 'walking', 46, 3380, now()),
-  ('-5.371,105.297', 'itera-akses-sabahbalau', 'motorcycle', 9, 3515, now()),
-  ('-5.371,105.297', 'itera-akses-sabahbalau', 'driving-car', 13, 3650, now()),
-  ('-5.359,105.332', 'itera-lampung', 'walking', 33, 2435, now()),
-  ('-5.359,105.332', 'itera-lampung', 'motorcycle', 7, 2532, now()),
-  ('-5.359,105.332', 'itera-lampung', 'driving-car', 9, 2630, now()),
-  ('-5.359,105.332', 'itera-gerbang-utama', 'walking', 33, 2435, now()),
-  ('-5.359,105.332', 'itera-gerbang-utama', 'motorcycle', 7, 2532, now()),
-  ('-5.359,105.332', 'itera-gerbang-utama', 'driving-car', 9, 2630, now()),
-  ('-5.359,105.332', 'itera-simpang-wayhuwi', 'walking', 46, 3414, now()),
-  ('-5.359,105.332', 'itera-simpang-wayhuwi', 'motorcycle', 9, 3550, now()),
-  ('-5.359,105.332', 'itera-simpang-wayhuwi', 'driving-car', 13, 3687, now()),
-  ('-5.359,105.332', 'itera-akses-sabahbalau', 'walking', 28, 2043, now()),
-  ('-5.359,105.332', 'itera-akses-sabahbalau', 'motorcycle', 6, 2124, now()),
-  ('-5.359,105.332', 'itera-akses-sabahbalau', 'driving-car', 8, 2206, now()),
-  ('-5.357,105.328', 'itera-lampung', 'walking', 26, 1888, now()),
-  ('-5.357,105.328', 'itera-lampung', 'motorcycle', 5, 1963, now()),
-  ('-5.357,105.328', 'itera-lampung', 'driving-car', 7, 2039, now()),
-  ('-5.357,105.328', 'itera-gerbang-utama', 'walking', 26, 1888, now()),
-  ('-5.357,105.328', 'itera-gerbang-utama', 'motorcycle', 5, 1963, now()),
-  ('-5.357,105.328', 'itera-gerbang-utama', 'driving-car', 7, 2039, now()),
-  ('-5.357,105.328', 'itera-simpang-wayhuwi', 'walking', 38, 2819, now()),
-  ('-5.357,105.328', 'itera-simpang-wayhuwi', 'motorcycle', 8, 2932, now()),
-  ('-5.357,105.328', 'itera-simpang-wayhuwi', 'driving-car', 11, 3044, now()),
-  ('-5.357,105.328', 'itera-akses-sabahbalau', 'walking', 26, 1886, now()),
-  ('-5.357,105.328', 'itera-akses-sabahbalau', 'motorcycle', 5, 1962, now()),
-  ('-5.357,105.328', 'itera-akses-sabahbalau', 'driving-car', 7, 2037, now()),
-  ('-5.364,105.302', 'itera-lampung', 'walking', 27, 1988, now()),
-  ('-5.364,105.302', 'itera-lampung', 'motorcycle', 6, 2067, now()),
-  ('-5.364,105.302', 'itera-lampung', 'driving-car', 8, 2147, now()),
-  ('-5.364,105.302', 'itera-gerbang-utama', 'walking', 27, 1988, now()),
-  ('-5.364,105.302', 'itera-gerbang-utama', 'motorcycle', 6, 2067, now()),
-  ('-5.364,105.302', 'itera-gerbang-utama', 'driving-car', 8, 2147, now()),
-  ('-5.364,105.302', 'itera-simpang-wayhuwi', 'walking', 21, 1543, now()),
-  ('-5.364,105.302', 'itera-simpang-wayhuwi', 'motorcycle', 5, 1604, now()),
-  ('-5.364,105.302', 'itera-simpang-wayhuwi', 'driving-car', 6, 1666, now()),
-  ('-5.364,105.302', 'itera-akses-sabahbalau', 'walking', 37, 2735, now()),
-  ('-5.364,105.302', 'itera-akses-sabahbalau', 'motorcycle', 8, 2844, now()),
-  ('-5.364,105.302', 'itera-akses-sabahbalau', 'driving-car', 10, 2954, now()),
-  ('-5.352,105.306', 'itera-lampung', 'walking', 20, 1500, now()),
-  ('-5.352,105.306', 'itera-lampung', 'motorcycle', 4, 1560, now()),
-  ('-5.352,105.306', 'itera-lampung', 'driving-car', 6, 1620, now()),
-  ('-5.352,105.306', 'itera-gerbang-utama', 'walking', 20, 1500, now()),
-  ('-5.352,105.306', 'itera-gerbang-utama', 'motorcycle', 4, 1560, now()),
-  ('-5.352,105.306', 'itera-gerbang-utama', 'driving-car', 6, 1620, now()),
-  ('-5.352,105.306', 'itera-simpang-wayhuwi', 'walking', 7, 503, now()),
-  ('-5.352,105.306', 'itera-simpang-wayhuwi', 'motorcycle', 2, 523, now()),
-  ('-5.352,105.306', 'itera-simpang-wayhuwi', 'driving-car', 2, 543, now()),
-  ('-5.352,105.306', 'itera-akses-sabahbalau', 'walking', 41, 3039, now()),
-  ('-5.352,105.306', 'itera-akses-sabahbalau', 'motorcycle', 8, 3160, now()),
-  ('-5.352,105.306', 'itera-akses-sabahbalau', 'driving-car', 11, 3282, now()),
-  ('-5.362,105.319', 'itera-lampung', 'walking', 11, 810, now()),
-  ('-5.362,105.319', 'itera-lampung', 'motorcycle', 3, 842, now()),
-  ('-5.362,105.319', 'itera-lampung', 'driving-car', 3, 875, now()),
-  ('-5.362,105.319', 'itera-gerbang-utama', 'walking', 11, 810, now()),
-  ('-5.362,105.319', 'itera-gerbang-utama', 'motorcycle', 3, 842, now()),
-  ('-5.362,105.319', 'itera-gerbang-utama', 'driving-car', 3, 875, now()),
-  ('-5.362,105.319', 'itera-simpang-wayhuwi', 'walking', 25, 1849, now()),
-  ('-5.362,105.319', 'itera-simpang-wayhuwi', 'motorcycle', 5, 1923, now()),
-  ('-5.362,105.319', 'itera-simpang-wayhuwi', 'driving-car', 7, 1997, now()),
-  ('-5.362,105.319', 'itera-akses-sabahbalau', 'walking', 12, 841, now()),
-  ('-5.362,105.319', 'itera-akses-sabahbalau', 'motorcycle', 3, 875, now()),
-  ('-5.362,105.319', 'itera-akses-sabahbalau', 'driving-car', 4, 909, now()),
-  ('-5.363,105.305', 'itera-lampung', 'walking', 21, 1524, now()),
-  ('-5.363,105.305', 'itera-lampung', 'motorcycle', 4, 1585, now()),
-  ('-5.363,105.305', 'itera-lampung', 'driving-car', 6, 1646, now()),
-  ('-5.363,105.305', 'itera-gerbang-utama', 'walking', 21, 1524, now()),
-  ('-5.363,105.305', 'itera-gerbang-utama', 'motorcycle', 4, 1585, now()),
-  ('-5.363,105.305', 'itera-gerbang-utama', 'driving-car', 6, 1646, now()),
-  ('-5.363,105.305', 'itera-simpang-wayhuwi', 'walking', 16, 1169, now()),
-  ('-5.363,105.305', 'itera-simpang-wayhuwi', 'motorcycle', 4, 1216, now()),
-  ('-5.363,105.305', 'itera-simpang-wayhuwi', 'driving-car', 5, 1262, now()),
-  ('-5.363,105.305', 'itera-akses-sabahbalau', 'walking', 32, 2373, now()),
-  ('-5.363,105.305', 'itera-akses-sabahbalau', 'motorcycle', 7, 2467, now()),
-  ('-5.363,105.305', 'itera-akses-sabahbalau', 'driving-car', 9, 2562, now()),
-  ('-6.363,106.832', 'ui-depok', 'walking', 9, 663, now()),
-  ('-6.363,106.832', 'ui-depok', 'motorcycle', 2, 689, now()),
-  ('-6.363,106.832', 'ui-depok', 'driving-car', 3, 716, now()),
-  ('-6.363,106.832', 'ui-gerbatama', 'walking', 9, 663, now()),
-  ('-6.363,106.832', 'ui-gerbatama', 'motorcycle', 2, 689, now()),
-  ('-6.363,106.832', 'ui-gerbatama', 'driving-car', 3, 716, now()),
-  ('-6.363,106.832', 'ui-kutek', 'walking', 21, 1504, now()),
-  ('-6.363,106.832', 'ui-kutek', 'motorcycle', 4, 1564, now()),
-  ('-6.363,106.832', 'ui-kutek', 'driving-car', 6, 1624, now()),
-  ('-6.363,106.832', 'ui-kukel', 'walking', 16, 1130, now()),
-  ('-6.363,106.832', 'ui-kukel', 'motorcycle', 3, 1175, now()),
-  ('-6.363,106.832', 'ui-kukel', 'driving-car', 5, 1220, now()),
-  ('-6.363,106.832', 'ui-pocin', 'walking', 10, 728, now()),
-  ('-6.363,106.832', 'ui-pocin', 'motorcycle', 2, 757, now()),
-  ('-6.363,106.832', 'ui-pocin', 'driving-car', 3, 786, now()),
-  ('-6.363,106.836', 'ui-depok', 'walking', 18, 1318, now()),
-  ('-6.363,106.836', 'ui-depok', 'motorcycle', 4, 1370, now()),
-  ('-6.363,106.836', 'ui-depok', 'driving-car', 5, 1423, now()),
-  ('-6.363,106.836', 'ui-gerbatama', 'walking', 18, 1318, now()),
-  ('-6.363,106.836', 'ui-gerbatama', 'motorcycle', 4, 1370, now()),
-  ('-6.363,106.836', 'ui-gerbatama', 'driving-car', 5, 1423, now()),
-  ('-6.363,106.836', 'ui-kutek', 'walking', 28, 2051, now()),
-  ('-6.363,106.836', 'ui-kutek', 'motorcycle', 6, 2133, now()),
-  ('-6.363,106.836', 'ui-kutek', 'driving-car', 8, 2215, now()),
-  ('-6.363,106.836', 'ui-kukel', 'walking', 23, 1719, now()),
-  ('-6.363,106.836', 'ui-kukel', 'motorcycle', 5, 1788, now()),
-  ('-6.363,106.836', 'ui-kukel', 'driving-car', 7, 1856, now()),
-  ('-6.363,106.836', 'ui-pocin', 'walking', 12, 885, now()),
-  ('-6.363,106.836', 'ui-pocin', 'motorcycle', 3, 920, now()),
-  ('-6.363,106.836', 'ui-pocin', 'driving-car', 4, 956, now()),
-  ('-6.356,106.826', 'ui-depok', 'walking', 12, 836, now()),
-  ('-6.356,106.826', 'ui-depok', 'motorcycle', 3, 870, now()),
-  ('-6.356,106.826', 'ui-depok', 'driving-car', 4, 903, now()),
-  ('-6.356,106.826', 'ui-gerbatama', 'walking', 12, 836, now()),
-  ('-6.356,106.826', 'ui-gerbatama', 'motorcycle', 3, 870, now()),
-  ('-6.356,106.826', 'ui-gerbatama', 'driving-car', 4, 903, now()),
-  ('-6.356,106.826', 'ui-kutek', 'walking', 24, 1786, now()),
-  ('-6.356,106.826', 'ui-kutek', 'motorcycle', 5, 1858, now()),
-  ('-6.356,106.826', 'ui-kutek', 'driving-car', 7, 1929, now()),
-  ('-6.356,106.826', 'ui-kukel', 'walking', 3, 203, now()),
-  ('-6.356,106.826', 'ui-kukel', 'motorcycle', 1, 211, now()),
-  ('-6.356,106.826', 'ui-kukel', 'driving-car', 2, 219, now()),
-  ('-6.356,106.826', 'ui-pocin', 'walking', 25, 1860, now()),
-  ('-6.356,106.826', 'ui-pocin', 'motorcycle', 5, 1934, now()),
-  ('-6.356,106.826', 'ui-pocin', 'driving-car', 7, 2009, now()),
-  ('-6.365,106.836', 'ui-depok', 'walking', 18, 1333, now()),
-  ('-6.365,106.836', 'ui-depok', 'motorcycle', 4, 1386, now()),
-  ('-6.365,106.836', 'ui-depok', 'driving-car', 5, 1439, now()),
-  ('-6.365,106.836', 'ui-gerbatama', 'walking', 18, 1333, now()),
-  ('-6.365,106.836', 'ui-gerbatama', 'motorcycle', 4, 1386, now()),
-  ('-6.365,106.836', 'ui-gerbatama', 'driving-car', 5, 1439, now()),
-  ('-6.365,106.836', 'ui-kutek', 'walking', 27, 1954, now()),
-  ('-6.365,106.836', 'ui-kutek', 'motorcycle', 6, 2032, now()),
-  ('-6.365,106.836', 'ui-kutek', 'driving-car', 8, 2110, now()),
-  ('-6.365,106.836', 'ui-kukel', 'walking', 25, 1801, now()),
-  ('-6.365,106.836', 'ui-kukel', 'motorcycle', 5, 1873, now()),
-  ('-6.365,106.836', 'ui-kukel', 'driving-car', 7, 1945, now()),
-  ('-6.365,106.836', 'ui-pocin', 'walking', 10, 718, now()),
-  ('-6.365,106.836', 'ui-pocin', 'motorcycle', 2, 746, now()),
-  ('-6.365,106.836', 'ui-pocin', 'driving-car', 3, 775, now()),
-  ('-6.364,106.833', 'ui-depok', 'walking', 13, 920, now()),
-  ('-6.364,106.833', 'ui-depok', 'motorcycle', 3, 957, now()),
-  ('-6.364,106.833', 'ui-depok', 'driving-car', 4, 994, now()),
-  ('-6.364,106.833', 'ui-gerbatama', 'walking', 13, 920, now()),
-  ('-6.364,106.833', 'ui-gerbatama', 'motorcycle', 3, 957, now()),
-  ('-6.364,106.833', 'ui-gerbatama', 'driving-car', 4, 994, now()),
-  ('-6.364,106.833', 'ui-kutek', 'walking', 22, 1644, now()),
-  ('-6.364,106.833', 'ui-kutek', 'motorcycle', 5, 1710, now()),
-  ('-6.364,106.833', 'ui-kutek', 'driving-car', 6, 1775, now()),
-  ('-6.364,106.833', 'ui-kukel', 'walking', 19, 1399, now()),
-  ('-6.364,106.833', 'ui-kukel', 'motorcycle', 4, 1455, now()),
-  ('-6.364,106.833', 'ui-kukel', 'driving-car', 6, 1511, now()),
-  ('-6.364,106.833', 'ui-pocin', 'walking', 9, 618, now()),
-  ('-6.364,106.833', 'ui-pocin', 'motorcycle', 2, 642, now()),
-  ('-6.364,106.833', 'ui-pocin', 'driving-car', 3, 667, now()),
-  ('-6.366,106.821', 'ui-depok', 'walking', 15, 1060, now()),
-  ('-6.366,106.821', 'ui-depok', 'motorcycle', 3, 1102, now()),
-  ('-6.366,106.821', 'ui-depok', 'driving-car', 4, 1145, now()),
-  ('-6.366,106.821', 'ui-gerbatama', 'walking', 15, 1060, now()),
-  ('-6.366,106.821', 'ui-gerbatama', 'motorcycle', 3, 1102, now()),
-  ('-6.366,106.821', 'ui-gerbatama', 'driving-car', 4, 1145, now()),
-  ('-6.366,106.821', 'ui-kutek', 'walking', 6, 393, now()),
-  ('-6.366,106.821', 'ui-kutek', 'motorcycle', 2, 408, now()),
-  ('-6.366,106.821', 'ui-kutek', 'driving-car', 2, 424, now()),
-  ('-6.366,106.821', 'ui-kukel', 'walking', 19, 1396, now()),
-  ('-6.366,106.821', 'ui-kukel', 'motorcycle', 4, 1452, now()),
-  ('-6.366,106.821', 'ui-kukel', 'driving-car', 6, 1508, now()),
-  ('-6.366,106.821', 'ui-pocin', 'walking', 22, 1581, now()),
-  ('-6.366,106.821', 'ui-pocin', 'motorcycle', 5, 1645, now()),
-  ('-6.366,106.821', 'ui-pocin', 'driving-car', 6, 1708, now()),
-  ('-6.369,106.836', 'ui-depok', 'walking', 21, 1521, now()),
-  ('-6.369,106.836', 'ui-depok', 'motorcycle', 4, 1582, now()),
-  ('-6.369,106.836', 'ui-depok', 'driving-car', 6, 1643, now()),
-  ('-6.369,106.836', 'ui-gerbatama', 'walking', 21, 1521, now()),
-  ('-6.369,106.836', 'ui-gerbatama', 'motorcycle', 4, 1582, now()),
-  ('-6.369,106.836', 'ui-gerbatama', 'driving-car', 6, 1643, now()),
-  ('-6.369,106.836', 'ui-kutek', 'walking', 25, 1826, now()),
-  ('-6.369,106.836', 'ui-kutek', 'motorcycle', 5, 1899, now()),
-  ('-6.369,106.836', 'ui-kutek', 'driving-car', 7, 1972, now()),
-  ('-6.369,106.836', 'ui-kukel', 'walking', 28, 2100, now()),
-  ('-6.369,106.836', 'ui-kukel', 'motorcycle', 6, 2184, now()),
-  ('-6.369,106.836', 'ui-kukel', 'driving-car', 8, 2268, now()),
-  ('-6.369,106.836', 'ui-pocin', 'walking', 7, 523, now()),
-  ('-6.369,106.836', 'ui-pocin', 'motorcycle', 2, 543, now()),
-  ('-6.369,106.836', 'ui-pocin', 'driving-car', 2, 564, now()),
-  ('-6.362,106.833', 'ui-depok', 'walking', 12, 851, now()),
-  ('-6.362,106.833', 'ui-depok', 'motorcycle', 3, 885, now()),
-  ('-6.362,106.833', 'ui-depok', 'driving-car', 4, 919, now()),
-  ('-6.362,106.833', 'ui-gerbatama', 'walking', 12, 851, now()),
-  ('-6.362,106.833', 'ui-gerbatama', 'motorcycle', 3, 885, now()),
-  ('-6.362,106.833', 'ui-gerbatama', 'driving-car', 4, 919, now()),
-  ('-6.362,106.833', 'ui-kutek', 'walking', 24, 1729, now()),
-  ('-6.362,106.833', 'ui-kutek', 'motorcycle', 5, 1798, now()),
-  ('-6.362,106.833', 'ui-kutek', 'driving-car', 7, 1867, now()),
-  ('-6.362,106.833', 'ui-kukel', 'walking', 17, 1228, now()),
-  ('-6.362,106.833', 'ui-kukel', 'motorcycle', 4, 1277, now()),
-  ('-6.362,106.833', 'ui-kukel', 'driving-car', 5, 1326, now()),
-  ('-6.362,106.833', 'ui-pocin', 'walking', 12, 853, now()),
-  ('-6.362,106.833', 'ui-pocin', 'motorcycle', 3, 887, now()),
-  ('-6.362,106.833', 'ui-pocin', 'driving-car', 4, 921, now()),
-  ('-6.364,106.837', 'ui-depok', 'walking', 19, 1356, now()),
-  ('-6.364,106.837', 'ui-depok', 'motorcycle', 4, 1411, now()),
-  ('-6.364,106.837', 'ui-depok', 'driving-car', 5, 1465, now()),
-  ('-6.364,106.837', 'ui-gerbatama', 'walking', 19, 1356, now()),
-  ('-6.364,106.837', 'ui-gerbatama', 'motorcycle', 4, 1411, now()),
-  ('-6.364,106.837', 'ui-gerbatama', 'driving-car', 5, 1465, now()),
-  ('-6.364,106.837', 'ui-kutek', 'walking', 27, 2016, now()),
-  ('-6.364,106.837', 'ui-kutek', 'motorcycle', 6, 2097, now()),
-  ('-6.364,106.837', 'ui-kutek', 'driving-car', 8, 2178, now()),
-  ('-6.364,106.837', 'ui-kukel', 'walking', 25, 1801, now()),
-  ('-6.364,106.837', 'ui-kukel', 'motorcycle', 5, 1873, now()),
-  ('-6.364,106.837', 'ui-kukel', 'driving-car', 7, 1945, now()),
-  ('-6.364,106.837', 'ui-pocin', 'walking', 11, 795, now()),
-  ('-6.364,106.837', 'ui-pocin', 'motorcycle', 3, 827, now()),
-  ('-6.364,106.837', 'ui-pocin', 'driving-car', 3, 859, now()),
-  ('-6.369,106.819', 'ui-depok', 'walking', 21, 1501, now()),
-  ('-6.369,106.819', 'ui-depok', 'motorcycle', 4, 1561, now()),
-  ('-6.369,106.819', 'ui-depok', 'driving-car', 6, 1621, now()),
-  ('-6.369,106.819', 'ui-gerbatama', 'walking', 21, 1501, now()),
-  ('-6.369,106.819', 'ui-gerbatama', 'motorcycle', 4, 1561, now()),
-  ('-6.369,106.819', 'ui-gerbatama', 'driving-car', 6, 1621, now()),
-  ('-6.369,106.819', 'ui-kutek', 'walking', 7, 483, now()),
-  ('-6.369,106.819', 'ui-kutek', 'motorcycle', 2, 502, now()),
-  ('-6.369,106.819', 'ui-kutek', 'driving-car', 2, 521, now()),
-  ('-6.369,106.819', 'ui-kukel', 'walking', 26, 1881, now()),
-  ('-6.369,106.819', 'ui-kukel', 'motorcycle', 5, 1957, now()),
-  ('-6.369,106.819', 'ui-kukel', 'driving-car', 7, 2032, now()),
-  ('-6.369,106.819', 'ui-pocin', 'walking', 24, 1786, now()),
-  ('-6.369,106.819', 'ui-pocin', 'motorcycle', 5, 1858, now()),
-  ('-6.369,106.819', 'ui-pocin', 'driving-car', 7, 1929, now()),
-  ('-6.358,106.822', 'ui-depok', 'walking', 12, 896, now()),
-  ('-6.358,106.822', 'ui-depok', 'motorcycle', 3, 932, now()),
-  ('-6.358,106.822', 'ui-depok', 'driving-car', 4, 968, now()),
-  ('-6.358,106.822', 'ui-gerbatama', 'walking', 12, 896, now()),
-  ('-6.358,106.822', 'ui-gerbatama', 'motorcycle', 3, 932, now()),
-  ('-6.358,106.822', 'ui-gerbatama', 'driving-car', 4, 968, now()),
-  ('-6.358,106.822', 'ui-kutek', 'walking', 19, 1400, now()),
-  ('-6.358,106.822', 'ui-kutek', 'motorcycle', 4, 1456, now()),
-  ('-6.358,106.822', 'ui-kutek', 'driving-car', 6, 1512, now()),
-  ('-6.358,106.822', 'ui-kukel', 'walking', 8, 560, now()),
-  ('-6.358,106.822', 'ui-kukel', 'motorcycle', 2, 582, now()),
-  ('-6.358,106.822', 'ui-kukel', 'driving-car', 3, 605, now()),
-  ('-6.358,106.822', 'ui-pocin', 'walking', 27, 1958, now()),
-  ('-6.358,106.822', 'ui-pocin', 'motorcycle', 6, 2036, now()),
-  ('-6.358,106.822', 'ui-pocin', 'driving-car', 8, 2114, now()),
-  ('-6.365,106.837', 'ui-depok', 'walking', 20, 1471, now()),
-  ('-6.365,106.837', 'ui-depok', 'motorcycle', 4, 1530, now()),
-  ('-6.365,106.837', 'ui-depok', 'driving-car', 6, 1589, now()),
-  ('-6.365,106.837', 'ui-gerbatama', 'walking', 20, 1471, now()),
-  ('-6.365,106.837', 'ui-gerbatama', 'motorcycle', 4, 1530, now()),
-  ('-6.365,106.837', 'ui-gerbatama', 'driving-car', 6, 1589, now()),
-  ('-6.365,106.837', 'ui-kutek', 'walking', 28, 2059, now()),
-  ('-6.365,106.837', 'ui-kutek', 'motorcycle', 6, 2141, now()),
-  ('-6.365,106.837', 'ui-kutek', 'driving-car', 8, 2223, now()),
-  ('-6.365,106.837', 'ui-kukel', 'walking', 26, 1943, now()),
-  ('-6.365,106.837', 'ui-kukel', 'motorcycle', 6, 2020, now()),
-  ('-6.365,106.837', 'ui-kukel', 'driving-car', 7, 2098, now()),
-  ('-6.365,106.837', 'ui-pocin', 'walking', 11, 788, now()),
-  ('-6.365,106.837', 'ui-pocin', 'motorcycle', 3, 819, now()),
-  ('-6.365,106.837', 'ui-pocin', 'driving-car', 3, 851, now()),
-  ('-6.361,106.833', 'ui-depok', 'walking', 12, 895, now()),
-  ('-6.361,106.833', 'ui-depok', 'motorcycle', 3, 931, now()),
-  ('-6.361,106.833', 'ui-depok', 'driving-car', 4, 967, now()),
-  ('-6.361,106.833', 'ui-gerbatama', 'walking', 12, 895, now()),
-  ('-6.361,106.833', 'ui-gerbatama', 'motorcycle', 3, 931, now()),
-  ('-6.361,106.833', 'ui-gerbatama', 'driving-car', 4, 967, now()),
-  ('-6.361,106.833', 'ui-kutek', 'walking', 25, 1841, now()),
-  ('-6.361,106.833', 'ui-kutek', 'motorcycle', 5, 1915, now()),
-  ('-6.361,106.833', 'ui-kutek', 'driving-car', 7, 1989, now()),
-  ('-6.361,106.833', 'ui-kukel', 'walking', 16, 1183, now()),
-  ('-6.361,106.833', 'ui-kukel', 'motorcycle', 4, 1230, now()),
-  ('-6.361,106.833', 'ui-kukel', 'driving-car', 5, 1277, now()),
-  ('-6.361,106.833', 'ui-pocin', 'walking', 14, 1013, now()),
-  ('-6.361,106.833', 'ui-pocin', 'motorcycle', 3, 1053, now()),
-  ('-6.361,106.833', 'ui-pocin', 'driving-car', 4, 1094, now()),
-  ('-6.367,106.835', 'ui-depok', 'walking', 18, 1319, now()),
-  ('-6.367,106.835', 'ui-depok', 'motorcycle', 4, 1372, now()),
-  ('-6.367,106.835', 'ui-depok', 'driving-car', 5, 1424, now()),
-  ('-6.367,106.835', 'ui-gerbatama', 'walking', 18, 1319, now()),
-  ('-6.367,106.835', 'ui-gerbatama', 'motorcycle', 4, 1372, now()),
-  ('-6.367,106.835', 'ui-gerbatama', 'driving-car', 5, 1424, now()),
-  ('-6.367,106.835', 'ui-kutek', 'walking', 23, 1709, now()),
-  ('-6.367,106.835', 'ui-kutek', 'motorcycle', 5, 1777, now()),
-  ('-6.367,106.835', 'ui-kutek', 'driving-car', 7, 1845, now()),
-  ('-6.367,106.835', 'ui-kukel', 'walking', 26, 1889, now()),
-  ('-6.367,106.835', 'ui-kukel', 'motorcycle', 5, 1964, now()),
-  ('-6.367,106.835', 'ui-kukel', 'driving-car', 7, 2040, now()),
-  ('-6.367,106.835', 'ui-pocin', 'walking', 6, 398, now()),
-  ('-6.367,106.835', 'ui-pocin', 'motorcycle', 2, 413, now()),
-  ('-6.367,106.835', 'ui-pocin', 'driving-car', 2, 429, now()),
-  ('-6.356,106.820', 'ui-depok', 'walking', 17, 1229, now()),
-  ('-6.356,106.820', 'ui-depok', 'motorcycle', 4, 1278, now()),
-  ('-6.356,106.820', 'ui-depok', 'driving-car', 5, 1327, now()),
-  ('-6.356,106.820', 'ui-gerbatama', 'walking', 17, 1229, now()),
-  ('-6.356,106.820', 'ui-gerbatama', 'motorcycle', 4, 1278, now()),
-  ('-6.356,106.820', 'ui-gerbatama', 'driving-car', 5, 1327, now()),
-  ('-6.356,106.820', 'ui-kutek', 'walking', 24, 1736, now()),
-  ('-6.356,106.820', 'ui-kutek', 'motorcycle', 5, 1806, now()),
-  ('-6.356,106.820', 'ui-kutek', 'driving-car', 7, 1875, now()),
-  ('-6.356,106.820', 'ui-kukel', 'walking', 10, 743, now()),
-  ('-6.356,106.820', 'ui-kukel', 'motorcycle', 2, 772, now()),
-  ('-6.356,106.820', 'ui-kukel', 'driving-car', 3, 802, now()),
-  ('-6.356,106.820', 'ui-pocin', 'walking', 31, 2304, now()),
-  ('-6.356,106.820', 'ui-pocin', 'motorcycle', 6, 2396, now()),
-  ('-6.356,106.820', 'ui-pocin', 'driving-car', 9, 2488, now()),
-  ('-6.367,106.821', 'ui-depok', 'walking', 14, 1011, now()),
-  ('-6.367,106.821', 'ui-depok', 'motorcycle', 3, 1052, now()),
-  ('-6.367,106.821', 'ui-depok', 'driving-car', 4, 1092, now()),
-  ('-6.367,106.821', 'ui-gerbatama', 'walking', 14, 1011, now()),
-  ('-6.367,106.821', 'ui-gerbatama', 'motorcycle', 3, 1052, now()),
-  ('-6.367,106.821', 'ui-gerbatama', 'driving-car', 4, 1092, now()),
-  ('-6.367,106.821', 'ui-kutek', 'walking', 5, 311, now()),
-  ('-6.367,106.821', 'ui-kutek', 'motorcycle', 1, 324, now()),
-  ('-6.367,106.821', 'ui-kutek', 'driving-car', 2, 336, now()),
-  ('-6.367,106.821', 'ui-kukel', 'walking', 19, 1389, now()),
-  ('-6.367,106.821', 'ui-kukel', 'motorcycle', 4, 1444, now()),
-  ('-6.367,106.821', 'ui-kukel', 'driving-car', 5, 1500, now()),
-  ('-6.367,106.821', 'ui-pocin', 'walking', 20, 1489, now()),
-  ('-6.367,106.821', 'ui-pocin', 'motorcycle', 4, 1548, now()),
-  ('-6.367,106.821', 'ui-pocin', 'driving-car', 6, 1608, now()),
-  ('-6.366,106.820', 'ui-depok', 'walking', 15, 1114, now()),
-  ('-6.366,106.820', 'ui-depok', 'motorcycle', 3, 1158, now()),
-  ('-6.366,106.820', 'ui-depok', 'driving-car', 5, 1203, now()),
-  ('-6.366,106.820', 'ui-gerbatama', 'walking', 15, 1114, now()),
-  ('-6.366,106.820', 'ui-gerbatama', 'motorcycle', 3, 1158, now()),
-  ('-6.366,106.820', 'ui-gerbatama', 'driving-car', 5, 1203, now()),
-  ('-6.366,106.820', 'ui-kutek', 'walking', 8, 538, now()),
-  ('-6.366,106.820', 'ui-kutek', 'motorcycle', 2, 559, now()),
-  ('-6.366,106.820', 'ui-kutek', 'driving-car', 2, 581, now()),
-  ('-6.366,106.820', 'ui-kukel', 'walking', 19, 1380, now()),
-  ('-6.366,106.820', 'ui-kukel', 'motorcycle', 4, 1435, now()),
-  ('-6.366,106.820', 'ui-kukel', 'driving-car', 5, 1490, now()),
-  ('-6.366,106.820', 'ui-pocin', 'walking', 23, 1710, now()),
-  ('-6.366,106.820', 'ui-pocin', 'motorcycle', 5, 1778, now()),
-  ('-6.366,106.820', 'ui-pocin', 'driving-car', 7, 1847, now()),
-  ('-6.369,106.818', 'ui-depok', 'walking', 21, 1541, now()),
-  ('-6.369,106.818', 'ui-depok', 'motorcycle', 5, 1603, now()),
-  ('-6.369,106.818', 'ui-depok', 'driving-car', 6, 1665, now()),
-  ('-6.369,106.818', 'ui-gerbatama', 'walking', 21, 1541, now()),
-  ('-6.369,106.818', 'ui-gerbatama', 'motorcycle', 5, 1603, now()),
-  ('-6.369,106.818', 'ui-gerbatama', 'driving-car', 6, 1665, now()),
-  ('-6.369,106.818', 'ui-kutek', 'walking', 8, 595, now()),
-  ('-6.369,106.818', 'ui-kutek', 'motorcycle', 2, 619, now()),
-  ('-6.369,106.818', 'ui-kutek', 'driving-car', 3, 643, now()),
-  ('-6.369,106.818', 'ui-kukel', 'walking', 25, 1869, now()),
-  ('-6.369,106.818', 'ui-kukel', 'motorcycle', 5, 1944, now()),
-  ('-6.369,106.818', 'ui-kukel', 'driving-car', 7, 2018, now()),
-  ('-6.369,106.818', 'ui-pocin', 'walking', 26, 1909, now()),
-  ('-6.369,106.818', 'ui-pocin', 'motorcycle', 5, 1985, now()),
-  ('-6.369,106.818', 'ui-pocin', 'driving-car', 7, 2061, now()),
-  ('-6.362,106.835', 'ui-depok', 'walking', 15, 1051, now()),
-  ('-6.362,106.835', 'ui-depok', 'motorcycle', 3, 1093, now()),
-  ('-6.362,106.835', 'ui-depok', 'driving-car', 4, 1135, now()),
-  ('-6.362,106.835', 'ui-gerbatama', 'walking', 15, 1051, now()),
-  ('-6.362,106.835', 'ui-gerbatama', 'motorcycle', 3, 1093, now()),
-  ('-6.362,106.835', 'ui-gerbatama', 'driving-car', 4, 1135, now()),
-  ('-6.362,106.835', 'ui-kutek', 'walking', 26, 1928, now()),
-  ('-6.362,106.835', 'ui-kutek', 'motorcycle', 6, 2005, now()),
-  ('-6.362,106.835', 'ui-kutek', 'driving-car', 7, 2082, now()),
-  ('-6.362,106.835', 'ui-kukel', 'walking', 19, 1380, now()),
-  ('-6.362,106.835', 'ui-kukel', 'motorcycle', 4, 1435, now()),
-  ('-6.362,106.835', 'ui-kukel', 'driving-car', 5, 1490, now()),
-  ('-6.362,106.835', 'ui-pocin', 'walking', 13, 959, now()),
-  ('-6.362,106.835', 'ui-pocin', 'motorcycle', 3, 997, now()),
-  ('-6.362,106.835', 'ui-pocin', 'driving-car', 4, 1035, now()),
-  ('-6.357,106.823', 'ui-depok', 'walking', 12, 888, now()),
-  ('-6.357,106.823', 'ui-depok', 'motorcycle', 3, 923, now()),
-  ('-6.357,106.823', 'ui-depok', 'driving-car', 4, 959, now()),
-  ('-6.357,106.823', 'ui-gerbatama', 'walking', 12, 888, now()),
-  ('-6.357,106.823', 'ui-gerbatama', 'motorcycle', 3, 923, now()),
-  ('-6.357,106.823', 'ui-gerbatama', 'driving-car', 4, 959, now()),
-  ('-6.357,106.823', 'ui-kutek', 'walking', 22, 1589, now()),
-  ('-6.357,106.823', 'ui-kutek', 'motorcycle', 5, 1652, now()),
-  ('-6.357,106.823', 'ui-kutek', 'driving-car', 6, 1716, now()),
-  ('-6.357,106.823', 'ui-kukel', 'walking', 5, 363, now()),
-  ('-6.357,106.823', 'ui-kukel', 'motorcycle', 1, 377, now()),
-  ('-6.357,106.823', 'ui-kukel', 'driving-car', 2, 392, now()),
-  ('-6.357,106.823', 'ui-pocin', 'walking', 27, 1970, now()),
-  ('-6.357,106.823', 'ui-pocin', 'motorcycle', 6, 2049, now()),
-  ('-6.357,106.823', 'ui-pocin', 'driving-car', 8, 2128, now()),
-  ('-6.360,106.834', 'ui-depok', 'walking', 13, 961, now()),
-  ('-6.360,106.834', 'ui-depok', 'motorcycle', 3, 1000, now()),
-  ('-6.360,106.834', 'ui-depok', 'driving-car', 4, 1038, now()),
-  ('-6.360,106.834', 'ui-gerbatama', 'walking', 13, 961, now()),
-  ('-6.360,106.834', 'ui-gerbatama', 'motorcycle', 3, 1000, now()),
-  ('-6.360,106.834', 'ui-gerbatama', 'driving-car', 4, 1038, now()),
-  ('-6.360,106.834', 'ui-kutek', 'walking', 26, 1919, now()),
-  ('-6.360,106.834', 'ui-kutek', 'motorcycle', 5, 1996, now()),
-  ('-6.360,106.834', 'ui-kutek', 'driving-car', 7, 2072, now()),
-  ('-6.360,106.834', 'ui-kukel', 'walking', 17, 1215, now()),
-  ('-6.360,106.834', 'ui-kukel', 'motorcycle', 4, 1264, now()),
-  ('-6.360,106.834', 'ui-kukel', 'driving-car', 5, 1312, now()),
-  ('-6.360,106.834', 'ui-pocin', 'walking', 15, 1078, now()),
-  ('-6.360,106.834', 'ui-pocin', 'motorcycle', 3, 1121, now()),
-  ('-6.360,106.834', 'ui-pocin', 'driving-car', 4, 1164, now()),
-  ('-6.358,106.825', 'ui-depok', 'walking', 10, 681, now()),
-  ('-6.358,106.825', 'ui-depok', 'motorcycle', 2, 709, now()),
-  ('-6.358,106.825', 'ui-depok', 'driving-car', 3, 736, now()),
-  ('-6.358,106.825', 'ui-gerbatama', 'walking', 10, 681, now()),
-  ('-6.358,106.825', 'ui-gerbatama', 'motorcycle', 2, 709, now()),
-  ('-6.358,106.825', 'ui-gerbatama', 'driving-car', 3, 736, now()),
-  ('-6.358,106.825', 'ui-kutek', 'walking', 21, 1534, now()),
-  ('-6.358,106.825', 'ui-kutek', 'motorcycle', 4, 1595, now()),
-  ('-6.358,106.825', 'ui-kutek', 'driving-car', 6, 1656, now()),
-  ('-6.358,106.825', 'ui-kukel', 'walking', 2, 116, now()),
-  ('-6.358,106.825', 'ui-kukel', 'motorcycle', 1, 121, now()),
-  ('-6.358,106.825', 'ui-kukel', 'driving-car', 2, 126, now()),
-  ('-6.358,106.825', 'ui-pocin', 'walking', 24, 1755, now()),
-  ('-6.358,106.825', 'ui-pocin', 'motorcycle', 5, 1825, now()),
-  ('-6.358,106.825', 'ui-pocin', 'driving-car', 7, 1895, now()),
-  ('-6.362,106.830', 'ui-depok', 'walking', 7, 471, now()),
-  ('-6.362,106.830', 'ui-depok', 'motorcycle', 2, 490, now()),
-  ('-6.362,106.830', 'ui-depok', 'driving-car', 2, 509, now()),
-  ('-6.362,106.830', 'ui-gerbatama', 'walking', 7, 471, now()),
-  ('-6.362,106.830', 'ui-gerbatama', 'motorcycle', 2, 490, now()),
-  ('-6.362,106.830', 'ui-gerbatama', 'driving-car', 2, 509, now()),
-  ('-6.362,106.830', 'ui-kutek', 'walking', 19, 1416, now()),
-  ('-6.362,106.830', 'ui-kutek', 'motorcycle', 4, 1473, now()),
-  ('-6.362,106.830', 'ui-kutek', 'driving-car', 6, 1530, now()),
-  ('-6.362,106.830', 'ui-kukel', 'walking', 13, 925, now()),
-  ('-6.362,106.830', 'ui-kukel', 'motorcycle', 3, 962, now()),
-  ('-6.362,106.830', 'ui-kukel', 'driving-car', 4, 999, now()),
-  ('-6.362,106.830', 'ui-pocin', 'walking', 12, 860, now()),
-  ('-6.362,106.830', 'ui-pocin', 'motorcycle', 3, 894, now()),
-  ('-6.362,106.830', 'ui-pocin', 'driving-car', 4, 929, now()),
-  ('-6.370,106.819', 'ui-depok', 'walking', 22, 1594, now()),
-  ('-6.370,106.819', 'ui-depok', 'motorcycle', 5, 1658, now()),
-  ('-6.370,106.819', 'ui-depok', 'driving-car', 6, 1721, now()),
-  ('-6.370,106.819', 'ui-gerbatama', 'walking', 22, 1594, now()),
-  ('-6.370,106.819', 'ui-gerbatama', 'motorcycle', 5, 1658, now()),
-  ('-6.370,106.819', 'ui-gerbatama', 'driving-car', 6, 1721, now()),
-  ('-6.370,106.819', 'ui-kutek', 'walking', 8, 555, now()),
-  ('-6.370,106.819', 'ui-kutek', 'motorcycle', 2, 577, now()),
-  ('-6.370,106.819', 'ui-kutek', 'driving-car', 2, 599, now()),
-  ('-6.370,106.819', 'ui-kukel', 'walking', 27, 1976, now()),
-  ('-6.370,106.819', 'ui-kukel', 'motorcycle', 6, 2055, now()),
-  ('-6.370,106.819', 'ui-kukel', 'driving-car', 8, 2134, now()),
-  ('-6.370,106.819', 'ui-pocin', 'walking', 25, 1845, now()),
-  ('-6.370,106.819', 'ui-pocin', 'motorcycle', 5, 1919, now()),
-  ('-6.370,106.819', 'ui-pocin', 'driving-car', 7, 1993, now()),
-  ('-6.369,106.822', 'ui-depok', 'walking', 17, 1265, now()),
-  ('-6.369,106.822', 'ui-depok', 'motorcycle', 4, 1316, now()),
-  ('-6.369,106.822', 'ui-depok', 'driving-car', 5, 1366, now()),
-  ('-6.369,106.822', 'ui-gerbatama', 'walking', 17, 1265, now()),
-  ('-6.369,106.822', 'ui-gerbatama', 'motorcycle', 4, 1316, now()),
-  ('-6.369,106.822', 'ui-gerbatama', 'driving-car', 5, 1366, now()),
-  ('-6.369,106.822', 'ui-kutek', 'walking', 3, 169, now()),
-  ('-6.369,106.822', 'ui-kutek', 'motorcycle', 1, 176, now()),
-  ('-6.369,106.822', 'ui-kutek', 'driving-car', 2, 182, now()),
-  ('-6.369,106.822', 'ui-kukel', 'walking', 24, 1741, now()),
-  ('-6.369,106.822', 'ui-kukel', 'motorcycle', 5, 1811, now()),
-  ('-6.369,106.822', 'ui-kukel', 'driving-car', 7, 1881, now()),
-  ('-6.369,106.822', 'ui-pocin', 'walking', 20, 1430, now()),
-  ('-6.369,106.822', 'ui-pocin', 'motorcycle', 4, 1487, now()),
-  ('-6.369,106.822', 'ui-pocin', 'driving-car', 6, 1544, now()),
-  ('-6.368,106.834', 'ui-depok', 'walking', 17, 1221, now()),
-  ('-6.368,106.834', 'ui-depok', 'motorcycle', 4, 1270, now()),
-  ('-6.368,106.834', 'ui-depok', 'driving-car', 5, 1319, now()),
-  ('-6.368,106.834', 'ui-gerbatama', 'walking', 17, 1221, now()),
-  ('-6.368,106.834', 'ui-gerbatama', 'motorcycle', 4, 1270, now()),
-  ('-6.368,106.834', 'ui-gerbatama', 'driving-car', 5, 1319, now()),
-  ('-6.368,106.834', 'ui-kutek', 'walking', 21, 1549, now()),
-  ('-6.368,106.834', 'ui-kutek', 'motorcycle', 5, 1611, now()),
-  ('-6.368,106.834', 'ui-kutek', 'driving-car', 6, 1673, now()),
-  ('-6.368,106.834', 'ui-kukel', 'walking', 25, 1819, now()),
-  ('-6.368,106.834', 'ui-kukel', 'motorcycle', 5, 1892, now()),
-  ('-6.368,106.834', 'ui-kukel', 'driving-car', 7, 1964, now()),
-  ('-6.368,106.834', 'ui-pocin', 'walking', 4, 236, now()),
-  ('-6.368,106.834', 'ui-pocin', 'motorcycle', 1, 246, now()),
-  ('-6.368,106.834', 'ui-pocin', 'driving-car', 2, 255, now()),
-  ('-6.359,106.835', 'ui-depok', 'walking', 16, 1135, now()),
-  ('-6.359,106.835', 'ui-depok', 'motorcycle', 3, 1180, now()),
-  ('-6.359,106.835', 'ui-depok', 'driving-car', 5, 1226, now()),
-  ('-6.359,106.835', 'ui-gerbatama', 'walking', 16, 1135, now()),
-  ('-6.359,106.835', 'ui-gerbatama', 'motorcycle', 3, 1180, now()),
-  ('-6.359,106.835', 'ui-gerbatama', 'driving-car', 5, 1226, now()),
-  ('-6.359,106.835', 'ui-kutek', 'walking', 29, 2115, now()),
-  ('-6.359,106.835', 'ui-kutek', 'motorcycle', 6, 2200, now()),
-  ('-6.359,106.835', 'ui-kutek', 'driving-car', 8, 2284, now()),
-  ('-6.359,106.835', 'ui-kukel', 'walking', 18, 1314, now()),
-  ('-6.359,106.835', 'ui-kukel', 'motorcycle', 4, 1366, now()),
-  ('-6.359,106.835', 'ui-kukel', 'driving-car', 5, 1419, now()),
-  ('-6.359,106.835', 'ui-pocin', 'walking', 17, 1250, now()),
-  ('-6.359,106.835', 'ui-pocin', 'motorcycle', 4, 1300, now()),
-  ('-6.359,106.835', 'ui-pocin', 'driving-car', 5, 1350, now()),
-  ('-0.926,100.443', 'unand-limau-manis', 'walking', 38, 2836, now()),
-  ('-0.926,100.443', 'unand-limau-manis', 'motorcycle', 8, 2950, now()),
-  ('-0.926,100.443', 'unand-limau-manis', 'driving-car', 11, 3063, now()),
-  ('-0.926,100.443', 'unand-gerbang-utama', 'walking', 38, 2836, now()),
-  ('-0.926,100.443', 'unand-gerbang-utama', 'motorcycle', 8, 2950, now()),
-  ('-0.926,100.443', 'unand-gerbang-utama', 'driving-car', 11, 3063, now()),
-  ('-0.926,100.443', 'unand-pasar-baru', 'walking', 16, 1185, now()),
-  ('-0.926,100.443', 'unand-pasar-baru', 'motorcycle', 4, 1232, now()),
-  ('-0.926,100.443', 'unand-pasar-baru', 'driving-car', 5, 1280, now()),
-  ('-0.926,100.443', 'unand-pintu-pauh', 'walking', 15, 1058, now()),
-  ('-0.926,100.443', 'unand-pintu-pauh', 'motorcycle', 3, 1100, now()),
-  ('-0.926,100.443', 'unand-pintu-pauh', 'driving-car', 4, 1142, now()),
-  ('-0.915,100.461', 'unand-limau-manis', 'walking', 3, 175, now()),
-  ('-0.915,100.461', 'unand-limau-manis', 'motorcycle', 1, 182, now()),
-  ('-0.915,100.461', 'unand-limau-manis', 'driving-car', 2, 189, now()),
-  ('-0.915,100.461', 'unand-gerbang-utama', 'walking', 3, 175, now()),
-  ('-0.915,100.461', 'unand-gerbang-utama', 'motorcycle', 1, 182, now()),
-  ('-0.915,100.461', 'unand-gerbang-utama', 'driving-car', 2, 189, now()),
-  ('-0.915,100.461', 'unand-pasar-baru', 'walking', 50, 3749, now()),
-  ('-0.915,100.461', 'unand-pasar-baru', 'motorcycle', 10, 3899, now()),
-  ('-0.915,100.461', 'unand-pasar-baru', 'driving-car', 14, 4049, now()),
-  ('-0.915,100.461', 'unand-pintu-pauh', 'walking', 36, 2648, now()),
-  ('-0.915,100.461', 'unand-pintu-pauh', 'motorcycle', 7, 2753, now()),
-  ('-0.915,100.461', 'unand-pintu-pauh', 'driving-car', 10, 2859, now()),
-  ('-0.915,100.464', 'unand-limau-manis', 'walking', 8, 550, now()),
-  ('-0.915,100.464', 'unand-limau-manis', 'motorcycle', 2, 572, now()),
-  ('-0.915,100.464', 'unand-limau-manis', 'driving-car', 2, 594, now()),
-  ('-0.915,100.464', 'unand-gerbang-utama', 'walking', 8, 550, now()),
-  ('-0.915,100.464', 'unand-gerbang-utama', 'motorcycle', 2, 572, now()),
-  ('-0.915,100.464', 'unand-gerbang-utama', 'driving-car', 2, 594, now()),
-  ('-0.915,100.464', 'unand-pasar-baru', 'walking', 57, 4216, now()),
-  ('-0.915,100.464', 'unand-pasar-baru', 'motorcycle', 11, 4385, now()),
-  ('-0.915,100.464', 'unand-pasar-baru', 'driving-car', 16, 4554, now()),
-  ('-0.915,100.464', 'unand-pintu-pauh', 'walking', 42, 3115, now()),
-  ('-0.915,100.464', 'unand-pintu-pauh', 'motorcycle', 9, 3240, now()),
-  ('-0.915,100.464', 'unand-pintu-pauh', 'driving-car', 12, 3364, now()),
-  ('-0.924,100.446', 'unand-limau-manis', 'walking', 32, 2346, now()),
-  ('-0.924,100.446', 'unand-limau-manis', 'motorcycle', 7, 2440, now()),
-  ('-0.924,100.446', 'unand-limau-manis', 'driving-car', 9, 2534, now()),
-  ('-0.924,100.446', 'unand-gerbang-utama', 'walking', 32, 2346, now()),
-  ('-0.924,100.446', 'unand-gerbang-utama', 'motorcycle', 7, 2440, now()),
-  ('-0.924,100.446', 'unand-gerbang-utama', 'driving-car', 9, 2534, now()),
-  ('-0.924,100.446', 'unand-pasar-baru', 'walking', 22, 1585, now()),
-  ('-0.924,100.446', 'unand-pasar-baru', 'motorcycle', 5, 1648, now()),
-  ('-0.924,100.446', 'unand-pasar-baru', 'driving-car', 6, 1712, now()),
-  ('-0.924,100.446', 'unand-pintu-pauh', 'walking', 14, 1028, now()),
-  ('-0.924,100.446', 'unand-pintu-pauh', 'motorcycle', 3, 1069, now()),
-  ('-0.924,100.446', 'unand-pintu-pauh', 'driving-car', 4, 1110, now()),
-  ('-0.923,100.446', 'unand-limau-manis', 'walking', 32, 2380, now()),
-  ('-0.923,100.446', 'unand-limau-manis', 'motorcycle', 7, 2475, now()),
-  ('-0.923,100.446', 'unand-limau-manis', 'driving-car', 9, 2570, now()),
-  ('-0.923,100.446', 'unand-gerbang-utama', 'walking', 32, 2380, now()),
-  ('-0.923,100.446', 'unand-gerbang-utama', 'motorcycle', 7, 2475, now()),
-  ('-0.923,100.446', 'unand-gerbang-utama', 'driving-car', 9, 2570, now()),
-  ('-0.923,100.446', 'unand-pasar-baru', 'walking', 20, 1491, now()),
-  ('-0.923,100.446', 'unand-pasar-baru', 'motorcycle', 4, 1551, now()),
-  ('-0.923,100.446', 'unand-pasar-baru', 'driving-car', 6, 1611, now()),
-  ('-0.923,100.446', 'unand-pintu-pauh', 'walking', 13, 916, now()),
-  ('-0.923,100.446', 'unand-pintu-pauh', 'motorcycle', 3, 953, now()),
-  ('-0.923,100.446', 'unand-pintu-pauh', 'driving-car', 4, 990, now()),
-  ('-0.924,100.443', 'unand-limau-manis', 'walking', 38, 2793, now()),
-  ('-0.924,100.443', 'unand-limau-manis', 'motorcycle', 8, 2904, now()),
-  ('-0.924,100.443', 'unand-limau-manis', 'driving-car', 11, 3016, now()),
-  ('-0.924,100.443', 'unand-gerbang-utama', 'walking', 38, 2793, now()),
-  ('-0.924,100.443', 'unand-gerbang-utama', 'motorcycle', 8, 2904, now()),
-  ('-0.924,100.443', 'unand-gerbang-utama', 'driving-car', 11, 3016, now()),
-  ('-0.924,100.443', 'unand-pasar-baru', 'walking', 15, 1056, now()),
-  ('-0.924,100.443', 'unand-pasar-baru', 'motorcycle', 3, 1099, now()),
-  ('-0.924,100.443', 'unand-pasar-baru', 'driving-car', 4, 1141, now()),
-  ('-0.924,100.443', 'unand-pintu-pauh', 'walking', 11, 824, now()),
-  ('-0.924,100.443', 'unand-pintu-pauh', 'motorcycle', 3, 857, now()),
-  ('-0.924,100.443', 'unand-pintu-pauh', 'driving-car', 3, 890, now()),
-  ('-0.925,100.449', 'unand-limau-manis', 'walking', 29, 2104, now()),
-  ('-0.925,100.449', 'unand-limau-manis', 'motorcycle', 6, 2188, now()),
-  ('-0.925,100.449', 'unand-limau-manis', 'driving-car', 8, 2272, now()),
-  ('-0.925,100.449', 'unand-gerbang-utama', 'walking', 29, 2104, now()),
-  ('-0.925,100.449', 'unand-gerbang-utama', 'motorcycle', 6, 2188, now()),
-  ('-0.925,100.449', 'unand-gerbang-utama', 'driving-car', 8, 2272, now()),
-  ('-0.925,100.449', 'unand-pasar-baru', 'walking', 27, 2008, now()),
-  ('-0.925,100.449', 'unand-pasar-baru', 'motorcycle', 6, 2088, now()),
-  ('-0.925,100.449', 'unand-pasar-baru', 'driving-car', 8, 2168, now()),
-  ('-0.925,100.449', 'unand-pintu-pauh', 'walking', 19, 1394, now()),
-  ('-0.925,100.449', 'unand-pintu-pauh', 'motorcycle', 4, 1450, now()),
-  ('-0.925,100.449', 'unand-pintu-pauh', 'driving-car', 6, 1505, now()),
-  ('-0.918,100.456', 'unand-limau-manis', 'walking', 10, 701, now()),
-  ('-0.918,100.456', 'unand-limau-manis', 'motorcycle', 2, 729, now()),
-  ('-0.918,100.456', 'unand-limau-manis', 'driving-car', 3, 757, now()),
-  ('-0.918,100.456', 'unand-gerbang-utama', 'walking', 10, 701, now()),
-  ('-0.918,100.456', 'unand-gerbang-utama', 'motorcycle', 2, 729, now()),
-  ('-0.918,100.456', 'unand-gerbang-utama', 'driving-car', 3, 757, now()),
-  ('-0.918,100.456', 'unand-pasar-baru', 'walking', 41, 3071, now()),
-  ('-0.918,100.456', 'unand-pasar-baru', 'motorcycle', 8, 3194, now()),
-  ('-0.918,100.456', 'unand-pasar-baru', 'driving-car', 12, 3317, now()),
-  ('-0.918,100.456', 'unand-pintu-pauh', 'walking', 27, 2009, now()),
-  ('-0.918,100.456', 'unand-pintu-pauh', 'motorcycle', 6, 2089, now()),
-  ('-0.918,100.456', 'unand-pintu-pauh', 'driving-car', 8, 2169, now()),
-  ('-0.925,100.446', 'unand-limau-manis', 'walking', 33, 2468, now()),
-  ('-0.925,100.446', 'unand-limau-manis', 'motorcycle', 7, 2566, now()),
-  ('-0.925,100.446', 'unand-limau-manis', 'driving-car', 9, 2665, now()),
-  ('-0.925,100.446', 'unand-gerbang-utama', 'walking', 33, 2468, now()),
-  ('-0.925,100.446', 'unand-gerbang-utama', 'motorcycle', 7, 2566, now()),
-  ('-0.925,100.446', 'unand-gerbang-utama', 'driving-car', 9, 2665, now()),
-  ('-0.925,100.446', 'unand-pasar-baru', 'walking', 21, 1528, now()),
-  ('-0.925,100.446', 'unand-pasar-baru', 'motorcycle', 4, 1589, now()),
-  ('-0.925,100.446', 'unand-pasar-baru', 'driving-car', 6, 1650, now()),
-  ('-0.925,100.446', 'unand-pintu-pauh', 'walking', 15, 1081, now()),
-  ('-0.925,100.446', 'unand-pintu-pauh', 'motorcycle', 3, 1125, now()),
-  ('-0.925,100.446', 'unand-pintu-pauh', 'driving-car', 4, 1168, now()),
-  ('-0.927,100.448', 'unand-limau-manis', 'walking', 33, 2454, now()),
-  ('-0.927,100.448', 'unand-limau-manis', 'motorcycle', 7, 2552, now()),
-  ('-0.927,100.448', 'unand-limau-manis', 'driving-car', 9, 2650, now()),
-  ('-0.927,100.448', 'unand-gerbang-utama', 'walking', 33, 2454, now()),
-  ('-0.927,100.448', 'unand-gerbang-utama', 'motorcycle', 7, 2552, now()),
-  ('-0.927,100.448', 'unand-gerbang-utama', 'driving-car', 9, 2650, now()),
-  ('-0.927,100.448', 'unand-pasar-baru', 'walking', 25, 1873, now()),
-  ('-0.927,100.448', 'unand-pasar-baru', 'motorcycle', 5, 1947, now()),
-  ('-0.927,100.448', 'unand-pasar-baru', 'driving-car', 7, 2022, now()),
-  ('-0.927,100.448', 'unand-pintu-pauh', 'walking', 20, 1489, now()),
-  ('-0.927,100.448', 'unand-pintu-pauh', 'motorcycle', 4, 1548, now()),
-  ('-0.927,100.448', 'unand-pintu-pauh', 'driving-car', 6, 1608, now()),
-  ('-0.924,100.441', 'unand-limau-manis', 'walking', 40, 2929, now()),
-  ('-0.924,100.441', 'unand-limau-manis', 'motorcycle', 8, 3046, now()),
-  ('-0.924,100.441', 'unand-limau-manis', 'driving-car', 11, 3163, now()),
-  ('-0.924,100.441', 'unand-gerbang-utama', 'walking', 40, 2929, now()),
-  ('-0.924,100.441', 'unand-gerbang-utama', 'motorcycle', 8, 3046, now()),
-  ('-0.924,100.441', 'unand-gerbang-utama', 'driving-car', 11, 3163, now()),
-  ('-0.924,100.441', 'unand-pasar-baru', 'walking', 12, 896, now()),
-  ('-0.924,100.441', 'unand-pasar-baru', 'motorcycle', 3, 932, now()),
-  ('-0.924,100.441', 'unand-pasar-baru', 'driving-car', 4, 968, now()),
-  ('-0.924,100.441', 'unand-pintu-pauh', 'walking', 11, 814, now()),
-  ('-0.924,100.441', 'unand-pintu-pauh', 'motorcycle', 3, 846, now()),
-  ('-0.924,100.441', 'unand-pintu-pauh', 'driving-car', 3, 879, now()),
-  ('-0.926,100.449', 'unand-limau-manis', 'walking', 31, 2288, now()),
-  ('-0.926,100.449', 'unand-limau-manis', 'motorcycle', 6, 2379, now()),
-  ('-0.926,100.449', 'unand-limau-manis', 'driving-car', 9, 2471, now()),
-  ('-0.926,100.449', 'unand-gerbang-utama', 'walking', 31, 2288, now()),
-  ('-0.926,100.449', 'unand-gerbang-utama', 'motorcycle', 6, 2379, now()),
-  ('-0.926,100.449', 'unand-gerbang-utama', 'driving-car', 9, 2471, now()),
-  ('-0.926,100.449', 'unand-pasar-baru', 'walking', 26, 1950, now()),
-  ('-0.926,100.449', 'unand-pasar-baru', 'motorcycle', 6, 2028, now()),
-  ('-0.926,100.449', 'unand-pasar-baru', 'driving-car', 8, 2106, now()),
-  ('-0.926,100.449', 'unand-pintu-pauh', 'walking', 20, 1456, now()),
-  ('-0.926,100.449', 'unand-pintu-pauh', 'motorcycle', 4, 1515, now()),
-  ('-0.926,100.449', 'unand-pintu-pauh', 'driving-car', 6, 1573, now()),
-  ('-0.922,100.444', 'unand-limau-manis', 'walking', 33, 2465, now()),
-  ('-0.922,100.444', 'unand-limau-manis', 'motorcycle', 7, 2564, now()),
-  ('-0.922,100.444', 'unand-limau-manis', 'driving-car', 9, 2662, now()),
-  ('-0.922,100.444', 'unand-gerbang-utama', 'walking', 33, 2465, now()),
-  ('-0.922,100.444', 'unand-gerbang-utama', 'motorcycle', 7, 2564, now()),
-  ('-0.922,100.444', 'unand-gerbang-utama', 'driving-car', 9, 2662, now()),
-  ('-0.922,100.444', 'unand-pasar-baru', 'walking', 18, 1316, now()),
-  ('-0.922,100.444', 'unand-pasar-baru', 'motorcycle', 4, 1369, now()),
-  ('-0.922,100.444', 'unand-pasar-baru', 'driving-car', 5, 1422, now()),
-  ('-0.922,100.444', 'unand-pintu-pauh', 'walking', 10, 710, now()),
-  ('-0.922,100.444', 'unand-pintu-pauh', 'motorcycle', 2, 738, now()),
-  ('-0.922,100.444', 'unand-pintu-pauh', 'driving-car', 3, 767, now()),
-  ('-0.922,100.450', 'unand-limau-manis', 'walking', 24, 1794, now()),
-  ('-0.922,100.450', 'unand-limau-manis', 'motorcycle', 5, 1866, now()),
-  ('-0.922,100.450', 'unand-limau-manis', 'driving-car', 7, 1937, now()),
-  ('-0.922,100.450', 'unand-gerbang-utama', 'walking', 24, 1794, now()),
-  ('-0.922,100.450', 'unand-gerbang-utama', 'motorcycle', 5, 1866, now()),
-  ('-0.922,100.450', 'unand-gerbang-utama', 'driving-car', 7, 1937, now()),
-  ('-0.922,100.450', 'unand-pasar-baru', 'walking', 28, 2071, now()),
-  ('-0.922,100.450', 'unand-pasar-baru', 'motorcycle', 6, 2154, now()),
-  ('-0.922,100.450', 'unand-pasar-baru', 'driving-car', 8, 2237, now()),
-  ('-0.922,100.450', 'unand-pintu-pauh', 'walking', 17, 1229, now()),
-  ('-0.922,100.450', 'unand-pintu-pauh', 'motorcycle', 4, 1278, now()),
-  ('-0.922,100.450', 'unand-pintu-pauh', 'driving-car', 5, 1327, now()),
-  ('-0.912,100.464', 'unand-limau-manis', 'walking', 8, 590, now()),
-  ('-0.912,100.464', 'unand-limau-manis', 'motorcycle', 2, 614, now()),
-  ('-0.912,100.464', 'unand-limau-manis', 'driving-car', 3, 637, now()),
-  ('-0.912,100.464', 'unand-gerbang-utama', 'walking', 8, 590, now()),
-  ('-0.912,100.464', 'unand-gerbang-utama', 'motorcycle', 2, 614, now()),
-  ('-0.912,100.464', 'unand-gerbang-utama', 'driving-car', 3, 637, now()),
-  ('-0.912,100.464', 'unand-pasar-baru', 'walking', 58, 4284, now()),
-  ('-0.912,100.464', 'unand-pasar-baru', 'motorcycle', 12, 4455, now()),
-  ('-0.912,100.464', 'unand-pasar-baru', 'driving-car', 16, 4626, now()),
-  ('-0.912,100.464', 'unand-pintu-pauh', 'walking', 42, 3144, now()),
-  ('-0.912,100.464', 'unand-pintu-pauh', 'motorcycle', 9, 3270, now()),
-  ('-0.912,100.464', 'unand-pintu-pauh', 'driving-car', 12, 3395, now()),
-  ('-0.913,100.460', 'unand-limau-manis', 'walking', 3, 191, now()),
-  ('-0.913,100.460', 'unand-limau-manis', 'motorcycle', 1, 199, now()),
-  ('-0.913,100.460', 'unand-limau-manis', 'driving-car', 2, 207, now()),
-  ('-0.913,100.460', 'unand-gerbang-utama', 'walking', 3, 191, now()),
-  ('-0.913,100.460', 'unand-gerbang-utama', 'motorcycle', 1, 199, now()),
-  ('-0.913,100.460', 'unand-gerbang-utama', 'driving-car', 2, 207, now()),
-  ('-0.913,100.460', 'unand-pasar-baru', 'walking', 50, 3690, now()),
-  ('-0.913,100.460', 'unand-pasar-baru', 'motorcycle', 10, 3838, now()),
-  ('-0.913,100.460', 'unand-pasar-baru', 'driving-car', 14, 3985, now()),
-  ('-0.913,100.460', 'unand-pintu-pauh', 'walking', 34, 2544, now()),
-  ('-0.913,100.460', 'unand-pintu-pauh', 'motorcycle', 7, 2646, now()),
-  ('-0.913,100.460', 'unand-pintu-pauh', 'driving-car', 10, 2747, now()),
-  ('-0.927,100.447', 'unand-limau-manis', 'walking', 34, 2486, now()),
-  ('-0.927,100.447', 'unand-limau-manis', 'motorcycle', 7, 2586, now()),
-  ('-0.927,100.447', 'unand-limau-manis', 'driving-car', 9, 2685, now()),
-  ('-0.927,100.447', 'unand-gerbang-utama', 'walking', 34, 2486, now()),
-  ('-0.927,100.447', 'unand-gerbang-utama', 'motorcycle', 7, 2586, now()),
-  ('-0.927,100.447', 'unand-gerbang-utama', 'driving-car', 9, 2685, now()),
-  ('-0.927,100.447', 'unand-pasar-baru', 'walking', 24, 1776, now()),
-  ('-0.927,100.447', 'unand-pasar-baru', 'motorcycle', 5, 1847, now()),
-  ('-0.927,100.447', 'unand-pasar-baru', 'driving-car', 7, 1918, now()),
-  ('-0.927,100.447', 'unand-pintu-pauh', 'walking', 19, 1405, now()),
-  ('-0.927,100.447', 'unand-pintu-pauh', 'motorcycle', 4, 1461, now()),
-  ('-0.927,100.447', 'unand-pintu-pauh', 'driving-car', 6, 1517, now()),
-  ('-0.911,100.462', 'unand-limau-manis', 'walking', 8, 574, now()),
-  ('-0.911,100.462', 'unand-limau-manis', 'motorcycle', 2, 597, now()),
-  ('-0.911,100.462', 'unand-limau-manis', 'driving-car', 3, 620, now()),
-  ('-0.911,100.462', 'unand-gerbang-utama', 'walking', 8, 574, now()),
-  ('-0.911,100.462', 'unand-gerbang-utama', 'motorcycle', 2, 597, now()),
-  ('-0.911,100.462', 'unand-gerbang-utama', 'driving-car', 3, 620, now()),
-  ('-0.911,100.462', 'unand-pasar-baru', 'walking', 56, 4161, now()),
-  ('-0.911,100.462', 'unand-pasar-baru', 'motorcycle', 11, 4328, now()),
-  ('-0.911,100.462', 'unand-pasar-baru', 'driving-car', 15, 4494, now()),
-  ('-0.911,100.462', 'unand-pintu-pauh', 'walking', 40, 2999, now()),
-  ('-0.911,100.462', 'unand-pintu-pauh', 'motorcycle', 8, 3119, now()),
-  ('-0.911,100.462', 'unand-pintu-pauh', 'driving-car', 11, 3239, now()),
-  ('-0.926,100.448', 'unand-limau-manis', 'walking', 32, 2344, now()),
-  ('-0.926,100.448', 'unand-limau-manis', 'motorcycle', 7, 2438, now()),
-  ('-0.926,100.448', 'unand-limau-manis', 'driving-car', 9, 2531, now()),
-  ('-0.926,100.448', 'unand-gerbang-utama', 'walking', 32, 2344, now()),
-  ('-0.926,100.448', 'unand-gerbang-utama', 'motorcycle', 7, 2438, now()),
-  ('-0.926,100.448', 'unand-gerbang-utama', 'driving-car', 9, 2531, now()),
-  ('-0.926,100.448', 'unand-pasar-baru', 'walking', 25, 1873, now()),
-  ('-0.926,100.448', 'unand-pasar-baru', 'motorcycle', 5, 1947, now()),
-  ('-0.926,100.448', 'unand-pasar-baru', 'driving-car', 7, 2022, now()),
-  ('-0.926,100.448', 'unand-pintu-pauh', 'walking', 19, 1408, now()),
-  ('-0.926,100.448', 'unand-pintu-pauh', 'motorcycle', 4, 1464, now()),
-  ('-0.926,100.448', 'unand-pintu-pauh', 'driving-car', 6, 1520, now()),
-  ('-0.927,100.446', 'unand-limau-manis', 'walking', 36, 2683, now()),
-  ('-0.927,100.446', 'unand-limau-manis', 'motorcycle', 7, 2790, now()),
-  ('-0.927,100.446', 'unand-limau-manis', 'driving-car', 10, 2897, now()),
-  ('-0.927,100.446', 'unand-gerbang-utama', 'walking', 36, 2683, now()),
-  ('-0.927,100.446', 'unand-gerbang-utama', 'motorcycle', 7, 2790, now()),
-  ('-0.927,100.446', 'unand-gerbang-utama', 'driving-car', 10, 2897, now()),
-  ('-0.927,100.446', 'unand-pasar-baru', 'walking', 22, 1625, now()),
-  ('-0.927,100.446', 'unand-pasar-baru', 'motorcycle', 5, 1690, now()),
-  ('-0.927,100.446', 'unand-pasar-baru', 'driving-car', 6, 1755, now()),
-  ('-0.927,100.446', 'unand-pintu-pauh', 'walking', 19, 1395, now()),
-  ('-0.927,100.446', 'unand-pintu-pauh', 'motorcycle', 4, 1451, now()),
-  ('-0.927,100.446', 'unand-pintu-pauh', 'driving-car', 6, 1507, now()),
-  ('-0.923,100.449', 'unand-limau-manis', 'walking', 27, 2023, now()),
-  ('-0.923,100.449', 'unand-limau-manis', 'motorcycle', 6, 2103, now()),
-  ('-0.923,100.449', 'unand-limau-manis', 'driving-car', 8, 2184, now()),
-  ('-0.923,100.449', 'unand-gerbang-utama', 'walking', 27, 2023, now()),
-  ('-0.923,100.449', 'unand-gerbang-utama', 'motorcycle', 6, 2103, now()),
-  ('-0.923,100.449', 'unand-gerbang-utama', 'driving-car', 8, 2184, now()),
-  ('-0.923,100.449', 'unand-pasar-baru', 'walking', 26, 1894, now()),
-  ('-0.923,100.449', 'unand-pasar-baru', 'motorcycle', 5, 1970, now()),
-  ('-0.923,100.449', 'unand-pasar-baru', 'driving-car', 7, 2045, now()),
-  ('-0.923,100.449', 'unand-pintu-pauh', 'walking', 16, 1165, now()),
-  ('-0.923,100.449', 'unand-pintu-pauh', 'motorcycle', 4, 1212, now()),
-  ('-0.923,100.449', 'unand-pintu-pauh', 'driving-car', 5, 1258, now()),
-  ('-0.924,100.445', 'unand-limau-manis', 'walking', 34, 2528, now()),
-  ('-0.924,100.445', 'unand-limau-manis', 'motorcycle', 7, 2629, now()),
-  ('-0.924,100.445', 'unand-limau-manis', 'driving-car', 10, 2730, now()),
-  ('-0.924,100.445', 'unand-gerbang-utama', 'walking', 34, 2528, now()),
-  ('-0.924,100.445', 'unand-gerbang-utama', 'motorcycle', 7, 2629, now()),
-  ('-0.924,100.445', 'unand-gerbang-utama', 'driving-car', 10, 2730, now()),
-  ('-0.924,100.445', 'unand-pasar-baru', 'walking', 19, 1368, now()),
-  ('-0.924,100.445', 'unand-pasar-baru', 'motorcycle', 4, 1422, now()),
-  ('-0.924,100.445', 'unand-pasar-baru', 'driving-car', 5, 1477, now()),
-  ('-0.924,100.445', 'unand-pintu-pauh', 'walking', 13, 914, now()),
-  ('-0.924,100.445', 'unand-pintu-pauh', 'motorcycle', 3, 950, now()),
-  ('-0.924,100.445', 'unand-pintu-pauh', 'driving-car', 4, 987, now()),
-  ('-0.916,100.456', 'unand-limau-manis', 'walking', 9, 630, now()),
-  ('-0.916,100.456', 'unand-limau-manis', 'motorcycle', 2, 655, now()),
-  ('-0.916,100.456', 'unand-limau-manis', 'driving-car', 3, 680, now()),
-  ('-0.916,100.456', 'unand-gerbang-utama', 'walking', 9, 630, now()),
-  ('-0.916,100.456', 'unand-gerbang-utama', 'motorcycle', 2, 655, now()),
-  ('-0.916,100.456', 'unand-gerbang-utama', 'driving-car', 3, 680, now()),
-  ('-0.916,100.456', 'unand-pasar-baru', 'walking', 42, 3083, now()),
-  ('-0.916,100.456', 'unand-pasar-baru', 'motorcycle', 9, 3206, now()),
-  ('-0.916,100.456', 'unand-pasar-baru', 'driving-car', 12, 3329, now()),
-  ('-0.916,100.456', 'unand-pintu-pauh', 'walking', 27, 1980, now()),
-  ('-0.916,100.456', 'unand-pintu-pauh', 'motorcycle', 6, 2059, now()),
-  ('-0.916,100.456', 'unand-pintu-pauh', 'driving-car', 8, 2138, now())
+  ('-5.361,105.328', 'itera-lampung', 'walking', 26, 1905, now()),
+  ('-5.361,105.328', 'itera-lampung', 'motorcycle', 5, 1981, now()),
+  ('-5.361,105.328', 'itera-lampung', 'driving-car', 7, 2057, now()),
+  ('-5.361,105.328', 'itera-gerbang-utama', 'walking', 26, 1905, now()),
+  ('-5.361,105.328', 'itera-gerbang-utama', 'motorcycle', 5, 1981, now()),
+  ('-5.361,105.328', 'itera-gerbang-utama', 'driving-car', 7, 2057, now()),
+  ('-5.361,105.328', 'itera-simpang-wayhuwi', 'walking', 40, 2938, now()),
+  ('-5.361,105.328', 'itera-simpang-wayhuwi', 'motorcycle', 8, 3055, now()),
+  ('-5.361,105.328', 'itera-simpang-wayhuwi', 'driving-car', 11, 3173, now()),
+  ('-5.361,105.328', 'itera-akses-sabahbalau', 'walking', 19, 1356, now()),
+  ('-5.361,105.328', 'itera-akses-sabahbalau', 'motorcycle', 4, 1411, now()),
+  ('-5.361,105.328', 'itera-akses-sabahbalau', 'driving-car', 5, 1465, now()),
+  ('-5.361,105.300', 'itera-lampung', 'walking', 28, 2073, now()),
+  ('-5.361,105.300', 'itera-lampung', 'motorcycle', 6, 2155, now()),
+  ('-5.361,105.300', 'itera-lampung', 'driving-car', 8, 2238, now()),
+  ('-5.361,105.300', 'itera-gerbang-utama', 'walking', 28, 2073, now()),
+  ('-5.361,105.300', 'itera-gerbang-utama', 'motorcycle', 6, 2155, now()),
+  ('-5.361,105.300', 'itera-gerbang-utama', 'driving-car', 8, 2238, now()),
+  ('-5.361,105.300', 'itera-simpang-wayhuwi', 'walking', 19, 1370, now()),
+  ('-5.361,105.300', 'itera-simpang-wayhuwi', 'motorcycle', 4, 1425, now()),
+  ('-5.361,105.300', 'itera-simpang-wayhuwi', 'driving-car', 5, 1480, now()),
+  ('-5.361,105.300', 'itera-akses-sabahbalau', 'walking', 41, 3068, now()),
+  ('-5.361,105.300', 'itera-akses-sabahbalau', 'motorcycle', 8, 3190, now()),
+  ('-5.361,105.300', 'itera-akses-sabahbalau', 'driving-car', 12, 3313, now()),
+  ('-5.369,105.294', 'itera-lampung', 'walking', 43, 3190, now()),
+  ('-5.369,105.294', 'itera-lampung', 'motorcycle', 9, 3318, now()),
+  ('-5.369,105.294', 'itera-lampung', 'driving-car', 12, 3445, now()),
+  ('-5.369,105.294', 'itera-gerbang-utama', 'walking', 43, 3190, now()),
+  ('-5.369,105.294', 'itera-gerbang-utama', 'motorcycle', 9, 3318, now()),
+  ('-5.369,105.294', 'itera-gerbang-utama', 'driving-car', 12, 3445, now()),
+  ('-5.369,105.294', 'itera-simpang-wayhuwi', 'walking', 37, 2713, now()),
+  ('-5.369,105.294', 'itera-simpang-wayhuwi', 'motorcycle', 8, 2821, now()),
+  ('-5.369,105.294', 'itera-simpang-wayhuwi', 'driving-car', 10, 2930, now()),
+  ('-5.369,105.294', 'itera-akses-sabahbalau', 'walking', 50, 3688, now()),
+  ('-5.369,105.294', 'itera-akses-sabahbalau', 'motorcycle', 10, 3835, now()),
+  ('-5.369,105.294', 'itera-akses-sabahbalau', 'driving-car', 14, 3983, now()),
+  ('-5.354,105.315', 'itera-lampung', 'walking', 8, 573, now()),
+  ('-5.354,105.315', 'itera-lampung', 'motorcycle', 2, 595, now()),
+  ('-5.354,105.315', 'itera-lampung', 'driving-car', 3, 618, now()),
+  ('-5.354,105.315', 'itera-gerbang-utama', 'walking', 8, 573, now()),
+  ('-5.354,105.315', 'itera-gerbang-utama', 'motorcycle', 2, 595, now()),
+  ('-5.354,105.315', 'itera-gerbang-utama', 'driving-car', 3, 618, now()),
+  ('-5.354,105.315', 'itera-simpang-wayhuwi', 'walking', 13, 955, now()),
+  ('-5.354,105.315', 'itera-simpang-wayhuwi', 'motorcycle', 3, 993, now()),
+  ('-5.354,105.315', 'itera-simpang-wayhuwi', 'driving-car', 4, 1031, now()),
+  ('-5.354,105.315', 'itera-akses-sabahbalau', 'walking', 28, 2088, now()),
+  ('-5.354,105.315', 'itera-akses-sabahbalau', 'motorcycle', 6, 2171, now()),
+  ('-5.354,105.315', 'itera-akses-sabahbalau', 'driving-car', 8, 2255, now()),
+  ('-5.355,105.315', 'itera-lampung', 'walking', 7, 505, now()),
+  ('-5.355,105.315', 'itera-lampung', 'motorcycle', 2, 525, now()),
+  ('-5.355,105.315', 'itera-lampung', 'driving-car', 2, 545, now()),
+  ('-5.355,105.315', 'itera-gerbang-utama', 'walking', 7, 505, now()),
+  ('-5.355,105.315', 'itera-gerbang-utama', 'motorcycle', 2, 525, now()),
+  ('-5.355,105.315', 'itera-gerbang-utama', 'driving-car', 2, 545, now()),
+  ('-5.355,105.315', 'itera-simpang-wayhuwi', 'walking', 13, 956, now()),
+  ('-5.355,105.315', 'itera-simpang-wayhuwi', 'motorcycle', 3, 995, now()),
+  ('-5.355,105.315', 'itera-simpang-wayhuwi', 'driving-car', 4, 1033, now()),
+  ('-5.355,105.315', 'itera-akses-sabahbalau', 'walking', 27, 2023, now()),
+  ('-5.355,105.315', 'itera-akses-sabahbalau', 'motorcycle', 6, 2103, now()),
+  ('-5.355,105.315', 'itera-akses-sabahbalau', 'driving-car', 8, 2184, now()),
+  ('-5.358,105.336', 'itera-lampung', 'walking', 40, 2950, now()),
+  ('-5.358,105.336', 'itera-lampung', 'motorcycle', 8, 3068, now()),
+  ('-5.358,105.336', 'itera-lampung', 'driving-car', 11, 3186, now()),
+  ('-5.358,105.336', 'itera-gerbang-utama', 'walking', 40, 2950, now()),
+  ('-5.358,105.336', 'itera-gerbang-utama', 'motorcycle', 8, 3068, now()),
+  ('-5.358,105.336', 'itera-gerbang-utama', 'driving-car', 11, 3186, now()),
+  ('-5.358,105.336', 'itera-simpang-wayhuwi', 'walking', 53, 3909, now()),
+  ('-5.358,105.336', 'itera-simpang-wayhuwi', 'motorcycle', 11, 4065, now()),
+  ('-5.358,105.336', 'itera-simpang-wayhuwi', 'driving-car', 15, 4221, now()),
+  ('-5.358,105.336', 'itera-akses-sabahbalau', 'walking', 34, 2531, now()),
+  ('-5.358,105.336', 'itera-akses-sabahbalau', 'motorcycle', 7, 2633, now()),
+  ('-5.358,105.336', 'itera-akses-sabahbalau', 'driving-car', 10, 2734, now()),
+  ('-5.354,105.305', 'itera-lampung', 'walking', 20, 1468, now()),
+  ('-5.354,105.305', 'itera-lampung', 'motorcycle', 4, 1526, now()),
+  ('-5.354,105.305', 'itera-lampung', 'driving-car', 6, 1585, now()),
+  ('-5.354,105.305', 'itera-gerbang-utama', 'walking', 20, 1468, now()),
+  ('-5.354,105.305', 'itera-gerbang-utama', 'motorcycle', 4, 1526, now()),
+  ('-5.354,105.305', 'itera-gerbang-utama', 'driving-car', 6, 1585, now()),
+  ('-5.354,105.305', 'itera-simpang-wayhuwi', 'walking', 6, 414, now()),
+  ('-5.354,105.305', 'itera-simpang-wayhuwi', 'motorcycle', 2, 430, now()),
+  ('-5.354,105.305', 'itera-simpang-wayhuwi', 'driving-car', 2, 447, now()),
+  ('-5.354,105.305', 'itera-akses-sabahbalau', 'walking', 40, 2949, now()),
+  ('-5.354,105.305', 'itera-akses-sabahbalau', 'motorcycle', 8, 3067, now()),
+  ('-5.354,105.305', 'itera-akses-sabahbalau', 'driving-car', 11, 3185, now()),
+  ('-5.351,105.305', 'itera-lampung', 'walking', 24, 1771, now()),
+  ('-5.351,105.305', 'itera-lampung', 'motorcycle', 5, 1842, now()),
+  ('-5.351,105.305', 'itera-lampung', 'driving-car', 7, 1913, now()),
+  ('-5.351,105.305', 'itera-gerbang-utama', 'walking', 24, 1771, now()),
+  ('-5.351,105.305', 'itera-gerbang-utama', 'motorcycle', 5, 1842, now()),
+  ('-5.351,105.305', 'itera-gerbang-utama', 'driving-car', 7, 1913, now()),
+  ('-5.351,105.305', 'itera-simpang-wayhuwi', 'walking', 11, 763, now()),
+  ('-5.351,105.305', 'itera-simpang-wayhuwi', 'motorcycle', 2, 793, now()),
+  ('-5.351,105.305', 'itera-simpang-wayhuwi', 'driving-car', 3, 824, now()),
+  ('-5.351,105.305', 'itera-akses-sabahbalau', 'walking', 45, 3308, now()),
+  ('-5.351,105.305', 'itera-akses-sabahbalau', 'motorcycle', 9, 3440, now()),
+  ('-5.351,105.305', 'itera-akses-sabahbalau', 'driving-car', 12, 3572, now()),
+  ('-5.351,105.310', 'itera-lampung', 'walking', 17, 1235, now()),
+  ('-5.351,105.310', 'itera-lampung', 'motorcycle', 4, 1284, now()),
+  ('-5.351,105.310', 'itera-lampung', 'driving-car', 5, 1334, now()),
+  ('-5.351,105.310', 'itera-gerbang-utama', 'walking', 17, 1235, now()),
+  ('-5.351,105.310', 'itera-gerbang-utama', 'motorcycle', 4, 1284, now()),
+  ('-5.351,105.310', 'itera-gerbang-utama', 'driving-car', 5, 1334, now()),
+  ('-5.351,105.310', 'itera-simpang-wayhuwi', 'walking', 9, 619, now()),
+  ('-5.351,105.310', 'itera-simpang-wayhuwi', 'motorcycle', 2, 644, now()),
+  ('-5.351,105.310', 'itera-simpang-wayhuwi', 'driving-car', 3, 668, now()),
+  ('-5.351,105.310', 'itera-akses-sabahbalau', 'walking', 38, 2821, now()),
+  ('-5.351,105.310', 'itera-akses-sabahbalau', 'motorcycle', 8, 2934, now()),
+  ('-5.351,105.310', 'itera-akses-sabahbalau', 'driving-car', 11, 3047, now()),
+  ('-5.372,105.300', 'itera-lampung', 'walking', 38, 2825, now()),
+  ('-5.372,105.300', 'itera-lampung', 'motorcycle', 8, 2938, now()),
+  ('-5.372,105.300', 'itera-lampung', 'driving-car', 11, 3051, now()),
+  ('-5.372,105.300', 'itera-gerbang-utama', 'walking', 38, 2825, now()),
+  ('-5.372,105.300', 'itera-gerbang-utama', 'motorcycle', 8, 2938, now()),
+  ('-5.372,105.300', 'itera-gerbang-utama', 'driving-car', 11, 3051, now()),
+  ('-5.372,105.300', 'itera-simpang-wayhuwi', 'walking', 36, 2640, now()),
+  ('-5.372,105.300', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2746, now()),
+  ('-5.372,105.300', 'itera-simpang-wayhuwi', 'driving-car', 10, 2851, now()),
+  ('-5.372,105.300', 'itera-akses-sabahbalau', 'walking', 40, 2996, now()),
+  ('-5.372,105.300', 'itera-akses-sabahbalau', 'motorcycle', 8, 3116, now()),
+  ('-5.372,105.300', 'itera-akses-sabahbalau', 'driving-car', 11, 3236, now()),
+  ('-5.352,105.317', 'itera-lampung', 'walking', 12, 863, now()),
+  ('-5.352,105.317', 'itera-lampung', 'motorcycle', 3, 897, now()),
+  ('-5.352,105.317', 'itera-lampung', 'driving-car', 4, 932, now()),
+  ('-5.352,105.317', 'itera-gerbang-utama', 'walking', 12, 863, now()),
+  ('-5.352,105.317', 'itera-gerbang-utama', 'motorcycle', 3, 897, now()),
+  ('-5.352,105.317', 'itera-gerbang-utama', 'driving-car', 4, 932, now()),
+  ('-5.352,105.317', 'itera-simpang-wayhuwi', 'walking', 17, 1236, now()),
+  ('-5.352,105.317', 'itera-simpang-wayhuwi', 'motorcycle', 4, 1286, now()),
+  ('-5.352,105.317', 'itera-simpang-wayhuwi', 'driving-car', 5, 1335, now()),
+  ('-5.352,105.317', 'itera-akses-sabahbalau', 'walking', 30, 2248, now()),
+  ('-5.352,105.317', 'itera-akses-sabahbalau', 'motorcycle', 6, 2337, now()),
+  ('-5.352,105.317', 'itera-akses-sabahbalau', 'driving-car', 9, 2427, now()),
+  ('-5.375,105.299', 'itera-lampung', 'walking', 42, 3123, now()),
+  ('-5.375,105.299', 'itera-lampung', 'motorcycle', 9, 3247, now()),
+  ('-5.375,105.299', 'itera-lampung', 'driving-car', 12, 3372, now()),
+  ('-5.375,105.299', 'itera-gerbang-utama', 'walking', 42, 3123, now()),
+  ('-5.375,105.299', 'itera-gerbang-utama', 'motorcycle', 9, 3247, now()),
+  ('-5.375,105.299', 'itera-gerbang-utama', 'driving-car', 12, 3372, now()),
+  ('-5.375,105.299', 'itera-simpang-wayhuwi', 'walking', 40, 2980, now()),
+  ('-5.375,105.299', 'itera-simpang-wayhuwi', 'motorcycle', 8, 3099, now()),
+  ('-5.375,105.299', 'itera-simpang-wayhuwi', 'driving-car', 11, 3218, now()),
+  ('-5.375,105.299', 'itera-akses-sabahbalau', 'walking', 43, 3165, now()),
+  ('-5.375,105.299', 'itera-akses-sabahbalau', 'motorcycle', 9, 3292, now()),
+  ('-5.375,105.299', 'itera-akses-sabahbalau', 'driving-car', 12, 3418, now()),
+  ('-5.362,105.324', 'itera-lampung', 'walking', 19, 1365, now()),
+  ('-5.362,105.324', 'itera-lampung', 'motorcycle', 4, 1420, now()),
+  ('-5.362,105.324', 'itera-lampung', 'driving-car', 5, 1474, now()),
+  ('-5.362,105.324', 'itera-gerbang-utama', 'walking', 19, 1365, now()),
+  ('-5.362,105.324', 'itera-gerbang-utama', 'motorcycle', 4, 1420, now()),
+  ('-5.362,105.324', 'itera-gerbang-utama', 'driving-car', 5, 1474, now()),
+  ('-5.362,105.324', 'itera-simpang-wayhuwi', 'walking', 33, 2418, now()),
+  ('-5.362,105.324', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2514, now()),
+  ('-5.362,105.324', 'itera-simpang-wayhuwi', 'driving-car', 9, 2611, now()),
+  ('-5.362,105.324', 'itera-akses-sabahbalau', 'walking', 12, 898, now()),
+  ('-5.362,105.324', 'itera-akses-sabahbalau', 'motorcycle', 3, 933, now()),
+  ('-5.362,105.324', 'itera-akses-sabahbalau', 'driving-car', 4, 969, now()),
+  ('-5.368,105.293', 'itera-lampung', 'walking', 45, 3319, now()),
+  ('-5.368,105.293', 'itera-lampung', 'motorcycle', 9, 3452, now()),
+  ('-5.368,105.293', 'itera-lampung', 'driving-car', 12, 3584, now()),
+  ('-5.368,105.293', 'itera-gerbang-utama', 'walking', 45, 3319, now()),
+  ('-5.368,105.293', 'itera-gerbang-utama', 'motorcycle', 9, 3452, now()),
+  ('-5.368,105.293', 'itera-gerbang-utama', 'driving-car', 12, 3584, now()),
+  ('-5.368,105.293', 'itera-simpang-wayhuwi', 'walking', 38, 2786, now()),
+  ('-5.368,105.293', 'itera-simpang-wayhuwi', 'motorcycle', 8, 2898, now()),
+  ('-5.368,105.293', 'itera-simpang-wayhuwi', 'driving-car', 11, 3009, now()),
+  ('-5.368,105.293', 'itera-akses-sabahbalau', 'walking', 52, 3871, now()),
+  ('-5.368,105.293', 'itera-akses-sabahbalau', 'motorcycle', 11, 4026, now()),
+  ('-5.368,105.293', 'itera-akses-sabahbalau', 'driving-car', 14, 4181, now()),
+  ('-5.362,105.326', 'itera-lampung', 'walking', 22, 1619, now()),
+  ('-5.362,105.326', 'itera-lampung', 'motorcycle', 5, 1684, now()),
+  ('-5.362,105.326', 'itera-lampung', 'driving-car', 6, 1748, now()),
+  ('-5.362,105.326', 'itera-gerbang-utama', 'walking', 22, 1619, now()),
+  ('-5.362,105.326', 'itera-gerbang-utama', 'motorcycle', 5, 1684, now()),
+  ('-5.362,105.326', 'itera-gerbang-utama', 'driving-car', 6, 1748, now()),
+  ('-5.362,105.326', 'itera-simpang-wayhuwi', 'walking', 36, 2668, now()),
+  ('-5.362,105.326', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2774, now()),
+  ('-5.362,105.326', 'itera-simpang-wayhuwi', 'driving-car', 10, 2881, now()),
+  ('-5.362,105.326', 'itera-akses-sabahbalau', 'walking', 14, 1025, now()),
+  ('-5.362,105.326', 'itera-akses-sabahbalau', 'motorcycle', 3, 1066, now()),
+  ('-5.362,105.326', 'itera-akses-sabahbalau', 'driving-car', 4, 1107, now()),
+  ('-5.374,105.293', 'itera-lampung', 'walking', 50, 3731, now()),
+  ('-5.374,105.293', 'itera-lampung', 'motorcycle', 10, 3881, now()),
+  ('-5.374,105.293', 'itera-lampung', 'driving-car', 14, 4030, now()),
+  ('-5.374,105.293', 'itera-gerbang-utama', 'walking', 50, 3731, now()),
+  ('-5.374,105.293', 'itera-gerbang-utama', 'motorcycle', 10, 3881, now()),
+  ('-5.374,105.293', 'itera-gerbang-utama', 'driving-car', 14, 4030, now()),
+  ('-5.374,105.293', 'itera-simpang-wayhuwi', 'walking', 45, 3349, now()),
+  ('-5.374,105.293', 'itera-simpang-wayhuwi', 'motorcycle', 9, 3483, now()),
+  ('-5.374,105.293', 'itera-simpang-wayhuwi', 'driving-car', 13, 3617, now()),
+  ('-5.374,105.293', 'itera-akses-sabahbalau', 'walking', 54, 4014, now()),
+  ('-5.374,105.293', 'itera-akses-sabahbalau', 'motorcycle', 11, 4174, now()),
+  ('-5.374,105.293', 'itera-akses-sabahbalau', 'driving-car', 15, 4335, now()),
+  ('-5.354,105.334', 'itera-lampung', 'walking', 37, 2741, now()),
+  ('-5.354,105.334', 'itera-lampung', 'motorcycle', 8, 2851, now()),
+  ('-5.354,105.334', 'itera-lampung', 'driving-car', 10, 2961, now()),
+  ('-5.354,105.334', 'itera-gerbang-utama', 'walking', 37, 2741, now()),
+  ('-5.354,105.334', 'itera-gerbang-utama', 'motorcycle', 8, 2851, now()),
+  ('-5.354,105.334', 'itera-gerbang-utama', 'driving-car', 10, 2961, now()),
+  ('-5.354,105.334', 'itera-simpang-wayhuwi', 'walking', 49, 3628, now()),
+  ('-5.354,105.334', 'itera-simpang-wayhuwi', 'motorcycle', 10, 3773, now()),
+  ('-5.354,105.334', 'itera-simpang-wayhuwi', 'driving-car', 14, 3918, now()),
+  ('-5.354,105.334', 'itera-akses-sabahbalau', 'walking', 35, 2624, now()),
+  ('-5.354,105.334', 'itera-akses-sabahbalau', 'motorcycle', 7, 2729, now()),
+  ('-5.354,105.334', 'itera-akses-sabahbalau', 'driving-car', 10, 2834, now()),
+  ('-5.349,105.305', 'itera-lampung', 'walking', 25, 1841, now()),
+  ('-5.349,105.305', 'itera-lampung', 'motorcycle', 5, 1915, now()),
+  ('-5.349,105.305', 'itera-lampung', 'driving-car', 7, 1989, now()),
+  ('-5.349,105.305', 'itera-gerbang-utama', 'walking', 25, 1841, now()),
+  ('-5.349,105.305', 'itera-gerbang-utama', 'motorcycle', 5, 1915, now()),
+  ('-5.349,105.305', 'itera-gerbang-utama', 'driving-car', 7, 1989, now()),
+  ('-5.349,105.305', 'itera-simpang-wayhuwi', 'walking', 12, 874, now()),
+  ('-5.349,105.305', 'itera-simpang-wayhuwi', 'motorcycle', 3, 909, now()),
+  ('-5.349,105.305', 'itera-simpang-wayhuwi', 'driving-car', 4, 944, now()),
+  ('-5.349,105.305', 'itera-akses-sabahbalau', 'walking', 46, 3398, now()),
+  ('-5.349,105.305', 'itera-akses-sabahbalau', 'motorcycle', 9, 3533, now()),
+  ('-5.349,105.305', 'itera-akses-sabahbalau', 'driving-car', 13, 3669, now()),
+  ('-5.357,105.328', 'itera-lampung', 'walking', 26, 1881, now()),
+  ('-5.357,105.328', 'itera-lampung', 'motorcycle', 5, 1957, now()),
+  ('-5.357,105.328', 'itera-lampung', 'driving-car', 7, 2032, now()),
+  ('-5.357,105.328', 'itera-gerbang-utama', 'walking', 26, 1881, now()),
+  ('-5.357,105.328', 'itera-gerbang-utama', 'motorcycle', 5, 1957, now()),
+  ('-5.357,105.328', 'itera-gerbang-utama', 'driving-car', 7, 2032, now()),
+  ('-5.357,105.328', 'itera-simpang-wayhuwi', 'walking', 38, 2838, now()),
+  ('-5.357,105.328', 'itera-simpang-wayhuwi', 'motorcycle', 8, 2951, now()),
+  ('-5.357,105.328', 'itera-simpang-wayhuwi', 'driving-car', 11, 3065, now()),
+  ('-5.357,105.328', 'itera-akses-sabahbalau', 'walking', 24, 1785, now()),
+  ('-5.357,105.328', 'itera-akses-sabahbalau', 'motorcycle', 5, 1856, now()),
+  ('-5.357,105.328', 'itera-akses-sabahbalau', 'driving-car', 7, 1928, now()),
+  ('-5.374,105.294', 'itera-lampung', 'walking', 49, 3646, now()),
+  ('-5.374,105.294', 'itera-lampung', 'motorcycle', 10, 3792, now()),
+  ('-5.374,105.294', 'itera-lampung', 'driving-car', 14, 3938, now()),
+  ('-5.374,105.294', 'itera-gerbang-utama', 'walking', 49, 3646, now()),
+  ('-5.374,105.294', 'itera-gerbang-utama', 'motorcycle', 10, 3792, now()),
+  ('-5.374,105.294', 'itera-gerbang-utama', 'driving-car', 14, 3938, now()),
+  ('-5.374,105.294', 'itera-simpang-wayhuwi', 'walking', 45, 3316, now()),
+  ('-5.374,105.294', 'itera-simpang-wayhuwi', 'motorcycle', 9, 3449, now()),
+  ('-5.374,105.294', 'itera-simpang-wayhuwi', 'driving-car', 12, 3582, now()),
+  ('-5.374,105.294', 'itera-akses-sabahbalau', 'walking', 52, 3869, now()),
+  ('-5.374,105.294', 'itera-akses-sabahbalau', 'motorcycle', 11, 4024, now()),
+  ('-5.374,105.294', 'itera-akses-sabahbalau', 'driving-car', 14, 4178, now()),
+  ('-5.348,105.307', 'itera-lampung', 'walking', 25, 1839, now()),
+  ('-5.348,105.307', 'itera-lampung', 'motorcycle', 5, 1912, now()),
+  ('-5.348,105.307', 'itera-lampung', 'driving-car', 7, 1986, now()),
+  ('-5.348,105.307', 'itera-gerbang-utama', 'walking', 25, 1839, now()),
+  ('-5.348,105.307', 'itera-gerbang-utama', 'motorcycle', 5, 1912, now()),
+  ('-5.348,105.307', 'itera-gerbang-utama', 'driving-car', 7, 1986, now()),
+  ('-5.348,105.307', 'itera-simpang-wayhuwi', 'walking', 14, 1045, now()),
+  ('-5.348,105.307', 'itera-simpang-wayhuwi', 'motorcycle', 3, 1087, now()),
+  ('-5.348,105.307', 'itera-simpang-wayhuwi', 'driving-car', 4, 1129, now()),
+  ('-5.348,105.307', 'itera-akses-sabahbalau', 'walking', 46, 3425, now()),
+  ('-5.348,105.307', 'itera-akses-sabahbalau', 'motorcycle', 9, 3562, now()),
+  ('-5.348,105.307', 'itera-akses-sabahbalau', 'driving-car', 13, 3699, now()),
+  ('-5.361,105.326', 'itera-lampung', 'walking', 21, 1554, now()),
+  ('-5.361,105.326', 'itera-lampung', 'motorcycle', 5, 1616, now()),
+  ('-5.361,105.326', 'itera-lampung', 'driving-car', 6, 1678, now()),
+  ('-5.361,105.326', 'itera-gerbang-utama', 'walking', 21, 1554, now()),
+  ('-5.361,105.326', 'itera-gerbang-utama', 'motorcycle', 5, 1616, now()),
+  ('-5.361,105.326', 'itera-gerbang-utama', 'driving-car', 6, 1678, now()),
+  ('-5.361,105.326', 'itera-simpang-wayhuwi', 'walking', 35, 2596, now()),
+  ('-5.361,105.326', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2700, now()),
+  ('-5.361,105.326', 'itera-simpang-wayhuwi', 'driving-car', 10, 2804, now()),
+  ('-5.361,105.326', 'itera-akses-sabahbalau', 'walking', 15, 1110, now()),
+  ('-5.361,105.326', 'itera-akses-sabahbalau', 'motorcycle', 3, 1154, now()),
+  ('-5.361,105.326', 'itera-akses-sabahbalau', 'driving-car', 4, 1199, now()),
+  ('-5.360,105.324', 'itera-lampung', 'walking', 17, 1250, now()),
+  ('-5.360,105.324', 'itera-lampung', 'motorcycle', 4, 1300, now()),
+  ('-5.360,105.324', 'itera-lampung', 'driving-car', 5, 1350, now()),
+  ('-5.360,105.324', 'itera-gerbang-utama', 'walking', 17, 1250, now()),
+  ('-5.360,105.324', 'itera-gerbang-utama', 'motorcycle', 4, 1300, now()),
+  ('-5.360,105.324', 'itera-gerbang-utama', 'driving-car', 5, 1350, now()),
+  ('-5.360,105.324', 'itera-simpang-wayhuwi', 'walking', 31, 2273, now()),
+  ('-5.360,105.324', 'itera-simpang-wayhuwi', 'motorcycle', 6, 2363, now()),
+  ('-5.360,105.324', 'itera-simpang-wayhuwi', 'driving-car', 9, 2454, now()),
+  ('-5.360,105.324', 'itera-akses-sabahbalau', 'walking', 17, 1225, now()),
+  ('-5.360,105.324', 'itera-akses-sabahbalau', 'motorcycle', 4, 1274, now()),
+  ('-5.360,105.324', 'itera-akses-sabahbalau', 'driving-car', 5, 1323, now()),
+  ('-5.363,105.325', 'itera-lampung', 'walking', 22, 1623, now()),
+  ('-5.363,105.325', 'itera-lampung', 'motorcycle', 5, 1687, now()),
+  ('-5.363,105.325', 'itera-lampung', 'driving-car', 6, 1752, now()),
+  ('-5.363,105.325', 'itera-gerbang-utama', 'walking', 22, 1623, now()),
+  ('-5.363,105.325', 'itera-gerbang-utama', 'motorcycle', 5, 1687, now()),
+  ('-5.363,105.325', 'itera-gerbang-utama', 'driving-car', 6, 1752, now()),
+  ('-5.363,105.325', 'itera-simpang-wayhuwi', 'walking', 36, 2675, now()),
+  ('-5.363,105.325', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2782, now()),
+  ('-5.363,105.325', 'itera-simpang-wayhuwi', 'driving-car', 10, 2889, now()),
+  ('-5.363,105.325', 'itera-akses-sabahbalau', 'walking', 13, 904, now()),
+  ('-5.363,105.325', 'itera-akses-sabahbalau', 'motorcycle', 3, 940, now()),
+  ('-5.363,105.325', 'itera-akses-sabahbalau', 'driving-car', 4, 976, now()),
+  ('-5.368,105.297', 'itera-lampung', 'walking', 38, 2830, now()),
+  ('-5.368,105.297', 'itera-lampung', 'motorcycle', 8, 2943, now()),
+  ('-5.368,105.297', 'itera-lampung', 'driving-car', 11, 3056, now()),
+  ('-5.368,105.297', 'itera-gerbang-utama', 'walking', 38, 2830, now()),
+  ('-5.368,105.297', 'itera-gerbang-utama', 'motorcycle', 8, 2943, now()),
+  ('-5.368,105.297', 'itera-gerbang-utama', 'driving-car', 11, 3056, now()),
+  ('-5.368,105.297', 'itera-simpang-wayhuwi', 'walking', 32, 2380, now()),
+  ('-5.368,105.297', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2475, now()),
+  ('-5.368,105.297', 'itera-simpang-wayhuwi', 'driving-car', 9, 2570, now()),
+  ('-5.368,105.297', 'itera-akses-sabahbalau', 'walking', 45, 3360, now()),
+  ('-5.368,105.297', 'itera-akses-sabahbalau', 'motorcycle', 9, 3494, now()),
+  ('-5.368,105.297', 'itera-akses-sabahbalau', 'driving-car', 13, 3629, now()),
+  ('-5.353,105.314', 'itera-lampung', 'walking', 11, 758, now()),
+  ('-5.353,105.314', 'itera-lampung', 'motorcycle', 2, 788, now()),
+  ('-5.353,105.314', 'itera-lampung', 'driving-car', 3, 818, now()),
+  ('-5.353,105.314', 'itera-gerbang-utama', 'walking', 11, 758, now()),
+  ('-5.353,105.314', 'itera-gerbang-utama', 'motorcycle', 2, 788, now()),
+  ('-5.353,105.314', 'itera-gerbang-utama', 'driving-car', 3, 818, now()),
+  ('-5.353,105.314', 'itera-simpang-wayhuwi', 'walking', 13, 919, now()),
+  ('-5.353,105.314', 'itera-simpang-wayhuwi', 'motorcycle', 3, 956, now()),
+  ('-5.353,105.314', 'itera-simpang-wayhuwi', 'driving-car', 4, 992, now()),
+  ('-5.353,105.314', 'itera-akses-sabahbalau', 'walking', 31, 2285, now()),
+  ('-5.353,105.314', 'itera-akses-sabahbalau', 'motorcycle', 6, 2376, now()),
+  ('-5.353,105.314', 'itera-akses-sabahbalau', 'driving-car', 9, 2468, now()),
+  ('-5.356,105.336', 'itera-lampung', 'walking', 41, 3010, now()),
+  ('-5.356,105.336', 'itera-lampung', 'motorcycle', 8, 3130, now()),
+  ('-5.356,105.336', 'itera-lampung', 'driving-car', 11, 3251, now()),
+  ('-5.356,105.336', 'itera-gerbang-utama', 'walking', 41, 3010, now()),
+  ('-5.356,105.336', 'itera-gerbang-utama', 'motorcycle', 8, 3130, now()),
+  ('-5.356,105.336', 'itera-gerbang-utama', 'driving-car', 11, 3251, now()),
+  ('-5.356,105.336', 'itera-simpang-wayhuwi', 'walking', 53, 3934, now()),
+  ('-5.356,105.336', 'itera-simpang-wayhuwi', 'motorcycle', 11, 4091, now()),
+  ('-5.356,105.336', 'itera-simpang-wayhuwi', 'driving-car', 15, 4248, now()),
+  ('-5.356,105.336', 'itera-akses-sabahbalau', 'walking', 37, 2709, now()),
+  ('-5.356,105.336', 'itera-akses-sabahbalau', 'motorcycle', 8, 2817, now()),
+  ('-5.356,105.336', 'itera-akses-sabahbalau', 'driving-car', 10, 2925, now()),
+  ('-5.368,105.295', 'itera-lampung', 'walking', 41, 3041, now()),
+  ('-5.368,105.295', 'itera-lampung', 'motorcycle', 8, 3163, now()),
+  ('-5.368,105.295', 'itera-lampung', 'driving-car', 11, 3285, now()),
+  ('-5.368,105.295', 'itera-gerbang-utama', 'walking', 41, 3041, now()),
+  ('-5.368,105.295', 'itera-gerbang-utama', 'motorcycle', 8, 3163, now()),
+  ('-5.368,105.295', 'itera-gerbang-utama', 'driving-car', 11, 3285, now()),
+  ('-5.368,105.295', 'itera-simpang-wayhuwi', 'walking', 35, 2566, now()),
+  ('-5.368,105.295', 'itera-simpang-wayhuwi', 'motorcycle', 7, 2669, now()),
+  ('-5.368,105.295', 'itera-simpang-wayhuwi', 'driving-car', 10, 2772, now()),
+  ('-5.368,105.295', 'itera-akses-sabahbalau', 'walking', 48, 3561, now()),
+  ('-5.368,105.295', 'itera-akses-sabahbalau', 'motorcycle', 10, 3704, now()),
+  ('-5.368,105.295', 'itera-akses-sabahbalau', 'driving-car', 13, 3846, now()),
+  ('-5.361,105.320', 'itera-lampung', 'walking', 12, 833, now()),
+  ('-5.361,105.320', 'itera-lampung', 'motorcycle', 3, 866, now()),
+  ('-5.361,105.320', 'itera-lampung', 'driving-car', 3, 899, now()),
+  ('-5.361,105.320', 'itera-gerbang-utama', 'walking', 12, 833, now()),
+  ('-5.361,105.320', 'itera-gerbang-utama', 'motorcycle', 3, 866, now()),
+  ('-5.361,105.320', 'itera-gerbang-utama', 'driving-car', 3, 899, now()),
+  ('-5.361,105.320', 'itera-simpang-wayhuwi', 'walking', 26, 1885, now()),
+  ('-5.361,105.320', 'itera-simpang-wayhuwi', 'motorcycle', 5, 1960, now()),
+  ('-5.361,105.320', 'itera-simpang-wayhuwi', 'driving-car', 7, 2036, now()),
+  ('-5.361,105.320', 'itera-akses-sabahbalau', 'walking', 13, 969, now()),
+  ('-5.361,105.320', 'itera-akses-sabahbalau', 'motorcycle', 3, 1008, now()),
+  ('-5.361,105.320', 'itera-akses-sabahbalau', 'driving-car', 4, 1046, now()),
+  ('-5.353,105.333', 'itera-lampung', 'walking', 36, 2686, now()),
+  ('-5.353,105.333', 'itera-lampung', 'motorcycle', 7, 2794, now()),
+  ('-5.353,105.333', 'itera-lampung', 'driving-car', 10, 2901, now()),
+  ('-5.353,105.333', 'itera-gerbang-utama', 'walking', 36, 2686, now()),
+  ('-5.353,105.333', 'itera-gerbang-utama', 'motorcycle', 7, 2794, now()),
+  ('-5.353,105.333', 'itera-gerbang-utama', 'driving-car', 10, 2901, now()),
+  ('-5.353,105.333', 'itera-simpang-wayhuwi', 'walking', 47, 3518, now()),
+  ('-5.353,105.333', 'itera-simpang-wayhuwi', 'motorcycle', 10, 3658, now()),
+  ('-5.353,105.333', 'itera-simpang-wayhuwi', 'driving-car', 13, 3799, now()),
+  ('-5.353,105.333', 'itera-akses-sabahbalau', 'walking', 37, 2740, now()),
+  ('-5.353,105.333', 'itera-akses-sabahbalau', 'motorcycle', 8, 2850, now()),
+  ('-5.353,105.333', 'itera-akses-sabahbalau', 'driving-car', 10, 2959, now()),
+  ('-5.359,105.303', 'itera-lampung', 'walking', 23, 1700, now()),
+  ('-5.359,105.303', 'itera-lampung', 'motorcycle', 5, 1768, now()),
+  ('-5.359,105.303', 'itera-lampung', 'driving-car', 7, 1836, now()),
+  ('-5.359,105.303', 'itera-gerbang-utama', 'walking', 23, 1700, now()),
+  ('-5.359,105.303', 'itera-gerbang-utama', 'motorcycle', 5, 1768, now()),
+  ('-5.359,105.303', 'itera-gerbang-utama', 'driving-car', 7, 1836, now()),
+  ('-5.359,105.303', 'itera-simpang-wayhuwi', 'walking', 13, 918, now()),
+  ('-5.359,105.303', 'itera-simpang-wayhuwi', 'motorcycle', 3, 954, now()),
+  ('-5.359,105.303', 'itera-simpang-wayhuwi', 'driving-car', 4, 991, now()),
+  ('-5.359,105.303', 'itera-akses-sabahbalau', 'walking', 39, 2865, now()),
+  ('-5.359,105.303', 'itera-akses-sabahbalau', 'motorcycle', 8, 2980, now()),
+  ('-5.359,105.303', 'itera-akses-sabahbalau', 'driving-car', 11, 3094, now()),
+  ('-5.371,105.294', 'itera-lampung', 'walking', 45, 3351, now()),
+  ('-5.371,105.294', 'itera-lampung', 'motorcycle', 9, 3485, now()),
+  ('-5.371,105.294', 'itera-lampung', 'driving-car', 13, 3619, now()),
+  ('-5.371,105.294', 'itera-gerbang-utama', 'walking', 45, 3351, now()),
+  ('-5.371,105.294', 'itera-gerbang-utama', 'motorcycle', 9, 3485, now()),
+  ('-5.371,105.294', 'itera-gerbang-utama', 'driving-car', 13, 3619, now()),
+  ('-5.371,105.294', 'itera-simpang-wayhuwi', 'walking', 39, 2923, now()),
+  ('-5.371,105.294', 'itera-simpang-wayhuwi', 'motorcycle', 8, 3039, now()),
+  ('-5.371,105.294', 'itera-simpang-wayhuwi', 'driving-car', 11, 3156, now()),
+  ('-5.371,105.294', 'itera-akses-sabahbalau', 'walking', 51, 3759, now()),
+  ('-5.371,105.294', 'itera-akses-sabahbalau', 'motorcycle', 10, 3909, now()),
+  ('-5.371,105.294', 'itera-akses-sabahbalau', 'driving-car', 14, 4059, now()),
+  ('-6.370,106.821', 'ui-depok', 'walking', 19, 1353, now()),
+  ('-6.370,106.821', 'ui-depok', 'motorcycle', 4, 1407, now()),
+  ('-6.370,106.821', 'ui-depok', 'driving-car', 5, 1461, now()),
+  ('-6.370,106.821', 'ui-gerbatama', 'walking', 19, 1353, now()),
+  ('-6.370,106.821', 'ui-gerbatama', 'motorcycle', 4, 1407, now()),
+  ('-6.370,106.821', 'ui-gerbatama', 'driving-car', 5, 1461, now()),
+  ('-6.370,106.821', 'ui-kutek', 'walking', 4, 269, now()),
+  ('-6.370,106.821', 'ui-kutek', 'motorcycle', 1, 280, now()),
+  ('-6.370,106.821', 'ui-kutek', 'driving-car', 2, 290, now()),
+  ('-6.370,106.821', 'ui-kukel', 'walking', 25, 1801, now()),
+  ('-6.370,106.821', 'ui-kukel', 'motorcycle', 5, 1873, now()),
+  ('-6.370,106.821', 'ui-kukel', 'driving-car', 7, 1945, now()),
+  ('-6.370,106.821', 'ui-pocin', 'walking', 21, 1546, now()),
+  ('-6.370,106.821', 'ui-pocin', 'motorcycle', 5, 1608, now()),
+  ('-6.370,106.821', 'ui-pocin', 'driving-car', 6, 1670, now()),
+  ('-6.358,106.821', 'ui-depok', 'walking', 14, 993, now()),
+  ('-6.358,106.821', 'ui-depok', 'motorcycle', 3, 1032, now()),
+  ('-6.358,106.821', 'ui-depok', 'driving-car', 4, 1072, now()),
+  ('-6.358,106.821', 'ui-gerbatama', 'walking', 14, 993, now()),
+  ('-6.358,106.821', 'ui-gerbatama', 'motorcycle', 3, 1032, now()),
+  ('-6.358,106.821', 'ui-gerbatama', 'driving-car', 4, 1072, now()),
+  ('-6.358,106.821', 'ui-kutek', 'walking', 21, 1516, now()),
+  ('-6.358,106.821', 'ui-kutek', 'motorcycle', 4, 1577, now()),
+  ('-6.358,106.821', 'ui-kutek', 'driving-car', 6, 1638, now()),
+  ('-6.358,106.821', 'ui-kukel', 'walking', 8, 583, now()),
+  ('-6.358,106.821', 'ui-kukel', 'motorcycle', 2, 606, now()),
+  ('-6.358,106.821', 'ui-kukel', 'driving-car', 3, 629, now()),
+  ('-6.358,106.821', 'ui-pocin', 'walking', 28, 2063, now()),
+  ('-6.358,106.821', 'ui-pocin', 'motorcycle', 6, 2145, now()),
+  ('-6.358,106.821', 'ui-pocin', 'driving-car', 8, 2228, now()),
+  ('-6.357,106.820', 'ui-depok', 'walking', 16, 1175, now()),
+  ('-6.357,106.820', 'ui-depok', 'motorcycle', 4, 1222, now()),
+  ('-6.357,106.820', 'ui-depok', 'driving-car', 5, 1269, now()),
+  ('-6.357,106.820', 'ui-gerbatama', 'walking', 16, 1175, now()),
+  ('-6.357,106.820', 'ui-gerbatama', 'motorcycle', 4, 1222, now()),
+  ('-6.357,106.820', 'ui-gerbatama', 'driving-car', 5, 1269, now()),
+  ('-6.357,106.820', 'ui-kutek', 'walking', 22, 1624, now()),
+  ('-6.357,106.820', 'ui-kutek', 'motorcycle', 5, 1689, now()),
+  ('-6.357,106.820', 'ui-kutek', 'driving-car', 6, 1754, now()),
+  ('-6.357,106.820', 'ui-kukel', 'walking', 10, 749, now()),
+  ('-6.357,106.820', 'ui-kukel', 'motorcycle', 2, 779, now()),
+  ('-6.357,106.820', 'ui-kukel', 'driving-car', 3, 809, now()),
+  ('-6.357,106.820', 'ui-pocin', 'walking', 30, 2239, now()),
+  ('-6.357,106.820', 'ui-pocin', 'motorcycle', 6, 2328, now()),
+  ('-6.357,106.820', 'ui-pocin', 'driving-car', 9, 2418, now()),
+  ('-6.363,106.831', 'ui-depok', 'walking', 7, 489, now()),
+  ('-6.363,106.831', 'ui-depok', 'motorcycle', 2, 508, now()),
+  ('-6.363,106.831', 'ui-depok', 'driving-car', 2, 528, now()),
+  ('-6.363,106.831', 'ui-gerbatama', 'walking', 7, 489, now()),
+  ('-6.363,106.831', 'ui-gerbatama', 'motorcycle', 2, 508, now()),
+  ('-6.363,106.831', 'ui-gerbatama', 'driving-car', 2, 528, now()),
+  ('-6.363,106.831', 'ui-kutek', 'walking', 19, 1383, now()),
+  ('-6.363,106.831', 'ui-kutek', 'motorcycle', 4, 1438, now()),
+  ('-6.363,106.831', 'ui-kutek', 'driving-car', 5, 1493, now()),
+  ('-6.363,106.831', 'ui-kukel', 'walking', 14, 981, now()),
+  ('-6.363,106.831', 'ui-kukel', 'motorcycle', 3, 1021, now()),
+  ('-6.363,106.831', 'ui-kukel', 'driving-car', 4, 1060, now()),
+  ('-6.363,106.831', 'ui-pocin', 'walking', 11, 789, now()),
+  ('-6.363,106.831', 'ui-pocin', 'motorcycle', 3, 820, now()),
+  ('-6.363,106.831', 'ui-pocin', 'driving-car', 3, 852, now()),
+  ('-6.362,106.835', 'ui-depok', 'walking', 15, 1055, now()),
+  ('-6.362,106.835', 'ui-depok', 'motorcycle', 3, 1097, now()),
+  ('-6.362,106.835', 'ui-depok', 'driving-car', 4, 1139, now()),
+  ('-6.362,106.835', 'ui-gerbatama', 'walking', 15, 1055, now()),
+  ('-6.362,106.835', 'ui-gerbatama', 'motorcycle', 3, 1097, now()),
+  ('-6.362,106.835', 'ui-gerbatama', 'driving-car', 4, 1139, now()),
+  ('-6.362,106.835', 'ui-kutek', 'walking', 26, 1911, now()),
+  ('-6.362,106.835', 'ui-kutek', 'motorcycle', 5, 1988, now()),
+  ('-6.362,106.835', 'ui-kutek', 'driving-car', 7, 2064, now()),
+  ('-6.362,106.835', 'ui-kukel', 'walking', 19, 1403, now()),
+  ('-6.362,106.835', 'ui-kukel', 'motorcycle', 4, 1459, now()),
+  ('-6.362,106.835', 'ui-kukel', 'driving-car', 6, 1515, now()),
+  ('-6.362,106.835', 'ui-pocin', 'walking', 13, 923, now()),
+  ('-6.362,106.835', 'ui-pocin', 'motorcycle', 3, 959, now()),
+  ('-6.362,106.835', 'ui-pocin', 'driving-car', 4, 996, now()),
+  ('-6.366,106.821', 'ui-depok', 'walking', 14, 1035, now()),
+  ('-6.366,106.821', 'ui-depok', 'motorcycle', 3, 1076, now()),
+  ('-6.366,106.821', 'ui-depok', 'driving-car', 4, 1118, now()),
+  ('-6.366,106.821', 'ui-gerbatama', 'walking', 14, 1035, now()),
+  ('-6.366,106.821', 'ui-gerbatama', 'motorcycle', 3, 1076, now()),
+  ('-6.366,106.821', 'ui-gerbatama', 'driving-car', 4, 1118, now()),
+  ('-6.366,106.821', 'ui-kutek', 'walking', 6, 398, now()),
+  ('-6.366,106.821', 'ui-kutek', 'motorcycle', 2, 413, now()),
+  ('-6.366,106.821', 'ui-kutek', 'driving-car', 2, 429, now()),
+  ('-6.366,106.821', 'ui-kukel', 'walking', 19, 1371, now()),
+  ('-6.366,106.821', 'ui-kukel', 'motorcycle', 4, 1426, now()),
+  ('-6.366,106.821', 'ui-kukel', 'driving-car', 5, 1481, now()),
+  ('-6.366,106.821', 'ui-pocin', 'walking', 21, 1566, now()),
+  ('-6.366,106.821', 'ui-pocin', 'motorcycle', 5, 1629, now()),
+  ('-6.366,106.821', 'ui-pocin', 'driving-car', 6, 1692, now()),
+  ('-6.365,106.819', 'ui-depok', 'walking', 16, 1174, now()),
+  ('-6.365,106.819', 'ui-depok', 'motorcycle', 4, 1221, now()),
+  ('-6.365,106.819', 'ui-depok', 'driving-car', 5, 1268, now()),
+  ('-6.365,106.819', 'ui-gerbatama', 'walking', 16, 1174, now()),
+  ('-6.365,106.819', 'ui-gerbatama', 'motorcycle', 4, 1221, now()),
+  ('-6.365,106.819', 'ui-gerbatama', 'driving-car', 5, 1268, now()),
+  ('-6.365,106.819', 'ui-kutek', 'walking', 9, 614, now()),
+  ('-6.365,106.819', 'ui-kutek', 'motorcycle', 2, 638, now()),
+  ('-6.365,106.819', 'ui-kutek', 'driving-car', 3, 663, now()),
+  ('-6.365,106.819', 'ui-kukel', 'walking', 19, 1405, now()),
+  ('-6.365,106.819', 'ui-kukel', 'motorcycle', 4, 1461, now()),
+  ('-6.365,106.819', 'ui-kukel', 'driving-car', 6, 1517, now()),
+  ('-6.365,106.819', 'ui-pocin', 'walking', 24, 1795, now()),
+  ('-6.365,106.819', 'ui-pocin', 'motorcycle', 5, 1867, now()),
+  ('-6.365,106.819', 'ui-pocin', 'driving-car', 7, 1939, now()),
+  ('-6.368,106.821', 'ui-depok', 'walking', 16, 1185, now()),
+  ('-6.368,106.821', 'ui-depok', 'motorcycle', 4, 1232, now()),
+  ('-6.368,106.821', 'ui-depok', 'driving-car', 5, 1280, now()),
+  ('-6.368,106.821', 'ui-gerbatama', 'walking', 16, 1185, now()),
+  ('-6.368,106.821', 'ui-gerbatama', 'motorcycle', 4, 1232, now()),
+  ('-6.368,106.821', 'ui-gerbatama', 'driving-car', 5, 1280, now()),
+  ('-6.368,106.821', 'ui-kutek', 'walking', 3, 201, now()),
+  ('-6.368,106.821', 'ui-kutek', 'motorcycle', 1, 209, now()),
+  ('-6.368,106.821', 'ui-kutek', 'driving-car', 2, 217, now()),
+  ('-6.368,106.821', 'ui-kukel', 'walking', 22, 1604, now()),
+  ('-6.368,106.821', 'ui-kukel', 'motorcycle', 5, 1668, now()),
+  ('-6.368,106.821', 'ui-kukel', 'driving-car', 6, 1732, now()),
+  ('-6.368,106.821', 'ui-pocin', 'walking', 21, 1509, now()),
+  ('-6.368,106.821', 'ui-pocin', 'motorcycle', 4, 1569, now()),
+  ('-6.368,106.821', 'ui-pocin', 'driving-car', 6, 1629, now()),
+  ('-6.366,106.836', 'ui-depok', 'walking', 18, 1299, now()),
+  ('-6.366,106.836', 'ui-depok', 'motorcycle', 4, 1351, now()),
+  ('-6.366,106.836', 'ui-depok', 'driving-car', 5, 1403, now()),
+  ('-6.366,106.836', 'ui-gerbatama', 'walking', 18, 1299, now()),
+  ('-6.366,106.836', 'ui-gerbatama', 'motorcycle', 4, 1351, now()),
+  ('-6.366,106.836', 'ui-gerbatama', 'driving-car', 5, 1403, now()),
+  ('-6.366,106.836', 'ui-kutek', 'walking', 25, 1868, now()),
+  ('-6.366,106.836', 'ui-kutek', 'motorcycle', 5, 1942, now()),
+  ('-6.366,106.836', 'ui-kutek', 'driving-car', 7, 2017, now()),
+  ('-6.366,106.836', 'ui-kukel', 'walking', 24, 1799, now()),
+  ('-6.366,106.836', 'ui-kukel', 'motorcycle', 5, 1871, now()),
+  ('-6.366,106.836', 'ui-kukel', 'driving-car', 7, 1943, now()),
+  ('-6.366,106.836', 'ui-pocin', 'walking', 9, 613, now()),
+  ('-6.366,106.836', 'ui-pocin', 'motorcycle', 2, 637, now()),
+  ('-6.366,106.836', 'ui-pocin', 'driving-car', 3, 662, now()),
+  ('-6.368,106.819', 'ui-depok', 'walking', 19, 1384, now()),
+  ('-6.368,106.819', 'ui-depok', 'motorcycle', 4, 1439, now()),
+  ('-6.368,106.819', 'ui-depok', 'driving-car', 5, 1494, now()),
+  ('-6.368,106.819', 'ui-gerbatama', 'walking', 19, 1384, now()),
+  ('-6.368,106.819', 'ui-gerbatama', 'motorcycle', 4, 1439, now()),
+  ('-6.368,106.819', 'ui-gerbatama', 'driving-car', 5, 1494, now()),
+  ('-6.368,106.819', 'ui-kutek', 'walking', 6, 435, now()),
+  ('-6.368,106.819', 'ui-kutek', 'motorcycle', 2, 452, now()),
+  ('-6.368,106.819', 'ui-kutek', 'driving-car', 2, 470, now()),
+  ('-6.368,106.819', 'ui-kukel', 'walking', 24, 1740, now()),
+  ('-6.368,106.819', 'ui-kukel', 'motorcycle', 5, 1810, now()),
+  ('-6.368,106.819', 'ui-kukel', 'driving-car', 7, 1879, now()),
+  ('-6.368,106.819', 'ui-pocin', 'walking', 24, 1749, now()),
+  ('-6.368,106.819', 'ui-pocin', 'motorcycle', 5, 1819, now()),
+  ('-6.368,106.819', 'ui-pocin', 'driving-car', 7, 1889, now()),
+  ('-6.371,106.821', 'ui-depok', 'walking', 20, 1491, now()),
+  ('-6.371,106.821', 'ui-depok', 'motorcycle', 4, 1551, now()),
+  ('-6.371,106.821', 'ui-depok', 'driving-car', 6, 1611, now()),
+  ('-6.371,106.821', 'ui-gerbatama', 'walking', 20, 1491, now()),
+  ('-6.371,106.821', 'ui-gerbatama', 'motorcycle', 4, 1551, now()),
+  ('-6.371,106.821', 'ui-gerbatama', 'driving-car', 6, 1611, now()),
+  ('-6.371,106.821', 'ui-kutek', 'walking', 6, 395, now()),
+  ('-6.371,106.821', 'ui-kutek', 'motorcycle', 2, 411, now()),
+  ('-6.371,106.821', 'ui-kutek', 'driving-car', 2, 427, now()),
+  ('-6.371,106.821', 'ui-kukel', 'walking', 27, 1970, now()),
+  ('-6.371,106.821', 'ui-kukel', 'motorcycle', 6, 2049, now()),
+  ('-6.371,106.821', 'ui-kukel', 'driving-car', 8, 2128, now()),
+  ('-6.371,106.821', 'ui-pocin', 'walking', 21, 1561, now()),
+  ('-6.371,106.821', 'ui-pocin', 'motorcycle', 5, 1624, now()),
+  ('-6.371,106.821', 'ui-pocin', 'driving-car', 6, 1686, now()),
+  ('-6.366,106.823', 'ui-depok', 'walking', 10, 724, now()),
+  ('-6.366,106.823', 'ui-depok', 'motorcycle', 2, 753, now()),
+  ('-6.366,106.823', 'ui-depok', 'driving-car', 3, 782, now()),
+  ('-6.366,106.823', 'ui-gerbatama', 'walking', 10, 724, now()),
+  ('-6.366,106.823', 'ui-gerbatama', 'motorcycle', 2, 753, now()),
+  ('-6.366,106.823', 'ui-gerbatama', 'driving-car', 3, 782, now()),
+  ('-6.366,106.823', 'ui-kutek', 'walking', 6, 416, now()),
+  ('-6.366,106.823', 'ui-kutek', 'motorcycle', 2, 433, now()),
+  ('-6.366,106.823', 'ui-kutek', 'driving-car', 2, 450, now()),
+  ('-6.366,106.823', 'ui-kukel', 'walking', 16, 1168, now()),
+  ('-6.366,106.823', 'ui-kukel', 'motorcycle', 4, 1214, now()),
+  ('-6.366,106.823', 'ui-kukel', 'driving-car', 5, 1261, now()),
+  ('-6.366,106.823', 'ui-pocin', 'walking', 17, 1260, now()),
+  ('-6.366,106.823', 'ui-pocin', 'motorcycle', 4, 1310, now()),
+  ('-6.366,106.823', 'ui-pocin', 'driving-car', 5, 1361, now()),
+  ('-6.370,106.819', 'ui-depok', 'walking', 21, 1561, now()),
+  ('-6.370,106.819', 'ui-depok', 'motorcycle', 5, 1624, now()),
+  ('-6.370,106.819', 'ui-depok', 'driving-car', 6, 1686, now()),
+  ('-6.370,106.819', 'ui-gerbatama', 'walking', 21, 1561, now()),
+  ('-6.370,106.819', 'ui-gerbatama', 'motorcycle', 5, 1624, now()),
+  ('-6.370,106.819', 'ui-gerbatama', 'driving-car', 6, 1686, now()),
+  ('-6.370,106.819', 'ui-kutek', 'walking', 8, 541, now()),
+  ('-6.370,106.819', 'ui-kutek', 'motorcycle', 2, 563, now()),
+  ('-6.370,106.819', 'ui-kutek', 'driving-car', 2, 585, now()),
+  ('-6.370,106.819', 'ui-kukel', 'walking', 26, 1934, now()),
+  ('-6.370,106.819', 'ui-kukel', 'motorcycle', 6, 2011, now()),
+  ('-6.370,106.819', 'ui-kukel', 'driving-car', 7, 2088, now()),
+  ('-6.370,106.819', 'ui-pocin', 'walking', 25, 1843, now()),
+  ('-6.370,106.819', 'ui-pocin', 'motorcycle', 5, 1916, now()),
+  ('-6.370,106.819', 'ui-pocin', 'driving-car', 7, 1990, now()),
+  ('-6.364,106.836', 'ui-depok', 'walking', 17, 1244, now()),
+  ('-6.364,106.836', 'ui-depok', 'motorcycle', 4, 1294, now()),
+  ('-6.364,106.836', 'ui-depok', 'driving-car', 5, 1343, now()),
+  ('-6.364,106.836', 'ui-gerbatama', 'walking', 17, 1244, now()),
+  ('-6.364,106.836', 'ui-gerbatama', 'motorcycle', 4, 1294, now()),
+  ('-6.364,106.836', 'ui-gerbatama', 'driving-car', 5, 1343, now()),
+  ('-6.364,106.836', 'ui-kutek', 'walking', 26, 1933, now()),
+  ('-6.364,106.836', 'ui-kutek', 'motorcycle', 6, 2010, now()),
+  ('-6.364,106.836', 'ui-kutek', 'driving-car', 7, 2087, now()),
+  ('-6.364,106.836', 'ui-kukel', 'walking', 23, 1686, now()),
+  ('-6.364,106.836', 'ui-kukel', 'motorcycle', 5, 1754, now()),
+  ('-6.364,106.836', 'ui-kukel', 'driving-car', 7, 1821, now()),
+  ('-6.364,106.836', 'ui-pocin', 'walking', 11, 753, now()),
+  ('-6.364,106.836', 'ui-pocin', 'motorcycle', 2, 783, now()),
+  ('-6.364,106.836', 'ui-pocin', 'driving-car', 3, 813, now()),
+  ('-6.361,106.831', 'ui-depok', 'walking', 9, 625, now()),
+  ('-6.361,106.831', 'ui-depok', 'motorcycle', 2, 650, now()),
+  ('-6.361,106.831', 'ui-depok', 'driving-car', 3, 675, now()),
+  ('-6.361,106.831', 'ui-gerbatama', 'walking', 9, 625, now()),
+  ('-6.361,106.831', 'ui-gerbatama', 'motorcycle', 2, 650, now()),
+  ('-6.361,106.831', 'ui-gerbatama', 'driving-car', 3, 675, now()),
+  ('-6.361,106.831', 'ui-kutek', 'walking', 22, 1605, now()),
+  ('-6.361,106.831', 'ui-kutek', 'motorcycle', 5, 1669, now()),
+  ('-6.361,106.831', 'ui-kutek', 'driving-car', 6, 1733, now()),
+  ('-6.361,106.831', 'ui-kukel', 'walking', 13, 963, now()),
+  ('-6.361,106.831', 'ui-kukel', 'motorcycle', 3, 1001, now()),
+  ('-6.361,106.831', 'ui-kukel', 'driving-car', 4, 1040, now()),
+  ('-6.361,106.831', 'ui-pocin', 'walking', 13, 960, now()),
+  ('-6.361,106.831', 'ui-pocin', 'motorcycle', 3, 998, now()),
+  ('-6.361,106.831', 'ui-pocin', 'driving-car', 4, 1037, now()),
+  ('-6.365,106.835', 'ui-depok', 'walking', 16, 1160, now()),
+  ('-6.365,106.835', 'ui-depok', 'motorcycle', 4, 1206, now()),
+  ('-6.365,106.835', 'ui-depok', 'driving-car', 5, 1253, now()),
+  ('-6.365,106.835', 'ui-gerbatama', 'walking', 16, 1160, now()),
+  ('-6.365,106.835', 'ui-gerbatama', 'motorcycle', 4, 1206, now()),
+  ('-6.365,106.835', 'ui-gerbatama', 'driving-car', 5, 1253, now()),
+  ('-6.365,106.835', 'ui-kutek', 'walking', 24, 1770, now()),
+  ('-6.365,106.835', 'ui-kutek', 'motorcycle', 5, 1841, now()),
+  ('-6.365,106.835', 'ui-kutek', 'driving-car', 7, 1912, now()),
+  ('-6.365,106.835', 'ui-kukel', 'walking', 23, 1660, now()),
+  ('-6.365,106.835', 'ui-kukel', 'motorcycle', 5, 1726, now()),
+  ('-6.365,106.835', 'ui-kukel', 'driving-car', 6, 1793, now()),
+  ('-6.365,106.835', 'ui-pocin', 'walking', 8, 570, now()),
+  ('-6.365,106.835', 'ui-pocin', 'motorcycle', 2, 593, now()),
+  ('-6.365,106.835', 'ui-pocin', 'driving-car', 3, 616, now()),
+  ('-6.370,106.822', 'ui-depok', 'walking', 17, 1266, now()),
+  ('-6.370,106.822', 'ui-depok', 'motorcycle', 4, 1317, now()),
+  ('-6.370,106.822', 'ui-depok', 'driving-car', 5, 1368, now()),
+  ('-6.370,106.822', 'ui-gerbatama', 'walking', 17, 1266, now()),
+  ('-6.370,106.822', 'ui-gerbatama', 'motorcycle', 4, 1317, now()),
+  ('-6.370,106.822', 'ui-gerbatama', 'driving-car', 5, 1368, now()),
+  ('-6.370,106.822', 'ui-kutek', 'walking', 3, 199, now()),
+  ('-6.370,106.822', 'ui-kutek', 'motorcycle', 1, 207, now()),
+  ('-6.370,106.822', 'ui-kutek', 'driving-car', 2, 215, now()),
+  ('-6.370,106.822', 'ui-kukel', 'walking', 24, 1778, now()),
+  ('-6.370,106.822', 'ui-kukel', 'motorcycle', 5, 1849, now()),
+  ('-6.370,106.822', 'ui-kukel', 'driving-car', 7, 1920, now()),
+  ('-6.370,106.822', 'ui-pocin', 'walking', 18, 1343, now()),
+  ('-6.370,106.822', 'ui-pocin', 'motorcycle', 4, 1396, now()),
+  ('-6.370,106.822', 'ui-pocin', 'driving-car', 5, 1450, now()),
+  ('-6.360,106.824', 'ui-depok', 'walking', 8, 553, now()),
+  ('-6.360,106.824', 'ui-depok', 'motorcycle', 2, 575, now()),
+  ('-6.360,106.824', 'ui-depok', 'driving-car', 2, 597, now()),
+  ('-6.360,106.824', 'ui-gerbatama', 'walking', 8, 553, now()),
+  ('-6.360,106.824', 'ui-gerbatama', 'motorcycle', 2, 575, now()),
+  ('-6.360,106.824', 'ui-gerbatama', 'driving-car', 2, 597, now()),
+  ('-6.360,106.824', 'ui-kutek', 'walking', 17, 1244, now()),
+  ('-6.360,106.824', 'ui-kutek', 'motorcycle', 4, 1294, now()),
+  ('-6.360,106.824', 'ui-kutek', 'driving-car', 5, 1343, now()),
+  ('-6.360,106.824', 'ui-kukel', 'walking', 6, 381, now()),
+  ('-6.360,106.824', 'ui-kukel', 'motorcycle', 1, 397, now()),
+  ('-6.360,106.824', 'ui-kukel', 'driving-car', 2, 412, now()),
+  ('-6.360,106.824', 'ui-pocin', 'walking', 22, 1625, now()),
+  ('-6.360,106.824', 'ui-pocin', 'motorcycle', 5, 1690, now()),
+  ('-6.360,106.824', 'ui-pocin', 'driving-car', 6, 1755, now()),
+  ('-6.364,106.832', 'ui-depok', 'walking', 10, 746, now()),
+  ('-6.364,106.832', 'ui-depok', 'motorcycle', 2, 776, now()),
+  ('-6.364,106.832', 'ui-depok', 'driving-car', 3, 806, now()),
+  ('-6.364,106.832', 'ui-gerbatama', 'walking', 10, 746, now()),
+  ('-6.364,106.832', 'ui-gerbatama', 'motorcycle', 2, 776, now()),
+  ('-6.364,106.832', 'ui-gerbatama', 'driving-car', 3, 806, now()),
+  ('-6.364,106.832', 'ui-kutek', 'walking', 20, 1441, now()),
+  ('-6.364,106.832', 'ui-kutek', 'motorcycle', 4, 1499, now()),
+  ('-6.364,106.832', 'ui-kutek', 'driving-car', 6, 1557, now()),
+  ('-6.364,106.832', 'ui-kukel', 'walking', 18, 1283, now()),
+  ('-6.364,106.832', 'ui-kukel', 'motorcycle', 4, 1334, now()),
+  ('-6.364,106.832', 'ui-kukel', 'driving-car', 5, 1385, now()),
+  ('-6.364,106.832', 'ui-pocin', 'walking', 8, 538, now()),
+  ('-6.364,106.832', 'ui-pocin', 'motorcycle', 2, 559, now()),
+  ('-6.364,106.832', 'ui-pocin', 'driving-car', 2, 581, now()),
+  ('-6.359,106.822', 'ui-depok', 'walking', 12, 849, now()),
+  ('-6.359,106.822', 'ui-depok', 'motorcycle', 3, 883, now()),
+  ('-6.359,106.822', 'ui-depok', 'driving-car', 4, 917, now()),
+  ('-6.359,106.822', 'ui-gerbatama', 'walking', 12, 849, now()),
+  ('-6.359,106.822', 'ui-gerbatama', 'motorcycle', 3, 883, now()),
+  ('-6.359,106.822', 'ui-gerbatama', 'driving-car', 4, 917, now()),
+  ('-6.359,106.822', 'ui-kutek', 'walking', 18, 1346, now()),
+  ('-6.359,106.822', 'ui-kutek', 'motorcycle', 4, 1400, now()),
+  ('-6.359,106.822', 'ui-kutek', 'driving-car', 5, 1454, now()),
+  ('-6.359,106.822', 'ui-kukel', 'walking', 8, 551, now()),
+  ('-6.359,106.822', 'ui-kukel', 'motorcycle', 2, 573, now()),
+  ('-6.359,106.822', 'ui-kukel', 'driving-car', 2, 595, now()),
+  ('-6.359,106.822', 'ui-pocin', 'walking', 26, 1905, now()),
+  ('-6.359,106.822', 'ui-pocin', 'motorcycle', 5, 1981, now()),
+  ('-6.359,106.822', 'ui-pocin', 'driving-car', 7, 2057, now()),
+  ('-6.366,106.824', 'ui-depok', 'walking', 9, 666, now()),
+  ('-6.366,106.824', 'ui-depok', 'motorcycle', 2, 693, now()),
+  ('-6.366,106.824', 'ui-depok', 'driving-car', 3, 720, now()),
+  ('-6.366,106.824', 'ui-gerbatama', 'walking', 9, 666, now()),
+  ('-6.366,106.824', 'ui-gerbatama', 'motorcycle', 2, 693, now()),
+  ('-6.366,106.824', 'ui-gerbatama', 'driving-car', 3, 720, now()),
+  ('-6.366,106.824', 'ui-kutek', 'walking', 6, 446, now()),
+  ('-6.366,106.824', 'ui-kutek', 'motorcycle', 2, 464, now()),
+  ('-6.366,106.824', 'ui-kutek', 'driving-car', 2, 482, now()),
+  ('-6.366,106.824', 'ui-kukel', 'walking', 16, 1144, now()),
+  ('-6.366,106.824', 'ui-kukel', 'motorcycle', 3, 1190, now()),
+  ('-6.366,106.824', 'ui-kukel', 'driving-car', 5, 1235, now()),
+  ('-6.366,106.824', 'ui-pocin', 'walking', 16, 1190, now()),
+  ('-6.366,106.824', 'ui-pocin', 'motorcycle', 4, 1238, now()),
+  ('-6.366,106.824', 'ui-pocin', 'driving-car', 5, 1285, now()),
+  ('-6.361,106.833', 'ui-depok', 'walking', 12, 840, now()),
+  ('-6.361,106.833', 'ui-depok', 'motorcycle', 3, 874, now()),
+  ('-6.361,106.833', 'ui-depok', 'driving-car', 4, 907, now()),
+  ('-6.361,106.833', 'ui-gerbatama', 'walking', 12, 840, now()),
+  ('-6.361,106.833', 'ui-gerbatama', 'motorcycle', 3, 874, now()),
+  ('-6.361,106.833', 'ui-gerbatama', 'driving-car', 4, 907, now()),
+  ('-6.361,106.833', 'ui-kutek', 'walking', 24, 1786, now()),
+  ('-6.361,106.833', 'ui-kutek', 'motorcycle', 5, 1858, now()),
+  ('-6.361,106.833', 'ui-kutek', 'driving-car', 7, 1929, now()),
+  ('-6.361,106.833', 'ui-kukel', 'walking', 16, 1145, now()),
+  ('-6.361,106.833', 'ui-kukel', 'motorcycle', 3, 1191, now()),
+  ('-6.361,106.833', 'ui-kukel', 'driving-car', 5, 1237, now()),
+  ('-6.361,106.833', 'ui-pocin', 'walking', 14, 983, now()),
+  ('-6.361,106.833', 'ui-pocin', 'motorcycle', 3, 1022, now()),
+  ('-6.361,106.833', 'ui-pocin', 'driving-car', 4, 1061, now()),
+  ('-6.364,106.837', 'ui-depok', 'walking', 19, 1354, now()),
+  ('-6.364,106.837', 'ui-depok', 'motorcycle', 4, 1408, now()),
+  ('-6.364,106.837', 'ui-depok', 'driving-car', 5, 1462, now()),
+  ('-6.364,106.837', 'ui-gerbatama', 'walking', 19, 1354, now()),
+  ('-6.364,106.837', 'ui-gerbatama', 'motorcycle', 4, 1408, now()),
+  ('-6.364,106.837', 'ui-gerbatama', 'driving-car', 5, 1462, now()),
+  ('-6.364,106.837', 'ui-kutek', 'walking', 27, 2021, now()),
+  ('-6.364,106.837', 'ui-kutek', 'motorcycle', 6, 2102, now()),
+  ('-6.364,106.837', 'ui-kutek', 'driving-car', 8, 2183, now()),
+  ('-6.364,106.837', 'ui-kukel', 'walking', 24, 1794, now()),
+  ('-6.364,106.837', 'ui-kukel', 'motorcycle', 5, 1866, now()),
+  ('-6.364,106.837', 'ui-kukel', 'driving-car', 7, 1937, now()),
+  ('-6.364,106.837', 'ui-pocin', 'walking', 11, 806, now()),
+  ('-6.364,106.837', 'ui-pocin', 'motorcycle', 3, 839, now()),
+  ('-6.364,106.837', 'ui-pocin', 'driving-car', 3, 871, now()),
+  ('-6.365,106.833', 'ui-depok', 'walking', 12, 841, now()),
+  ('-6.365,106.833', 'ui-depok', 'motorcycle', 3, 875, now()),
+  ('-6.365,106.833', 'ui-depok', 'driving-car', 4, 909, now()),
+  ('-6.365,106.833', 'ui-gerbatama', 'walking', 12, 841, now()),
+  ('-6.365,106.833', 'ui-gerbatama', 'motorcycle', 3, 875, now()),
+  ('-6.365,106.833', 'ui-gerbatama', 'driving-car', 4, 909, now()),
+  ('-6.365,106.833', 'ui-kutek', 'walking', 20, 1489, now()),
+  ('-6.365,106.833', 'ui-kutek', 'motorcycle', 4, 1548, now()),
+  ('-6.365,106.833', 'ui-kutek', 'driving-car', 6, 1608, now()),
+  ('-6.365,106.833', 'ui-kukel', 'walking', 19, 1379, now()),
+  ('-6.365,106.833', 'ui-kukel', 'motorcycle', 4, 1434, now()),
+  ('-6.365,106.833', 'ui-kukel', 'driving-car', 5, 1489, now()),
+  ('-6.365,106.833', 'ui-pocin', 'walking', 7, 485, now()),
+  ('-6.365,106.833', 'ui-pocin', 'motorcycle', 2, 504, now()),
+  ('-6.365,106.833', 'ui-pocin', 'driving-car', 2, 524, now()),
+  ('-6.368,106.833', 'ui-depok', 'walking', 16, 1191, now()),
+  ('-6.368,106.833', 'ui-depok', 'motorcycle', 4, 1239, now()),
+  ('-6.368,106.833', 'ui-depok', 'driving-car', 5, 1287, now()),
+  ('-6.368,106.833', 'ui-gerbatama', 'walking', 16, 1191, now()),
+  ('-6.368,106.833', 'ui-gerbatama', 'motorcycle', 4, 1239, now()),
+  ('-6.368,106.833', 'ui-gerbatama', 'driving-car', 5, 1287, now()),
+  ('-6.368,106.833', 'ui-kutek', 'walking', 20, 1485, now()),
+  ('-6.368,106.833', 'ui-kutek', 'motorcycle', 4, 1544, now()),
+  ('-6.368,106.833', 'ui-kutek', 'driving-car', 6, 1604, now()),
+  ('-6.368,106.833', 'ui-kukel', 'walking', 24, 1800, now()),
+  ('-6.368,106.833', 'ui-kukel', 'motorcycle', 5, 1872, now()),
+  ('-6.368,106.833', 'ui-kukel', 'driving-car', 7, 1944, now()),
+  ('-6.368,106.833', 'ui-pocin', 'walking', 3, 170, now()),
+  ('-6.368,106.833', 'ui-pocin', 'motorcycle', 1, 177, now()),
+  ('-6.368,106.833', 'ui-pocin', 'driving-car', 2, 184, now()),
+  ('-6.371,106.819', 'ui-depok', 'walking', 23, 1691, now()),
+  ('-6.371,106.819', 'ui-depok', 'motorcycle', 5, 1759, now()),
+  ('-6.371,106.819', 'ui-depok', 'driving-car', 7, 1827, now()),
+  ('-6.371,106.819', 'ui-gerbatama', 'walking', 23, 1691, now()),
+  ('-6.371,106.819', 'ui-gerbatama', 'motorcycle', 5, 1759, now()),
+  ('-6.371,106.819', 'ui-gerbatama', 'driving-car', 7, 1827, now()),
+  ('-6.371,106.819', 'ui-kutek', 'walking', 9, 628, now()),
+  ('-6.371,106.819', 'ui-kutek', 'motorcycle', 2, 653, now()),
+  ('-6.371,106.819', 'ui-kutek', 'driving-car', 3, 678, now()),
+  ('-6.371,106.819', 'ui-kukel', 'walking', 28, 2089, now()),
+  ('-6.371,106.819', 'ui-kukel', 'motorcycle', 6, 2172, now()),
+  ('-6.371,106.819', 'ui-kukel', 'driving-car', 8, 2256, now()),
+  ('-6.371,106.819', 'ui-pocin', 'walking', 26, 1888, now()),
+  ('-6.371,106.819', 'ui-pocin', 'motorcycle', 5, 1963, now()),
+  ('-6.371,106.819', 'ui-pocin', 'driving-car', 7, 2039, now()),
+  ('-6.360,106.834', 'ui-depok', 'walking', 13, 969, now()),
+  ('-6.360,106.834', 'ui-depok', 'motorcycle', 3, 1008, now()),
+  ('-6.360,106.834', 'ui-depok', 'driving-car', 4, 1046, now()),
+  ('-6.360,106.834', 'ui-gerbatama', 'walking', 13, 969, now()),
+  ('-6.360,106.834', 'ui-gerbatama', 'motorcycle', 3, 1008, now()),
+  ('-6.360,106.834', 'ui-gerbatama', 'driving-car', 4, 1046, now()),
+  ('-6.360,106.834', 'ui-kutek', 'walking', 27, 1971, now()),
+  ('-6.360,106.834', 'ui-kutek', 'motorcycle', 6, 2050, now()),
+  ('-6.360,106.834', 'ui-kutek', 'driving-car', 8, 2129, now()),
+  ('-6.360,106.834', 'ui-kukel', 'walking', 16, 1149, now()),
+  ('-6.360,106.834', 'ui-kukel', 'motorcycle', 3, 1195, now()),
+  ('-6.360,106.834', 'ui-kukel', 'driving-car', 5, 1241, now()),
+  ('-6.360,106.834', 'ui-pocin', 'walking', 16, 1195, now()),
+  ('-6.360,106.834', 'ui-pocin', 'motorcycle', 4, 1243, now()),
+  ('-6.360,106.834', 'ui-pocin', 'driving-car', 5, 1291, now()),
+  ('-6.368,106.835', 'ui-depok', 'walking', 19, 1369, now()),
+  ('-6.368,106.835', 'ui-depok', 'motorcycle', 4, 1424, now()),
+  ('-6.368,106.835', 'ui-depok', 'driving-car', 5, 1478, now()),
+  ('-6.368,106.835', 'ui-gerbatama', 'walking', 19, 1369, now()),
+  ('-6.368,106.835', 'ui-gerbatama', 'motorcycle', 4, 1424, now()),
+  ('-6.368,106.835', 'ui-gerbatama', 'driving-car', 5, 1478, now()),
+  ('-6.368,106.835', 'ui-kutek', 'walking', 23, 1670, now()),
+  ('-6.368,106.835', 'ui-kutek', 'motorcycle', 5, 1737, now()),
+  ('-6.368,106.835', 'ui-kutek', 'driving-car', 7, 1804, now()),
+  ('-6.368,106.835', 'ui-kukel', 'walking', 27, 1960, now()),
+  ('-6.368,106.835', 'ui-kukel', 'motorcycle', 6, 2038, now()),
+  ('-6.368,106.835', 'ui-kukel', 'driving-car', 8, 2117, now()),
+  ('-6.368,106.835', 'ui-pocin', 'walking', 5, 361, now()),
+  ('-6.368,106.835', 'ui-pocin', 'motorcycle', 1, 376, now()),
+  ('-6.368,106.835', 'ui-pocin', 'driving-car', 2, 390, now()),
+  ('-6.359,106.820', 'ui-depok', 'walking', 14, 1010, now()),
+  ('-6.359,106.820', 'ui-depok', 'motorcycle', 3, 1050, now()),
+  ('-6.359,106.820', 'ui-depok', 'driving-car', 4, 1091, now()),
+  ('-6.359,106.820', 'ui-gerbatama', 'walking', 14, 1010, now()),
+  ('-6.359,106.820', 'ui-gerbatama', 'motorcycle', 3, 1050, now()),
+  ('-6.359,106.820', 'ui-gerbatama', 'driving-car', 4, 1091, now()),
+  ('-6.359,106.820', 'ui-kutek', 'walking', 19, 1370, now()),
+  ('-6.359,106.820', 'ui-kutek', 'motorcycle', 4, 1425, now()),
+  ('-6.359,106.820', 'ui-kutek', 'driving-car', 5, 1480, now()),
+  ('-6.359,106.820', 'ui-kukel', 'walking', 10, 730, now()),
+  ('-6.359,106.820', 'ui-kukel', 'motorcycle', 2, 759, now()),
+  ('-6.359,106.820', 'ui-kukel', 'driving-car', 3, 788, now()),
+  ('-6.359,106.820', 'ui-pocin', 'walking', 28, 2044, now()),
+  ('-6.359,106.820', 'ui-pocin', 'motorcycle', 6, 2126, now()),
+  ('-6.359,106.820', 'ui-pocin', 'driving-car', 8, 2207, now()),
+  ('-6.367,106.834', 'ui-depok', 'walking', 17, 1208, now()),
+  ('-6.367,106.834', 'ui-depok', 'motorcycle', 4, 1256, now()),
+  ('-6.367,106.834', 'ui-depok', 'driving-car', 5, 1304, now()),
+  ('-6.367,106.834', 'ui-gerbatama', 'walking', 17, 1208, now()),
+  ('-6.367,106.834', 'ui-gerbatama', 'motorcycle', 4, 1256, now()),
+  ('-6.367,106.834', 'ui-gerbatama', 'driving-car', 5, 1304, now()),
+  ('-6.367,106.834', 'ui-kutek', 'walking', 22, 1593, now()),
+  ('-6.367,106.834', 'ui-kutek', 'motorcycle', 5, 1656, now()),
+  ('-6.367,106.834', 'ui-kutek', 'driving-car', 6, 1720, now()),
+  ('-6.367,106.834', 'ui-kukel', 'walking', 24, 1790, now()),
+  ('-6.367,106.834', 'ui-kukel', 'motorcycle', 5, 1862, now()),
+  ('-6.367,106.834', 'ui-kukel', 'driving-car', 7, 1933, now()),
+  ('-6.367,106.834', 'ui-pocin', 'walking', 4, 290, now()),
+  ('-6.367,106.834', 'ui-pocin', 'motorcycle', 1, 302, now()),
+  ('-6.367,106.834', 'ui-pocin', 'driving-car', 2, 313, now()),
+  ('-0.915,100.462', 'unand-limau-manis', 'walking', 5, 323, now()),
+  ('-0.915,100.462', 'unand-limau-manis', 'motorcycle', 1, 335, now()),
+  ('-0.915,100.462', 'unand-limau-manis', 'driving-car', 2, 348, now()),
+  ('-0.915,100.462', 'unand-gerbang-utama', 'walking', 5, 323, now()),
+  ('-0.915,100.462', 'unand-gerbang-utama', 'motorcycle', 1, 335, now()),
+  ('-0.915,100.462', 'unand-gerbang-utama', 'driving-car', 2, 348, now()),
+  ('-0.915,100.462', 'unand-pasar-baru', 'walking', 53, 3949, now()),
+  ('-0.915,100.462', 'unand-pasar-baru', 'motorcycle', 11, 4107, now()),
+  ('-0.915,100.462', 'unand-pasar-baru', 'driving-car', 15, 4265, now()),
+  ('-0.915,100.462', 'unand-pintu-pauh', 'walking', 39, 2851, now()),
+  ('-0.915,100.462', 'unand-pintu-pauh', 'motorcycle', 8, 2965, now()),
+  ('-0.915,100.462', 'unand-pintu-pauh', 'driving-car', 11, 3079, now()),
+  ('-0.918,100.464', 'unand-limau-manis', 'walking', 11, 751, now()),
+  ('-0.918,100.464', 'unand-limau-manis', 'motorcycle', 2, 781, now()),
+  ('-0.918,100.464', 'unand-limau-manis', 'driving-car', 3, 811, now()),
+  ('-0.918,100.464', 'unand-gerbang-utama', 'walking', 11, 751, now()),
+  ('-0.918,100.464', 'unand-gerbang-utama', 'motorcycle', 2, 781, now()),
+  ('-0.918,100.464', 'unand-gerbang-utama', 'driving-car', 3, 811, now()),
+  ('-0.918,100.464', 'unand-pasar-baru', 'walking', 55, 4121, now()),
+  ('-0.918,100.464', 'unand-pasar-baru', 'motorcycle', 11, 4286, now()),
+  ('-0.918,100.464', 'unand-pasar-baru', 'driving-car', 15, 4451, now()),
+  ('-0.918,100.464', 'unand-pintu-pauh', 'walking', 42, 3088, now()),
+  ('-0.918,100.464', 'unand-pintu-pauh', 'motorcycle', 9, 3211, now()),
+  ('-0.918,100.464', 'unand-pintu-pauh', 'driving-car', 12, 3335, now()),
+  ('-0.922,100.440', 'unand-limau-manis', 'walking', 40, 2965, now()),
+  ('-0.922,100.440', 'unand-limau-manis', 'motorcycle', 8, 3084, now()),
+  ('-0.922,100.440', 'unand-limau-manis', 'driving-car', 11, 3202, now()),
+  ('-0.922,100.440', 'unand-gerbang-utama', 'walking', 40, 2965, now()),
+  ('-0.922,100.440', 'unand-gerbang-utama', 'motorcycle', 8, 3084, now()),
+  ('-0.922,100.440', 'unand-gerbang-utama', 'driving-car', 11, 3202, now()),
+  ('-0.922,100.440', 'unand-pasar-baru', 'walking', 11, 751, now()),
+  ('-0.922,100.440', 'unand-pasar-baru', 'motorcycle', 2, 781, now()),
+  ('-0.922,100.440', 'unand-pasar-baru', 'driving-car', 3, 811, now()),
+  ('-0.922,100.440', 'unand-pintu-pauh', 'walking', 9, 605, now()),
+  ('-0.922,100.440', 'unand-pintu-pauh', 'motorcycle', 2, 629, now()),
+  ('-0.922,100.440', 'unand-pintu-pauh', 'driving-car', 3, 653, now()),
+  ('-0.912,100.456', 'unand-limau-manis', 'walking', 9, 664, now()),
+  ('-0.912,100.456', 'unand-limau-manis', 'motorcycle', 2, 690, now()),
+  ('-0.912,100.456', 'unand-limau-manis', 'driving-car', 3, 717, now()),
+  ('-0.912,100.456', 'unand-gerbang-utama', 'walking', 9, 664, now()),
+  ('-0.912,100.456', 'unand-gerbang-utama', 'motorcycle', 2, 690, now()),
+  ('-0.912,100.456', 'unand-gerbang-utama', 'driving-car', 3, 717, now()),
+  ('-0.912,100.456', 'unand-pasar-baru', 'walking', 45, 3303, now()),
+  ('-0.912,100.456', 'unand-pasar-baru', 'motorcycle', 9, 3435, now()),
+  ('-0.912,100.456', 'unand-pasar-baru', 'driving-car', 12, 3567, now()),
+  ('-0.912,100.456', 'unand-pintu-pauh', 'walking', 29, 2125, now()),
+  ('-0.912,100.456', 'unand-pintu-pauh', 'motorcycle', 6, 2210, now()),
+  ('-0.912,100.456', 'unand-pintu-pauh', 'driving-car', 8, 2295, now()),
+  ('-0.918,100.463', 'unand-limau-manis', 'walking', 8, 593, now()),
+  ('-0.918,100.463', 'unand-limau-manis', 'motorcycle', 2, 616, now()),
+  ('-0.918,100.463', 'unand-limau-manis', 'driving-car', 3, 640, now()),
+  ('-0.918,100.463', 'unand-gerbang-utama', 'walking', 8, 593, now()),
+  ('-0.918,100.463', 'unand-gerbang-utama', 'motorcycle', 2, 616, now()),
+  ('-0.918,100.463', 'unand-gerbang-utama', 'driving-car', 3, 640, now()),
+  ('-0.918,100.463', 'unand-pasar-baru', 'walking', 53, 3948, now()),
+  ('-0.918,100.463', 'unand-pasar-baru', 'motorcycle', 11, 4105, now()),
+  ('-0.918,100.463', 'unand-pasar-baru', 'driving-car', 15, 4263, now()),
+  ('-0.918,100.463', 'unand-pintu-pauh', 'walking', 39, 2904, now()),
+  ('-0.918,100.463', 'unand-pintu-pauh', 'motorcycle', 8, 3020, now()),
+  ('-0.918,100.463', 'unand-pintu-pauh', 'driving-car', 11, 3136, now()),
+  ('-0.926,100.449', 'unand-limau-manis', 'walking', 31, 2283, now()),
+  ('-0.926,100.449', 'unand-limau-manis', 'motorcycle', 6, 2374, now()),
+  ('-0.926,100.449', 'unand-limau-manis', 'driving-car', 9, 2465, now()),
+  ('-0.926,100.449', 'unand-gerbang-utama', 'walking', 31, 2283, now()),
+  ('-0.926,100.449', 'unand-gerbang-utama', 'motorcycle', 6, 2374, now()),
+  ('-0.926,100.449', 'unand-gerbang-utama', 'driving-car', 9, 2465, now()),
+  ('-0.926,100.449', 'unand-pasar-baru', 'walking', 27, 2003, now()),
+  ('-0.926,100.449', 'unand-pasar-baru', 'motorcycle', 6, 2083, now()),
+  ('-0.926,100.449', 'unand-pasar-baru', 'driving-car', 8, 2163, now()),
+  ('-0.926,100.449', 'unand-pintu-pauh', 'walking', 21, 1514, now()),
+  ('-0.926,100.449', 'unand-pintu-pauh', 'motorcycle', 4, 1574, now()),
+  ('-0.926,100.449', 'unand-pintu-pauh', 'driving-car', 6, 1635, now()),
+  ('-0.923,100.448', 'unand-limau-manis', 'walking', 29, 2109, now()),
+  ('-0.923,100.448', 'unand-limau-manis', 'motorcycle', 6, 2193, now()),
+  ('-0.923,100.448', 'unand-limau-manis', 'driving-car', 8, 2277, now()),
+  ('-0.923,100.448', 'unand-gerbang-utama', 'walking', 29, 2109, now()),
+  ('-0.923,100.448', 'unand-gerbang-utama', 'motorcycle', 6, 2193, now()),
+  ('-0.923,100.448', 'unand-gerbang-utama', 'driving-car', 8, 2277, now()),
+  ('-0.923,100.448', 'unand-pasar-baru', 'walking', 24, 1774, now()),
+  ('-0.923,100.448', 'unand-pasar-baru', 'motorcycle', 5, 1845, now()),
+  ('-0.923,100.448', 'unand-pasar-baru', 'driving-car', 7, 1916, now()),
+  ('-0.923,100.448', 'unand-pintu-pauh', 'walking', 15, 1059, now()),
+  ('-0.923,100.448', 'unand-pintu-pauh', 'motorcycle', 3, 1101, now()),
+  ('-0.923,100.448', 'unand-pintu-pauh', 'driving-car', 4, 1143, now()),
+  ('-0.917,100.461', 'unand-limau-manis', 'walking', 7, 463, now()),
+  ('-0.917,100.461', 'unand-limau-manis', 'motorcycle', 2, 481, now()),
+  ('-0.917,100.461', 'unand-limau-manis', 'driving-car', 2, 500, now()),
+  ('-0.917,100.461', 'unand-gerbang-utama', 'walking', 7, 463, now()),
+  ('-0.917,100.461', 'unand-gerbang-utama', 'motorcycle', 2, 481, now()),
+  ('-0.917,100.461', 'unand-gerbang-utama', 'driving-car', 2, 500, now()),
+  ('-0.917,100.461', 'unand-pasar-baru', 'walking', 50, 3709, now()),
+  ('-0.917,100.461', 'unand-pasar-baru', 'motorcycle', 10, 3857, now()),
+  ('-0.917,100.461', 'unand-pasar-baru', 'driving-car', 14, 4005, now()),
+  ('-0.917,100.461', 'unand-pintu-pauh', 'walking', 36, 2656, now()),
+  ('-0.917,100.461', 'unand-pintu-pauh', 'motorcycle', 7, 2763, now()),
+  ('-0.917,100.461', 'unand-pintu-pauh', 'driving-car', 10, 2869, now()),
+  ('-0.925,100.440', 'unand-limau-manis', 'walking', 42, 3134, now()),
+  ('-0.925,100.440', 'unand-limau-manis', 'motorcycle', 9, 3259, now()),
+  ('-0.925,100.440', 'unand-limau-manis', 'driving-car', 12, 3384, now()),
+  ('-0.925,100.440', 'unand-gerbang-utama', 'walking', 42, 3134, now()),
+  ('-0.925,100.440', 'unand-gerbang-utama', 'motorcycle', 9, 3259, now()),
+  ('-0.925,100.440', 'unand-gerbang-utama', 'driving-car', 12, 3384, now()),
+  ('-0.925,100.440', 'unand-pasar-baru', 'walking', 10, 740, now()),
+  ('-0.925,100.440', 'unand-pasar-baru', 'motorcycle', 2, 770, now()),
+  ('-0.925,100.440', 'unand-pasar-baru', 'driving-car', 3, 799, now()),
+  ('-0.925,100.440', 'unand-pintu-pauh', 'walking', 13, 944, now()),
+  ('-0.925,100.440', 'unand-pintu-pauh', 'motorcycle', 3, 982, now()),
+  ('-0.925,100.440', 'unand-pintu-pauh', 'driving-car', 4, 1019, now()),
+  ('-0.923,100.444', 'unand-limau-manis', 'walking', 34, 2500, now()),
+  ('-0.923,100.444', 'unand-limau-manis', 'motorcycle', 7, 2600, now()),
+  ('-0.923,100.444', 'unand-limau-manis', 'driving-car', 9, 2700, now()),
+  ('-0.923,100.444', 'unand-gerbang-utama', 'walking', 34, 2500, now()),
+  ('-0.923,100.444', 'unand-gerbang-utama', 'motorcycle', 7, 2600, now()),
+  ('-0.923,100.444', 'unand-gerbang-utama', 'driving-car', 9, 2700, now()),
+  ('-0.923,100.444', 'unand-pasar-baru', 'walking', 18, 1306, now()),
+  ('-0.923,100.444', 'unand-pasar-baru', 'motorcycle', 4, 1359, now()),
+  ('-0.923,100.444', 'unand-pasar-baru', 'driving-car', 5, 1411, now()),
+  ('-0.923,100.444', 'unand-pintu-pauh', 'walking', 11, 759, now()),
+  ('-0.923,100.444', 'unand-pintu-pauh', 'motorcycle', 2, 789, now()),
+  ('-0.923,100.444', 'unand-pintu-pauh', 'driving-car', 3, 819, now()),
+  ('-0.927,100.441', 'unand-limau-manis', 'walking', 44, 3231, now()),
+  ('-0.927,100.441', 'unand-limau-manis', 'motorcycle', 9, 3361, now()),
+  ('-0.927,100.441', 'unand-limau-manis', 'driving-car', 12, 3490, now()),
+  ('-0.927,100.441', 'unand-gerbang-utama', 'walking', 44, 3231, now()),
+  ('-0.927,100.441', 'unand-gerbang-utama', 'motorcycle', 9, 3361, now()),
+  ('-0.927,100.441', 'unand-gerbang-utama', 'driving-car', 12, 3490, now()),
+  ('-0.927,100.441', 'unand-pasar-baru', 'walking', 14, 1018, now()),
+  ('-0.927,100.441', 'unand-pasar-baru', 'motorcycle', 3, 1058, now()),
+  ('-0.927,100.441', 'unand-pasar-baru', 'driving-car', 4, 1099, now()),
+  ('-0.927,100.441', 'unand-pintu-pauh', 'walking', 18, 1301, now()),
+  ('-0.927,100.441', 'unand-pintu-pauh', 'motorcycle', 4, 1353, now()),
+  ('-0.927,100.441', 'unand-pintu-pauh', 'driving-car', 5, 1405, now()),
+  ('-0.915,100.457', 'unand-limau-manis', 'walking', 7, 518, now()),
+  ('-0.915,100.457', 'unand-limau-manis', 'motorcycle', 2, 538, now()),
+  ('-0.915,100.457', 'unand-limau-manis', 'driving-car', 2, 559, now()),
+  ('-0.915,100.457', 'unand-gerbang-utama', 'walking', 7, 518, now()),
+  ('-0.915,100.457', 'unand-gerbang-utama', 'motorcycle', 2, 538, now()),
+  ('-0.915,100.457', 'unand-gerbang-utama', 'driving-car', 2, 559, now()),
+  ('-0.915,100.457', 'unand-pasar-baru', 'walking', 43, 3190, now()),
+  ('-0.915,100.457', 'unand-pasar-baru', 'motorcycle', 9, 3318, now()),
+  ('-0.915,100.457', 'unand-pasar-baru', 'driving-car', 12, 3445, now()),
+  ('-0.915,100.457', 'unand-pintu-pauh', 'walking', 28, 2064, now()),
+  ('-0.915,100.457', 'unand-pintu-pauh', 'motorcycle', 6, 2146, now()),
+  ('-0.915,100.457', 'unand-pintu-pauh', 'driving-car', 8, 2229, now()),
+  ('-0.927,100.442', 'unand-limau-manis', 'walking', 41, 3066, now()),
+  ('-0.927,100.442', 'unand-limau-manis', 'motorcycle', 8, 3189, now()),
+  ('-0.927,100.442', 'unand-limau-manis', 'driving-car', 12, 3312, now()),
+  ('-0.927,100.442', 'unand-gerbang-utama', 'walking', 41, 3066, now()),
+  ('-0.927,100.442', 'unand-gerbang-utama', 'motorcycle', 8, 3189, now()),
+  ('-0.927,100.442', 'unand-gerbang-utama', 'driving-car', 12, 3312, now()),
+  ('-0.927,100.442', 'unand-pasar-baru', 'walking', 15, 1125, now()),
+  ('-0.927,100.442', 'unand-pasar-baru', 'motorcycle', 3, 1170, now()),
+  ('-0.927,100.442', 'unand-pasar-baru', 'driving-car', 5, 1215, now()),
+  ('-0.927,100.442', 'unand-pintu-pauh', 'walking', 17, 1238, now()),
+  ('-0.927,100.442', 'unand-pintu-pauh', 'motorcycle', 4, 1287, now()),
+  ('-0.927,100.442', 'unand-pintu-pauh', 'driving-car', 5, 1337, now()),
+  ('-0.911,100.457', 'unand-limau-manis', 'walking', 8, 573, now()),
+  ('-0.911,100.457', 'unand-limau-manis', 'motorcycle', 2, 595, now()),
+  ('-0.911,100.457', 'unand-limau-manis', 'driving-car', 3, 618, now()),
+  ('-0.911,100.457', 'unand-gerbang-utama', 'walking', 8, 573, now()),
+  ('-0.911,100.457', 'unand-gerbang-utama', 'motorcycle', 2, 595, now()),
+  ('-0.911,100.457', 'unand-gerbang-utama', 'driving-car', 3, 618, now()),
+  ('-0.911,100.457', 'unand-pasar-baru', 'walking', 47, 3518, now()),
+  ('-0.911,100.457', 'unand-pasar-baru', 'motorcycle', 10, 3658, now()),
+  ('-0.911,100.457', 'unand-pasar-baru', 'driving-car', 13, 3799, now()),
+  ('-0.911,100.457', 'unand-pintu-pauh', 'walking', 32, 2339, now()),
+  ('-0.911,100.457', 'unand-pintu-pauh', 'motorcycle', 7, 2432, now()),
+  ('-0.911,100.457', 'unand-pintu-pauh', 'driving-car', 9, 2526, now()),
+  ('-0.926,100.446', 'unand-limau-manis', 'walking', 34, 2529, now()),
+  ('-0.926,100.446', 'unand-limau-manis', 'motorcycle', 7, 2630, now()),
+  ('-0.926,100.446', 'unand-limau-manis', 'driving-car', 10, 2731, now()),
+  ('-0.926,100.446', 'unand-gerbang-utama', 'walking', 34, 2529, now()),
+  ('-0.926,100.446', 'unand-gerbang-utama', 'motorcycle', 7, 2630, now()),
+  ('-0.926,100.446', 'unand-gerbang-utama', 'driving-car', 10, 2731, now()),
+  ('-0.926,100.446', 'unand-pasar-baru', 'walking', 23, 1659, now()),
+  ('-0.926,100.446', 'unand-pasar-baru', 'motorcycle', 5, 1725, now()),
+  ('-0.926,100.446', 'unand-pasar-baru', 'driving-car', 6, 1791, now()),
+  ('-0.926,100.446', 'unand-pintu-pauh', 'walking', 18, 1305, now()),
+  ('-0.926,100.446', 'unand-pintu-pauh', 'motorcycle', 4, 1357, now()),
+  ('-0.926,100.446', 'unand-pintu-pauh', 'driving-car', 5, 1409, now()),
+  ('-0.912,100.464', 'unand-limau-manis', 'walking', 9, 645, now()),
+  ('-0.912,100.464', 'unand-limau-manis', 'motorcycle', 2, 671, now()),
+  ('-0.912,100.464', 'unand-limau-manis', 'driving-car', 3, 697, now()),
+  ('-0.912,100.464', 'unand-gerbang-utama', 'walking', 9, 645, now()),
+  ('-0.912,100.464', 'unand-gerbang-utama', 'motorcycle', 2, 671, now()),
+  ('-0.912,100.464', 'unand-gerbang-utama', 'driving-car', 3, 697, now()),
+  ('-0.912,100.464', 'unand-pasar-baru', 'walking', 58, 4336, now()),
+  ('-0.912,100.464', 'unand-pasar-baru', 'motorcycle', 12, 4510, now()),
+  ('-0.912,100.464', 'unand-pasar-baru', 'driving-car', 16, 4683, now()),
+  ('-0.912,100.464', 'unand-pintu-pauh', 'walking', 43, 3194, now()),
+  ('-0.912,100.464', 'unand-pintu-pauh', 'motorcycle', 9, 3322, now()),
+  ('-0.912,100.464', 'unand-pintu-pauh', 'driving-car', 12, 3449, now()),
+  ('-0.913,100.458', 'unand-limau-manis', 'walking', 4, 288, now()),
+  ('-0.913,100.458', 'unand-limau-manis', 'motorcycle', 1, 299, now()),
+  ('-0.913,100.458', 'unand-limau-manis', 'driving-car', 2, 311, now()),
+  ('-0.913,100.458', 'unand-gerbang-utama', 'walking', 4, 288, now()),
+  ('-0.913,100.458', 'unand-gerbang-utama', 'motorcycle', 1, 299, now()),
+  ('-0.913,100.458', 'unand-gerbang-utama', 'driving-car', 2, 311, now()),
+  ('-0.913,100.458', 'unand-pasar-baru', 'walking', 47, 3521, now()),
+  ('-0.913,100.458', 'unand-pasar-baru', 'motorcycle', 10, 3662, now()),
+  ('-0.913,100.458', 'unand-pasar-baru', 'driving-car', 13, 3803, now()),
+  ('-0.913,100.458', 'unand-pintu-pauh', 'walking', 32, 2371, now()),
+  ('-0.913,100.458', 'unand-pintu-pauh', 'motorcycle', 7, 2466, now()),
+  ('-0.913,100.458', 'unand-pintu-pauh', 'driving-car', 9, 2561, now()),
+  ('-0.923,100.449', 'unand-limau-manis', 'walking', 27, 1980, now()),
+  ('-0.923,100.449', 'unand-limau-manis', 'motorcycle', 6, 2059, now()),
+  ('-0.923,100.449', 'unand-limau-manis', 'driving-car', 8, 2138, now()),
+  ('-0.923,100.449', 'unand-gerbang-utama', 'walking', 27, 1980, now()),
+  ('-0.923,100.449', 'unand-gerbang-utama', 'motorcycle', 6, 2059, now()),
+  ('-0.923,100.449', 'unand-gerbang-utama', 'driving-car', 8, 2138, now()),
+  ('-0.923,100.449', 'unand-pasar-baru', 'walking', 26, 1940, now()),
+  ('-0.923,100.449', 'unand-pasar-baru', 'motorcycle', 6, 2018, now()),
+  ('-0.923,100.449', 'unand-pasar-baru', 'driving-car', 7, 2095, now()),
+  ('-0.923,100.449', 'unand-pintu-pauh', 'walking', 16, 1196, now()),
+  ('-0.923,100.449', 'unand-pintu-pauh', 'motorcycle', 4, 1244, now()),
+  ('-0.923,100.449', 'unand-pintu-pauh', 'driving-car', 5, 1292, now()),
+  ('-0.915,100.463', 'unand-limau-manis', 'walking', 6, 443, now()),
+  ('-0.915,100.463', 'unand-limau-manis', 'motorcycle', 2, 460, now()),
+  ('-0.915,100.463', 'unand-limau-manis', 'driving-car', 2, 478, now()),
+  ('-0.915,100.463', 'unand-gerbang-utama', 'walking', 6, 443, now()),
+  ('-0.915,100.463', 'unand-gerbang-utama', 'motorcycle', 2, 460, now()),
+  ('-0.915,100.463', 'unand-gerbang-utama', 'driving-car', 2, 478, now()),
+  ('-0.915,100.463', 'unand-pasar-baru', 'walking', 55, 4073, now()),
+  ('-0.915,100.463', 'unand-pasar-baru', 'motorcycle', 11, 4235, now()),
+  ('-0.915,100.463', 'unand-pasar-baru', 'driving-car', 15, 4398, now()),
+  ('-0.915,100.463', 'unand-pintu-pauh', 'walking', 40, 2979, now()),
+  ('-0.915,100.463', 'unand-pintu-pauh', 'motorcycle', 8, 3098, now()),
+  ('-0.915,100.463', 'unand-pintu-pauh', 'driving-car', 11, 3217, now()),
+  ('-0.924,100.441', 'unand-limau-manis', 'walking', 40, 2963, now()),
+  ('-0.924,100.441', 'unand-limau-manis', 'motorcycle', 8, 3081, now()),
+  ('-0.924,100.441', 'unand-limau-manis', 'driving-car', 11, 3200, now()),
+  ('-0.924,100.441', 'unand-gerbang-utama', 'walking', 40, 2963, now()),
+  ('-0.924,100.441', 'unand-gerbang-utama', 'motorcycle', 8, 3081, now()),
+  ('-0.924,100.441', 'unand-gerbang-utama', 'driving-car', 11, 3200, now()),
+  ('-0.924,100.441', 'unand-pasar-baru', 'walking', 13, 916, now()),
+  ('-0.924,100.441', 'unand-pasar-baru', 'motorcycle', 3, 953, now()),
+  ('-0.924,100.441', 'unand-pasar-baru', 'driving-car', 4, 990, now()),
+  ('-0.924,100.441', 'unand-pintu-pauh', 'walking', 12, 898, now()),
+  ('-0.924,100.441', 'unand-pintu-pauh', 'motorcycle', 3, 933, now()),
+  ('-0.924,100.441', 'unand-pintu-pauh', 'driving-car', 4, 969, now()),
+  ('-0.925,100.446', 'unand-limau-manis', 'walking', 34, 2478, now()),
+  ('-0.925,100.446', 'unand-limau-manis', 'motorcycle', 7, 2577, now()),
+  ('-0.925,100.446', 'unand-limau-manis', 'driving-car', 9, 2676, now()),
+  ('-0.925,100.446', 'unand-gerbang-utama', 'walking', 34, 2478, now()),
+  ('-0.925,100.446', 'unand-gerbang-utama', 'motorcycle', 7, 2577, now()),
+  ('-0.925,100.446', 'unand-gerbang-utama', 'driving-car', 9, 2676, now()),
+  ('-0.925,100.446', 'unand-pasar-baru', 'walking', 22, 1610, now()),
+  ('-0.925,100.446', 'unand-pasar-baru', 'motorcycle', 5, 1674, now()),
+  ('-0.925,100.446', 'unand-pasar-baru', 'driving-car', 6, 1739, now()),
+  ('-0.925,100.446', 'unand-pintu-pauh', 'walking', 16, 1200, now()),
+  ('-0.925,100.446', 'unand-pintu-pauh', 'motorcycle', 4, 1248, now()),
+  ('-0.925,100.446', 'unand-pintu-pauh', 'driving-car', 5, 1296, now()),
+  ('-0.910,100.461', 'unand-limau-manis', 'walking', 9, 606, now()),
+  ('-0.910,100.461', 'unand-limau-manis', 'motorcycle', 2, 631, now()),
+  ('-0.910,100.461', 'unand-limau-manis', 'driving-car', 3, 655, now()),
+  ('-0.910,100.461', 'unand-gerbang-utama', 'walking', 9, 606, now()),
+  ('-0.910,100.461', 'unand-gerbang-utama', 'motorcycle', 2, 631, now()),
+  ('-0.910,100.461', 'unand-gerbang-utama', 'driving-car', 3, 655, now()),
+  ('-0.910,100.461', 'unand-pasar-baru', 'walking', 55, 4084, now()),
+  ('-0.910,100.461', 'unand-pasar-baru', 'motorcycle', 11, 4247, now()),
+  ('-0.910,100.461', 'unand-pasar-baru', 'driving-car', 15, 4410, now()),
+  ('-0.910,100.461', 'unand-pintu-pauh', 'walking', 39, 2913, now()),
+  ('-0.910,100.461', 'unand-pintu-pauh', 'motorcycle', 8, 3029, now()),
+  ('-0.910,100.461', 'unand-pintu-pauh', 'driving-car', 11, 3146, now()),
+  ('-0.913,100.465', 'unand-limau-manis', 'walking', 9, 651, now()),
+  ('-0.913,100.465', 'unand-limau-manis', 'motorcycle', 2, 677, now()),
+  ('-0.913,100.465', 'unand-limau-manis', 'driving-car', 3, 703, now()),
+  ('-0.913,100.465', 'unand-gerbang-utama', 'walking', 9, 651, now()),
+  ('-0.913,100.465', 'unand-gerbang-utama', 'motorcycle', 2, 677, now()),
+  ('-0.913,100.465', 'unand-gerbang-utama', 'driving-car', 3, 703, now()),
+  ('-0.913,100.465', 'unand-pasar-baru', 'walking', 59, 4356, now()),
+  ('-0.913,100.465', 'unand-pasar-baru', 'motorcycle', 12, 4531, now()),
+  ('-0.913,100.465', 'unand-pasar-baru', 'driving-car', 16, 4705, now()),
+  ('-0.913,100.465', 'unand-pintu-pauh', 'walking', 44, 3230, now()),
+  ('-0.913,100.465', 'unand-pintu-pauh', 'motorcycle', 9, 3359, now()),
+  ('-0.913,100.465', 'unand-pintu-pauh', 'driving-car', 12, 3488, now()),
+  ('-0.924,100.442', 'unand-limau-manis', 'walking', 39, 2869, now()),
+  ('-0.924,100.442', 'unand-limau-manis', 'motorcycle', 8, 2984, now()),
+  ('-0.924,100.442', 'unand-limau-manis', 'driving-car', 11, 3098, now()),
+  ('-0.924,100.442', 'unand-gerbang-utama', 'walking', 39, 2869, now()),
+  ('-0.924,100.442', 'unand-gerbang-utama', 'motorcycle', 8, 2984, now()),
+  ('-0.924,100.442', 'unand-gerbang-utama', 'driving-car', 11, 3098, now()),
+  ('-0.924,100.442', 'unand-pasar-baru', 'walking', 13, 948, now()),
+  ('-0.924,100.442', 'unand-pasar-baru', 'motorcycle', 3, 985, now()),
+  ('-0.924,100.442', 'unand-pasar-baru', 'driving-car', 4, 1023, now()),
+  ('-0.924,100.442', 'unand-pintu-pauh', 'walking', 11, 783, now()),
+  ('-0.924,100.442', 'unand-pintu-pauh', 'motorcycle', 3, 814, now()),
+  ('-0.924,100.442', 'unand-pintu-pauh', 'driving-car', 3, 845, now()),
+  ('-5.354,105.247', 'unila-bandarlampung', 'walking', 22, 1580, now()),
+  ('-5.354,105.247', 'unila-bandarlampung', 'motorcycle', 5, 1643, now()),
+  ('-5.354,105.247', 'unila-bandarlampung', 'driving-car', 6, 1706, now()),
+  ('-5.354,105.247', 'unila-gerbang-utama', 'walking', 22, 1580, now()),
+  ('-5.354,105.247', 'unila-gerbang-utama', 'motorcycle', 5, 1643, now()),
+  ('-5.354,105.247', 'unila-gerbang-utama', 'driving-car', 6, 1706, now()),
+  ('-5.354,105.247', 'unila-gerbang-kpbaru', 'walking', 9, 636, now()),
+  ('-5.354,105.247', 'unila-gerbang-kpbaru', 'motorcycle', 2, 662, now()),
+  ('-5.354,105.247', 'unila-gerbang-kpbaru', 'driving-car', 3, 687, now()),
+  ('-5.354,105.247', 'unila-gerbang-gedongmeneng', 'walking', 34, 2485, now()),
+  ('-5.354,105.247', 'unila-gerbang-gedongmeneng', 'motorcycle', 7, 2584, now()),
+  ('-5.354,105.247', 'unila-gerbang-gedongmeneng', 'driving-car', 9, 2684, now()),
+  ('-5.351,105.244', 'unila-bandarlampung', 'walking', 26, 1880, now()),
+  ('-5.351,105.244', 'unila-bandarlampung', 'motorcycle', 5, 1955, now()),
+  ('-5.351,105.244', 'unila-bandarlampung', 'driving-car', 7, 2030, now()),
+  ('-5.351,105.244', 'unila-gerbang-utama', 'walking', 26, 1880, now()),
+  ('-5.351,105.244', 'unila-gerbang-utama', 'motorcycle', 5, 1955, now()),
+  ('-5.351,105.244', 'unila-gerbang-utama', 'driving-car', 7, 2030, now()),
+  ('-5.351,105.244', 'unila-gerbang-kpbaru', 'walking', 17, 1213, now()),
+  ('-5.351,105.244', 'unila-gerbang-kpbaru', 'motorcycle', 4, 1261, now()),
+  ('-5.351,105.244', 'unila-gerbang-kpbaru', 'driving-car', 5, 1310, now()),
+  ('-5.351,105.244', 'unila-gerbang-gedongmeneng', 'walking', 36, 2670, now()),
+  ('-5.351,105.244', 'unila-gerbang-gedongmeneng', 'motorcycle', 7, 2777, now()),
+  ('-5.351,105.244', 'unila-gerbang-gedongmeneng', 'driving-car', 10, 2884, now()),
+  ('-5.365,105.238', 'unila-bandarlampung', 'walking', 11, 814, now()),
+  ('-5.365,105.238', 'unila-bandarlampung', 'motorcycle', 3, 846, now()),
+  ('-5.365,105.238', 'unila-bandarlampung', 'driving-car', 3, 879, now()),
+  ('-5.365,105.238', 'unila-gerbang-utama', 'walking', 11, 814, now()),
+  ('-5.365,105.238', 'unila-gerbang-utama', 'motorcycle', 3, 846, now()),
+  ('-5.365,105.238', 'unila-gerbang-utama', 'driving-car', 3, 879, now()),
+  ('-5.365,105.238', 'unila-gerbang-kpbaru', 'walking', 24, 1788, now()),
+  ('-5.365,105.238', 'unila-gerbang-kpbaru', 'motorcycle', 5, 1859, now()),
+  ('-5.365,105.238', 'unila-gerbang-kpbaru', 'driving-car', 7, 1931, now()),
+  ('-5.365,105.238', 'unila-gerbang-gedongmeneng', 'walking', 9, 623, now()),
+  ('-5.365,105.238', 'unila-gerbang-gedongmeneng', 'motorcycle', 2, 647, now()),
+  ('-5.365,105.238', 'unila-gerbang-gedongmeneng', 'driving-car', 3, 672, now()),
+  ('-5.360,105.233', 'unila-bandarlampung', 'walking', 22, 1614, now()),
+  ('-5.360,105.233', 'unila-bandarlampung', 'motorcycle', 5, 1678, now()),
+  ('-5.360,105.233', 'unila-bandarlampung', 'driving-car', 6, 1743, now()),
+  ('-5.360,105.233', 'unila-gerbang-utama', 'walking', 22, 1614, now()),
+  ('-5.360,105.233', 'unila-gerbang-utama', 'motorcycle', 5, 1678, now()),
+  ('-5.360,105.233', 'unila-gerbang-utama', 'driving-car', 6, 1743, now()),
+  ('-5.360,105.233', 'unila-gerbang-kpbaru', 'walking', 29, 2170, now()),
+  ('-5.360,105.233', 'unila-gerbang-kpbaru', 'motorcycle', 6, 2257, now()),
+  ('-5.360,105.233', 'unila-gerbang-kpbaru', 'driving-car', 8, 2344, now()),
+  ('-5.360,105.233', 'unila-gerbang-gedongmeneng', 'walking', 22, 1616, now()),
+  ('-5.360,105.233', 'unila-gerbang-gedongmeneng', 'motorcycle', 5, 1681, now()),
+  ('-5.360,105.233', 'unila-gerbang-gedongmeneng', 'driving-car', 6, 1746, now()),
+  ('-5.351,105.247', 'unila-bandarlampung', 'walking', 26, 1879, now()),
+  ('-5.351,105.247', 'unila-bandarlampung', 'motorcycle', 5, 1954, now()),
+  ('-5.351,105.247', 'unila-bandarlampung', 'driving-car', 7, 2029, now()),
+  ('-5.351,105.247', 'unila-gerbang-utama', 'walking', 26, 1879, now()),
+  ('-5.351,105.247', 'unila-gerbang-utama', 'motorcycle', 5, 1954, now()),
+  ('-5.351,105.247', 'unila-gerbang-utama', 'driving-car', 7, 2029, now()),
+  ('-5.351,105.247', 'unila-gerbang-kpbaru', 'walking', 13, 945, now()),
+  ('-5.351,105.247', 'unila-gerbang-kpbaru', 'motorcycle', 3, 983, now()),
+  ('-5.351,105.247', 'unila-gerbang-kpbaru', 'driving-car', 4, 1021, now()),
+  ('-5.351,105.247', 'unila-gerbang-gedongmeneng', 'walking', 37, 2766, now()),
+  ('-5.351,105.247', 'unila-gerbang-gedongmeneng', 'motorcycle', 8, 2877, now()),
+  ('-5.351,105.247', 'unila-gerbang-gedongmeneng', 'driving-car', 10, 2988, now()),
+  ('-5.365,105.236', 'unila-bandarlampung', 'walking', 14, 1013, now()),
+  ('-5.365,105.236', 'unila-bandarlampung', 'motorcycle', 3, 1053, now()),
+  ('-5.365,105.236', 'unila-bandarlampung', 'driving-car', 4, 1094, now()),
+  ('-5.365,105.236', 'unila-gerbang-utama', 'walking', 14, 1013, now()),
+  ('-5.365,105.236', 'unila-gerbang-utama', 'motorcycle', 3, 1053, now()),
+  ('-5.365,105.236', 'unila-gerbang-utama', 'driving-car', 4, 1094, now()),
+  ('-5.365,105.236', 'unila-gerbang-kpbaru', 'walking', 27, 1960, now()),
+  ('-5.365,105.236', 'unila-gerbang-kpbaru', 'motorcycle', 6, 2038, now()),
+  ('-5.365,105.236', 'unila-gerbang-kpbaru', 'driving-car', 8, 2117, now()),
+  ('-5.365,105.236', 'unila-gerbang-gedongmeneng', 'walking', 10, 704, now()),
+  ('-5.365,105.236', 'unila-gerbang-gedongmeneng', 'motorcycle', 2, 732, now()),
+  ('-5.365,105.236', 'unila-gerbang-gedongmeneng', 'driving-car', 3, 760, now()),
+  ('-5.359,105.236', 'unila-bandarlampung', 'walking', 18, 1300, now()),
+  ('-5.359,105.236', 'unila-bandarlampung', 'motorcycle', 4, 1352, now()),
+  ('-5.359,105.236', 'unila-bandarlampung', 'driving-car', 5, 1404, now()),
+  ('-5.359,105.236', 'unila-gerbang-utama', 'walking', 18, 1300, now()),
+  ('-5.359,105.236', 'unila-gerbang-utama', 'motorcycle', 4, 1352, now()),
+  ('-5.359,105.236', 'unila-gerbang-utama', 'driving-car', 5, 1404, now()),
+  ('-5.359,105.236', 'unila-gerbang-kpbaru', 'walking', 23, 1704, now()),
+  ('-5.359,105.236', 'unila-gerbang-kpbaru', 'motorcycle', 5, 1772, now()),
+  ('-5.359,105.236', 'unila-gerbang-kpbaru', 'driving-car', 7, 1840, now()),
+  ('-5.359,105.236', 'unila-gerbang-gedongmeneng', 'walking', 21, 1575, now()),
+  ('-5.359,105.236', 'unila-gerbang-gedongmeneng', 'motorcycle', 5, 1638, now()),
+  ('-5.359,105.236', 'unila-gerbang-gedongmeneng', 'driving-car', 6, 1701, now()),
+  ('-5.370,105.238', 'unila-bandarlampung', 'walking', 15, 1095, now()),
+  ('-5.370,105.238', 'unila-bandarlampung', 'motorcycle', 3, 1139, now()),
+  ('-5.370,105.238', 'unila-bandarlampung', 'driving-car', 4, 1183, now()),
+  ('-5.370,105.238', 'unila-gerbang-utama', 'walking', 15, 1095, now()),
+  ('-5.370,105.238', 'unila-gerbang-utama', 'motorcycle', 3, 1139, now()),
+  ('-5.370,105.238', 'unila-gerbang-utama', 'driving-car', 4, 1183, now()),
+  ('-5.370,105.238', 'unila-gerbang-kpbaru', 'walking', 30, 2191, now()),
+  ('-5.370,105.238', 'unila-gerbang-kpbaru', 'motorcycle', 6, 2279, now()),
+  ('-5.370,105.238', 'unila-gerbang-kpbaru', 'driving-car', 8, 2367, now()),
+  ('-5.370,105.238', 'unila-gerbang-gedongmeneng', 'walking', 3, 205, now()),
+  ('-5.370,105.238', 'unila-gerbang-gedongmeneng', 'motorcycle', 1, 213, now()),
+  ('-5.370,105.238', 'unila-gerbang-gedongmeneng', 'driving-car', 2, 221, now()),
+  ('-5.359,105.249', 'unila-bandarlampung', 'walking', 16, 1140, now()),
+  ('-5.359,105.249', 'unila-bandarlampung', 'motorcycle', 3, 1186, now()),
+  ('-5.359,105.249', 'unila-bandarlampung', 'driving-car', 5, 1231, now()),
+  ('-5.359,105.249', 'unila-gerbang-utama', 'walking', 16, 1140, now()),
+  ('-5.359,105.249', 'unila-gerbang-utama', 'motorcycle', 3, 1186, now()),
+  ('-5.359,105.249', 'unila-gerbang-utama', 'driving-car', 5, 1231, now()),
+  ('-5.359,105.249', 'unila-gerbang-kpbaru', 'walking', 2, 148, now()),
+  ('-5.359,105.249', 'unila-gerbang-kpbaru', 'motorcycle', 1, 153, now()),
+  ('-5.359,105.249', 'unila-gerbang-kpbaru', 'driving-car', 2, 159, now()),
+  ('-5.359,105.249', 'unila-gerbang-gedongmeneng', 'walking', 28, 2081, now()),
+  ('-5.359,105.249', 'unila-gerbang-gedongmeneng', 'motorcycle', 6, 2165, now()),
+  ('-5.359,105.249', 'unila-gerbang-gedongmeneng', 'driving-car', 8, 2248, now()),
+  ('-5.371,105.238', 'unila-bandarlampung', 'walking', 17, 1260, now()),
+  ('-5.371,105.238', 'unila-bandarlampung', 'motorcycle', 4, 1310, now()),
+  ('-5.371,105.238', 'unila-bandarlampung', 'driving-car', 5, 1361, now()),
+  ('-5.371,105.238', 'unila-gerbang-utama', 'walking', 17, 1260, now()),
+  ('-5.371,105.238', 'unila-gerbang-utama', 'motorcycle', 4, 1310, now()),
+  ('-5.371,105.238', 'unila-gerbang-utama', 'driving-car', 5, 1361, now()),
+  ('-5.371,105.238', 'unila-gerbang-kpbaru', 'walking', 32, 2365, now()),
+  ('-5.371,105.238', 'unila-gerbang-kpbaru', 'motorcycle', 7, 2460, now()),
+  ('-5.371,105.238', 'unila-gerbang-kpbaru', 'driving-car', 9, 2554, now()),
+  ('-5.371,105.238', 'unila-gerbang-gedongmeneng', 'walking', 5, 320, now()),
+  ('-5.371,105.238', 'unila-gerbang-gedongmeneng', 'motorcycle', 1, 333, now()),
+  ('-5.371,105.238', 'unila-gerbang-gedongmeneng', 'driving-car', 2, 346, now()),
+  ('-5.353,105.248', 'unila-bandarlampung', 'walking', 23, 1696, now()),
+  ('-5.353,105.248', 'unila-bandarlampung', 'motorcycle', 5, 1764, now()),
+  ('-5.353,105.248', 'unila-bandarlampung', 'driving-car', 7, 1832, now()),
+  ('-5.353,105.248', 'unila-gerbang-utama', 'walking', 23, 1696, now()),
+  ('-5.353,105.248', 'unila-gerbang-utama', 'motorcycle', 5, 1764, now()),
+  ('-5.353,105.248', 'unila-gerbang-utama', 'driving-car', 7, 1832, now()),
+  ('-5.353,105.248', 'unila-gerbang-kpbaru', 'walking', 10, 726, now()),
+  ('-5.353,105.248', 'unila-gerbang-kpbaru', 'motorcycle', 2, 755, now()),
+  ('-5.353,105.248', 'unila-gerbang-kpbaru', 'driving-car', 3, 784, now()),
+  ('-5.353,105.248', 'unila-gerbang-gedongmeneng', 'walking', 35, 2603, now()),
+  ('-5.353,105.248', 'unila-gerbang-gedongmeneng', 'motorcycle', 7, 2707, now()),
+  ('-5.353,105.248', 'unila-gerbang-gedongmeneng', 'driving-car', 10, 2811, now()),
+  ('-5.356,105.249', 'unila-bandarlampung', 'walking', 19, 1355, now()),
+  ('-5.356,105.249', 'unila-bandarlampung', 'motorcycle', 4, 1409, now()),
+  ('-5.356,105.249', 'unila-bandarlampung', 'driving-car', 5, 1463, now()),
+  ('-5.356,105.249', 'unila-gerbang-utama', 'walking', 19, 1355, now()),
+  ('-5.356,105.249', 'unila-gerbang-utama', 'motorcycle', 4, 1409, now()),
+  ('-5.356,105.249', 'unila-gerbang-utama', 'driving-car', 5, 1463, now()),
+  ('-5.356,105.249', 'unila-gerbang-kpbaru', 'walking', 5, 303, now()),
+  ('-5.356,105.249', 'unila-gerbang-kpbaru', 'motorcycle', 1, 315, now()),
+  ('-5.356,105.249', 'unila-gerbang-kpbaru', 'driving-car', 2, 327, now()),
+  ('-5.356,105.249', 'unila-gerbang-gedongmeneng', 'walking', 31, 2289, now()),
+  ('-5.356,105.249', 'unila-gerbang-gedongmeneng', 'motorcycle', 6, 2380, now()),
+  ('-5.356,105.249', 'unila-gerbang-gedongmeneng', 'driving-car', 9, 2472, now()),
+  ('-5.351,105.243', 'unila-bandarlampung', 'walking', 26, 1934, now()),
+  ('-5.351,105.243', 'unila-bandarlampung', 'motorcycle', 6, 2011, now()),
+  ('-5.351,105.243', 'unila-bandarlampung', 'driving-car', 7, 2088, now()),
+  ('-5.351,105.243', 'unila-gerbang-utama', 'walking', 26, 1934, now()),
+  ('-5.351,105.243', 'unila-gerbang-utama', 'motorcycle', 6, 2011, now()),
+  ('-5.351,105.243', 'unila-gerbang-utama', 'driving-car', 7, 2088, now()),
+  ('-5.351,105.243', 'unila-gerbang-kpbaru', 'walking', 19, 1351, now()),
+  ('-5.351,105.243', 'unila-gerbang-kpbaru', 'motorcycle', 4, 1405, now()),
+  ('-5.351,105.243', 'unila-gerbang-kpbaru', 'driving-car', 5, 1459, now()),
+  ('-5.351,105.243', 'unila-gerbang-gedongmeneng', 'walking', 36, 2683, now()),
+  ('-5.351,105.243', 'unila-gerbang-gedongmeneng', 'motorcycle', 7, 2790, now()),
+  ('-5.351,105.243', 'unila-gerbang-gedongmeneng', 'driving-car', 10, 2897, now()),
+  ('-5.355,105.251', 'unila-bandarlampung', 'walking', 22, 1638, now()),
+  ('-5.355,105.251', 'unila-bandarlampung', 'motorcycle', 5, 1703, now()),
+  ('-5.355,105.251', 'unila-bandarlampung', 'driving-car', 6, 1769, now()),
+  ('-5.355,105.251', 'unila-gerbang-utama', 'walking', 22, 1638, now()),
+  ('-5.355,105.251', 'unila-gerbang-utama', 'motorcycle', 5, 1703, now()),
+  ('-5.355,105.251', 'unila-gerbang-utama', 'driving-car', 6, 1769, now()),
+  ('-5.355,105.251', 'unila-gerbang-kpbaru', 'walking', 8, 534, now()),
+  ('-5.355,105.251', 'unila-gerbang-kpbaru', 'motorcycle', 2, 555, now()),
+  ('-5.355,105.251', 'unila-gerbang-kpbaru', 'driving-car', 2, 576, now()),
+  ('-5.355,105.251', 'unila-gerbang-gedongmeneng', 'walking', 35, 2579, now()),
+  ('-5.355,105.251', 'unila-gerbang-gedongmeneng', 'motorcycle', 7, 2682, now()),
+  ('-5.355,105.251', 'unila-gerbang-gedongmeneng', 'driving-car', 10, 2785, now()),
+  ('-5.352,105.244', 'unila-bandarlampung', 'walking', 24, 1759, now()),
+  ('-5.352,105.244', 'unila-bandarlampung', 'motorcycle', 5, 1829, now()),
+  ('-5.352,105.244', 'unila-bandarlampung', 'driving-car', 7, 1899, now()),
+  ('-5.352,105.244', 'unila-gerbang-utama', 'walking', 24, 1759, now()),
+  ('-5.352,105.244', 'unila-gerbang-utama', 'motorcycle', 5, 1829, now()),
+  ('-5.352,105.244', 'unila-gerbang-utama', 'driving-car', 7, 1899, now()),
+  ('-5.352,105.244', 'unila-gerbang-kpbaru', 'walking', 15, 1065, now()),
+  ('-5.352,105.244', 'unila-gerbang-kpbaru', 'motorcycle', 3, 1108, now()),
+  ('-5.352,105.244', 'unila-gerbang-kpbaru', 'driving-car', 4, 1150, now()),
+  ('-5.352,105.244', 'unila-gerbang-gedongmeneng', 'walking', 35, 2573, now()),
+  ('-5.352,105.244', 'unila-gerbang-gedongmeneng', 'motorcycle', 7, 2675, now()),
+  ('-5.352,105.244', 'unila-gerbang-gedongmeneng', 'driving-car', 10, 2778, now()),
+  ('-5.353,105.252', 'unila-bandarlampung', 'walking', 28, 2051, now()),
+  ('-5.353,105.252', 'unila-bandarlampung', 'motorcycle', 6, 2133, now()),
+  ('-5.353,105.252', 'unila-bandarlampung', 'driving-car', 8, 2215, now()),
+  ('-5.353,105.252', 'unila-gerbang-utama', 'walking', 28, 2051, now()),
+  ('-5.353,105.252', 'unila-gerbang-utama', 'motorcycle', 6, 2133, now()),
+  ('-5.353,105.252', 'unila-gerbang-utama', 'driving-car', 8, 2215, now()),
+  ('-5.353,105.252', 'unila-gerbang-kpbaru', 'walking', 13, 948, now()),
+  ('-5.353,105.252', 'unila-gerbang-kpbaru', 'motorcycle', 3, 985, now()),
+  ('-5.353,105.252', 'unila-gerbang-kpbaru', 'driving-car', 4, 1023, now()),
+  ('-5.353,105.252', 'unila-gerbang-gedongmeneng', 'walking', 40, 2994, now()),
+  ('-5.353,105.252', 'unila-gerbang-gedongmeneng', 'motorcycle', 8, 3114, now()),
+  ('-5.353,105.252', 'unila-gerbang-gedongmeneng', 'driving-car', 11, 3233, now()),
+  ('-5.359,105.238', 'unila-bandarlampung', 'walking', 15, 1099, now()),
+  ('-5.359,105.238', 'unila-bandarlampung', 'motorcycle', 3, 1143, now()),
+  ('-5.359,105.238', 'unila-bandarlampung', 'driving-car', 4, 1187, now()),
+  ('-5.359,105.238', 'unila-gerbang-utama', 'walking', 15, 1099, now()),
+  ('-5.359,105.238', 'unila-gerbang-utama', 'motorcycle', 3, 1143, now()),
+  ('-5.359,105.238', 'unila-gerbang-utama', 'driving-car', 4, 1187, now()),
+  ('-5.359,105.238', 'unila-gerbang-kpbaru', 'walking', 20, 1474, now()),
+  ('-5.359,105.238', 'unila-gerbang-kpbaru', 'motorcycle', 4, 1533, now()),
+  ('-5.359,105.238', 'unila-gerbang-kpbaru', 'driving-car', 6, 1592, now()),
+  ('-5.359,105.238', 'unila-gerbang-gedongmeneng', 'walking', 20, 1491, now()),
+  ('-5.359,105.238', 'unila-gerbang-gedongmeneng', 'motorcycle', 4, 1551, now()),
+  ('-5.359,105.238', 'unila-gerbang-gedongmeneng', 'driving-car', 6, 1611, now()),
+  ('-5.370,105.236', 'unila-bandarlampung', 'walking', 18, 1326, now()),
+  ('-5.370,105.236', 'unila-bandarlampung', 'motorcycle', 4, 1379, now()),
+  ('-5.370,105.236', 'unila-bandarlampung', 'driving-car', 5, 1432, now()),
+  ('-5.370,105.236', 'unila-gerbang-utama', 'walking', 18, 1326, now()),
+  ('-5.370,105.236', 'unila-gerbang-utama', 'motorcycle', 4, 1379, now()),
+  ('-5.370,105.236', 'unila-gerbang-utama', 'driving-car', 5, 1432, now()),
+  ('-5.370,105.236', 'unila-gerbang-kpbaru', 'walking', 33, 2416, now()),
+  ('-5.370,105.236', 'unila-gerbang-kpbaru', 'motorcycle', 7, 2513, now()),
+  ('-5.370,105.236', 'unila-gerbang-kpbaru', 'driving-car', 9, 2610, now()),
+  ('-5.370,105.236', 'unila-gerbang-gedongmeneng', 'walking', 6, 431, now()),
+  ('-5.370,105.236', 'unila-gerbang-gedongmeneng', 'motorcycle', 2, 449, now()),
+  ('-5.370,105.236', 'unila-gerbang-gedongmeneng', 'driving-car', 2, 466, now()),
+  ('-5.370,105.239', 'unila-bandarlampung', 'walking', 14, 1028, now()),
+  ('-5.370,105.239', 'unila-bandarlampung', 'motorcycle', 3, 1069, now()),
+  ('-5.370,105.239', 'unila-bandarlampung', 'driving-car', 4, 1110, now()),
+  ('-5.370,105.239', 'unila-gerbang-utama', 'walking', 14, 1028, now()),
+  ('-5.370,105.239', 'unila-gerbang-utama', 'motorcycle', 3, 1069, now()),
+  ('-5.370,105.239', 'unila-gerbang-utama', 'driving-car', 4, 1110, now()),
+  ('-5.370,105.239', 'unila-gerbang-kpbaru', 'walking', 29, 2133, now()),
+  ('-5.370,105.239', 'unila-gerbang-kpbaru', 'motorcycle', 6, 2218, now()),
+  ('-5.370,105.239', 'unila-gerbang-kpbaru', 'driving-car', 8, 2303, now()),
+  ('-5.370,105.239', 'unila-gerbang-gedongmeneng', 'walking', 2, 85, now()),
+  ('-5.370,105.239', 'unila-gerbang-gedongmeneng', 'motorcycle', 1, 88, now()),
+  ('-5.370,105.239', 'unila-gerbang-gedongmeneng', 'driving-car', 2, 92, now()),
+  ('-5.369,105.239', 'unila-bandarlampung', 'walking', 12, 844, now()),
+  ('-5.369,105.239', 'unila-bandarlampung', 'motorcycle', 3, 878, now()),
+  ('-5.369,105.239', 'unila-bandarlampung', 'driving-car', 4, 911, now()),
+  ('-5.369,105.239', 'unila-gerbang-utama', 'walking', 12, 844, now()),
+  ('-5.369,105.239', 'unila-gerbang-utama', 'motorcycle', 3, 878, now()),
+  ('-5.369,105.239', 'unila-gerbang-utama', 'driving-car', 4, 911, now()),
+  ('-5.369,105.239', 'unila-gerbang-kpbaru', 'walking', 26, 1945, now()),
+  ('-5.369,105.239', 'unila-gerbang-kpbaru', 'motorcycle', 6, 2023, now()),
+  ('-5.369,105.239', 'unila-gerbang-kpbaru', 'driving-car', 8, 2101, now()),
+  ('-5.369,105.239', 'unila-gerbang-gedongmeneng', 'walking', 2, 124, now()),
+  ('-5.369,105.239', 'unila-gerbang-gedongmeneng', 'motorcycle', 1, 129, now()),
+  ('-5.369,105.239', 'unila-gerbang-gedongmeneng', 'driving-car', 2, 134, now()),
+  ('-5.353,105.253', 'unila-bandarlampung', 'walking', 28, 2066, now()),
+  ('-5.353,105.253', 'unila-bandarlampung', 'motorcycle', 6, 2149, now()),
+  ('-5.353,105.253', 'unila-bandarlampung', 'driving-car', 8, 2232, now()),
+  ('-5.353,105.253', 'unila-gerbang-utama', 'walking', 28, 2066, now()),
+  ('-5.353,105.253', 'unila-gerbang-utama', 'motorcycle', 6, 2149, now()),
+  ('-5.353,105.253', 'unila-gerbang-utama', 'driving-car', 8, 2232, now()),
+  ('-5.353,105.253', 'unila-gerbang-kpbaru', 'walking', 13, 961, now()),
+  ('-5.353,105.253', 'unila-gerbang-kpbaru', 'motorcycle', 3, 1000, now()),
+  ('-5.353,105.253', 'unila-gerbang-kpbaru', 'driving-car', 4, 1038, now()),
+  ('-5.353,105.253', 'unila-gerbang-gedongmeneng', 'walking', 41, 3008, now()),
+  ('-5.353,105.253', 'unila-gerbang-gedongmeneng', 'motorcycle', 8, 3128, now()),
+  ('-5.353,105.253', 'unila-gerbang-gedongmeneng', 'driving-car', 11, 3248, now()),
+  ('-5.352,105.247', 'unila-bandarlampung', 'walking', 24, 1778, now()),
+  ('-5.352,105.247', 'unila-bandarlampung', 'motorcycle', 5, 1849, now()),
+  ('-5.352,105.247', 'unila-bandarlampung', 'driving-car', 7, 1920, now()),
+  ('-5.352,105.247', 'unila-gerbang-utama', 'walking', 24, 1778, now()),
+  ('-5.352,105.247', 'unila-gerbang-utama', 'motorcycle', 5, 1849, now()),
+  ('-5.352,105.247', 'unila-gerbang-utama', 'driving-car', 7, 1920, now()),
+  ('-5.352,105.247', 'unila-gerbang-kpbaru', 'walking', 12, 863, now()),
+  ('-5.352,105.247', 'unila-gerbang-kpbaru', 'motorcycle', 3, 897, now()),
+  ('-5.352,105.247', 'unila-gerbang-kpbaru', 'driving-car', 4, 932, now()),
+  ('-5.352,105.247', 'unila-gerbang-gedongmeneng', 'walking', 36, 2663, now()),
+  ('-5.352,105.247', 'unila-gerbang-gedongmeneng', 'motorcycle', 7, 2769, now()),
+  ('-5.352,105.247', 'unila-gerbang-gedongmeneng', 'driving-car', 10, 2876, now()),
+  ('-5.366,105.238', 'unila-bandarlampung', 'walking', 11, 805, now()),
+  ('-5.366,105.238', 'unila-bandarlampung', 'motorcycle', 3, 837, now()),
+  ('-5.366,105.238', 'unila-bandarlampung', 'driving-car', 3, 869, now()),
+  ('-5.366,105.238', 'unila-gerbang-utama', 'walking', 11, 805, now()),
+  ('-5.366,105.238', 'unila-gerbang-utama', 'motorcycle', 3, 837, now()),
+  ('-5.366,105.238', 'unila-gerbang-utama', 'driving-car', 3, 869, now()),
+  ('-5.366,105.238', 'unila-gerbang-kpbaru', 'walking', 25, 1834, now()),
+  ('-5.366,105.238', 'unila-gerbang-kpbaru', 'motorcycle', 5, 1907, now()),
+  ('-5.366,105.238', 'unila-gerbang-kpbaru', 'driving-car', 7, 1980, now()),
+  ('-5.366,105.238', 'unila-gerbang-gedongmeneng', 'walking', 7, 478, now()),
+  ('-5.366,105.238', 'unila-gerbang-gedongmeneng', 'motorcycle', 2, 497, now()),
+  ('-5.366,105.238', 'unila-gerbang-gedongmeneng', 'driving-car', 2, 516, now()),
+  ('-5.366,105.233', 'unila-bandarlampung', 'walking', 20, 1483, now()),
+  ('-5.366,105.233', 'unila-bandarlampung', 'motorcycle', 4, 1542, now()),
+  ('-5.366,105.233', 'unila-bandarlampung', 'driving-car', 6, 1601, now()),
+  ('-5.366,105.233', 'unila-gerbang-utama', 'walking', 20, 1483, now()),
+  ('-5.366,105.233', 'unila-gerbang-utama', 'motorcycle', 4, 1542, now()),
+  ('-5.366,105.233', 'unila-gerbang-utama', 'driving-car', 6, 1601, now()),
+  ('-5.366,105.233', 'unila-gerbang-kpbaru', 'walking', 32, 2398, now()),
+  ('-5.366,105.233', 'unila-gerbang-kpbaru', 'motorcycle', 7, 2493, now()),
+  ('-5.366,105.233', 'unila-gerbang-kpbaru', 'driving-car', 9, 2589, now()),
+  ('-5.366,105.233', 'unila-gerbang-gedongmeneng', 'walking', 14, 1006, now()),
+  ('-5.366,105.233', 'unila-gerbang-gedongmeneng', 'motorcycle', 3, 1047, now()),
+  ('-5.366,105.233', 'unila-gerbang-gedongmeneng', 'driving-car', 4, 1087, now()),
+  ('-5.366,105.237', 'unila-bandarlampung', 'walking', 14, 984, now()),
+  ('-5.366,105.237', 'unila-bandarlampung', 'motorcycle', 3, 1023, now()),
+  ('-5.366,105.237', 'unila-bandarlampung', 'driving-car', 4, 1062, now()),
+  ('-5.366,105.237', 'unila-gerbang-utama', 'walking', 14, 984, now()),
+  ('-5.366,105.237', 'unila-gerbang-utama', 'motorcycle', 3, 1023, now()),
+  ('-5.366,105.237', 'unila-gerbang-utama', 'driving-car', 4, 1062, now()),
+  ('-5.366,105.237', 'unila-gerbang-kpbaru', 'walking', 27, 1965, now()),
+  ('-5.366,105.237', 'unila-gerbang-kpbaru', 'motorcycle', 6, 2044, now()),
+  ('-5.366,105.237', 'unila-gerbang-kpbaru', 'driving-car', 8, 2122, now()),
+  ('-5.366,105.237', 'unila-gerbang-gedongmeneng', 'walking', 9, 618, now()),
+  ('-5.366,105.237', 'unila-gerbang-gedongmeneng', 'motorcycle', 2, 642, now()),
+  ('-5.366,105.237', 'unila-gerbang-gedongmeneng', 'driving-car', 3, 667, now()),
+  ('-5.353,105.249', 'unila-bandarlampung', 'walking', 24, 1736, now()),
+  ('-5.353,105.249', 'unila-bandarlampung', 'motorcycle', 5, 1806, now()),
+  ('-5.353,105.249', 'unila-bandarlampung', 'driving-car', 7, 1875, now()),
+  ('-5.353,105.249', 'unila-gerbang-utama', 'walking', 24, 1736, now()),
+  ('-5.353,105.249', 'unila-gerbang-utama', 'motorcycle', 5, 1806, now()),
+  ('-5.353,105.249', 'unila-gerbang-utama', 'driving-car', 7, 1875, now()),
+  ('-5.353,105.249', 'unila-gerbang-kpbaru', 'walking', 10, 678, now()),
+  ('-5.353,105.249', 'unila-gerbang-kpbaru', 'motorcycle', 2, 705, now()),
+  ('-5.353,105.249', 'unila-gerbang-kpbaru', 'driving-car', 3, 732, now()),
+  ('-5.353,105.249', 'unila-gerbang-gedongmeneng', 'walking', 36, 2664, now()),
+  ('-5.353,105.249', 'unila-gerbang-gedongmeneng', 'motorcycle', 7, 2770, now()),
+  ('-5.353,105.249', 'unila-gerbang-gedongmeneng', 'driving-car', 10, 2877, now()),
+  ('-5.359,105.252', 'unila-bandarlampung', 'walking', 18, 1350, now()),
+  ('-5.359,105.252', 'unila-bandarlampung', 'motorcycle', 4, 1404, now()),
+  ('-5.359,105.252', 'unila-bandarlampung', 'driving-car', 5, 1458, now()),
+  ('-5.359,105.252', 'unila-gerbang-utama', 'walking', 18, 1350, now()),
+  ('-5.359,105.252', 'unila-gerbang-utama', 'motorcycle', 4, 1404, now()),
+  ('-5.359,105.252', 'unila-gerbang-utama', 'driving-car', 5, 1458, now()),
+  ('-5.359,105.252', 'unila-gerbang-kpbaru', 'walking', 6, 430, now()),
+  ('-5.359,105.252', 'unila-gerbang-kpbaru', 'motorcycle', 2, 447, now()),
+  ('-5.359,105.252', 'unila-gerbang-kpbaru', 'driving-car', 2, 464, now()),
+  ('-5.359,105.252', 'unila-gerbang-gedongmeneng', 'walking', 31, 2278, now()),
+  ('-5.359,105.252', 'unila-gerbang-gedongmeneng', 'motorcycle', 6, 2369, now()),
+  ('-5.359,105.252', 'unila-gerbang-gedongmeneng', 'driving-car', 9, 2460, now()),
+  ('-5.350,105.247', 'unila-bandarlampung', 'walking', 28, 2036, now()),
+  ('-5.350,105.247', 'unila-bandarlampung', 'motorcycle', 6, 2118, now()),
+  ('-5.350,105.247', 'unila-bandarlampung', 'driving-car', 8, 2199, now()),
+  ('-5.350,105.247', 'unila-gerbang-utama', 'walking', 28, 2036, now()),
+  ('-5.350,105.247', 'unila-gerbang-utama', 'motorcycle', 6, 2118, now()),
+  ('-5.350,105.247', 'unila-gerbang-utama', 'driving-car', 8, 2199, now()),
+  ('-5.350,105.247', 'unila-gerbang-kpbaru', 'walking', 16, 1159, now()),
+  ('-5.350,105.247', 'unila-gerbang-kpbaru', 'motorcycle', 4, 1205, now()),
+  ('-5.350,105.247', 'unila-gerbang-kpbaru', 'driving-car', 5, 1251, now()),
+  ('-5.350,105.247', 'unila-gerbang-gedongmeneng', 'walking', 39, 2896, now()),
+  ('-5.350,105.247', 'unila-gerbang-gedongmeneng', 'motorcycle', 8, 3012, now()),
+  ('-5.350,105.247', 'unila-gerbang-gedongmeneng', 'driving-car', 11, 3128, now()),
+  ('-5.368,105.241', 'unila-bandarlampung', 'walking', 8, 585, now()),
+  ('-5.368,105.241', 'unila-bandarlampung', 'motorcycle', 2, 608, now()),
+  ('-5.368,105.241', 'unila-bandarlampung', 'driving-car', 3, 632, now()),
+  ('-5.368,105.241', 'unila-gerbang-utama', 'walking', 8, 585, now()),
+  ('-5.368,105.241', 'unila-gerbang-utama', 'motorcycle', 2, 608, now()),
+  ('-5.368,105.241', 'unila-gerbang-utama', 'driving-car', 3, 632, now()),
+  ('-5.368,105.241', 'unila-gerbang-kpbaru', 'walking', 23, 1688, now()),
+  ('-5.368,105.241', 'unila-gerbang-kpbaru', 'motorcycle', 5, 1755, now()),
+  ('-5.368,105.241', 'unila-gerbang-kpbaru', 'driving-car', 7, 1823, now()),
+  ('-5.368,105.241', 'unila-gerbang-gedongmeneng', 'walking', 5, 373, now()),
+  ('-5.368,105.241', 'unila-gerbang-gedongmeneng', 'motorcycle', 1, 387, now()),
+  ('-5.368,105.241', 'unila-gerbang-gedongmeneng', 'driving-car', 2, 402, now()),
+  ('-0.907,100.357', 'unp-padang', 'walking', 20, 1484, now()),
+  ('-0.907,100.357', 'unp-padang', 'motorcycle', 4, 1543, now()),
+  ('-0.907,100.357', 'unp-padang', 'driving-car', 6, 1602, now()),
+  ('-0.907,100.357', 'unp-gerbang-utama', 'walking', 20, 1484, now()),
+  ('-0.907,100.357', 'unp-gerbang-utama', 'motorcycle', 4, 1543, now()),
+  ('-0.907,100.357', 'unp-gerbang-utama', 'driving-car', 6, 1602, now()),
+  ('-0.907,100.357', 'unp-stasiun-airtawar', 'walking', 28, 2060, now()),
+  ('-0.907,100.357', 'unp-stasiun-airtawar', 'motorcycle', 6, 2142, now()),
+  ('-0.907,100.357', 'unp-stasiun-airtawar', 'driving-car', 8, 2225, now()),
+  ('-0.907,100.357', 'unp-gerbang-cendrawasih', 'walking', 9, 639, now()),
+  ('-0.907,100.357', 'unp-gerbang-cendrawasih', 'motorcycle', 2, 664, now()),
+  ('-0.907,100.357', 'unp-gerbang-cendrawasih', 'driving-car', 3, 690, now()),
+  ('-0.896,100.359', 'unp-padang', 'walking', 13, 940, now()),
+  ('-0.896,100.359', 'unp-padang', 'motorcycle', 3, 978, now()),
+  ('-0.896,100.359', 'unp-padang', 'driving-car', 4, 1015, now()),
+  ('-0.896,100.359', 'unp-gerbang-utama', 'walking', 13, 940, now()),
+  ('-0.896,100.359', 'unp-gerbang-utama', 'motorcycle', 3, 978, now()),
+  ('-0.896,100.359', 'unp-gerbang-utama', 'driving-car', 4, 1015, now()),
+  ('-0.896,100.359', 'unp-stasiun-airtawar', 'walking', 20, 1443, now()),
+  ('-0.896,100.359', 'unp-stasiun-airtawar', 'motorcycle', 4, 1500, now()),
+  ('-0.896,100.359', 'unp-stasiun-airtawar', 'driving-car', 6, 1558, now()),
+  ('-0.896,100.359', 'unp-gerbang-cendrawasih', 'walking', 16, 1169, now()),
+  ('-0.896,100.359', 'unp-gerbang-cendrawasih', 'motorcycle', 4, 1216, now()),
+  ('-0.896,100.359', 'unp-gerbang-cendrawasih', 'driving-car', 5, 1262, now()),
+  ('-0.904,100.358', 'unp-padang', 'walking', 16, 1191, now()),
+  ('-0.904,100.358', 'unp-padang', 'motorcycle', 4, 1239, now()),
+  ('-0.904,100.358', 'unp-padang', 'driving-car', 5, 1287, now()),
+  ('-0.904,100.358', 'unp-gerbang-utama', 'walking', 16, 1191, now()),
+  ('-0.904,100.358', 'unp-gerbang-utama', 'motorcycle', 4, 1239, now()),
+  ('-0.904,100.358', 'unp-gerbang-utama', 'driving-car', 5, 1287, now()),
+  ('-0.904,100.358', 'unp-stasiun-airtawar', 'walking', 25, 1816, now()),
+  ('-0.904,100.358', 'unp-stasiun-airtawar', 'motorcycle', 5, 1889, now()),
+  ('-0.904,100.358', 'unp-stasiun-airtawar', 'driving-car', 7, 1962, now()),
+  ('-0.904,100.358', 'unp-gerbang-cendrawasih', 'walking', 6, 434, now()),
+  ('-0.904,100.358', 'unp-gerbang-cendrawasih', 'motorcycle', 2, 451, now()),
+  ('-0.904,100.358', 'unp-gerbang-cendrawasih', 'driving-car', 2, 468, now()),
+  ('-0.904,100.359', 'unp-padang', 'walking', 18, 1283, now()),
+  ('-0.904,100.359', 'unp-padang', 'motorcycle', 4, 1334, now()),
+  ('-0.904,100.359', 'unp-padang', 'driving-car', 5, 1385, now()),
+  ('-0.904,100.359', 'unp-gerbang-utama', 'walking', 18, 1283, now()),
+  ('-0.904,100.359', 'unp-gerbang-utama', 'motorcycle', 4, 1334, now()),
+  ('-0.904,100.359', 'unp-gerbang-utama', 'driving-car', 5, 1385, now()),
+  ('-0.904,100.359', 'unp-stasiun-airtawar', 'walking', 26, 1911, now()),
+  ('-0.904,100.359', 'unp-stasiun-airtawar', 'motorcycle', 5, 1988, now()),
+  ('-0.904,100.359', 'unp-stasiun-airtawar', 'driving-car', 7, 2064, now()),
+  ('-0.904,100.359', 'unp-gerbang-cendrawasih', 'walking', 8, 533, now()),
+  ('-0.904,100.359', 'unp-gerbang-cendrawasih', 'motorcycle', 2, 554, now()),
+  ('-0.904,100.359', 'unp-gerbang-cendrawasih', 'driving-car', 2, 575, now()),
+  ('-0.905,100.359', 'unp-padang', 'walking', 19, 1413, now()),
+  ('-0.905,100.359', 'unp-padang', 'motorcycle', 4, 1469, now()),
+  ('-0.905,100.359', 'unp-padang', 'driving-car', 6, 1526, now()),
+  ('-0.905,100.359', 'unp-gerbang-utama', 'walking', 19, 1413, now()),
+  ('-0.905,100.359', 'unp-gerbang-utama', 'motorcycle', 4, 1469, now()),
+  ('-0.905,100.359', 'unp-gerbang-utama', 'driving-car', 6, 1526, now()),
+  ('-0.905,100.359', 'unp-stasiun-airtawar', 'walking', 28, 2038, now()),
+  ('-0.905,100.359', 'unp-stasiun-airtawar', 'motorcycle', 6, 2119, now()),
+  ('-0.905,100.359', 'unp-stasiun-airtawar', 'driving-car', 8, 2201, now()),
+  ('-0.905,100.359', 'unp-gerbang-cendrawasih', 'walking', 9, 638, now()),
+  ('-0.905,100.359', 'unp-gerbang-cendrawasih', 'motorcycle', 2, 663, now()),
+  ('-0.905,100.359', 'unp-gerbang-cendrawasih', 'driving-car', 3, 689, now()),
+  ('-0.896,100.350', 'unp-padang', 'walking', 5, 354, now()),
+  ('-0.896,100.350', 'unp-padang', 'motorcycle', 1, 368, now()),
+  ('-0.896,100.350', 'unp-padang', 'driving-car', 2, 382, now()),
+  ('-0.896,100.350', 'unp-gerbang-utama', 'walking', 5, 354, now()),
+  ('-0.896,100.350', 'unp-gerbang-utama', 'motorcycle', 1, 368, now()),
+  ('-0.896,100.350', 'unp-gerbang-utama', 'driving-car', 2, 382, now()),
+  ('-0.896,100.350', 'unp-stasiun-airtawar', 'walking', 4, 296, now()),
+  ('-0.896,100.350', 'unp-stasiun-airtawar', 'motorcycle', 1, 308, now()),
+  ('-0.896,100.350', 'unp-stasiun-airtawar', 'driving-car', 2, 320, now()),
+  ('-0.896,100.350', 'unp-gerbang-cendrawasih', 'walking', 16, 1141, now()),
+  ('-0.896,100.350', 'unp-gerbang-cendrawasih', 'motorcycle', 3, 1187, now()),
+  ('-0.896,100.350', 'unp-gerbang-cendrawasih', 'driving-car', 5, 1233, now()),
+  ('-0.888,100.354', 'unp-padang', 'walking', 19, 1379, now()),
+  ('-0.888,100.354', 'unp-padang', 'motorcycle', 4, 1434, now()),
+  ('-0.888,100.354', 'unp-padang', 'driving-car', 5, 1489, now()),
+  ('-0.888,100.354', 'unp-gerbang-utama', 'walking', 19, 1379, now()),
+  ('-0.888,100.354', 'unp-gerbang-utama', 'motorcycle', 4, 1434, now()),
+  ('-0.888,100.354', 'unp-gerbang-utama', 'driving-car', 5, 1489, now()),
+  ('-0.888,100.354', 'unp-stasiun-airtawar', 'walking', 17, 1264, now()),
+  ('-0.888,100.354', 'unp-stasiun-airtawar', 'motorcycle', 4, 1314, now()),
+  ('-0.888,100.354', 'unp-stasiun-airtawar', 'driving-car', 5, 1365, now()),
+  ('-0.888,100.354', 'unp-gerbang-cendrawasih', 'walking', 29, 2134, now()),
+  ('-0.888,100.354', 'unp-gerbang-cendrawasih', 'motorcycle', 6, 2219, now()),
+  ('-0.888,100.354', 'unp-gerbang-cendrawasih', 'driving-car', 8, 2304, now()),
+  ('-0.888,100.352', 'unp-padang', 'walking', 18, 1301, now()),
+  ('-0.888,100.352', 'unp-padang', 'motorcycle', 4, 1353, now()),
+  ('-0.888,100.352', 'unp-padang', 'driving-car', 5, 1405, now()),
+  ('-0.888,100.352', 'unp-gerbang-utama', 'walking', 18, 1301, now()),
+  ('-0.888,100.352', 'unp-gerbang-utama', 'motorcycle', 4, 1353, now()),
+  ('-0.888,100.352', 'unp-gerbang-utama', 'driving-car', 5, 1405, now()),
+  ('-0.888,100.352', 'unp-stasiun-airtawar', 'walking', 15, 1093, now()),
+  ('-0.888,100.352', 'unp-stasiun-airtawar', 'motorcycle', 3, 1136, now()),
+  ('-0.888,100.352', 'unp-stasiun-airtawar', 'driving-car', 4, 1180, now()),
+  ('-0.888,100.352', 'unp-gerbang-cendrawasih', 'walking', 28, 2099, now()),
+  ('-0.888,100.352', 'unp-gerbang-cendrawasih', 'motorcycle', 6, 2183, now()),
+  ('-0.888,100.352', 'unp-gerbang-cendrawasih', 'driving-car', 8, 2267, now()),
+  ('-0.894,100.359', 'unp-padang', 'walking', 15, 1061, now()),
+  ('-0.894,100.359', 'unp-padang', 'motorcycle', 3, 1104, now()),
+  ('-0.894,100.359', 'unp-padang', 'driving-car', 4, 1146, now()),
+  ('-0.894,100.359', 'unp-gerbang-utama', 'walking', 15, 1061, now()),
+  ('-0.894,100.359', 'unp-gerbang-utama', 'motorcycle', 3, 1104, now()),
+  ('-0.894,100.359', 'unp-gerbang-utama', 'driving-car', 4, 1146, now()),
+  ('-0.894,100.359', 'unp-stasiun-airtawar', 'walking', 20, 1463, now()),
+  ('-0.894,100.359', 'unp-stasiun-airtawar', 'motorcycle', 4, 1521, now()),
+  ('-0.894,100.359', 'unp-stasiun-airtawar', 'driving-car', 6, 1580, now()),
+  ('-0.894,100.359', 'unp-gerbang-cendrawasih', 'walking', 19, 1425, now()),
+  ('-0.894,100.359', 'unp-gerbang-cendrawasih', 'motorcycle', 4, 1482, now()),
+  ('-0.894,100.359', 'unp-gerbang-cendrawasih', 'driving-car', 6, 1539, now()),
+  ('-0.890,100.354', 'unp-padang', 'walking', 15, 1055, now()),
+  ('-0.890,100.354', 'unp-padang', 'motorcycle', 3, 1097, now()),
+  ('-0.890,100.354', 'unp-padang', 'driving-car', 4, 1139, now()),
+  ('-0.890,100.354', 'unp-gerbang-utama', 'walking', 15, 1055, now()),
+  ('-0.890,100.354', 'unp-gerbang-utama', 'motorcycle', 3, 1097, now()),
+  ('-0.890,100.354', 'unp-gerbang-utama', 'driving-car', 4, 1139, now()),
+  ('-0.890,100.354', 'unp-stasiun-airtawar', 'walking', 14, 1038, now()),
+  ('-0.890,100.354', 'unp-stasiun-airtawar', 'motorcycle', 3, 1079, now()),
+  ('-0.890,100.354', 'unp-stasiun-airtawar', 'driving-car', 4, 1121, now()),
+  ('-0.890,100.354', 'unp-gerbang-cendrawasih', 'walking', 24, 1795, now()),
+  ('-0.890,100.354', 'unp-gerbang-cendrawasih', 'motorcycle', 5, 1867, now()),
+  ('-0.890,100.354', 'unp-gerbang-cendrawasih', 'driving-car', 7, 1939, now()),
+  ('-0.892,100.353', 'unp-padang', 'walking', 11, 793, now()),
+  ('-0.892,100.353', 'unp-padang', 'motorcycle', 3, 824, now()),
+  ('-0.892,100.353', 'unp-padang', 'driving-car', 3, 856, now()),
+  ('-0.892,100.353', 'unp-gerbang-utama', 'walking', 11, 793, now()),
+  ('-0.892,100.353', 'unp-gerbang-utama', 'motorcycle', 3, 824, now()),
+  ('-0.892,100.353', 'unp-gerbang-utama', 'driving-car', 3, 856, now()),
+  ('-0.892,100.353', 'unp-stasiun-airtawar', 'walking', 10, 720, now()),
+  ('-0.892,100.353', 'unp-stasiun-airtawar', 'motorcycle', 2, 749, now()),
+  ('-0.892,100.353', 'unp-stasiun-airtawar', 'driving-car', 3, 778, now()),
+  ('-0.892,100.353', 'unp-gerbang-cendrawasih', 'walking', 22, 1593, now()),
+  ('-0.892,100.353', 'unp-gerbang-cendrawasih', 'motorcycle', 5, 1656, now()),
+  ('-0.892,100.353', 'unp-gerbang-cendrawasih', 'driving-car', 6, 1720, now()),
+  ('-0.902,100.347', 'unp-padang', 'walking', 13, 940, now()),
+  ('-0.902,100.347', 'unp-padang', 'motorcycle', 3, 978, now()),
+  ('-0.902,100.347', 'unp-padang', 'driving-car', 4, 1015, now()),
+  ('-0.902,100.347', 'unp-gerbang-utama', 'walking', 13, 940, now()),
+  ('-0.902,100.347', 'unp-gerbang-utama', 'motorcycle', 3, 978, now()),
+  ('-0.902,100.347', 'unp-gerbang-utama', 'driving-car', 4, 1015, now()),
+  ('-0.902,100.347', 'unp-stasiun-airtawar', 'walking', 13, 931, now()),
+  ('-0.902,100.347', 'unp-stasiun-airtawar', 'motorcycle', 3, 969, now()),
+  ('-0.902,100.347', 'unp-stasiun-airtawar', 'driving-car', 4, 1006, now()),
+  ('-0.902,100.347', 'unp-gerbang-cendrawasih', 'walking', 16, 1136, now()),
+  ('-0.902,100.347', 'unp-gerbang-cendrawasih', 'motorcycle', 3, 1182, now()),
+  ('-0.902,100.347', 'unp-gerbang-cendrawasih', 'driving-car', 5, 1227, now()),
+  ('-0.893,100.358', 'unp-padang', 'walking', 15, 1054, now()),
+  ('-0.893,100.358', 'unp-padang', 'motorcycle', 3, 1096, now()),
+  ('-0.893,100.358', 'unp-padang', 'driving-car', 4, 1138, now()),
+  ('-0.893,100.358', 'unp-gerbang-utama', 'walking', 15, 1054, now()),
+  ('-0.893,100.358', 'unp-gerbang-utama', 'motorcycle', 3, 1096, now()),
+  ('-0.893,100.358', 'unp-gerbang-utama', 'driving-car', 4, 1138, now()),
+  ('-0.893,100.358', 'unp-stasiun-airtawar', 'walking', 19, 1410, now()),
+  ('-0.893,100.358', 'unp-stasiun-airtawar', 'motorcycle', 4, 1466, now()),
+  ('-0.893,100.358', 'unp-stasiun-airtawar', 'driving-car', 6, 1523, now()),
+  ('-0.893,100.358', 'unp-gerbang-cendrawasih', 'walking', 20, 1481, now()),
+  ('-0.893,100.358', 'unp-gerbang-cendrawasih', 'motorcycle', 4, 1541, now()),
+  ('-0.893,100.358', 'unp-gerbang-cendrawasih', 'driving-car', 6, 1600, now()),
+  ('-0.889,100.350', 'unp-padang', 'walking', 17, 1201, now()),
+  ('-0.889,100.350', 'unp-padang', 'motorcycle', 4, 1249, now()),
+  ('-0.889,100.350', 'unp-padang', 'driving-car', 5, 1297, now()),
+  ('-0.889,100.350', 'unp-gerbang-utama', 'walking', 17, 1201, now()),
+  ('-0.889,100.350', 'unp-gerbang-utama', 'motorcycle', 4, 1249, now()),
+  ('-0.889,100.350', 'unp-gerbang-utama', 'driving-car', 5, 1297, now()),
+  ('-0.889,100.350', 'unp-stasiun-airtawar', 'walking', 12, 838, now()),
+  ('-0.889,100.350', 'unp-stasiun-airtawar', 'motorcycle', 3, 871, now()),
+  ('-0.889,100.350', 'unp-stasiun-airtawar', 'driving-car', 4, 905, now()),
+  ('-0.889,100.350', 'unp-gerbang-cendrawasih', 'walking', 28, 2040, now()),
+  ('-0.889,100.350', 'unp-gerbang-cendrawasih', 'motorcycle', 6, 2122, now()),
+  ('-0.889,100.350', 'unp-gerbang-cendrawasih', 'driving-car', 8, 2203, now()),
+  ('-0.892,100.358', 'unp-padang', 'walking', 16, 1144, now()),
+  ('-0.892,100.358', 'unp-padang', 'motorcycle', 3, 1190, now()),
+  ('-0.892,100.358', 'unp-padang', 'driving-car', 5, 1235, now()),
+  ('-0.892,100.358', 'unp-gerbang-utama', 'walking', 16, 1144, now()),
+  ('-0.892,100.358', 'unp-gerbang-utama', 'motorcycle', 3, 1190, now()),
+  ('-0.892,100.358', 'unp-gerbang-utama', 'driving-car', 5, 1235, now()),
+  ('-0.892,100.358', 'unp-stasiun-airtawar', 'walking', 19, 1421, now()),
+  ('-0.892,100.358', 'unp-stasiun-airtawar', 'motorcycle', 4, 1478, now()),
+  ('-0.892,100.358', 'unp-stasiun-airtawar', 'driving-car', 6, 1535, now()),
+  ('-0.892,100.358', 'unp-gerbang-cendrawasih', 'walking', 22, 1644, now()),
+  ('-0.892,100.358', 'unp-gerbang-cendrawasih', 'motorcycle', 5, 1710, now()),
+  ('-0.892,100.358', 'unp-gerbang-cendrawasih', 'driving-car', 6, 1775, now()),
+  ('-0.897,100.358', 'unp-padang', 'walking', 10, 730, now()),
+  ('-0.897,100.358', 'unp-padang', 'motorcycle', 2, 759, now()),
+  ('-0.897,100.358', 'unp-padang', 'driving-car', 3, 788, now()),
+  ('-0.897,100.358', 'unp-gerbang-utama', 'walking', 10, 730, now()),
+  ('-0.897,100.358', 'unp-gerbang-utama', 'motorcycle', 2, 759, now()),
+  ('-0.897,100.358', 'unp-gerbang-utama', 'driving-car', 3, 788, now()),
+  ('-0.897,100.358', 'unp-stasiun-airtawar', 'walking', 18, 1318, now()),
+  ('-0.897,100.358', 'unp-stasiun-airtawar', 'motorcycle', 4, 1370, now()),
+  ('-0.897,100.358', 'unp-stasiun-airtawar', 'driving-car', 5, 1423, now()),
+  ('-0.897,100.358', 'unp-gerbang-cendrawasih', 'walking', 12, 853, now()),
+  ('-0.897,100.358', 'unp-gerbang-cendrawasih', 'motorcycle', 3, 887, now()),
+  ('-0.897,100.358', 'unp-gerbang-cendrawasih', 'driving-car', 4, 921, now()),
+  ('-0.902,100.361', 'unp-padang', 'walking', 19, 1369, now()),
+  ('-0.902,100.361', 'unp-padang', 'motorcycle', 4, 1424, now()),
+  ('-0.902,100.361', 'unp-padang', 'driving-car', 5, 1478, now()),
+  ('-0.902,100.361', 'unp-gerbang-utama', 'walking', 19, 1369, now()),
+  ('-0.902,100.361', 'unp-gerbang-utama', 'motorcycle', 4, 1424, now()),
+  ('-0.902,100.361', 'unp-gerbang-utama', 'driving-car', 5, 1478, now()),
+  ('-0.902,100.361', 'unp-stasiun-airtawar', 'walking', 27, 2011, now()),
+  ('-0.902,100.361', 'unp-stasiun-airtawar', 'motorcycle', 6, 2092, now()),
+  ('-0.902,100.361', 'unp-stasiun-airtawar', 'driving-car', 8, 2172, now()),
+  ('-0.902,100.361', 'unp-gerbang-cendrawasih', 'walking', 12, 848, now()),
+  ('-0.902,100.361', 'unp-gerbang-cendrawasih', 'motorcycle', 3, 881, now()),
+  ('-0.902,100.361', 'unp-gerbang-cendrawasih', 'driving-car', 4, 915, now()),
+  ('-0.898,100.348', 'unp-padang', 'walking', 9, 638, now()),
+  ('-0.898,100.348', 'unp-padang', 'motorcycle', 2, 663, now()),
+  ('-0.898,100.348', 'unp-padang', 'driving-car', 3, 689, now()),
+  ('-0.898,100.348', 'unp-gerbang-utama', 'walking', 9, 638, now()),
+  ('-0.898,100.348', 'unp-gerbang-utama', 'motorcycle', 2, 663, now()),
+  ('-0.898,100.348', 'unp-gerbang-utama', 'driving-car', 3, 689, now()),
+  ('-0.898,100.348', 'unp-stasiun-airtawar', 'walking', 7, 458, now()),
+  ('-0.898,100.348', 'unp-stasiun-airtawar', 'motorcycle', 2, 476, now()),
+  ('-0.898,100.348', 'unp-stasiun-airtawar', 'driving-car', 2, 494, now()),
+  ('-0.898,100.348', 'unp-gerbang-cendrawasih', 'walking', 16, 1193, now()),
+  ('-0.898,100.348', 'unp-gerbang-cendrawasih', 'motorcycle', 4, 1240, now()),
+  ('-0.898,100.348', 'unp-gerbang-cendrawasih', 'driving-car', 5, 1288, now()),
+  ('-0.889,100.355', 'unp-padang', 'walking', 17, 1201, now()),
+  ('-0.889,100.355', 'unp-padang', 'motorcycle', 4, 1249, now()),
+  ('-0.889,100.355', 'unp-padang', 'driving-car', 5, 1297, now()),
+  ('-0.889,100.355', 'unp-gerbang-utama', 'walking', 17, 1201, now()),
+  ('-0.889,100.355', 'unp-gerbang-utama', 'motorcycle', 4, 1249, now()),
+  ('-0.889,100.355', 'unp-gerbang-utama', 'driving-car', 5, 1297, now()),
+  ('-0.889,100.355', 'unp-stasiun-airtawar', 'walking', 17, 1208, now()),
+  ('-0.889,100.355', 'unp-stasiun-airtawar', 'motorcycle', 4, 1256, now()),
+  ('-0.889,100.355', 'unp-stasiun-airtawar', 'driving-car', 5, 1304, now()),
+  ('-0.889,100.355', 'unp-gerbang-cendrawasih', 'walking', 26, 1909, now()),
+  ('-0.889,100.355', 'unp-gerbang-cendrawasih', 'motorcycle', 5, 1985, now()),
+  ('-0.889,100.355', 'unp-gerbang-cendrawasih', 'driving-car', 7, 2061, now()),
+  ('-0.891,100.356', 'unp-padang', 'walking', 14, 1011, now()),
+  ('-0.891,100.356', 'unp-padang', 'motorcycle', 3, 1052, now()),
+  ('-0.891,100.356', 'unp-padang', 'driving-car', 4, 1092, now()),
+  ('-0.891,100.356', 'unp-gerbang-utama', 'walking', 14, 1011, now()),
+  ('-0.891,100.356', 'unp-gerbang-utama', 'motorcycle', 3, 1052, now()),
+  ('-0.891,100.356', 'unp-gerbang-utama', 'driving-car', 4, 1092, now()),
+  ('-0.891,100.356', 'unp-stasiun-airtawar', 'walking', 16, 1133, now()),
+  ('-0.891,100.356', 'unp-stasiun-airtawar', 'motorcycle', 3, 1178, now()),
+  ('-0.891,100.356', 'unp-stasiun-airtawar', 'driving-car', 5, 1223, now()),
+  ('-0.891,100.356', 'unp-gerbang-cendrawasih', 'walking', 23, 1676, now()),
+  ('-0.891,100.356', 'unp-gerbang-cendrawasih', 'motorcycle', 5, 1743, now()),
+  ('-0.891,100.356', 'unp-gerbang-cendrawasih', 'driving-car', 7, 1810, now()),
+  ('-0.896,100.349', 'unp-padang', 'walking', 7, 469, now()),
+  ('-0.896,100.349', 'unp-padang', 'motorcycle', 2, 488, now()),
+  ('-0.896,100.349', 'unp-padang', 'driving-car', 2, 506, now()),
+  ('-0.896,100.349', 'unp-gerbang-utama', 'walking', 7, 469, now()),
+  ('-0.896,100.349', 'unp-gerbang-utama', 'motorcycle', 2, 488, now()),
+  ('-0.896,100.349', 'unp-gerbang-utama', 'driving-car', 2, 506, now()),
+  ('-0.896,100.349', 'unp-stasiun-airtawar', 'walking', 3, 186, now()),
+  ('-0.896,100.349', 'unp-stasiun-airtawar', 'motorcycle', 1, 194, now()),
+  ('-0.896,100.349', 'unp-stasiun-airtawar', 'driving-car', 2, 201, now()),
+  ('-0.896,100.349', 'unp-gerbang-cendrawasih', 'walking', 17, 1246, now()),
+  ('-0.896,100.349', 'unp-gerbang-cendrawasih', 'motorcycle', 4, 1296, now()),
+  ('-0.896,100.349', 'unp-gerbang-cendrawasih', 'driving-car', 5, 1346, now()),
+  ('-0.901,100.347', 'unp-padang', 'walking', 12, 876, now()),
+  ('-0.901,100.347', 'unp-padang', 'motorcycle', 3, 911, now()),
+  ('-0.901,100.347', 'unp-padang', 'driving-car', 4, 946, now()),
+  ('-0.901,100.347', 'unp-gerbang-utama', 'walking', 12, 876, now()),
+  ('-0.901,100.347', 'unp-gerbang-utama', 'motorcycle', 3, 911, now()),
+  ('-0.901,100.347', 'unp-gerbang-utama', 'driving-car', 4, 946, now()),
+  ('-0.901,100.347', 'unp-stasiun-airtawar', 'walking', 12, 871, now()),
+  ('-0.901,100.347', 'unp-stasiun-airtawar', 'motorcycle', 3, 906, now()),
+  ('-0.901,100.347', 'unp-stasiun-airtawar', 'driving-car', 4, 941, now()),
+  ('-0.901,100.347', 'unp-gerbang-cendrawasih', 'walking', 15, 1108, now()),
+  ('-0.901,100.347', 'unp-gerbang-cendrawasih', 'motorcycle', 3, 1152, now()),
+  ('-0.901,100.347', 'unp-gerbang-cendrawasih', 'driving-car', 4, 1196, now()),
+  ('-0.891,100.358', 'unp-padang', 'walking', 16, 1129, now()),
+  ('-0.891,100.358', 'unp-padang', 'motorcycle', 3, 1174, now()),
+  ('-0.891,100.358', 'unp-padang', 'driving-car', 5, 1219, now()),
+  ('-0.891,100.358', 'unp-gerbang-utama', 'walking', 16, 1129, now()),
+  ('-0.891,100.358', 'unp-gerbang-utama', 'motorcycle', 3, 1174, now()),
+  ('-0.891,100.358', 'unp-gerbang-utama', 'driving-car', 5, 1219, now()),
+  ('-0.891,100.358', 'unp-stasiun-airtawar', 'walking', 19, 1384, now()),
+  ('-0.891,100.358', 'unp-stasiun-airtawar', 'motorcycle', 4, 1439, now()),
+  ('-0.891,100.358', 'unp-stasiun-airtawar', 'driving-car', 5, 1494, now()),
+  ('-0.891,100.358', 'unp-gerbang-cendrawasih', 'walking', 23, 1654, now()),
+  ('-0.891,100.358', 'unp-gerbang-cendrawasih', 'motorcycle', 5, 1720, now()),
+  ('-0.891,100.358', 'unp-gerbang-cendrawasih', 'driving-car', 6, 1786, now()),
+  ('-0.886,100.352', 'unp-padang', 'walking', 22, 1598, now()),
+  ('-0.886,100.352', 'unp-padang', 'motorcycle', 5, 1661, now()),
+  ('-0.886,100.352', 'unp-padang', 'driving-car', 6, 1725, now()),
+  ('-0.886,100.352', 'unp-gerbang-utama', 'walking', 22, 1598, now()),
+  ('-0.886,100.352', 'unp-gerbang-utama', 'motorcycle', 5, 1661, now()),
+  ('-0.886,100.352', 'unp-gerbang-utama', 'driving-car', 6, 1725, now()),
+  ('-0.886,100.352', 'unp-stasiun-airtawar', 'walking', 18, 1331, now()),
+  ('-0.886,100.352', 'unp-stasiun-airtawar', 'motorcycle', 4, 1385, now()),
+  ('-0.886,100.352', 'unp-stasiun-airtawar', 'driving-car', 5, 1438, now()),
+  ('-0.886,100.352', 'unp-gerbang-cendrawasih', 'walking', 32, 2400, now()),
+  ('-0.886,100.352', 'unp-gerbang-cendrawasih', 'motorcycle', 7, 2496, now()),
+  ('-0.886,100.352', 'unp-gerbang-cendrawasih', 'driving-car', 9, 2592, now()),
+  ('-0.907,100.363', 'unp-padang', 'walking', 27, 1980, now()),
+  ('-0.907,100.363', 'unp-padang', 'motorcycle', 6, 2059, now()),
+  ('-0.907,100.363', 'unp-padang', 'driving-car', 8, 2138, now()),
+  ('-0.907,100.363', 'unp-gerbang-utama', 'walking', 27, 1980, now()),
+  ('-0.907,100.363', 'unp-gerbang-utama', 'motorcycle', 6, 2059, now()),
+  ('-0.907,100.363', 'unp-gerbang-utama', 'driving-car', 8, 2138, now()),
+  ('-0.907,100.363', 'unp-stasiun-airtawar', 'walking', 35, 2620, now()),
+  ('-0.907,100.363', 'unp-stasiun-airtawar', 'motorcycle', 7, 2725, now()),
+  ('-0.907,100.363', 'unp-stasiun-airtawar', 'driving-car', 10, 2830, now()),
+  ('-0.907,100.363', 'unp-gerbang-cendrawasih', 'walking', 17, 1260, now()),
+  ('-0.907,100.363', 'unp-gerbang-cendrawasih', 'motorcycle', 4, 1310, now()),
+  ('-0.907,100.363', 'unp-gerbang-cendrawasih', 'driving-car', 5, 1361, now()),
+  ('-0.896,100.347', 'unp-padang', 'walking', 11, 788, now()),
+  ('-0.896,100.347', 'unp-padang', 'motorcycle', 3, 819, now()),
+  ('-0.896,100.347', 'unp-padang', 'driving-car', 3, 851, now()),
+  ('-0.896,100.347', 'unp-gerbang-utama', 'walking', 11, 788, now()),
+  ('-0.896,100.347', 'unp-gerbang-utama', 'motorcycle', 3, 819, now()),
+  ('-0.896,100.347', 'unp-gerbang-utama', 'driving-car', 3, 851, now()),
+  ('-0.896,100.347', 'unp-stasiun-airtawar', 'walking', 5, 301, now()),
+  ('-0.896,100.347', 'unp-stasiun-airtawar', 'motorcycle', 1, 313, now()),
+  ('-0.896,100.347', 'unp-stasiun-airtawar', 'driving-car', 2, 325, now()),
+  ('-0.896,100.347', 'unp-gerbang-cendrawasih', 'walking', 20, 1459, now()),
+  ('-0.896,100.347', 'unp-gerbang-cendrawasih', 'motorcycle', 4, 1517, now()),
+  ('-0.896,100.347', 'unp-gerbang-cendrawasih', 'driving-car', 6, 1575, now()),
+  ('-0.898,100.350', 'unp-padang', 'walking', 4, 271, now()),
+  ('-0.898,100.350', 'unp-padang', 'motorcycle', 1, 282, now()),
+  ('-0.898,100.350', 'unp-padang', 'driving-car', 2, 293, now()),
+  ('-0.898,100.350', 'unp-gerbang-utama', 'walking', 4, 271, now()),
+  ('-0.898,100.350', 'unp-gerbang-utama', 'motorcycle', 1, 282, now()),
+  ('-0.898,100.350', 'unp-gerbang-utama', 'driving-car', 2, 293, now()),
+  ('-0.898,100.350', 'unp-stasiun-airtawar', 'walking', 7, 463, now()),
+  ('-0.898,100.350', 'unp-stasiun-airtawar', 'motorcycle', 2, 481, now()),
+  ('-0.898,100.350', 'unp-stasiun-airtawar', 'driving-car', 2, 500, now()),
+  ('-0.898,100.350', 'unp-gerbang-cendrawasih', 'walking', 13, 971, now()),
+  ('-0.898,100.350', 'unp-gerbang-cendrawasih', 'motorcycle', 3, 1010, now()),
+  ('-0.898,100.350', 'unp-gerbang-cendrawasih', 'driving-car', 4, 1049, now()),
+  ('-0.890,100.352', 'unp-padang', 'walking', 15, 1069, now()),
+  ('-0.890,100.352', 'unp-padang', 'motorcycle', 3, 1112, now()),
+  ('-0.890,100.352', 'unp-padang', 'driving-car', 4, 1154, now()),
+  ('-0.890,100.352', 'unp-gerbang-utama', 'walking', 15, 1069, now()),
+  ('-0.890,100.352', 'unp-gerbang-utama', 'motorcycle', 3, 1112, now()),
+  ('-0.890,100.352', 'unp-gerbang-utama', 'driving-car', 4, 1154, now()),
+  ('-0.890,100.352', 'unp-stasiun-airtawar', 'walking', 12, 868, now()),
+  ('-0.890,100.352', 'unp-stasiun-airtawar', 'motorcycle', 3, 902, now()),
+  ('-0.890,100.352', 'unp-stasiun-airtawar', 'driving-car', 4, 937, now()),
+  ('-0.890,100.352', 'unp-gerbang-cendrawasih', 'walking', 26, 1879, now()),
+  ('-0.890,100.352', 'unp-gerbang-cendrawasih', 'motorcycle', 5, 1954, now()),
+  ('-0.890,100.352', 'unp-gerbang-cendrawasih', 'driving-car', 7, 2029, now()),
+  ('-0.906,100.357', 'unp-padang', 'walking', 19, 1356, now()),
+  ('-0.906,100.357', 'unp-padang', 'motorcycle', 4, 1411, now()),
+  ('-0.906,100.357', 'unp-padang', 'driving-car', 5, 1465, now()),
+  ('-0.906,100.357', 'unp-gerbang-utama', 'walking', 19, 1356, now()),
+  ('-0.906,100.357', 'unp-gerbang-utama', 'motorcycle', 4, 1411, now()),
+  ('-0.906,100.357', 'unp-gerbang-utama', 'driving-car', 5, 1465, now()),
+  ('-0.906,100.357', 'unp-stasiun-airtawar', 'walking', 26, 1936, now()),
+  ('-0.906,100.357', 'unp-stasiun-airtawar', 'motorcycle', 6, 2014, now()),
+  ('-0.906,100.357', 'unp-stasiun-airtawar', 'driving-car', 7, 2091, now()),
+  ('-0.906,100.357', 'unp-gerbang-cendrawasih', 'walking', 7, 510, now()),
+  ('-0.906,100.357', 'unp-gerbang-cendrawasih', 'motorcycle', 2, 530, now()),
+  ('-0.906,100.357', 'unp-gerbang-cendrawasih', 'driving-car', 2, 551, now()),
+  ('-0.907,100.360', 'unp-padang', 'walking', 24, 1785, now()),
+  ('-0.907,100.360', 'unp-padang', 'motorcycle', 5, 1856, now()),
+  ('-0.907,100.360', 'unp-padang', 'driving-car', 7, 1928, now()),
+  ('-0.907,100.360', 'unp-gerbang-utama', 'walking', 24, 1785, now()),
+  ('-0.907,100.360', 'unp-gerbang-utama', 'motorcycle', 5, 1856, now()),
+  ('-0.907,100.360', 'unp-gerbang-utama', 'driving-car', 7, 1928, now()),
+  ('-0.907,100.360', 'unp-stasiun-airtawar', 'walking', 33, 2405, now()),
+  ('-0.907,100.360', 'unp-stasiun-airtawar', 'motorcycle', 7, 2501, now()),
+  ('-0.907,100.360', 'unp-stasiun-airtawar', 'driving-car', 9, 2597, now()),
+  ('-0.907,100.360', 'unp-gerbang-cendrawasih', 'walking', 14, 985, now()),
+  ('-0.907,100.360', 'unp-gerbang-cendrawasih', 'motorcycle', 3, 1024, now()),
+  ('-0.907,100.360', 'unp-gerbang-cendrawasih', 'driving-car', 4, 1064, now()),
+  ('-0.900,100.351', 'unp-padang', 'walking', 6, 389, now()),
+  ('-0.900,100.351', 'unp-padang', 'motorcycle', 2, 404, now()),
+  ('-0.900,100.351', 'unp-padang', 'driving-car', 2, 420, now()),
+  ('-0.900,100.351', 'unp-gerbang-utama', 'walking', 6, 389, now()),
+  ('-0.900,100.351', 'unp-gerbang-utama', 'motorcycle', 2, 404, now()),
+  ('-0.900,100.351', 'unp-gerbang-utama', 'driving-car', 2, 420, now()),
+  ('-0.900,100.351', 'unp-stasiun-airtawar', 'walking', 10, 736, now()),
+  ('-0.900,100.351', 'unp-stasiun-airtawar', 'motorcycle', 2, 766, now()),
+  ('-0.900,100.351', 'unp-stasiun-airtawar', 'driving-car', 3, 795, now()),
+  ('-0.900,100.351', 'unp-gerbang-cendrawasih', 'walking', 10, 738, now()),
+  ('-0.900,100.351', 'unp-gerbang-cendrawasih', 'motorcycle', 2, 767, now()),
+  ('-0.900,100.351', 'unp-gerbang-cendrawasih', 'driving-car', 3, 797, now()),
+  ('-0.899,100.351', 'unp-padang', 'walking', 5, 315, now()),
+  ('-0.899,100.351', 'unp-padang', 'motorcycle', 1, 328, now()),
+  ('-0.899,100.351', 'unp-padang', 'driving-car', 2, 340, now()),
+  ('-0.899,100.351', 'unp-gerbang-utama', 'walking', 5, 315, now()),
+  ('-0.899,100.351', 'unp-gerbang-utama', 'motorcycle', 1, 328, now()),
+  ('-0.899,100.351', 'unp-gerbang-utama', 'driving-car', 2, 340, now()),
+  ('-0.899,100.351', 'unp-stasiun-airtawar', 'walking', 9, 619, now()),
+  ('-0.899,100.351', 'unp-stasiun-airtawar', 'motorcycle', 2, 644, now()),
+  ('-0.899,100.351', 'unp-stasiun-airtawar', 'driving-car', 3, 668, now()),
+  ('-0.899,100.351', 'unp-gerbang-cendrawasih', 'walking', 12, 833, now()),
+  ('-0.899,100.351', 'unp-gerbang-cendrawasih', 'motorcycle', 3, 866, now()),
+  ('-0.899,100.351', 'unp-gerbang-cendrawasih', 'driving-car', 3, 899, now())
 ON CONFLICT (origin_cell, dest_id, mode) DO UPDATE SET
   minutes = EXCLUDED.minutes,
   distance_m = EXCLUDED.distance_m,

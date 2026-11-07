@@ -30,10 +30,26 @@ describe("Pilot Configuration (Fase 0)", () => {
     expect(itera.gates.length).toBeGreaterThanOrEqual(3);
   });
 
+  it("menetapkan Universitas Lampung (Unila) dan Universitas Negeri Padang (UNP) sebagai pilot terpetakan", () => {
+    const unila = PILOT_CONFIG.unilaPilot;
+    expect(unila.id).toBe("pilot-lampung-unila");
+    expect(unila.campusId).toBe("unila-bandarlampung");
+    expect(unila.city).toBe("Bandar Lampung");
+    expect(unila.gates.length).toBeGreaterThanOrEqual(3);
+
+    const unp = PILOT_CONFIG.unpPilot;
+    expect(unp.id).toBe("pilot-padang-unp");
+    expect(unp.campusId).toBe("unp-padang");
+    expect(unp.city).toBe("Padang");
+    expect(unp.gates.length).toBeGreaterThanOrEqual(3);
+  });
+
   it("dapat mencari pilot berdasarkan campusId", () => {
     expect(getPilotByCampusId("ui-depok")?.id).toBe("pilot-depok-ui");
     expect(getPilotByCampusId("unand-limau-manis")?.id).toBe("pilot-padang-unand");
     expect(getPilotByCampusId("itera-lampung")?.id).toBe("pilot-lampung-itera");
+    expect(getPilotByCampusId("unila-bandarlampung")?.id).toBe("pilot-lampung-unila");
+    expect(getPilotByCampusId("unp-padang")?.id).toBe("pilot-padang-unp");
     expect(getPilotByCampusId("non-existent")).toBeUndefined();
   });
 
@@ -41,6 +57,8 @@ describe("Pilot Configuration (Fase 0)", () => {
     expect(isPilotCampus("ui-depok")).toBe(true);
     expect(isPilotCampus("unand-limau-manis")).toBe(true);
     expect(isPilotCampus("itera-lampung")).toBe(true);
+    expect(isPilotCampus("unila-bandarlampung")).toBe(true);
+    expect(isPilotCampus("unp-padang")).toBe(true);
     expect(isPilotCampus("ugm-bulaksumur")).toBe(false);
   });
 

@@ -1255,7 +1255,7 @@ console.log('Updated database/seed.sql');
 // =========================================================================
 // 5. Update src/data/pilot-listings.ts
 // =========================================================================
-const listingsFileContent = `export type PilotCampusId = "ui-depok" | "unand-limau-manis" | "itera-lampung";
+const listingsFileContent = `export type PilotCampusId = "ui-depok" | "unand-limau-manis" | "itera-lampung" | "unila-bandarlampung" | "unp-padang";
 
 export interface PilotListing {
   readonly id: string;
@@ -1315,7 +1315,7 @@ const uiPois = consolidatedPois.map((p) => {
   };
 });
 
-const poisFileContent = `export type PilotCampusPoiId = "ui-depok" | "unand-limau-manis" | "itera-lampung";
+const poisFileContent = `export type PilotCampusPoiId = "ui-depok" | "unand-limau-manis" | "itera-lampung" | "unila-bandarlampung" | "unp-padang";
 
 export interface PilotPoi {
   readonly id: string;

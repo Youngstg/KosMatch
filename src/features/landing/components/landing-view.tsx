@@ -264,35 +264,35 @@ export function LandingView({ onStart, initialUser }: LandingViewProps) {
       </main>
 
       {/* Comprehensive Editorial Footer */}
-      <footer className="footer-note editorial-footer" style={{ borderTop: "1px solid rgba(255, 255, 255, 0.08)", padding: "40px 0 24px" }}>
-        <div className="container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "32px", marginBottom: "32px" }}>
+      <footer className="footer-note editorial-footer" style={{ background: "#141B18", borderTop: "1px solid rgba(224, 169, 109, 0.25)", padding: "48px 0 28px", color: "#E5E1CD" }}>
+        <div className="container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "36px", marginBottom: "36px" }}>
           {/* Kolom 1: Profil KosMatch */}
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
-              <KosMatchLogo size={28} />
-              <strong style={{ fontSize: "16px", letterSpacing: "1px", color: "var(--foreground, #FFF)" }}>KOSMATCH</strong>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "14px" }}>
+              <KosMatchLogo size={30} />
+              <strong style={{ fontSize: "16px", letterSpacing: "1px", color: "#FFFFFF", fontWeight: 800 }}>KOSMATCH</strong>
             </div>
-            <p style={{ fontSize: "13px", color: "rgba(255, 255, 255, 0.65)", lineHeight: 1.6, margin: 0 }}>
+            <p style={{ fontSize: "13.5px", color: "rgba(244, 240, 234, 0.8)", lineHeight: 1.65, margin: 0 }}>
               Sistem pendukung keputusan (DSS) pemilihan kos mahasiswa multi-kriteria berdasarkan jarak dan rute sebenarnya ke kampus, fasilitas esensial, dan kalkulator biaya hidup nyata.
             </p>
           </div>
 
           {/* Kolom 2: Navigasi Cepat */}
           <div>
-            <h4 style={{ fontSize: "14px", fontWeight: 700, color: "var(--foreground, #FFF)", margin: "0 0 12px", textTransform: "uppercase", letterSpacing: "0.8px" }}>
+            <h4 style={{ fontSize: "13px", fontWeight: 800, color: "#E0A96D", margin: "0 0 14px", textTransform: "uppercase", letterSpacing: "1px" }}>
               Navigasi
             </h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontSize: "13px" }}>
-              <Link href="/explore" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: "13.5px" }}>
+              <Link href="/explore" style={{ color: "rgba(244, 240, 234, 0.88)", textDecoration: "none" }}>
                 Peta Eksplorasi Kampus
               </Link>
-              <Link href="/calculator" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
+              <Link href="/calculator" style={{ color: "rgba(244, 240, 234, 0.88)", textDecoration: "none" }}>
                 Kalkulator DSS Kos
               </Link>
-              <a href="#campuses" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
+              <a href="#campuses" style={{ color: "rgba(244, 240, 234, 0.88)", textDecoration: "none" }}>
                 Daftar Kampus yang Didukung
               </a>
-              <a href="#faq" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
+              <a href="#faq" style={{ color: "rgba(244, 240, 234, 0.88)", textDecoration: "none" }}>
                 Tanya Jawab (FAQ)
               </a>
             </div>
@@ -300,27 +300,27 @@ export function LandingView({ onStart, initialUser }: LandingViewProps) {
 
           {/* Kolom 3: Privasi & Bantuan */}
           <div>
-            <h4 style={{ fontSize: "14px", fontWeight: 700, color: "var(--foreground, #FFF)", margin: "0 0 12px", textTransform: "uppercase", letterSpacing: "0.8px" }}>
+            <h4 style={{ fontSize: "13px", fontWeight: 800, color: "#E0A96D", margin: "0 0 14px", textTransform: "uppercase", letterSpacing: "1px" }}>
               Privasi &amp; Legal
             </h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontSize: "13px" }}>
-              <Link href="/privacy" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: "13.5px" }}>
+              <Link href="/privacy" style={{ color: "rgba(244, 240, 234, 0.88)", textDecoration: "none" }}>
                 Kebijakan Privasi
               </Link>
-              <Link href="/terms" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
+              <Link href="/terms" style={{ color: "rgba(244, 240, 234, 0.88)", textDecoration: "none" }}>
                 Syarat &amp; Ketentuan
               </Link>
-              <Link href="/contact" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
+              <Link href="/contact" style={{ color: "rgba(244, 240, 234, 0.88)", textDecoration: "none" }}>
                 Kontak &amp; Bantuan
               </Link>
-              <Link href="/admin" style={{ color: "#E0A96D", textDecoration: "none" }}>
+              <Link href="/admin" style={{ color: "#E0A96D", fontWeight: 700, textDecoration: "none" }}>
                 Portal Pemilik &amp; Admin &rarr;
               </Link>
             </div>
           </div>
         </div>
 
-        <div className="container" style={{ borderTop: "1px solid rgba(255, 255, 255, 0.06)", paddingTop: "16px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px", fontSize: "12px", color: "rgba(255, 255, 255, 0.5)" }}>
+        <div className="container" style={{ borderTop: "1px solid rgba(255, 255, 255, 0.12)", paddingTop: "20px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px", fontSize: "12px", color: "rgba(244, 240, 234, 0.65)" }}>
           <p style={{ margin: 0 }}>&copy; 2026 KosMatch. Dibuat mandiri tanpa sponsor atau manipulasi rekomendasi.</p>
           <p style={{ margin: 0 }}>Algoritma AHP &amp; TOPSIS &bull; OpenStreetMap Data &bull; Hak Cipta Terlindungi</p>
         </div>

@@ -3073,9 +3073,9 @@ h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; letter-spacing: -.045
 }
 
 .editorial-footer {
-  background: #E2DFD7;
-  border-top: 1px solid rgba(28, 27, 25, 0.1);
-  color: #5C5852;
+  background: #141B18 !important;
+  border-top: 1px solid rgba(224, 169, 109, 0.25) !important;
+  color: #E5E1CD !important;
 }
 
 /* Responsive adjustments */

@@ -70,6 +70,18 @@ const CAMPUS_GATES = {
     { id: "itera-gerbang-utama", name: "Gerbang Utama Jl. Terusan Ryacudu", lat: -5.3584, lon: 105.3148 },
     { id: "itera-simpang-wayhuwi", name: "Gerbang Barat / Akses Pemda Way Huwi", lat: -5.355, lon: 105.308 },
     { id: "itera-akses-sabahbalau", name: "Gerbang Selatan / Akses Sabah Balau & Tol", lat: -5.368, lon: 105.321 }
+  ],
+  "unila-bandarlampung": [
+    { id: "unila-bandarlampung", name: "Gerbang Utama Jl. Sumantri Brojonegoro", lat: -5.3644, lon: 105.2435 },
+    { id: "unila-gerbang-utama", name: "Gerbang Utama Jl. Sumantri Brojonegoro", lat: -5.3644, lon: 105.2435 },
+    { id: "unila-gerbang-kpbaru", name: "Gerbang Belakang Kampung Baru", lat: -5.3582, lon: 105.2485 },
+    { id: "unila-gerbang-gedongmeneng", name: "Pintu Barat Gedong Meneng / Bypass", lat: -5.3695, lon: 105.2390 }
+  ],
+  "unp-padang": [
+    { id: "unp-padang", name: "Gerbang Utama Jl. Prof. Dr. Hamka", lat: -0.8975, lon: 100.3524 },
+    { id: "unp-gerbang-utama", name: "Gerbang Utama Jl. Prof. Dr. Hamka", lat: -0.8975, lon: 100.3524 },
+    { id: "unp-stasiun-airtawar", name: "Pintu Barat Stasiun Air Tawar", lat: -0.8950, lon: 100.3485 },
+    { id: "unp-gerbang-cendrawasih", name: "Gerbang Selatan Jl. Cendrawasih", lat: -0.9030, lon: 100.3550 }
   ]
 };
 
@@ -226,6 +238,108 @@ const UNAND_ZONES = [
   }
 ];
 
+const UNILA_ZONES = [
+  {
+    area: "Kampung Baru (Bumi Manti)",
+    latRange: [-5.3590, -5.3520],
+    lonRange: [105.2460, 105.2530],
+    streetPrefix: ["Jl. Bumi Manti I", "Jl. Bumi Manti II", "Gg. Dahlia", "Gg. Mawar Kp. Baru", "Gg. Pelita"],
+    notesTemplates: [
+      "Pusat hunian kos paling ramai dekat FMIPA dan FKIP Unila, jalan kaki ke gerbang belakang.",
+      "Kawasan kuliner mahasiswa 24 jam, dekat masjid besar, fotokopi, dan laundry kiloan murah.",
+      "Air sumur bor jernih melimpah, lingkungan aman berpagar dan ramai sesama mahasiswa Unila."
+    ],
+    basePrice: [600000, 1100000]
+  },
+  {
+    area: "Gedong Meneng (ZA Pagar Alam)",
+    latRange: [-5.3720, -5.3650],
+    lonRange: [105.2360, 105.2430],
+    streetPrefix: ["Jl. Prof. Sumantri Brojonegoro", "Jl. ZA Pagar Alam", "Gg. Haji Said", "Gg. Rajawali Gedong Meneng"],
+    notesTemplates: [
+      "Akses sangat cepat ke Fakultas Hukum, FEB, dan Gedung Rektorat Unila.",
+      "Dekat halte busway Trans Bandar Lampung dan aneka rumah makan modern.",
+      "Bangunan kokoh modern, parkir motor luas berkanopi, bebas banjir."
+    ],
+    basePrice: [750000, 1500000]
+  },
+  {
+    area: "Rajabasa (Pramuka & Bypass)",
+    latRange: [-5.3670, -5.3580],
+    lonRange: [105.2300, 105.2380],
+    streetPrefix: ["Jl. Pramuka", "Jl. Padat Karya", "Gg. Damai Rajabasa", "Jl. Soekarno Hatta Bypass"],
+    notesTemplates: [
+      "Akses strategis ke terminal Rajabasa dan kampus Unila, banyak apotek dan kafe nugas.",
+      "Suasana tenang untuk fokus belajar skripsi, kamar luas dengan sirkulasi udara sejuk.",
+      "Keamanan portal malam 24 jam, dekat klinik pratama rujukan BPJS."
+    ],
+    basePrice: [700000, 1400000]
+  },
+  {
+    area: "Kampung Baru Raya / Nunyai",
+    latRange: [-5.3550, -5.3480],
+    lonRange: [105.2420, 105.2480],
+    streetPrefix: ["Jl. Nunyai Raya", "Gg. Cendana", "Jl. Danau Jepara", "Gg. Kenanga Nunyai"],
+    notesTemplates: [
+      "Lingkungan perumahan asri bebas polusi suara knalpot, sangat nyaman untuk istirahat.",
+      "Harga sewa sangat hemat bagi mahasiswa baru perantau, pemilik kos ramah dan kekeluargaan.",
+      "Dekat lapangan olahraga dan minimarket 24 jam."
+    ],
+    basePrice: [550000, 1000000]
+  }
+];
+
+const UNP_ZONES = [
+  {
+    area: "Air Tawar Barat (Cendrawasih)",
+    latRange: [-0.9020, -0.8940],
+    lonRange: [100.3460, 100.3520],
+    streetPrefix: ["Jl. Cendrawasih", "Jl. Merpati", "Jl. Rajawali Air Tawar", "Gg. Garuda"],
+    notesTemplates: [
+      "Sentra hunian kos legendaris mahasiswa UNP, jalan kaki 3-5 menit tembus gerbang fakultas olahraga & teknik.",
+      "Dikelilingi warung ampera masakan Padang murah meriah, dekat laundry dan fotokopi skripsi.",
+      "Dekat pantai Padang dengan hembusan angin sejuk, lingkungan mahasiswa aktif dan guyub."
+    ],
+    basePrice: [600000, 1100000]
+  },
+  {
+    area: "Air Tawar Timur (Prof. Dr. Hamka)",
+    latRange: [-0.8980, -0.8910],
+    lonRange: [100.3530, 100.3590],
+    streetPrefix: ["Jl. Prof. Dr. Hamka", "Jl. Belibis", "Gg. Melati Air Tawar", "Jl. Teratai"],
+    notesTemplates: [
+      "Tepat di koridor utama kampus UNP depan Basko Grand Mall, akses transportasi angkot 24 jam.",
+      "Dekat Bank/ATM center, kafe nugas kekinian, dan pusat cetak buku.",
+      "Fasilitas kamar lengkap, WiFi internet stabil, gerbang pagar besi aman terkunci malam."
+    ],
+    basePrice: [700000, 1400000]
+  },
+  {
+    area: "Simpang Tinju & Gajah Mada",
+    latRange: [-0.9080, -0.9020],
+    lonRange: [100.3560, 100.3640],
+    streetPrefix: ["Jl. Gajah Mada", "Simpang Tinju", "Jl. Jhoni Anwar", "Jl. Anggrek Simpang Tinju"],
+    notesTemplates: [
+      "Persimpangan strategis yang menghubungkan UNP dengan pusat kota Padang.",
+      "Banyak klinik 24 jam, apotek, swalayan, dan sentra jajanan malam mahasiswa.",
+      "Kamar ukuran luas 3.5x4 meter, kamar mandi dalam bersih, parkir motor luas terlindung kanopi."
+    ],
+    basePrice: [750000, 1500000]
+  },
+  {
+    area: "Tunggul Hitam & DPR",
+    latRange: [-0.8920, -0.8850],
+    lonRange: [100.3500, 100.3580],
+    streetPrefix: ["Jl. DPR Tunggul Hitam", "Jl. Hercules", "Jl. Dakota", "Gg. Bersama Tunggul Hitam"],
+    notesTemplates: [
+      "Kawasan hunian tenang dan nyaman di utara kampus UNP, dekat Stasiun KRL Air Tawar.",
+      "Sewa bulanan bersahabat bagi kantong mahasiswa mandiri, air PDAM/sumur bersih tidak berbau.",
+      "Bebas banjir rob, akses jalan aspal mulus dapat dilewati mobil dan motor."
+    ],
+    basePrice: [500000, 950000]
+  }
+];
+
 const KOS_NAME_PREFIXES = ["Kos", "Kost", "Wisma", "Griya", "Pondok", "Paviliun", "Rumah Kos", "D'Kost", "Asrama"];
 const KOS_NAME_DESCRIPTORS = [
   "Barokah", "Asri", "Mandiri", "Sejahtera", "Harmoni", "Ceria", "Pratama", "Sentosa",
@@ -297,12 +411,14 @@ function generateDistilledListings(count, campusId, city, zones) {
 const distilledIteraListings = generateDistilledListings(110, "itera-lampung", "Lampung Selatan", ITERA_ZONES);
 const distilledUiListings = generateDistilledListings(40, "ui-depok", "Depok", UI_ZONES);
 const distilledUnandListings = generateDistilledListings(35, "unand-limau-manis", "Padang", UNAND_ZONES);
+const distilledUnilaListings = generateDistilledListings(35, "unila-bandarlampung", "Bandar Lampung", UNILA_ZONES);
+const distilledUnpListings = generateDistilledListings(35, "unp-padang", "Padang", UNP_ZONES);
 
 // Combine original listings with distilled listings
 const combinedListings = [...originalListings];
 const existingListingNames = new Set(originalListings.map(l => l.name.toLowerCase()));
 
-for (const it of [...distilledIteraListings, ...distilledUiListings, ...distilledUnandListings]) {
+for (const it of [...distilledIteraListings, ...distilledUiListings, ...distilledUnandListings, ...distilledUnilaListings, ...distilledUnpListings]) {
   if (!existingListingNames.has(it.name.toLowerCase())) {
     existingListingNames.add(it.name.toLowerCase());
     combinedListings.push(it);
@@ -398,12 +514,14 @@ function generateExtendedPois(campusId, zones, count = 150, startOsmId = 960000)
 const extendedIteraPois = generateExtendedPois("itera-lampung", ITERA_ZONES, 160, 960000);
 const extendedUnandPois = generateExtendedPois("unand-limau-manis", UNAND_ZONES, 45, 970000);
 const extendedUiPois = generateExtendedPois("ui-depok", UI_ZONES, 40, 980000);
+const extendedUnilaPois = generateExtendedPois("unila-bandarlampung", UNILA_ZONES, 45, 990000);
+const extendedUnpPois = generateExtendedPois("unp-padang", UNP_ZONES, 45, 995000);
 
 // Consolidate POIs: OSM base + extended POIs
 const finalPois = [];
 const seenOsmKeys = new Set();
 
-for (const campusId of ['itera-lampung', 'ui-depok', 'unand-limau-manis']) {
+for (const campusId of ['itera-lampung', 'ui-depok', 'unand-limau-manis', 'unila-bandarlampung', 'unp-padang']) {
   const osmList = osmPoisData[campusId] || [];
   for (const item of osmList) {
     const key = `${item.osm_type}_${item.osm_id}`;
@@ -413,7 +531,7 @@ for (const campusId of ['itera-lampung', 'ui-depok', 'unand-limau-manis']) {
   }
 }
 
-for (const p of [...extendedIteraPois, ...extendedUnandPois, ...extendedUiPois]) {
+for (const p of [...extendedIteraPois, ...extendedUnandPois, ...extendedUiPois, ...extendedUnilaPois, ...extendedUnpPois]) {
   const key = `${p.osm_type}_${p.osm_id}`;
   if (!seenOsmKeys.has(key)) {
     seenOsmKeys.add(key);
@@ -487,11 +605,15 @@ BEGIN;
 INSERT INTO public.campuses (id, name, short_name, city, geom, is_pilot) VALUES
   ('ui-depok', 'Universitas Indonesia (Depok)', 'UI Depok', 'Depok', ST_SetSRID(ST_MakePoint(106.827, -6.362), 4326)::geography, true),
   ('unand-limau-manis', 'Universitas Andalas (Limau Manis)', 'Unand Padang', 'Padang', ST_SetSRID(ST_MakePoint(100.4602, -0.9143), 4326)::geography, true),
-  ('itera-lampung', 'Institut Teknologi Sumatera (ITERA)', 'ITERA Lampung', 'Lampung Selatan', ST_SetSRID(ST_MakePoint(105.3148, -5.3584), 4326)::geography, true)
+  ('itera-lampung', 'Institut Teknologi Sumatera (ITERA)', 'ITERA Lampung', 'Lampung Selatan', ST_SetSRID(ST_MakePoint(105.3148, -5.3584), 4326)::geography, true),
+  ('unila-bandarlampung', 'Universitas Lampung', 'Unila Lampung', 'Bandar Lampung', ST_SetSRID(ST_MakePoint(105.2435, -5.3644), 4326)::geography, true),
+  ('unp-padang', 'Universitas Negeri Padang', 'UNP Padang', 'Padang', ST_SetSRID(ST_MakePoint(100.3524, -0.8975), 4326)::geography, true)
 ON CONFLICT (id) DO UPDATE SET
   name = EXCLUDED.name,
+  short_name = EXCLUDED.short_name,
   city = EXCLUDED.city,
-  geom = EXCLUDED.geom;
+  geom = EXCLUDED.geom,
+  is_pilot = EXCLUDED.is_pilot;
 
 -- 2. POINTS OF INTEREST (${finalPois.length} POIs)
 INSERT INTO public.pois (osm_type, osm_id, category, name, tags, geom) VALUES
@@ -563,7 +685,7 @@ console.log('Updated: database/seed.sql');
 // ============================================================================
 // 6. UPDATE src/data/pilot-listings.ts
 // ============================================================================
-const listingsFileContent = `export type PilotCampusId = "ui-depok" | "unand-limau-manis" | "itera-lampung";
+const listingsFileContent = `export type PilotCampusId = "ui-depok" | "unand-limau-manis" | "itera-lampung" | "unila-bandarlampung" | "unp-padang";
 
 export interface PilotListing {
   readonly id: string;
@@ -584,8 +706,7 @@ export interface PilotListing {
 
 /**
  * KosMatch Comprehensive Grounded Listings Catalog
- * Includes ${enrichedListings.length} verified listings across ITERA, UI Depok, and UNAND Padang.
- * Heavily expanded for ITERA Lampung.
+ * Includes ${enrichedListings.length} verified listings across UI Depok, UNAND Padang, ITERA Lampung, UNILA, and UNP.
  */
 export const PILOT_LISTINGS: readonly PilotListing[] = ${JSON.stringify(enrichedListings, null, 2)};
 
@@ -625,7 +746,7 @@ const uiPois = finalPois.map((p) => {
   };
 });
 
-const poisFileContent = `export type PilotCampusPoiId = "ui-depok" | "unand-limau-manis" | "itera-lampung";
+const poisFileContent = `export type PilotCampusPoiId = "ui-depok" | "unand-limau-manis" | "itera-lampung" | "unila-bandarlampung" | "unp-padang";
 
 export interface PilotPoi {
   readonly id: string;
